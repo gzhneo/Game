@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blender-Bodenversuch</title>
+<!-- Vorlage fuer tools/assets/blender/boden_versuch.py seite; die Daten ersetzt das Werkzeug. -->
+<style>
+:root { --bg:#16181b; --fl:#202328; --tx:#e6e6e6; --mu:#9aa0a6; --ak:#6fb3ff; --li:#33373d; --gr:#ffcc33; }
+@media (prefers-color-scheme: light) { :root { --bg:#f4f4f2; --fl:#fff; --tx:#1c1d1f; --mu:#5f6368; --ak:#1a5fb4; --li:#d5d5d0; --gr:#c98a00; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--tx); font:15px/1.5 system-ui, "Segoe UI", sans-serif; }
+main { max-width:1960px; margin:0 auto; padding:16px; }
+h1 { font-size:22px; margin:8px 0 4px; } h2 { font-size:18px; margin:32px 0 8px; border-bottom:1px solid var(--li); padding-bottom:4px; }
+h3 { font-size:16px; margin:22px 0 4px; }
+.mu { color:var(--mu); }
+.leiste { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; margin:8px 0; }
+.gruppe { display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+.gruppe > span { color:var(--mu); font-size:13px; margin-right:2px; }
+button { background:var(--fl); color:var(--tx); border:1px solid var(--li); border-radius:6px; padding:4px 9px; cursor:pointer; font:inherit; font-size:14px; }
+button.an { border-color:var(--ak); color:var(--ak); font-weight:600; }
+.wisch { position:relative; width:100%; overflow:hidden; border:1px solid var(--li); cursor:ew-resize; user-select:none; touch-action:none; }
+.wisch img { display:block; width:100%; height:auto; pointer-events:none; }
+.wisch .oben { position:absolute; inset:0; overflow:hidden; }
+.wisch .oben img { width:auto; height:100%; max-width:none; }
+.wisch .strich { position:absolute; top:0; bottom:0; width:2px; background:#fff; box-shadow:0 0 0 1px #0008; pointer-events:none; }
+.wisch .griff { position:absolute; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%; background:#fff; box-shadow:0 1px 4px #0009; pointer-events:none; }
+.wisch .etikett { position:absolute; top:8px; padding:2px 8px; border-radius:4px; background:#000a; color:#fff; font-size:13px; pointer-events:none; }
+.rahmen { position:absolute; border:2px solid var(--gr); pointer-events:none; }
+.raster { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:8px; margin-top:8px; }
+.raster.zwei { grid-template-columns:repeat(2, 1fr); }
+@media (max-width:800px) { .raster.zwei { grid-template-columns:1fr; } }
+figure { margin:0; background:var(--fl); border:1px solid var(--li); border-radius:6px; padding:6px; }
+figure img { width:100%; height:auto; display:block; }
+figure.px img { image-rendering:pixelated; }
+figcaption { font-size:13px; color:var(--mu); margin-top:4px; }
+table { border-collapse:collapse; margin:8px 0; font-variant-numeric:tabular-nums; font-size:14px; }
+td, th { border:1px solid var(--li); padding:3px 8px; text-align:right; } th:first-child, td:first-child { text-align:left; }
+a { color:var(--ak); }
+</style>
+</head>
+<body>
+<main>
+<h1>Bodentexturen mit Blender -- Vergleich alt und neu (TODO 57 b)</h1>
+<p class="mu">Zero Hour, Tournament Lake, 1920x1080, D3D11, Effekte fxaa, sharpen, softparticles, colorgrade, ssao, Helligkeitsregler 50.
+<b>SD</b> = Originale (alt), <b>HD-KI2</b> = KI-Stufe, <b>Blender s=2 / s=4</b> = sechs Bodentexturen neu, prozedural in Blender
+(Modelle und übrige Texturen aus der klassischen HD-Stufe), <b>Original + Blender-Detail</b> = Original hochskaliert, darüber
+Blender-Feindetail. Ansicht <b>Schieberegler</b>: links Fassung A, rechts Fassung B, Trennlinie mit der Maus ziehen (oder Tasten , und .).
+<b>Nebeneinander</b>: A und B neben- bzw. untereinander. <b>Alle</b>: alle Fassungen. Pfeiltasten wechseln die Aufnahme.
+Gelbe Rahmen: die Ausschnitte (dreifach vergrößert, ohne Filter), dort unterscheiden sich SD und Blender am stärksten.</p>
+<div id="szenen"></div>
+<h2>Kachelansicht je Textur (3x3 gekachelt)</h2>
+<p class="mu">Jede Tafel zeigt dieselbe Textur neunmal nebeneinander, damit Nähte und Wiederholung sichtbar werden. Eine Kachel
+deckt 8x8 Kartenzellen (80x80 Welteinheiten). Mittelwert und Streuung je Kanal (0..1) gemessen in Originalauflösung.
+Klick auf ein Bild öffnet es in voller Größe.</p>
+<div id="kacheln"></div>
+</main>
+<script>
+const D = /*DATEN*/null;
+const NAME = Object.fromEntries(D.fassungen);
+const zustand = {};
+let aktiv = null;
+function el(t, a, ...k) { const e = document.createElement(t); Object.assign(e, a || {}); k.forEach(x => x != null && e.append(x)); return e; }
+function knopf(text, an, fn) { const b = el("button", {textContent: text, className: an ? "an" : ""}); b.onclick = fn; return b; }
+function gruppe(titel, ...k) { return el("div", {className: "gruppe"}, el("span", {textContent: titel}), ...k); }
+
+// Schieberegler: B unten ganz, A oben bis zur Trennlinie
+function wisch(srcA, srcB, titelA, titelB, pos, beiAenderung, rahmen) {
+  const box = el("div", {className: "wisch"});
+  const unten = el("img", {src: srcB, alt: titelB});
+  const obenImg = el("img", {src: srcA, alt: titelA});
+  const oben = el("div", {className: "oben"}, obenImg);
+  const strich = el("div", {className: "strich"}), griff = el("div", {className: "griff"});
+  const eA = el("div", {className: "etikett", textContent: "A: " + titelA}), eB = el("div", {className: "etikett", textContent: "B: " + titelB});
+  eA.style.left = "8px"; eB.style.right = "8px";
+  box.append(unten, oben, strich, griff, eA, eB);
+  (rahmen || []).forEach(([x, y, w, h]) => { const r = el("div", {className: "rahmen"});
+    Object.assign(r.style, {left: x / 19.2 + "%", top: y / 10.8 + "%", width: w / 19.2 + "%", height: h / 10.8 + "%"}); box.append(r); });
+  function setze(p) { pos = Math.max(0, Math.min(1, p)); const w = box.clientWidth;
+    oben.style.width = pos * 100 + "%"; obenImg.style.width = w + "px"; obenImg.style.height = "auto";
+    strich.style.left = pos * 100 + "%"; griff.style.left = pos * 100 + "%"; beiAenderung(pos); }
+  function aus(e) { const r = box.getBoundingClientRect(); setze((e.clientX - r.left) / r.width); }
+  let ziehen = false;
+  box.addEventListener("pointerdown", e => { ziehen = true; box.setPointerCapture(e.pointerId); aus(e); });
+  box.addEventListener("pointermove", e => { if (ziehen) aus(e); });
+  box.addEventListener("pointerup", () => { ziehen = false; });
+  new ResizeObserver(() => setze(pos)).observe(box);
+  unten.onload = () => setze(pos);
+  box.schiebe = d => setze(pos + d);
+  return box;
+}
+
+function zeichne(sz) {
+  const z = zustand[sz.name], s = sz.shots[z.shot], box = document.getElementById("sz-" + sz.name);
+  if (!s.fassungen.includes(z.a)) z.a = s.fassungen[0];
+  if (!s.fassungen.includes(z.b)) z.b = s.fassungen[s.fassungen.length - 1];
+  box.innerHTML = "";
+  const bildSrc = k => `seite/${sz.name}/${s.shot}_${k}.jpg`;
+  const leiste = el("div", {className: "leiste"},
+    gruppe("Aufnahme", ...sz.shots.map((x, i) => knopf(x.shot.replace("shot_", "").replace(/^0+/, "") || "0", i === z.shot, () => { z.shot = i; zeichne(sz); }))),
+    gruppe("Ansicht", ...[["wisch", "Schieberegler"], ["neben", "Nebeneinander"], ["alle", "Alle"]].map(([k, t]) => knopf(t, z.modus === k, () => { z.modus = k; zeichne(sz); }))));
+  const wahl = el("div", {className: "leiste"},
+    gruppe("A", ...D.fassungen.filter(([k]) => s.fassungen.includes(k)).map(([k, t]) => knopf(t, z.a === k, () => { z.a = k; zeichne(sz); }))),
+    gruppe("B", ...D.fassungen.filter(([k]) => s.fassungen.includes(k)).map(([k, t]) => knopf(t, z.b === k, () => { z.b = k; zeichne(sz); }))));
+  box.append(leiste);
+  if (z.modus !== "alle") box.append(wahl);
+  const zeige = z.modus === "alle" ? s.fassungen.slice().sort((p, q) => D.fassungen.findIndex(f => f[0] === p) - D.fassungen.findIndex(f => f[0] === q)) : [z.a, z.b];
+  if (z.modus === "wisch") {
+    const w = wisch(bildSrc(z.a), bildSrc(z.b), NAME[z.a], NAME[z.b], z.pos, p => { z.pos = p; }, s.fenster);
+    z.wisch = w; box.append(w);
+  } else {
+    z.wisch = null;
+    const r = el("div", {className: z.modus === "neben" ? "raster zwei" : "raster"});
+    zeige.forEach(k => r.append(el("figure", {}, el("a", {href: bildSrc(k)}, el("img", {src: bildSrc(k), alt: NAME[k]})), el("figcaption", {textContent: NAME[k] + " -- mittlere Helligkeit " + s.hell[k].toFixed(1)}))));
+    box.append(r);
+  }
+  const tab = el("table"); tab.append(el("tr", {}, el("th", {textContent: "Fassung"}), el("th", {textContent: "mittlere Helligkeit (0..255)"})));
+  D.fassungen.forEach(([k, t]) => { if (s.hell[k] !== undefined) tab.append(el("tr", {}, el("td", {textContent: t}), el("td", {textContent: s.hell[k].toFixed(1)}))); });
+  box.append(tab);
+  s.fenster.forEach((_, i) => {
+    box.append(el("h3", {textContent: `Ausschnitt ${i + 1} (dreifach)`}));
+    const aus = k => `seite/${sz.name}/${s.shot}_${k}_a${i}.png`;
+    if (z.modus === "wisch") {
+      const r = el("div", {className: "raster zwei"});
+      r.append(wisch(aus(z.a), aus(z.b), NAME[z.a], NAME[z.b], 0.5, () => {}), el("div"));
+      r.firstChild.style.imageRendering = "pixelated";
+      box.append(r);
+    } else {
+      const r = el("div", {className: z.modus === "neben" ? "raster zwei" : "raster"});
+      zeige.forEach(k => r.append(el("figure", {className: "px"}, el("img", {src: aus(k), alt: NAME[k], loading: "lazy"}), el("figcaption", {textContent: NAME[k]}))));
+      box.append(r);
+    }
+  });
+}
+
+const wurzel = document.getElementById("szenen");
+const TITEL = {skirmish: "Skirmish (2 KI, Seed 1, Standardkamera)", boden: "Boden aus der Nähe (Replay, boden_nah.txt: je Bodenart ein Halt, Zoom 0,35)",
+  zoom: "Kamerafahrt nah bis fern (Replay, zoom.txt -- steht über dem See, Boden nur am Rand und in der Ferne)"};
+const REIHE = ["boden", "skirmish", "zoom"];
+D.szenen.sort((p, q) => REIHE.indexOf(p.name) - REIHE.indexOf(q.name)).forEach(sz => {
+  if (!sz.shots.length) return;
+  zustand[sz.name] = {shot: 0, a: "sd", b: "blender4", modus: "wisch", pos: 0.5};
+  const div = el("div", {id: "sz-" + sz.name});
+  div.addEventListener("pointerenter", () => { aktiv = sz; });
+  wurzel.append(el("h2", {textContent: TITEL[sz.name] || sz.name}), div); zeichne(sz);
+  if (!aktiv) aktiv = sz; });
+document.addEventListener("keydown", e => {
+  if (!aktiv) return; const z = zustand[aktiv.name];
+  if (e.key === "ArrowRight") { z.shot = Math.min(z.shot + 1, aktiv.shots.length - 1); zeichne(aktiv); }
+  if (e.key === "ArrowLeft") { z.shot = Math.max(z.shot - 1, 0); zeichne(aktiv); }
+  if (e.key === "," && z.wisch) z.wisch.schiebe(-0.05);
+  if (e.key === "." && z.wisch) z.wisch.schiebe(0.05);
+});
+
+// Kachelansicht: Schieberegler Original gegen Blender und alle Tafeln nebeneinander
+const kb = document.getElementById("kacheln");
+function fmt(v) { return v ? v.map(x => x.toFixed(3)).join(" / ") : "-"; }
+D.kacheln.forEach(k => { const b = k.bericht || {};
+  kb.append(el("h3", {textContent: `${k.name} (${k.art})`}),
+    el("p", {className: "mu", textContent: `Mittel R/G/B: Original ${fmt(b.original)}, HD-KI2 ${fmt(b.hdki2)}, Blender ${fmt(b.blender_klein)}. `
+      + `Streuung: Original ${fmt(b.original_std)}, Blender ${fmt(b.blender_klein_std)} (in 1024 Pixeln ${fmt(b.blender4_std)}). Naht/Innen ${b.naht_verhaeltnis ?? "-"}`}));
+  const t = Object.fromEntries(k.tafeln);
+  const kz = {a: k.tafeln[0] && k.tafeln[0][0], b: (k.tafeln.find(x => x[0].startsWith("Blender s=4")) || k.tafeln[k.tafeln.length - 1] || [])[0], pos: 0.5};
+  const platz = el("div");
+  function male() {
+    platz.innerHTML = "";
+    platz.append(el("div", {className: "leiste"},
+      gruppe("A", ...k.tafeln.map(([n]) => knopf(n, kz.a === n, () => { kz.a = n; male(); }))),
+      gruppe("B", ...k.tafeln.map(([n]) => knopf(n, kz.b === n, () => { kz.b = n; male(); })))));
+    const r = el("div", {className: "raster zwei"});
+    r.append(wisch(t[kz.a], t[kz.b], kz.a, kz.b, kz.pos, p => { kz.pos = p; }), el("div"));
+    platz.append(r);
+  }
+  if (k.tafeln.length) male();
+  const z = el("div", {className: "raster"});
+  k.tafeln.forEach(([n, src]) => z.append(el("figure", {}, el("a", {href: src}, el("img", {src, alt: n, loading: "lazy"})), el("figcaption", {textContent: n}))));
+  kb.append(platz, z); });
+</script>
+</body>
+</html>

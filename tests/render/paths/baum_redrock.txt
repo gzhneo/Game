@@ -1,0 +1,15 @@
+# Bäume frei: Red Rock, Skirmish. Die Karte mit den meisten Pflanzen (2.913): Tannen, Fichten,
+# Ahorn, Palmen; Hartriegel nur als TreeDogwood2 im Nordosten. Orte aus tools/render/map_objekte.py.
+# frame   x      y      zoom       drehung   neigung
+60        0.846  0.778  standard   0         standard
+119       0.846  0.778  standard   0         standard
+120       0.846  0.778  0.30       0         standard
+179       0.846  0.778  0.30       0         standard
+180       0.752  0.574  standard   0         standard
+239       0.752  0.574  standard   0         standard
+240       0.752  0.574  0.40       0         standard
+299       0.752  0.574  0.40       0         standard
+300       0.183  0.589  standard   0         standard
+359       0.183  0.589  standard   0         standard
+360       0.183  0.589  0.30       45        -20
+419       0.183  0.589  0.30       45        -20

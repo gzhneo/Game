@@ -1,0 +1,14 @@
+# Boden-Detail: Standardansicht, zwei nahe Halte und ein mittlerer Zoom -- kartenrelativ,
+# fuer beliebige Skirmish-Karten (Alpine Assault, Tournament Desert, Fortress Avalanche). Bilder alle 120 Frames:
+# 120 Standard, 240/360 nah (Ort 1), 480/600 nah (Ort 2), 720/840 mittel mit Drehung, 960/1080 Standard mit Drehung.
+# frame   x      y      zoom       drehung   neigung
+0         0.30   0.30   standard   0         standard
+120       0.30   0.30   standard   0         standard
+240       0.30   0.30   0.35       0         standard
+360       0.30   0.30   0.35       0         standard
+480       0.68   0.45   0.35       0         standard
+600       0.68   0.45   0.35       0         standard
+720       0.50   0.68   0.60       30        standard
+840       0.50   0.68   0.60       30        standard
+960       0.50   0.68   standard   30        standard
+1080      0.50   0.68   standard   30        standard

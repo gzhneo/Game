@@ -1,0 +1,51 @@
+/*
+**	Command & Conquer Generals(tm) / Generals Zero Hour(tm)
+**	Copyright 2025 Electronic Arts Inc.
+**	Modified by GZH Neo, Copyright (C) 2026 GZH Neo
+**
+**	This program is free software: you can redistribute it and/or modify
+**	it under the terms of the GNU General Public License as published by
+**	the Free Software Foundation, either version 3 of the License, or
+**	(at your option) any later version.
+**
+**	This program is distributed in the hope that it will be useful,
+**	but WITHOUT ANY WARRANTY; without even the implied warranty of
+**	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+**	GNU General Public License for more details.
+**
+**	You should have received a copy of the GNU General Public License
+**	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+ /***********************************************************************************************
+ ***              C O N F I D E N T I A L  ---  W E S T W O O D  S T U D I O S               ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                 Project Name : WW3D                                                         *
+ *                                                                                             *
+ *                     $Archive:: /Commando/Code/wwshade/shdlib.h                           $*
+ *
+ *                    Org Author:: Kenny Mitchell
+ *                                                                                             *
+ *                       $Author:: Kenny_m
+ *																																	
+ *								$Modtime:: 07/01/02 9:58p                                               $*
+ *                                                                                             *
+ *                    $Revision:: 1                                                          $*
+ *                                                                                             *
+ *---------------------------------------------------------------------------------------------*
+ * Functions:                                                                                  *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+#ifndef SHDLIB_H
+#define SHDLIB_H
+
+#define SHD_INIT					
+#define SHD_SHUTDOWN				
+#define SHD_INIT_SHADERS		
+#define SHD_SHUTDOWN_SHADERS	
+#define SHD_FLUSH					
+#define SHD_REG_LOADER			
+
+
+#endif // SHDLIB_H

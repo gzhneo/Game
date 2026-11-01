@@ -1,0 +1,25 @@
+# TODO 56 (CC0-Naturobjekte): Tournament Lake (Zero Hour), Replay e0zh-tournament-lake-3ai-seed2
+# oder Skirmish. Orte aus den Kartendaten (tools/render/map_objekte.py): Felsgruppe bei 0,56/0,255 (Rocks1, Rocks3,
+# RockClusterMedium01 dicht beieinander), Kiefernwald bei 0,449/0,369 (TreePine, TreePine2), Felsen bei 0,69/0,30.
+# Je Halt zwei Bilder (alle 60 Frames): Spielsicht, näher, ganz nah, gedreht.
+# frame   x      y      zoom       drehung   neigung
+60        0.560  0.255  standard   0         standard
+179       0.560  0.255  standard   0         standard
+180       0.560  0.255  0.45       0         standard
+299       0.560  0.255  0.45       0         standard
+300       0.560  0.258  0.22       0         standard
+419       0.560  0.258  0.22       0         standard
+420       0.560  0.258  0.22       120       standard
+539       0.560  0.258  0.22       120       standard
+540       0.449  0.369  standard   0         standard
+659       0.449  0.369  standard   0         standard
+660       0.449  0.369  0.40       0         standard
+779       0.449  0.369  0.40       0         standard
+780       0.462  0.395  0.22       0         standard
+899       0.462  0.395  0.22       0         standard
+900       0.462  0.395  0.22       0         -20
+1019      0.462  0.395  0.22       0         -20
+1020      0.695  0.300  0.30       0         standard
+1139      0.695  0.300  0.30       0         standard
+1140      0.695  0.300  standard   0         standard
+1259      0.695  0.300  standard   0         standard

@@ -1,0 +1,27 @@
+# Fels-Tessellation: Fortress Avalanche -- je Ort Standardansicht, nah (0,35), ganz nah (0,2) und nah mit flacher Kamera (Neigung 15).
+# Orte aus tools/render/map_hang.py (steilste Flaechen); ein Bild alle 120 Logik-Frames.
+# frame   x      y      zoom       drehung   neigung
+0         0.458  0.542  standard   0         standard
+120       0.458  0.542  standard   0         standard
+121       0.458  0.542  0.35       0         standard
+240       0.458  0.542  0.35       0         standard
+241       0.458  0.542  0.20       0         standard
+360       0.458  0.542  0.20       0         standard
+361       0.458  0.542  0.35       0         15
+480       0.458  0.542  0.35       0         15
+481       0.375  0.708  standard   0         standard
+600       0.375  0.708  standard   0         standard
+601       0.375  0.708  0.35       0         standard
+720       0.375  0.708  0.35       0         standard
+721       0.375  0.708  0.20       0         standard
+840       0.375  0.708  0.20       0         standard
+841       0.375  0.708  0.35       0         15
+960       0.375  0.708  0.35       0         15
+961       0.292  0.625  standard   90        standard
+1080      0.292  0.625  standard   90        standard
+1081      0.292  0.625  0.35       90        standard
+1200      0.292  0.625  0.35       90        standard
+1201      0.292  0.625  0.20       90        standard
+1320      0.292  0.625  0.20       90        standard
+1321      0.292  0.625  0.35       90        15
+1440      0.292  0.625  0.35       90        15

@@ -1,0 +1,174 @@
+TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
+MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
+FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
+MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
+FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
+TEXTURPAKET ersetzt 0 texturen 63
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+WORKERS 30
+D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
+STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
+TESTHILFE ERROR script file not found
+SLOTS mode 2 seed 1 localSlot 0
+SLOT 0 state 5 ai 0 template -2 start 0 color 3 team -1 kind 0
+SLOT 1 state 4 ai 1 template 8 start 3 color 0 team -1 kind 0
+SLOT 2 state 4 ai 1 template 12 start 0 color 7 team -1 kind 0
+TERRAINTILES dds Art/Terrain/TMGras23a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMDirt14a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TXDirt01a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TXAsph01a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TMGras22a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TXConc04a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TMDirt03a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMDirt05a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TXConc01a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TMCrops01a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras18a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras16a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras17a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff21a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras24a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMConc01a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras12b.dds tiles 16 extent 128
+BODENDETAIL klassen 17 mit_detail 17 zuordnungen 253 raster 28 x 15 atlas 1024
+TERRAINRELIEF kacheln 224 von 224 stufe 2 atlas 4096 x 2048
+TERRAINTESS kacheln 224 von 224 stufe 1 klassen 17 von 17 gitter 390 x 465 abweichend 0
+0 29A1F3E5
+STATE frame 0 mode 2 players 6 objects 268 recorder 0 particles 2/0
+STATE frame 1 mode 2 players 6 objects 270 recorder 0 particles 2/0
+30 0BF69B1B
+60 D6B0AD1A
+90 447A8E2E
+120 31E79DC7
+150 5B5CE9A9
+180 26D18531
+210 E6BDCCCF
+240 B78D2D44
+270 B3937A89
+300 E6F7039D
+330 D755B209
+360 55C39580
+390 3B224DB9
+420 679D76E3
+450 17CB755B
+480 25355D22
+510 8905354F
+540 F3F94514
+570 A82B8B3B
+600 F334CD7D
+630 EBC193E6
+660 65F5FD97
+690 A9BAAC59
+720 41D34844
+750 03A5E830
+780 D421BC55
+810 3FBC6255
+840 8FCFD235
+870 27A7C497
+900 1706A11A
+STATE frame 900 mode 2 players 6 objects 277 recorder 0 particles 4/0
+930 82ED9D48
+960 45776221
+990 DCAE48F0
+1020 BD4B2E1E
+1050 FF94C76D
+1080 B500768C
+1110 521BE073
+1140 2A5E969A
+1170 2D3AB68A
+1200 B75F7916
+1230 DA6F4FD5
+1260 D0A31251
+1290 2676EECF
+1320 AE8FDE7E
+1350 4445F285
+1380 D84601B2
+1410 06C68644
+1440 B49361AE
+1470 7404E258
+1500 0171B38E
+1530 473D3D16
+1560 728603D7
+1590 CAEAAB71
+1620 21E18A2B
+1650 49223467
+1680 80158C19
+1710 7234F128
+1740 4CAAA4E3
+1770 C85F1CFB
+1800 711CDAF2
+STATE frame 1800 mode 2 players 6 objects 294 recorder 0 particles 4/0
+1830 2B811B6F
+1860 E8157880
+1890 B42A21A9
+1920 1E7A1D66
+1950 44B257A7
+1980 29F004C9
+2010 DB91C27F
+2040 CD6418D7
+2070 EA00EF9D
+2100 82027CB0
+2130 F762F7EA
+2160 FEA01C8D
+2190 9B1A10D5
+2220 5303B687
+2250 A0662B7A
+2280 E6CE8761
+2310 44BE1B23
+2340 C8A879B1
+2370 AE5DCAF4
+2400 9969DA92
+2430 8E2F6CC4
+2460 2BC1896C
+2490 F205F893
+2520 934E9603
+2550 DC9F7AF5
+2580 9FE8A10E
+2610 FB9FDFC9
+2640 1EE47314
+2670 08295E46
+2700 610B8A5A
+STATE frame 2700 mode 2 players 6 objects 315 recorder 0 particles 4/0
+2730 C0618BDE
+2760 BF735692
+2790 68A0D29C
+2820 D81430B9
+2850 F289FEC4
+2880 DEA12D43
+2910 0B81F6F3
+2940 29669B22
+2970 ADCBEE6A
+3000 76E16193
+3030 2C4846F1
+3060 45B7C31A
+3090 BAF43A1A
+3120 89CC5294
+3150 A6C59ED2
+3180 02C53894
+3210 D19A0016
+3240 3918FADB
+3270 2038F05E
+3300 5035A3AC
+3330 2C77A8B8
+3360 54B1AAD9
+3390 9769244A
+3420 0B60367B
+3450 20315C59
+3480 EC03E7A0
+3510 38BD9741
+3540 9F676040
+3570 5E6C8E22
+END maxFrames 3600
+3600 195D9DE9
+STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
+BENCH ticks 3598 mean 0.207 p50 0.122 p95 0.493 p99 0.983 max 16.631 total 744 ms
+FRAMES frames 3540 mean 0.213 p50 0.123 p95 0.496 p99 0.974 max 21.312 total 755 ms
+PFADSUCHE 0.0319 ms je Tick mit Anfragen (623 Ticks, hoechstens 3.102 ms) anfragen 687 zellen 33656 warteschlange 1.1 hoechstens 4 rest 0.00 anfragen_je_tick 564 58 1 0 einzeln_hoechstens 1.860 ms
+PFADSUCHE_ARTEN pfad 668 zellen 33095 ms 19.0 hoechstens 1.86 naechster 9 zellen 288 ms 0.1 hoechstens 0.03 kosten 2 zellen 32 ms 0.0 hoechstens 0.00 boden 1 zellen 912 ms 4.7 hoechstens 4.74 ausweichen 11 zellen 273 ms 0.1 hoechstens 0.02 sichtlinie 24726 schritte 136658 abbrueche 24398 vorrat_leer 0 pfad_fehlschlaege 0 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 26122 kleinste 25702 frei_bei_vorrat_leer 0
+LOGIKPHASEN 3601 Ticks, 0.2082 ms je Tick (Mittel/hoechstens ms): skript 0.0218/4.820 gelaende 0.0001/0.006 befehle 0.0048/16.448 updates 0.0626/9.485 ki 0.1106/256.034 bau 0.0001/0.001 partition 0.0073/0.306 tickende 0.0010/0.256
+LOGIKMODULE 25 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): WorkerAIUpdate 0.0103 7.7 0.521 AIUpdateInterface 0.0093 4.0 0.390 ProductionUpdate 0.0089 18.1 9.257 PhysicsBehavior 0.0041 6.1 0.514 SpawnBehavior 0.0041 5.2 4.917 DozerAIUpdate 0.0027 1.9 0.604 StealthDetectorUpdate 0.0026 2.1 0.411 SupplyTruckAIUpdate 0.0020 1.2 0.351 GarrisonContain 0.0018 14.0 0.256 SpecialAbilityUpdate 0.0018 0.5 3.561 ObjectWeaponStatusHelper 0.0015 21.2 0.277 SupplyWarehouseDockUpdate 0.0006 12.0 0.240
+LOGIKSPITZE ab Tick 31: laengster Tick 1220 16.513 ms: skript 0.083 gelaende 0.000 befehle 0.000 updates 0.044 ki 16.371 bau 0.001 partition 0.009 tickende 0.004; laengstes Update 9.257 ms Tick 1276 ProductionUpdate an Tank_ChinaBarracks
+GPUEFFEKTE flags 0x1FFFF samples 1 bilder 49 bild 12.6215 ms (49) bodendetail zeichnungen 0.0 von 0.0 felder 224 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 429.7 umlaeufe 0.15
+PARTIKELZEIT simulation 0.0003 ms je Tick (53 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+EXIT code 0

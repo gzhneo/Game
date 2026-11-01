@@ -1,0 +1,22 @@
+# systemd-Einheit fuer gzh-rendezvous.
+# Installieren: Programm nach /usr/local/bin, Einstellung nach /etc/gzh-rendezvous.conf, diese Datei nach
+# /etc/systemd/system/, dann: systemctl daemon-reload && systemctl enable --now gzh-rendezvous
+[Unit]
+Description=GZH Neo rendezvous server (for network games)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/gzh-rendezvous --config /etc/gzh-rendezvous.conf
+Restart=on-failure
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+RestrictAddressFamilies=AF_INET AF_INET6
+LimitNOFILE=1024
+
+[Install]
+WantedBy=multi-user.target

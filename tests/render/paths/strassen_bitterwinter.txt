@@ -1,0 +1,29 @@
+# Strassen frei, Nahpruefung zh bitter winter
+# frame   x      y      zoom       drehung   neigung
+# kreuzung3 sidewalk2
+0         0.733  0.281  0.45       0         standard
+120       0.733  0.281  0.45       0         standard
+240       0.733  0.281  0.22       0         standard
+360       0.733  0.281  0.22       0         standard
+# kreuzung3 gravelroadsnow
+480       0.651  0.322  0.45       0         standard
+600       0.651  0.322  0.45       0         standard
+720       0.651  0.322  0.22       0         standard
+840       0.651  0.322  0.22       0         standard
+# kreuzung3 sidewalk2
+960       0.279  0.433  0.45       0         standard
+1080      0.279  0.433  0.45       0         standard
+1200      0.279  0.433  0.22       0         standard
+1320      0.279  0.433  0.22       0         standard
+# kreuzung3 sidewalk2
+1440      0.839  0.427  0.45       0         standard
+1560      0.839  0.427  0.45       0         standard
+1680      0.839  0.427  0.22       0         standard
+1800      0.839  0.427  0.22       0         standard
+# kreuzung3 gravelroadsnow
+1920      0.576  0.392  0.45       0         standard
+2040      0.576  0.392  0.45       0         standard
+2160      0.576  0.392  0.22       0         standard
+2280      0.576  0.392  0.22       0         standard
+2400      0.50   0.50   standard   0         standard
+2520      0.50   0.50   standard   0         standard

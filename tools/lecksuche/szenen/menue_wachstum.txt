@@ -1,0 +1,222 @@
+# Menues wiederholt: Optionen, LAN-Lobby mit eigenem Spiel, Replays, Spielstaende, Skirmish-Menue -- fuenf Runden.
+# Merkpunkt nach der ersten Runde (alles einmal geladen), Wachstum nach der fuenften: was je Menuebesuch liegen
+# bleibt und erst beim Beenden frei wird, waechst hier viermal.
+hauptmenue
+# Runde 1
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonBack
+warte 30
+klick OptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 30
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick LanGameOptionsMenu.wnd:ButtonBack
+fenster LanLobbyMenu.wnd:ButtonBack
+warte 30
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonReplay
+fenster ReplayMenu.wnd:ButtonBack
+warte 30
+klick ReplayMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonLoadGame
+fenster SaveLoad.wnd:ButtonBack
+warte 30
+klick SaveLoad.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+merke
+# Runde 2
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonBack
+warte 30
+klick OptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 30
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick LanGameOptionsMenu.wnd:ButtonBack
+fenster LanLobbyMenu.wnd:ButtonBack
+warte 30
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonReplay
+fenster ReplayMenu.wnd:ButtonBack
+warte 30
+klick ReplayMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonLoadGame
+fenster SaveLoad.wnd:ButtonBack
+warte 30
+klick SaveLoad.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+# Runde 3
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonBack
+warte 30
+klick OptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 30
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick LanGameOptionsMenu.wnd:ButtonBack
+fenster LanLobbyMenu.wnd:ButtonBack
+warte 30
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonReplay
+fenster ReplayMenu.wnd:ButtonBack
+warte 30
+klick ReplayMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonLoadGame
+fenster SaveLoad.wnd:ButtonBack
+warte 30
+klick SaveLoad.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+# Runde 4
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonBack
+warte 30
+klick OptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 30
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick LanGameOptionsMenu.wnd:ButtonBack
+fenster LanLobbyMenu.wnd:ButtonBack
+warte 30
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonReplay
+fenster ReplayMenu.wnd:ButtonBack
+warte 30
+klick ReplayMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonLoadGame
+fenster SaveLoad.wnd:ButtonBack
+warte 30
+klick SaveLoad.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+# Runde 5
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonBack
+warte 30
+klick OptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 30
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick LanGameOptionsMenu.wnd:ButtonBack
+fenster LanLobbyMenu.wnd:ButtonBack
+warte 30
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonReplay
+fenster ReplayMenu.wnd:ButtonBack
+warte 30
+klick ReplayMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonLoadGame
+fenster SaveLoad.wnd:ButtonBack
+warte 30
+klick SaveLoad.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonBack
+warte 30
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+wachstum runden2bis5
+beenden

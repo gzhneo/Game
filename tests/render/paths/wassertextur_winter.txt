@@ -1,0 +1,10 @@
+# Bitter Winter (Zero Hour): Wintersee mit TSWater03 (trueb).
+# Freie Wassertextur: EA- gegen freie Wasserfarbe. Kartenrelativ, Winkel in Grad;
+# jede Pose zwei Stuetzpunkte, damit sie bei --every 60 stillsteht.
+# frame   x      y      zoom      drehung  neigung
+60        0.33   0.62   standard  0        standard
+120       0.33   0.62   standard  0        standard
+180       0.33   0.62   0.50      0        standard
+240       0.33   0.62   0.50      0        standard
+300       0.38   0.60   1.00      45       standard
+360       0.38   0.60   1.00      45       standard

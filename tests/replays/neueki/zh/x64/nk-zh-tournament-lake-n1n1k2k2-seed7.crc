@@ -1,0 +1,1315 @@
+TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
+MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
+FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
+MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
+FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
+TEXTURPAKET ersetzt 0 texturen 63
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+WORKERS 30
+D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
+STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
+SLOTS mode 2 seed 7 localSlot 0
+SLOT 0 state 5 ai 0 template -2 start 1 color 7 team -1 kind 0
+SLOT 1 state 4 ai 1 template 7 start 3 color 0 team 0 kind 1
+SLOT 2 state 4 ai 1 template 6 start 2 color 3 team 0 kind 1
+SLOT 3 state 4 ai 1 template 6 start 0 color 2 team 1 kind 0
+SLOT 4 state 4 ai 1 template 2 start 1 color 1 team 1 kind 0
+TERRAINTILES dds Art/Terrain/TMGras12a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras12b.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras02a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMDirt03a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMDirt05a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff03a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff12a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras28c.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TXDirt01a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff23a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TXRock04a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff02a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff13a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff15b.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff16a.dds tiles 16 extent 128
+BODENDETAIL klassen 15 mit_detail 15 zuordnungen 253 raster 28 x 15 atlas 1024
+TERRAINRELIEF kacheln 216 von 216 stufe 2 atlas 4096 x 2048
+TERRAINTESS kacheln 216 von 216 stufe 1 klassen 15 von 15 gitter 450 x 450 abweichend 0
+KIOHNE 0 spieler 3 teile 14336
+KIOHNE 0 spieler 4 teile 14336
+0 4A3F8232
+STATE frame 0 mode 2 players 8 objects 194 recorder 0 particles 0/0
+STATE frame 1 mode 2 players 8 objects 201 recorder 0 particles 0/0
+30 8D7FF572
+60 C351040A
+KIEROEFFNUNG 63 spieler 3 startkapital 10000 klasse standard geldfaktor 1.00
+KIHAUSHALT 63 spieler 3 geld 10600 basis 0 frei 10600 vorrang_offen 0
+KIWIRTSCHAFT 63 spieler 3 lage vorrat 0 zentren 0 geld 10600 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+KIEROEFFNUNG 64 spieler 4 startkapital 10000 klasse standard geldfaktor 1.00
+KIHAUSHALT 64 spieler 4 geld 10600 basis 0 frei 10600 vorrang_offen 0
+KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 10600 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+90 F29C7CFF
+120 8801FCAF
+150 3B6F6978
+180 EE5D0DFB
+210 EE567160
+240 84991320
+270 4A29BCD4
+300 D5913DA1
+330 2914F4A1
+360 7E40F369
+390 09BE27A3
+420 0ACC0221
+450 30F278A3
+480 63DE9834
+510 CFE5BBC9
+540 840CA0AA
+570 697B4CD9
+600 B046F0A2
+630 C2295EA6
+660 6CEAEF34
+690 AA41FCA5
+720 1EA36189
+750 02431A10
+780 4D99AD43
+810 01C35012
+840 08A32253
+870 322B67BB
+900 3CBB3F1C
+STATE frame 900 mode 2 players 8 objects 205 recorder 0 particles 0/0
+930 C97B33B9
+960 C55F7B4D
+990 E9921F27
+1020 FF4DC694
+1050 704AE50B
+1080 0D3509B1
+1110 F9E386FC
+1140 DBC21A90
+1170 B9686627
+1200 87061355
+1230 62646FB0
+1260 7A8CF2E4
+1290 4CC79CA1
+1320 50E92519
+1350 96BB0C93
+1380 474A649B
+1410 8A830473
+1440 3074499A
+1470 6E8AFBB9
+1500 EBB569E8
+1530 E6E3413A
+1560 439EEC3A
+1590 CBE46ECB
+1620 40ECFFED
+1650 DE23DEE9
+1680 95F04820
+1710 F3DC8171
+1740 1A196328
+1770 33B67CCD
+1800 39C946AE
+STATE frame 1800 mode 2 players 8 objects 215 recorder 0 particles 0/0
+1830 375869DB
+1860 027A9993
+KIHAUSHALT 1863 spieler 3 geld 5850 basis 0 frei 5850 vorrang_offen 0
+KIWIRTSCHAFT 1863 spieler 3 lage vorrat 30000 zentren 1 geld 5850 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+KIHAUSHALT 1864 spieler 4 geld 12950 basis 0 frei 12950 vorrang_offen 1
+KIWIRTSCHAFT 1864 spieler 4 lage vorrat 0 zentren 0 geld 12950 hacker 0 sammler 0 bedarf 2000 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+1890 41AD46B9
+1920 005115EB
+KIFOKUS 1950 spieler 3 gegner 5 vorher -1 grund wahl kosten 2818
+KIFOKUS 1950 spieler 4 gegner 5 vorher -1 grund buendnis kosten 0
+1950 5BA1332A
+1980 DED75790
+2010 4BAABE62
+2040 5509B186
+2070 0958E6DB
+2100 BA81A009
+2130 F788F1F3
+2160 0842ED2D
+2190 524183C5
+2220 AE47C410
+2250 6B45E05A
+2280 F9499E8F
+2310 37D1DDAE
+2340 CB378A72
+2370 AD57DB9F
+2400 8209B777
+2430 29C625F2
+2460 651D4878
+2490 A7C20D35
+2520 304CDFEA
+2550 1DC48B97
+2580 1A46CB6B
+2610 E6A32B27
+2640 6DA1215E
+2670 3526AF9A
+2700 9697C52A
+STATE frame 2700 mode 2 players 8 objects 224 recorder 0 particles 0/0
+2730 C5B78C2D
+2760 A5E9B95B
+KIWIRTSCHAFT 2764 spieler 4 ausbau Lazr_AmericaSupplyCenter vorrat 30000 zentren 1 grund wachstum
+2790 4E7D205B
+2820 18E8AE1C
+2850 07930412
+2880 9D0278B0
+2910 C908DA53
+2940 FFA13614
+KIWIRTSCHAFT 2943 spieler 3 technik TechOilDerrick einheit AirF_AmericaInfantryRanger ort 1288 1791
+2970 19901C23
+3000 3FBAEE78
+3030 5CC9E2B9
+3060 8533880C
+3090 04B35B09
+3120 0E50F62A
+KIWIRTSCHAFT 3124 spieler 4 technik TechOilDerrick einheit Lazr_AmericaInfantryRanger ort 1877 1353
+3150 7F62289C
+3180 FF53976E
+3210 652E96A1
+3240 B17594AB
+3270 790012A1
+3300 78117FE8
+3330 0E684FFA
+3360 8A8418AE
+3390 5AC106E2
+3420 171D3F57
+3450 22A0FBBA
+3480 963A73F4
+3510 DD61A9FE
+3540 7A3A37D1
+3570 F75F2AE0
+KISUPERWAFFE 3600 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 204 wert 5300 radius 300
+3600 AF825CBD
+STATE frame 3600 mode 2 players 8 objects 235 recorder 0 particles 9/6
+KISUPERWAFFE 3603 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 204 wert 5200 radius 300
+3630 F71B1DB4
+3660 284FC1D2
+KIWIRTSCHAFT 3663 spieler 3 technik_ende einheit_weg dauer 24
+KIHAUSHALT 3663 spieler 3 geld 12350 basis 1000 frei 11350 vorrang_offen 1
+KIWIRTSCHAFT 3663 spieler 3 lage vorrat 28425 zentren 1 geld 12350 hacker 0 sammler 3 bedarf 0 einnahmebauten 0 technik 0 frei 5 sammelrate 1575 restzeit_min 18.0 investieren 0
+KIHAUSHALT 3664 spieler 4 geld 5550 basis 1000 frei 4550 vorrang_offen 1
+KIWIRTSCHAFT 3664 spieler 4 lage vorrat 115725 zentren 2 geld 5550 hacker 0 sammler 2 bedarf 0 einnahmebauten 0 technik 0 frei 5 sammelrate 0 restzeit_min 999.0 investieren 1
+3690 EEB382F7
+3720 B306BCFB
+KIFOKUS 3750 spieler 3 gegner 6 vorher 5 grund wechsel kosten 3072
+KIFOKUS 3750 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+3750 E1D8E3A7
+3780 487DF03A
+KIUEBERFALL 3783 spieler 3 bau transport AirF_AmericaVehicleHumvee fahrer AirF_AmericaInfantryColonelBurton anzahl 0 kosten 8300
+3810 6BF3FCF2
+3840 4375DEB3
+3870 63CD074B
+3900 348E39E3
+3930 2626AD97
+3960 1787875C
+3990 22A8A4A6
+4020 4B3C162B
+KIWIRTSCHAFT 4024 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 3 ziel 6
+4050 9A9DB5A0
+4080 CECA6AAC
+4110 A9BF18D8
+4140 1A8E2FCE
+4170 87D518EF
+4200 8FDA7936
+4230 51A3E90F
+4260 C04E2E08
+4290 9AA064CF
+4320 52FED300
+4350 D67992FF
+4380 05D0AC66
+KIWIRTSCHAFT 4384 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 6
+KIWIRTSCHAFT 4384 spieler 4 technik_ende einheit_weg dauer 42
+4410 8F6F3099
+4440 7978590F
+4470 F0CD9D05
+4500 C03FFC09
+STATE frame 4500 mode 2 players 8 objects 258 recorder 0 particles 17/28
+4530 4066C7AD
+4560 C7895245
+4590 45E2B025
+4620 5D71B4DA
+4650 9D4E4DDB
+4680 9F09F07B
+4710 5BDCF47D
+4740 47C885BD
+KIWIRTSCHAFT 4743 spieler 3 ausbau AirF_AmericaSupplyCenter vorrat 26625 zentren 1 grund wachstum
+KIWIRTSCHAFT 4744 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 6
+4770 9B3006C3
+4800 F285AB3E
+4830 8DAFE5AB
+4860 BB67D0E5
+4890 552489A5
+4920 5B65EF18
+4950 5D86F364
+4980 88E13975
+5010 249072BC
+5040 566E765B
+5070 53CAED6E
+5100 EF89093C
+5130 3C9969D0
+5160 1C3E7148
+5190 CCAD3273
+5220 F60462B2
+5250 82F1E9AC
+5280 52AAACE9
+KIGEGNERMODELL 5283 spieler 3 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 2975 luftwert 0 abwehr 0 getarnt 0
+5310 6B76F3A3
+5340 AF7CBED4
+5370 2441B7A8
+KISUPERWAFFE 5400 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 265 wert 6600 radius 300
+5400 4FCDEA77
+STATE frame 5400 mode 2 players 8 objects 280 recorder 0 particles 26/95
+KISUPERWAFFE 5404 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 265 wert 6500 radius 300
+KIHILFE 5404 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
+5430 A9863972
+5460 2BE53789
+KIHAUSHALT 5463 spieler 3 geld 7200 basis 0 frei 7200 vorrang_offen 1
+KIWIRTSCHAFT 5463 spieler 3 lage vorrat 25425 zentren 1 geld 7200 hacker 0 sammler 3 bedarf 2000 einnahmebauten 0 technik 0 frei 3 sammelrate 2288 restzeit_min 11.1 investieren 0
+KIHAUSHALT 5464 spieler 4 geld 900 basis 0 frei 900 vorrang_offen 0
+KIWIRTSCHAFT 5464 spieler 4 lage vorrat 113325 zentren 2 geld 900 hacker 0 sammler 7 bedarf 0 einnahmebauten 0 technik 0 frei 3 sammelrate 2550 restzeit_min 44.4 investieren 0
+5490 B8ED2F10
+5520 16998E7E
+5550 50C8740C
+5580 C9D3D77E
+5610 F8BC05B9
+5640 7B89290C
+KIHILFE 5644 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
+5670 37E14AB7
+5700 5A1394AD
+5730 54C40048
+5760 82C971B0
+5790 787327F9
+5820 9C286664
+KIHILFE 5824 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
+5850 E8B46195
+5880 E19CADC3
+5910 49AA4151
+5940 8B327418
+5970 9E6082E4
+6000 4D1E076F
+KIHILFE 6004 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
+6030 6872481C
+6060 8BF59BFE
+6090 C942F898
+6120 11F5676B
+6150 7B20DAB2
+6180 B521DA53
+KIHILFE 6184 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
+6210 F9B85626
+6240 EA08E065
+6270 C4E07BF4
+6300 5FF36A16
+STATE frame 6300 mode 2 players 8 objects 293 recorder 0 particles 80/485
+KIHILFE 6303 spieler 3 verworfen verbuendeter 4 bedrohung 1950 armee 3450 einsetzbar 925 kandidaten 2 wert 450
+KIUEBERFALL 6304 spieler 4 bau transport Lazr_AmericaVehicleHumvee fahrer Lazr_AmericaInfantryColonelBurton anzahl 0 kosten 8200
+6330 609E22C8
+6360 A53145CC
+6390 E374EA22
+6420 C72E3ED7
+6450 8F18A328
+6480 DB35C235
+KIHILFE 6483 spieler 3 verworfen verbuendeter 4 bedrohung 1050 armee 4650 einsetzbar 1525 kandidaten 2 wert 450
+KIGEGNERMODELL 6484 spieler 4 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 4975 luftwert 0 abwehr 0 getarnt 0
+6510 F928D32A
+6540 88703C80
+6570 90E826B3
+6600 F5F851B2
+KIWIRTSCHAFT 6603 spieler 3 auftrag_abgebrochen AirF_AmericaSupplyCenter ort 1235 1509
+6630 8273535B
+6660 A7273D87
+KIHILFE 6663 spieler 3 verworfen verbuendeter 4 bedrohung 1800 armee 4650 einsetzbar 1525 kandidaten 2 wert 450
+6690 58858C6B
+6720 A016FE31
+6750 6C4BD8AB
+6780 22AD770D
+6810 42E69D64
+6840 F5EB9D13
+KIHILFE 6843 spieler 3 verworfen verbuendeter 4 bedrohung 1750 armee 4650 einsetzbar 1525 kandidaten 2 wert 450
+6870 95B05660
+6900 88FC81B3
+6930 5411972F
+6960 53B4EEB4
+6990 44462610
+7020 3C94EE5D
+KIHILFE 7023 spieler 3 verworfen verbuendeter 4 bedrohung 3150 armee 5850 einsetzbar 2125 kandidaten 2 wert 450
+7050 A6787564
+7080 6E473106
+KIWIRTSCHAFT 7084 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 6
+7110 323AEB6C
+7140 3AF6C80A
+7170 3EE88F1D
+KISUPERWAFFE 7200 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 228 wert 6901 radius 300
+7200 7832244F
+STATE frame 7200 mode 2 players 8 objects 332 recorder 0 particles 150/972
+KIHILFE 7203 spieler 3 verworfen verbuendeter 4 bedrohung 3450 armee 5850 einsetzbar 2125 kandidaten 2 wert 450
+KISUPERWAFFE 7205 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 228 wert 9008 radius 300
+7230 AA872152
+7260 A5F45C1E
+KIHAUSHALT 7263 spieler 3 geld 11250 basis 0 frei 11250 vorrang_offen 0
+KIWIRTSCHAFT 7263 spieler 3 lage vorrat 22425 zentren 1 geld 11250 hacker 0 sammler 3 bedarf 0 einnahmebauten 0 technik 0 frei 2 sammelrate 2644 restzeit_min 8.5 investieren 0
+KIHAUSHALT 7264 spieler 4 geld 4275 basis 1000 frei 3275 vorrang_offen 1
+KIWIRTSCHAFT 7264 spieler 4 lage vorrat 108150 zentren 2 geld 4275 hacker 0 sammler 4 bedarf 0 einnahmebauten 0 technik 0 frei 2 sammelrate 3788 restzeit_min 28.6 investieren 0
+7290 6939D464
+7320 5F393E63
+7350 B8D2698B
+7380 3609A262
+KIHILFE 7383 spieler 3 verworfen verbuendeter 4 bedrohung 3150 armee 5850 einsetzbar 2125 kandidaten 2 wert 450
+KIUEBERFALL 7383 spieler 3 ende sammeln_zeit
+7410 E4AF1EAD
+7440 81D6FD60
+KIWIRTSCHAFT 7444 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 9
+7470 14BB0965
+KIFOKUS 7500 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2078
+7500 3F1016CB
+KIFOKUS 7514 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+7530 E26E4886
+7560 026B747B
+KIHILFE 7563 spieler 3 verworfen verbuendeter 4 bedrohung 2750 armee 5850 einsetzbar 2925 kandidaten 3 wert 1250
+7590 5A492255
+7620 41AAAB2B
+KIWIRTSCHAFT 7624 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 9
+7650 5362ED43
+7680 1D399B49
+7710 D1951F87
+7740 698504E7
+KIHILFE 7743 spieler 3 verworfen verbuendeter 4 bedrohung 2750 armee 8050 einsetzbar 4025 kandidaten 3 wert 1250
+7770 3B10C311
+7800 26659FC8
+7830 25BA80C8
+7860 F345AE4B
+7890 64966518
+7920 E2EF3786
+KIHILFE 7923 spieler 3 start verbuendeter 4 bedrohung 1150 einheiten 3 wert 1250 ort 1938 1379 armee 9150 einsetzbar 4575 kandidaten 3 wert 1250
+7950 CAFA14C3
+7980 19E9E261
+8010 7822709B
+8040 FBDE15F6
+KIHILFE 8043 spieler 3 ende aussichtslos dauer 4 verbleibend 3
+8070 A3E5EF1E
+8100 AF019341
+STATE frame 8100 mode 2 players 8 objects 339 recorder 0 particles 99/392
+8130 4D289A18
+8160 51A9B7CB
+8190 673371F7
+8220 5E18A1E4
+8250 9081F188
+8280 972DF7C6
+KIGEGNERMODELL 8283 spieler 3 ansturm 1 einigeln 0 luft 1 tarnung 0 armee 10925 luftwert 2800 abwehr 1000 getarnt 0
+KIGEGNERMODELL 8284 spieler 4 ansturm 1 einigeln 0 luft 1 tarnung 0 armee 10925 luftwert 2800 abwehr 1000 getarnt 0
+8310 12370DC2
+8340 CAE0EE7E
+8370 295E9EB9
+8400 A2D2A0AB
+8430 734BFE90
+8460 1786C750
+8490 5E826E53
+8520 0F96E9D7
+KIHILFE 8523 spieler 3 start verbuendeter 4 bedrohung 1400 einheiten 5 wert 1700 ort 1514 707 armee 11800 einsetzbar 5900 kandidaten 5 wert 1700
+8550 ED2F59F3
+8580 3FB2293E
+KIGEFECHT 8595 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 5 feinde 6
+8610 6D965866
+8640 9876F6D2
+8670 E5E681E7
+8700 0EC4492A
+KIWIRTSCHAFT 8703 spieler 3 sammler AFG_AmericaVehicleChinook bestand 3 ziel 5
+8730 2E53453B
+8760 5C95B76F
+KIUEBERFALL 8763 spieler 3 bau transport AirF_AmericaVehicleHumvee fahrer AirF_AmericaInfantryMissileDefender anzahl 5 kosten 2300
+8790 935CA917
+8820 8BD24334
+KIHILFE 8823 spieler 3 ende eigene_basis dauer 10 verbleibend 3
+8850 95835611
+8880 8A444CB1
+8910 49D13203
+8940 318DB222
+8970 84A3DBB9
+KISUPERWAFFE 9000 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 7522 radius 300
+9000 B1C8C8CA
+STATE frame 9000 mode 2 players 8 objects 363 recorder 0 particles 77/311
+KIHILFE 9004 spieler 4 start verbuendeter 3 bedrohung 700 einheiten 4 wert 1650 ort 531 1031 armee 10350 einsetzbar 4475 kandidaten 5 wert 2550
+KISUPERWAFFE 9006 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 281 wert 8501 radius 300
+KIGEFECHT 9015 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 4 feinde 8
+9030 8A20CCAE
+9060 CAB4B873
+KIWIRTSCHAFT 9063 spieler 3 sammler AFG_AmericaVehicleChinook bestand 4 ziel 5
+KIHAUSHALT 9063 spieler 3 geld 6050 basis 1000 frei 4100 vorrang_offen 1
+KIWIRTSCHAFT 9063 spieler 3 lage vorrat 40725 zentren 2 geld 6050 hacker 0 sammler 4 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 2644 restzeit_min 15.4 investieren 0
+KIHAUSHALT 9064 spieler 4 geld 375 basis 1000 frei -625 vorrang_offen 1
+KIWIRTSCHAFT 9064 spieler 4 lage vorrat 40725 zentren 2 geld 375 hacker 0 sammler 8 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 3788 restzeit_min 10.8 investieren 0
+9090 571C169A
+9120 E31DF925
+KIVERTEIDIGUNG 9123 spieler 3 bedrohung 700 einheiten 1 wert 300 ort 534 930
+KIHILFE 9124 spieler 4 ende eigene_basis dauer 4 verbleibend 4
+KIFOKUS 9150 spieler 3 gegner 6 vorher 5 grund druck kosten 1199
+9150 CB79246A
+KIFOKUS 9164 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+9180 B362BF1E
+KIHILFE 9183 spieler 3 start verbuendeter 4 bedrohung 1300 einheiten 4 wert 2050 ort 2601 1131 armee 15400 einsetzbar 7700 kandidaten 8 wert 3100
+KIGEFECHT 9195 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 4 feinde 2
+9210 5C33FEFB
+9240 90A63911
+9270 90E12F19
+9300 572B8008
+9330 09CDCD65
+9360 18D60E58
+9390 5FA52255
+9420 78723DED
+KIVERTEIDIGUNG 9423 spieler 3 bedrohung 700 einheiten 2 wert 525 ort 1106 385
+KIHILFE 9423 spieler 3 ende eigene_basis dauer 8 verbleibend 4
+9450 35123363
+9480 C2B800A8
+9510 EB5813D3
+9540 BC4FFA0B
+9570 C676BA15
+9600 DF0DEDCE
+9630 9B412D52
+9660 1A68A4B9
+KIHILFE 9663 spieler 3 start verbuendeter 4 bedrohung 750 einheiten 3 wert 1325 ort 2295 1013 armee 16300 einsetzbar 7550 kandidaten 9 wert 3400
+KIGEFECHT 9675 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 3 feinde 4
+9690 0316D569
+9720 38C8CB85
+9750 19E5E464
+9780 E6782C9C
+9810 B45AF93B
+9840 DA15A224
+9870 BEC23CBA
+9900 6E3E2CB2
+STATE frame 9900 mode 2 players 8 objects 391 recorder 0 particles 117/573
+KIHILFE 9903 spieler 3 ende eigene_basis dauer 8 verbleibend 3
+KIHILFE 9904 spieler 4 verworfen verbuendeter 3 bedrohung 2800 armee 10425 einsetzbar 4512 kandidaten 2 wert 1125
+KIUEBERFALL 9904 spieler 4 ende sammeln_zeit
+9930 113C8897
+9960 3DF6788B
+9990 2FD163ED
+10020 7D2F3CA2
+KIVERTEIDIGUNG 10023 spieler 3 bedrohung 2300 einheiten 1 wert 225 ort 852 978
+KIFOKUS 10050 spieler 3 gegner 5 vorher 6 grund druck kosten 2095
+10050 0F6FAB45
+KIFOKUS 10075 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+10080 375E949D
+10110 9945326F
+10140 CEED1489
+10170 25A7EBBD
+10200 7628FE64
+10230 C48D33D6
+10260 B08CD639
+10290 DAE71B4F
+10320 6444B5C5
+10350 94CD4D4B
+10380 777DC346
+10410 4DF84E42
+10440 D9FF905A
+10470 0C3F99BD
+10500 88BDCF87
+10530 0E886C50
+10560 EBB55675
+10590 BA468780
+10620 2DEA481D
+10650 CBFAAE5D
+10680 A8D0546B
+10710 483C7E56
+10740 6425A15C
+10770 D3D1DC0E
+KISUPERWAFFE 10800 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9400 radius 300
+10800 1E133C2D
+STATE frame 10800 mode 2 players 8 objects 375 recorder 0 particles 149/701
+KISUPERWAFFE 10807 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9300 radius 300
+10830 E05A1040
+10860 1D2D756A
+KIHAUSHALT 10863 spieler 3 geld 1850 basis 1000 frei 850 vorrang_offen 1
+KIWIRTSCHAFT 10863 spieler 3 lage vorrat 34575 zentren 2 geld 1850 hacker 0 sammler 5 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 4322 restzeit_min 8.0 investieren 0
+KIHAUSHALT 10864 spieler 4 geld 75 basis 1000 frei -925 vorrang_offen 1
+KIWIRTSCHAFT 10864 spieler 4 lage vorrat 34575 zentren 2 geld 75 hacker 0 sammler 8 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 46744 restzeit_min 0.7 investieren 0
+10890 0B80922A
+10920 DF394B1E
+10950 7AC3D33B
+10980 396CB3F4
+11010 FC60B963
+11040 1A41FFAA
+11070 F98D0830
+11100 10D02DAA
+11130 0E8ED561
+11160 ABA60822
+KIVERTEIDIGUNG 11164 spieler 4 bedrohung 900 einheiten 6 wert 2200 ort 2559 1134
+11190 9B810D82
+11220 1D5A46C6
+KIFOKUS 11250 spieler 3 gegner 6 vorher 5 grund druck kosten 1730
+11250 6795E865
+KIFOKUS 11275 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+11280 3E13B21C
+11310 DC947ECB
+11340 362E1A93
+11370 A8AF1677
+11400 8FA9FC30
+11430 55A67532
+11460 2DCBA73F
+11490 86B2726F
+11520 64DEE6F3
+11550 916D52DA
+11580 A13F2215
+KIUEBERFALL 11583 spieler 3 los fahrer 5
+11610 BB4B1BD5
+11640 6324561E
+KIHILFE 11643 spieler 3 verworfen verbuendeter 4 bedrohung 6000 armee 14925 einsetzbar 5162 kandidaten 6 wert 1925
+KIUEBERFALL 11643 spieler 3 ziel AmericaSupplyCenter id 1640 sieger 0 verhaeltnis 1000000.00
+11670 3458A4D6
+11700 1A22FCF3
+STATE frame 11700 mode 2 players 8 objects 422 recorder 0 particles 230/1309
+KIUEBERFALL 11704 spieler 4 bau transport Lazr_AmericaVehicleHumvee fahrer Lazr_AmericaInfantryMissileDefender anzahl 5 kosten 2200
+KIBAU 11704 spieler 4 upgrade Upgrade_ComancheRocketPods kosten 800 geld 12325
+11730 2A7DAAC8
+11760 524BE4D3
+11790 CA99B247
+11820 4C76A268
+KIGEGNERMODELL 11823 spieler 3 ansturm 1 einigeln 0 luft 1 tarnung 1 armee 37200 luftwert 16500 abwehr 8000 getarnt 3200
+KIVERTEIDIGUNG 11823 spieler 3 bedrohung 3200 einheiten 4 wert 1475 ort 936 963
+KIGEGNERMODELL 11824 spieler 4 ansturm 1 einigeln 0 luft 1 tarnung 1 armee 37200 luftwert 16500 abwehr 8000 getarnt 3200
+KIVERTEIDIGUNG 11824 spieler 4 bedrohung 6000 einheiten 2 wert 450 ort 2633 1060
+11850 F995A869
+11880 6DC6BA33
+KIVERTEIDIGUNG 11884 spieler 4 bedrohung 6000 einheiten 1 wert 225 ort 2628 1035
+11910 C21DFFE0
+11940 B3E476B8
+11970 6416FAEF
+12000 76A3B3A4
+KIUEBERFALL 12003 spieler 3 rueckzug prognose
+12030 0A68C67F
+12060 BBFD31E9
+KIHILFE 12063 spieler 3 verworfen verbuendeter 4 bedrohung 7900 armee 13825 einsetzbar 4612 kandidaten 6 wert 1925
+12090 886E5FD8
+12120 38F3AF70
+KIUEBERFALL 12123 spieler 3 heim fahrer 5
+12150 2DBE44DB
+12180 02157C23
+KIVERTEIDIGUNG 12184 spieler 4 bedrohung 8800 einheiten 1 wert 700 ort 2510 893
+12210 AF0DDEC3
+12240 8C9F65ED
+KIHILFE 12243 spieler 3 verworfen verbuendeter 4 bedrohung 6000 armee 13825 einsetzbar 4612 kandidaten 6 wert 1925
+12270 51AAD102
+12300 90BE5FE8
+KIVERTEIDIGUNG 12304 spieler 4 bedrohung 4900 einheiten 1 wert 225 ort 2476 845
+12330 81F5AC51
+12360 F0E6B643
+KIVERTEIDIGUNG 12364 spieler 4 bedrohung 2900 einheiten 2 wert 600 ort 2481 847
+12390 A78222EB
+12420 148E71CC
+12450 884E8293
+12480 E932C76D
+KIVERTEIDIGUNG 12484 spieler 4 bedrohung 2000 einheiten 1 wert 300 ort 2443 793
+12510 8F4A882B
+12540 FFEE1691
+KIBAU 12544 spieler 4 upgrade Upgrade_AmericaRangerFlashBangGrenade kosten 800 geld 13525
+12570 7E7B6210
+KISUPERWAFFE 12600 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 10100 radius 300
+12600 0CA0334A
+STATE frame 12600 mode 2 players 8 objects 416 recorder 0 particles 113/896
+KIVERTEIDIGUNG 12603 spieler 3 bedrohung 900 einheiten 1 wert 225 ort 742 1094
+KISUPERWAFFE 12608 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 13000 radius 300
+12630 C5724960
+KISUPERWAFFE 12655 spieler 4 macht SuperweaponA10ThunderboltMissileStrike gegner 6 ziel_id 362 wert 7000 radius 50
+12660 8952C4F9
+KIHAUSHALT 12663 spieler 3 geld 600 basis 1000 frei -400 vorrang_offen 1
+KIWIRTSCHAFT 12663 spieler 3 lage vorrat 28575 zentren 2 geld 600 hacker 0 sammler 6 bedarf 2500 einnahmebauten 0 technik 0 frei 0 sammelrate 5198 restzeit_min 5.5 investieren 0
+KIHAUSHALT 12664 spieler 4 geld 13725 basis 1000 frei 12725 vorrang_offen 1
+KIWIRTSCHAFT 12664 spieler 4 lage vorrat 28575 zentren 2 geld 13725 hacker 0 sammler 9 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 26409 restzeit_min 1.1 investieren 0
+12690 80D54A8B
+12720 0EF31DA7
+KIFOKUS 12750 spieler 3 gegner 5 vorher 6 grund druck kosten 1850
+12750 8848FB7B
+KIFOKUS 12775 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+12780 D1215111
+KIHILFE 12784 spieler 4 start verbuendeter 3 bedrohung 3000 einheiten 8 wert 2800 ort 971 1099 armee 7500 einsetzbar 2850 kandidaten 8 wert 2800
+KIGEFECHT 12795 spieler 4 lage fokus 7 abstand 0 verteilt 0 eigene 8 feinde 5
+12810 B489C9AC
+12840 FD5AC873
+12870 2893B181
+12900 71D7BF80
+12930 36DA9D00
+12960 508A961F
+12990 0EBC93DB
+13020 3E8E8688
+13050 E764A95F
+13080 068EE20C
+KIGEFECHT 13095 spieler 4 lage fokus 10 abstand 17 verteilt 0 eigene 8 feinde 7
+13110 5769C900
+13140 085F3966
+13170 B96C045B
+13200 7745EC75
+13230 F9C18EF7
+13260 7DB2C2D1
+13290 5FC435BD
+13320 DFCCBF6F
+13350 9206C7A4
+13380 2FCE6FD1
+KIGEFECHT 13395 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 8 feinde 6
+13410 9673BA94
+13440 372CD860
+KIBAU 13444 spieler 4 einheit Lazr_AmericaInfantryPathfinder kosten 600 geld 10025 wahl detektor
+13470 C4CAA4C3
+13500 62D86526
+STATE frame 13500 mode 2 players 8 objects 401 recorder 0 particles 112/596
+KIUEBERFALL 13503 spieler 3 los fahrer 5
+13530 639FBB6D
+KISUPERWAFFE 13537 spieler 3 macht AirF_SuperweaponA10ThunderboltMissileStrike warten wert 2000
+13560 B041908E
+KIUEBERFALL 13563 spieler 3 ziel Lazr_AmericaSupplyCenter id 222 sieger 0 verhaeltnis 4.64
+13590 656C2AF2
+13620 1CF237CC
+13650 CC68DF60
+13680 D3640B7A
+13710 6C64EFFC
+13740 577450F9
+13770 2BE977F5
+13800 9300753D
+KIGEFECHT 13815 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 7 feinde 3
+13830 C947AF13
+13860 2801FDC2
+13890 B162EFA1
+13920 436D4BD0
+13950 1F143874
+13980 18FA3765
+KIVERTEIDIGUNG 13984 spieler 4 bedrohung 2000 einheiten 4 wert 3300 ort 2412 1071
+KIHILFE 13984 spieler 4 ende eigene_basis dauer 40 verbleibend 7
+14010 2CD843E5
+14040 539A8E4D
+KIBAU 14044 spieler 4 einheit Lazr_AmericaInfantryPathfinder kosten 600 geld 8675 wahl detektor
+14070 D3603730
+14100 5B0844AD
+KIBAU 14104 spieler 4 upgrade Upgrade_AmericaBunkerBusters kosten 1500 geld 6575
+14130 1E362B90
+14160 9010C993
+14190 7B3498A7
+14220 44BDFF16
+14250 98CEE680
+14280 FF966788
+14310 0F681734
+14340 C3C17E6B
+KIBAU 14344 spieler 4 einheit Lazr_AmericaInfantryMissileDefender kosten 300 geld 5675 wahl konter
+14370 4E0AB30C
+KISUPERWAFFE 14400 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9400 radius 300
+14400 B16F82AB
+STATE frame 14400 mode 2 players 8 objects 430 recorder 0 particles 171/791
+KIVERTEIDIGUNG 14403 spieler 3 bedrohung 1400 einheiten 1 wert 225 ort 981 799
+KIHILFE 14404 spieler 4 start verbuendeter 3 bedrohung 2800 einheiten 9 wert 4950 ort 1038 932 armee 11850 einsetzbar 5025 kandidaten 9 wert 4950
+KISUPERWAFFE 14409 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9525 radius 300
+KIGEFECHT 14415 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 4
+14430 4D01FF14
+14460 3383ED09
+KIUEBERFALL 14463 spieler 3 ziel Lazr_AmericaSupplyCenter id 705 sieger 1 verhaeltnis 0.64
+KIHAUSHALT 14463 spieler 3 geld 150 basis 1000 frei -850 vorrang_offen 1
+KIWIRTSCHAFT 14463 spieler 3 lage vorrat 22425 zentren 2 geld 150 hacker 0 sammler 7 bedarf 2500 einnahmebauten 0 technik 0 frei 0 sammelrate 5712 restzeit_min 3.9 investieren 0
+KIHAUSHALT 14464 spieler 4 geld 6375 basis 1000 frei 5375 vorrang_offen 1
+KIWIRTSCHAFT 14464 spieler 4 lage vorrat 22425 zentren 2 geld 6375 hacker 0 sammler 9 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 16355 restzeit_min 1.4 investieren 0
+14490 1016D698
+14520 F592AB54
+KIUEBERFALL 14523 spieler 3 rueckzug prognose
+KIBAU 14524 spieler 4 upgrade Upgrade_AmericaSentryDroneGun kosten 1000 geld 4150
+14550 0E842404
+14580 990CEB53
+KIVERTEIDIGUNG 14583 spieler 3 bedrohung 1400 einheiten 1 wert 225 ort 578 859
+14610 1381B630
+14640 084969B8
+14670 B2911248
+14700 7ABD24D7
+14730 3E85D75D
+14760 FFDBAF4B
+KIGEFECHT 14760 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 5
+KIBAU 14763 spieler 3 upgrade Upgrade_AmericaChemicalSuits kosten 1000 geld 11100
+KIBAU 14763 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 10100 wahl luftabwehr
+14790 ED195C24
+14820 1F1BA9F2
+14850 22B9D73C
+14880 CD509841
+KIUEBERFALL 14883 spieler 3 heim fahrer 5
+KIVERTEIDIGUNG 14884 spieler 4 bedrohung 2800 einheiten 3 wert 4500 ort 2475 1034
+KIHILFE 14884 spieler 4 ende eigene_basis dauer 16 verbleibend 9
+KISUPERWAFFE 14887 spieler 3 macht AirF_SuperweaponA10ThunderboltMissileStrike gegner 5 ziel_id 660 wert 7200 radius 50
+14910 D9A8AC8B
+14940 830F1018
+KIBAU 14943 spieler 3 upgrade Upgrade_AmericaRangerFlashBangGrenade kosten 800 geld 10600
+14970 C3F54EE2
+KIFOKUS 15000 spieler 3 gegner 6 vorher 5 grund druck kosten 1421
+15000 3652F76F
+KIFOKUS 15025 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+15030 D2503999
+15060 9806C444
+15090 6EA72DA8
+15120 C596E6DC
+15150 B0CB8CC4
+15180 ACB43F0B
+15210 EDB08AFC
+15240 8D58F847
+15270 9B25B34F
+15300 CF8928D6
+STATE frame 15300 mode 2 players 8 objects 434 recorder 0 particles 181/2264
+KIUEBERFALL 15304 spieler 4 ende sammeln_zeit
+15330 A32F22D9
+15360 A28F37E5
+KIVERTEIDIGUNG 15364 spieler 4 bedrohung 2700 einheiten 2 wert 600 ort 2389 1009
+15390 E23879AF
+15420 13886205
+15450 0772B5F5
+15480 81C994B7
+15510 88AF49A5
+15540 B2FF1118
+15570 688D8CBF
+15600 9714C4E1
+KIBAU 15603 spieler 3 upgrade Upgrade_ComancheRocketPods kosten 800 geld 7300
+15630 6D63279A
+15660 AC9E15C6
+15690 5D100076
+15720 A32B9914
+15750 E82180F5
+15780 7DF13FCE
+KIVERTEIDIGUNG 15783 spieler 3 bedrohung 1500 einheiten 2 wert 525 ort 735 1135
+15810 95BE5A5E
+15840 31B09007
+KIBAU 15843 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 7700 wahl luftabwehr
+15870 2B3AAEAD
+15900 84ED3754
+15930 8147457E
+15960 8C7AC35D
+15990 DB4B5098
+16020 45414C99
+16050 C052E623
+16080 E77B5DA0
+16110 6E1245B9
+16140 ABC8D971
+KIVERTEIDIGUNG 16143 spieler 3 bedrohung 900 einheiten 1 wert 300 ort 785 1087
+16170 C003B891
+KISUPERWAFFE 16200 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 13368 radius 300
+16200 1F09CEFB
+STATE frame 16200 mode 2 players 8 objects 447 recorder 0 particles 171/2656
+KISUPERWAFFE 16210 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 3840 wert 22231 radius 300
+16230 3D522E93
+KISUPERWAFFE 16237 spieler 3 macht AirF_SuperweaponSpectreGunship gegner 6 ziel_id 3909 wert 22833 radius 200
+16260 CC709A91
+KIUEBERFALL 16263 spieler 3 ende aufgeloest
+KIHAUSHALT 16263 spieler 3 geld 3950 basis 1000 frei 2950 vorrang_offen 1
+KIWIRTSCHAFT 16263 spieler 3 lage vorrat 16200 zentren 2 geld 3950 hacker 0 sammler 7 bedarf 4500 einnahmebauten 0 technik 0 frei 0 sammelrate 5893 restzeit_min 2.7 investieren 0
+KIHAUSHALT 16264 spieler 4 geld 625 basis 1000 frei -375 vorrang_offen 1
+KIWIRTSCHAFT 16264 spieler 4 lage vorrat 16200 zentren 2 geld 625 hacker 0 sammler 10 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 11215 restzeit_min 1.4 investieren 0
+16290 275D1D12
+16320 43C22D76
+KIVERTEIDIGUNG 16324 spieler 4 bedrohung 3850 einheiten 7 wert 2550 ort 2548 1040
+16350 7EA62274
+16380 DFCCC47F
+KIVERTEIDIGUNG 16384 spieler 4 bedrohung 2450 einheiten 1 wert 300 ort 2515 1066
+16410 3138B3E5
+16440 1FDBCA8B
+16470 6BE0F151
+16500 9CB88F83
+16530 2D5B52A8
+16560 F9B75EE1
+16590 AAC86A6B
+16620 8D9223F3
+16650 FF2B992E
+16680 2B5FD728
+16710 4A94B6C1
+16740 88F7A415
+16770 9A1B57AD
+16800 13738E94
+16830 60EAD87F
+16860 B971E4AA
+16890 6E8E1C3D
+16920 F53727C3
+KIFOKUS 16950 spieler 3 gegner 5 vorher 6 grund druck kosten 1491
+16950 11610879
+16980 714E88B6
+KIFOKUS 16985 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+17010 D6188B4A
+17040 62CF3AE8
+17070 B9D50466
+17100 9D9F3FBD
+STATE frame 17100 mode 2 players 8 objects 471 recorder 0 particles 207/1142
+KIVERTEIDIGUNG 17104 spieler 4 bedrohung 1100 einheiten 2 wert 900 ort 2576 1110
+17130 C3FA1178
+17160 ADB464E7
+KIHILFE 17164 spieler 4 start verbuendeter 3 bedrohung 6150 einheiten 13 wert 5325 ort 644 882 armee 10650 einsetzbar 5325 kandidaten 15 wert 7050
+KIGEFECHT 17175 spieler 4 lage fokus 5 abstand 1 verteilt 0 eigene 13 feinde 13
+17190 8989467E
+17220 F8288C82
+17250 45B632B0
+17280 EE440590
+KIHILFE 17284 spieler 4 ende eigene_basis dauer 4 verbleibend 13
+17310 BBD6FBD3
+17340 F4E6C982
+17370 81016493
+17400 3C4A799E
+17430 6F42B125
+17460 E17990C8
+KIHILFE 17464 spieler 4 start verbuendeter 3 bedrohung 4350 einheiten 9 wert 4050 ort 708 835 armee 10650 einsetzbar 5325 kandidaten 9 wert 4050
+KIGEFECHT 17475 spieler 4 lage fokus 3 abstand 7 verteilt 0 eigene 9 feinde 8
+17490 F3394106
+17520 6CB809DB
+17550 23A690DA
+17580 76D2301F
+17610 43D6B3F3
+17640 91FCEBEE
+KIVERTEIDIGUNG 17643 spieler 3 bedrohung 4050 einheiten 2 wert 450 ort 772 882
+KIHILFE 17644 spieler 4 ende eigene_basis dauer 6 verbleibend 9
+17670 644D5F1E
+17700 CE815044
+KIVERTEIDIGUNG 17703 spieler 3 bedrohung 3750 einheiten 1 wert 800 ort 785 851
+17730 56E837A8
+17760 BAB80215
+17790 C67372BC
+17820 8B8A4C7A
+17850 99C557BC
+17880 600BAA94
+17910 2CC250A9
+17940 ED21BD11
+17970 FEC7259A
+KISUPERWAFFE 18000 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8700 radius 300
+18000 28F9336E
+STATE frame 18000 mode 2 players 8 objects 457 recorder 0 particles 195/2088
+KISUPERWAFFE 18011 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8600 radius 300
+18030 BE7AB9F1
+18060 EBA5F85B
+KIHAUSHALT 18063 spieler 3 geld 60 basis 1000 frei -940 vorrang_offen 1
+KIWIRTSCHAFT 18063 spieler 3 lage vorrat 10275 zentren 2 geld 60 hacker 0 sammler 7 bedarf 4500 einnahmebauten 0 technik 0 frei 0 sammelrate 5947 restzeit_min 1.7 investieren 0
+KIVERTEIDIGUNG 18064 spieler 4 bedrohung 3100 einheiten 1 wert 225 ort 2458 1012
+KIHAUSHALT 18064 spieler 4 geld 775 basis 1000 frei -225 vorrang_offen 1
+KIWIRTSCHAFT 18064 spieler 4 lage vorrat 32175 zentren 3 geld 775 hacker 0 sammler 10 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 8720 restzeit_min 3.7 investieren 0
+18090 252A5F57
+18120 B0F8D400
+KIVERTEIDIGUNG 18124 spieler 4 bedrohung 3100 einheiten 1 wert 225 ort 2458 1012
+KIFOKUS 18150 spieler 3 gegner 6 vorher 5 grund druck kosten 1624
+18150 3E064C0E
+18180 C89F93F0
+KIHILFE 18183 spieler 3 start verbuendeter 4 bedrohung 3100 einheiten 7 wert 4850 ort 2458 1012 armee 15700 einsetzbar 7850 kandidaten 8 wert 5150
+KIFOKUS 18185 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+KIGEFECHT 18195 spieler 3 lage fokus 7 abstand 0 verteilt 0 eigene 7 feinde 5
+18210 773A0B4B
+18240 190DBCAF
+18270 5C64D7F3
+18300 C24529B1
+18330 DC12FA2E
+18360 47F5778F
+18390 2FFC9B8A
+18420 1AA9C23F
+18450 F16056B4
+18480 565B9F21
+18510 2540ECF0
+KIGEFECHT 18510 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 7 feinde 5
+18540 69C20533
+18570 F3B376B1
+18600 7632A011
+18630 8AA4E5B8
+18660 249D294F
+18690 6E4E80C5
+18720 40D119D8
+18750 8F786A83
+18780 B95AC8A3
+KIVERTEIDIGUNG 18783 spieler 3 bedrohung 1400 einheiten 1 wert 300 ort 854 822
+KIHILFE 18783 spieler 3 ende eigene_basis dauer 20 verbleibend 7
+18810 117DC78B
+18840 02691D6B
+18870 BFEC6994
+18900 EBD131C8
+STATE frame 18900 mode 2 players 8 objects 469 recorder 0 particles 221/2738
+18930 78FD23D0
+18960 FB305823
+18990 6C0493B8
+19020 6956E7E7
+19050 45B016D7
+19080 0783E337
+19110 631ADD23
+19140 14729794
+19170 C150FF4A
+19200 3FE09EA1
+19230 56B2FD59
+19260 2C43498E
+19290 6C1F5C8D
+19320 4B4D2CC7
+19350 FC759606
+19380 084A0C76
+KIGEGNERMODELL 19384 spieler 4 ansturm 0 einigeln 0 luft 1 tarnung 1 armee 18800 luftwert 9000 abwehr 14000 getarnt 0
+19410 B850EE97
+19440 E80EBB0B
+19470 9F93A74A
+19500 7AB45A61
+19530 50F8B8C8
+19560 E8219836
+19590 DB883A96
+19620 7946B6C5
+KIGEGNERMODELL 19623 spieler 3 ansturm 0 einigeln 0 luft 1 tarnung 1 armee 20575 luftwert 10400 abwehr 13000 getarnt 0
+19650 AC953CA3
+19680 1341D46C
+KIHILFE 19683 spieler 3 start verbuendeter 4 bedrohung 8250 einheiten 16 wert 8175 ort 2348 1183 armee 13075 einsetzbar 9152 kandidaten 16 wert 8175
+KIWIRTSCHAFT 19683 spieler 3 bau AirF_AmericaSupplyDropZone bestand 1 ziel 2 vorrat 4875 grund knapp
+KIVERTEIDIGUNG 19684 spieler 4 bedrohung 1400 einheiten 1 wert 300 ort 2664 940
+KIGEFECHT 19695 spieler 3 lage fokus 7 abstand 2 verteilt 0 eigene 16 feinde 15
+19710 49D4A1CA
+19740 B33BBD39
+19770 957DBD61
+KISUPERWAFFE 19800 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 15100 radius 300
+19800 7D1AC940
+STATE frame 19800 mode 2 players 8 objects 463 recorder 0 particles 337/6358
+KISUPERWAFFE 19812 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 3799 wert 20725 radius 300
+19830 64D1F6A8
+19860 A23F9DAF
+KIHAUSHALT 19863 spieler 3 geld 500 basis 1000 frei -500 vorrang_offen 1
+KIWIRTSCHAFT 19863 spieler 3 lage vorrat 4200 zentren 2 geld 500 hacker 0 sammler 7 bedarf 7000 einnahmebauten 0 technik 0 frei 0 sammelrate 5973 restzeit_min 0.7 investieren 0
+KIHAUSHALT 19864 spieler 4 geld 475 basis 1000 frei -525 vorrang_offen 1
+KIWIRTSCHAFT 19864 spieler 4 lage vorrat 24900 zentren 3 geld 475 hacker 0 sammler 8 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 7660 restzeit_min 3.3 investieren 0
+19890 F60E6444
+19920 89518B21
+19950 0D8DAD53
+19980 4CCD5E94
+KIGEFECHT 19995 spieler 3 lage fokus 5 abstand 24 verteilt 0 eigene 15 feinde 14
+20010 6D0C0A8C
+20040 54460114
+20070 8EF88A6D
+20100 B45D6945
+20130 6765FF24
+20160 AC155F08
+20190 60D9D166
+20220 AEAD595D
+20250 F9908170
+20280 F8C8C61E
+KIVERTEIDIGUNG 20284 spieler 4 bedrohung 1725 einheiten 1 wert 225 ort 2521 808
+KIGEFECHT 20295 spieler 3 lage fokus 5 abstand 2 verteilt 0 eigene 14 feinde 4
+20310 4ED54505
+20340 34552D0C
+20370 7268EBEA
+20400 D7EF5905
+20430 F6C81167
+20460 DBF62CC8
+20490 ADA50348
+20520 0927D05C
+20550 9690001F
+20580 DBA4500D
+KIGEFECHT 20595 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 14 feinde 12
+20610 6AE615A3
+20640 E4714618
+20670 7A2E2E01
+20700 639CE760
+STATE frame 20700 mode 2 players 8 objects 443 recorder 0 particles 146/2146
+20730 EFDFA708
+KISUPERWAFFE 20745 spieler 4 macht SuperweaponA10ThunderboltMissileStrike gegner 6 ziel_id 825 wert 5400 radius 50
+20760 E0488BFA
+20790 D4F7A5FF
+20820 2CE1ACC1
+KIHILFE 20823 spieler 3 verstaerkung einheiten 4 wert 2700 bedrohung 5625
+KIFOKUS 20850 spieler 3 gegner 5 vorher 6 grund druck kosten 1391
+20850 41247512
+20880 A85979A2
+KIFOKUS 20885 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+KIGEFECHT 20895 spieler 3 lage fokus 10 abstand 0 verteilt 0 eigene 15 feinde 22
+20910 73316A65
+20940 B53CC3E0
+KIHILFE 20944 spieler 4 verworfen verbuendeter 3 bedrohung 5200 armee 3400 einsetzbar 2380 kandidaten 1 wert 300
+20970 C874F34A
+21000 864A3E81
+21030 3D4B6786
+21060 98DBA3ED
+21090 83B5701D
+21120 976D7753
+KIVERTEIDIGUNG 21123 spieler 3 bedrohung 900 einheiten 2 wert 525 ort 956 944
+KIHILFE 21123 spieler 3 ende eigene_basis dauer 48 verbleibend 15
+21150 EE270BF3
+21180 71F1B45D
+21210 8EE191EE
+21240 96F949B5
+KIVERTEIDIGUNG 21244 spieler 4 bedrohung 2225 einheiten 2 wert 450 ort 2556 1123
+21270 9471950F
+21300 3E85161D
+KIHILFE 21303 spieler 3 start verbuendeter 4 bedrohung 5775 einheiten 17 wert 8900 ort 791 1328 armee 12725 einsetzbar 8908 kandidaten 17 wert 8900
+KIGEFECHT 21315 spieler 3 lage fokus 15 abstand 0 verteilt 0 eigene 17 feinde 36
+21330 E4388AB3
+21360 2C8CFCF6
+KIHILFE 21363 spieler 3 ende eigene_basis dauer 2 verbleibend 17
+21390 3645EF76
+21420 82024055
+KIVERTEIDIGUNG 21423 spieler 3 bedrohung 1500 einheiten 1 wert 225 ort 593 1116
+21450 8D00177B
+21480 B059D538
+21510 246285C1
+21540 AA5BC981
+KIHILFE 21543 spieler 3 start verbuendeter 4 bedrohung 6675 einheiten 15 wert 8225 ort 783 1302 armee 12900 einsetzbar 9030 kandidaten 15 wert 8225
+21570 D7B05494
+KISUPERWAFFE 21600 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 290 wert 14598 radius 300
+21600 F07B9879
+STATE frame 21600 mode 2 players 8 objects 506 recorder 0 particles 325/1228
+KIHILFE 21603 spieler 3 ende eigene_basis dauer 2 verbleibend 15
+KISUPERWAFFE 21613 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 290 wert 17801 radius 300
+21630 66F38B72
+KISUPERWAFFE 21648 spieler 3 macht SuperweaponDaisyCutter gegner 5 ziel_id 9093 wert 12383 radius 170
+KISUPERWAFFE 21648 spieler 3 macht AirF_SuperweaponSpectreGunship gegner 5 ziel_id 9093 wert 14283 radius 200
+21660 0D17F88A
+KIHAUSHALT 21663 spieler 3 geld 450 basis 1000 frei -550 vorrang_offen 1
+KIWIRTSCHAFT 21663 spieler 3 lage vorrat 0 zentren 2 geld 450 hacker 0 sammler 6 bedarf 7000 einnahmebauten 0 technik 0 frei 0 sammelrate 5499 restzeit_min 0.0 investieren 0
+KIHAUSHALT 21664 spieler 4 geld 600 basis 1000 frei -400 vorrang_offen 1
+KIWIRTSCHAFT 21664 spieler 4 lage vorrat 20100 zentren 3 geld 600 hacker 0 sammler 3 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 7242 restzeit_min 2.8 investieren 0
+21690 68219A41
+21720 C692C4A6
+KIVERTEIDIGUNG 21723 spieler 3 bedrohung 1350 einheiten 1 wert 1300 ort 549 1081
+21750 5590F590
+21780 CC6A2E8D
+KIVERTEIDIGUNG 21783 spieler 3 bedrohung 2850 einheiten 1 wert 800 ort 633 1097
+21810 704A8317
+21840 03EDF33F
+21870 8ECFE1A9
+21900 527936BA
+21930 9AC6C95A
+21960 21545061
+21990 A77D91B0
+22020 99DCC1EA
+22050 141D8A75
+22080 EBDD7586
+22110 28B3B731
+22140 4903D723
+KIVERTEIDIGUNG 22143 spieler 3 bedrohung 4350 einheiten 3 wert 900 ort 664 923
+22170 767BC81D
+22200 8C420CDD
+KIWIRTSCHAFT 22204 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 3 ziel 9
+KIWIRTSCHAFT 22204 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 9
+KIWIRTSCHAFT 22204 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 9
+KIBAU 22204 spieler 4 einheit Lazr_AmericaTankAvenger kosten 1500 geld 16000 wahl luftabwehr
+22230 D9A3F369
+22260 C2BDA169
+KIVERTEIDIGUNG 22263 spieler 3 bedrohung 4950 einheiten 2 wert 450 ort 782 944
+KIUEBERFALL 22263 spieler 3 bau transport AirF_AmericaVehicleHumvee fahrer AirF_AmericaInfantryColonelBurton anzahl 0 kosten 8300
+KIBAU 22263 spieler 3 upgrade Upgrade_AmericaMOAB kosten 4000 geld 13495
+KIBAU 22263 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 9495 wahl konter
+22290 3B3102DE
+22320 76DF2D0A
+KIVERTEIDIGUNG 22323 spieler 3 bedrohung 4425 einheiten 2 wert 450 ort 784 938
+22350 D433222F
+22380 600C2D98
+KIVERTEIDIGUNG 22383 spieler 3 bedrohung 4425 einheiten 2 wert 450 ort 829 908
+22410 04A2E980
+22440 ECF36062
+22470 657C98B9
+22500 7DC7597F
+STATE frame 22500 mode 2 players 8 objects 600 recorder 0 particles 499/1768
+KIVERTEIDIGUNG 22503 spieler 3 bedrohung 5325 einheiten 1 wert 300 ort 698 962
+22530 574DFA3B
+22560 DF604C06
+KIWIRTSCHAFT 22564 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 6
+22590 8ADF728E
+22620 82430413
+KIVERTEIDIGUNG 22623 spieler 3 bedrohung 2325 einheiten 1 wert 300 ort 585 1048
+22650 61C040EA
+22680 E954D752
+KIVERTEIDIGUNG 22683 spieler 3 bedrohung 2025 einheiten 1 wert 225 ort 602 1066
+22710 ED617CD6
+22740 409924B8
+KIBAU 22743 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 9645 wahl konter
+22770 75071E22
+22800 753A6CCB
+22830 137AE5A6
+KISUPERWAFFE 22848 spieler 3 macht AirF_SuperweaponA10ThunderboltMissileStrike gegner 5 ziel_id 949 wert 5400 radius 50
+22860 C052A1ED
+22890 7271544B
+22920 3BEF9FA5
+KIVERTEIDIGUNG 22923 spieler 3 bedrohung 1125 einheiten 1 wert 225 ort 704 978
+KIBAU 22923 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 9345 wahl konter
+KIWIRTSCHAFT 22924 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 3 ziel 6
+22950 16A2B703
+22980 D4EC52A1
+KIVERTEIDIGUNG 22983 spieler 3 bedrohung 900 einheiten 1 wert 300 ort 755 965
+23010 EB92A789
+23040 572B6E09
+KIHILFE 23043 spieler 3 start verbuendeter 4 bedrohung 6400 einheiten 19 wert 7075 ort 2136 1092 armee 13625 einsetzbar 9538 kandidaten 19 wert 7075
+KIGEFECHT 23055 spieler 3 lage fokus 8 abstand 0 verteilt 0 eigene 19 feinde 6
+23070 66447176
+23100 6CB05CB4
+KIHILFE 23103 spieler 3 ende eigene_basis dauer 2 verbleibend 19
+KIBAU 23103 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 4595 wahl konter
+23130 5A847B4D
+23160 63B7E8B8
+KIVERTEIDIGUNG 23163 spieler 3 bedrohung 950 einheiten 1 wert 225 ort 526 1099
+23190 34441BA0
+23220 CE4AC1DD
+KIVERTEIDIGUNG 23223 spieler 3 bedrohung 950 einheiten 1 wert 300 ort 554 1063
+23250 AD5DA7C0
+23280 5CF96126
+KIVERTEIDIGUNG 23283 spieler 3 bedrohung 950 einheiten 1 wert 1500 ort 559 1075
+KIWIRTSCHAFT 23284 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 6
+23310 DF2C7FDE
+23340 3B229E27
+KIVERTEIDIGUNG 23343 spieler 3 bedrohung 950 einheiten 2 wert 525 ort 544 1072
+23370 ECAD33C1
+KIFOKUS 23400 spieler 3 gegner 6 vorher 5 grund druck kosten 1643
+KISUPERWAFFE 23400 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 1769 wert 20580 radius 300
+23400 FF1D61AC
+STATE frame 23400 mode 2 players 8 objects 542 recorder 0 particles 626/2574
+KIHILFE 23403 spieler 3 start verbuendeter 4 bedrohung 6100 einheiten 17 wert 5550 ort 2757 690 armee 16400 einsetzbar 11480 kandidaten 17 wert 5550
+KISUPERWAFFE 23414 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8175 radius 300
+KIGEFECHT 23415 spieler 3 lage fokus 8 abstand 0 verteilt 0 eigene 17 feinde 2
+23430 847C2F53
+KIFOKUS 23435 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+23460 B6BEC804
+KIHAUSHALT 23463 spieler 3 geld 1505 basis 1000 frei 505 vorrang_offen 1
+KIWIRTSCHAFT 23463 spieler 3 lage vorrat 0 zentren 2 geld 1505 hacker 0 sammler 3 bedarf 2000 einnahmebauten 2 technik 0 frei 0 sammelrate 2975 restzeit_min 0.0 investieren 1
+KIHAUSHALT 23464 spieler 4 geld 2500 basis 700 frei 1800 vorrang_offen 1
+KIWIRTSCHAFT 23464 spieler 4 lage vorrat 18000 zentren 2 geld 2500 hacker 0 sammler 2 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 4746 restzeit_min 3.8 investieren 0
+23490 F7406F38
+23520 3635A00B
+23550 3CCE694F
+23580 2480F897
+KIVERTEIDIGUNG 23584 spieler 4 bedrohung 11000 einheiten 3 wert 675 ort 2771 731
+23610 8EBC7C43
+23640 2B86EDCA
+23670 2C215A86
+23700 1D735857
+KIGEFECHT 23715 spieler 3 lage fokus 21 abstand 0 verteilt 0 eigene 17 feinde 0
+23730 60CBC163
+23760 20533DC4
+23790 1CCC4B26
+23820 449F07FD
+23850 6285B16F
+23880 B4613E07
+23910 8A018D7A
+23940 0AB22280
+KIVERTEIDIGUNG 23943 spieler 3 bedrohung 1800 einheiten 1 wert 225 ort 700 1132
+KIHILFE 23943 spieler 3 ende eigene_basis dauer 18 verbleibend 17
+23970 DD9ADB29
+24000 B475A287
+24030 F0236F06
+24060 99D761DF
+24090 E75DA3C7
+24120 F3A81092
+KIHILFE 24123 spieler 3 start verbuendeter 4 bedrohung 10600 einheiten 20 wert 6375 ort 2790 462 armee 19750 einsetzbar 13825 kandidaten 20 wert 6375
+KIGEFECHT 24135 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 20 feinde 5
+24150 24BE2B85
+24180 E0954A38
+24210 C353CDA7
+24240 F033FD52
+KIVERTEIDIGUNG 24243 spieler 3 bedrohung 1100 einheiten 1 wert 225 ort 1137 546
+KIHILFE 24243 spieler 3 ende eigene_basis dauer 4 verbleibend 20
+24270 EF3A1C65
+24300 8CD6B17C
+STATE frame 24300 mode 2 players 8 objects 482 recorder 0 particles 299/1338
+24330 515BECA6
+24360 2E4FE0E4
+24390 4F8B3C14
+24420 5F2BCFC9
+KIHILFE 24423 spieler 3 start verbuendeter 4 bedrohung 8600 einheiten 26 wert 7725 ort 2699 352 armee 21675 einsetzbar 15172 kandidaten 26 wert 7725
+KIGEFECHT 24435 spieler 3 lage fokus 7 abstand 0 verteilt 0 eigene 26 feinde 35
+24450 C15A997C
+24480 6DB77517
+24510 19749B03
+24540 6D0CEA7D
+24570 5480146C
+24600 B4AA4792
+24630 F85F4040
+24660 393AFEC9
+KIHILFE 24663 spieler 3 ende aussichtslos dauer 8 verbleibend 23
+24690 B03D5AA7
+24720 487FD743
+KIVERTEIDIGUNG 24724 spieler 4 bedrohung 23400 einheiten 2 wert 450 ort 2612 548
+24750 CCF1F195
+24780 F7AC45AE
+24810 E5DF8C5F
+24840 B48DEF9A
+KIHILFE 24843 spieler 3 verworfen verbuendeter 4 bedrohung 13600 armee 22500 einsetzbar 15750 kandidaten 21 wert 6600
+24870 EFB8972B
+24900 8FBFC705
+24930 4FF6738A
+24960 3095124F
+24990 3B507DB6
+25020 A8D93C7E
+25050 BA97EEFC
+25080 8690276D
+25110 35721017
+25140 A2EA5202
+25170 3026EC31
+KIFOKUS 25200 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2388
+KISUPERWAFFE 25200 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8532 radius 300
+25200 953CADB3
+STATE frame 25200 mode 2 players 8 objects 489 recorder 0 particles 218/995
+25230 49AFF53E
+KIFOKUS 25235 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+25260 D28053C5
+KIHAUSHALT 25263 spieler 3 geld 125 basis 1000 frei -875 vorrang_offen 1
+KIWIRTSCHAFT 25263 spieler 3 lage vorrat 0 zentren 2 geld 125 hacker 0 sammler 0 bedarf 6500 einnahmebauten 2 technik 0 frei 0 sammelrate 1487 restzeit_min 0.0 investieren 1
+KIHAUSHALT 25264 spieler 4 geld 0 basis 700 frei -700 vorrang_offen 1
+KIWIRTSCHAFT 25264 spieler 4 lage vorrat 0 zentren 0 geld 0 hacker 0 sammler 0 bedarf 4000 einnahmebauten 0 technik 0 frei 0 sammelrate 11823 restzeit_min 0.0 investieren 0
+25290 42B27BFB
+25320 9DEB0C9A
+25350 23A6A4BD
+25380 C17BE327
+25410 E211FE9B
+25440 D79942BB
+KIANGRIFF 25443 spieler 3 sammeln gegner 5 einheiten 16 wert 5400 einsetzbar 17150 ort 483 1050
+25470 885DCDB8
+25500 0048F676
+25530 609BAB43
+25560 5FADEFB2
+25590 B5CD2465
+25620 41CCE916
+25650 2B0B9A9A
+25680 6A42251E
+25710 7C892056
+25740 1BB05348
+KIANGRIFF 25743 spieler 3 los allein gegner 5 einheiten 18 wert 5850 ziel 541 1715
+25770 2DEE7DCF
+25800 28F8DD5A
+KIZIEL 25803 spieler 3 ziel Lazr_AmericaSupplyCenter id 222 sieger 0 verhaeltnis 15.95 weg_bedrohung 212
+25830 B7E6DFA0
+25860 634CA93D
+KIUEBERFALL 25863 spieler 3 ende sammeln_zeit
+25890 3DDEF9E4
+25920 1DA7C21D
+25950 5D0F16EC
+25980 BB047A6A
+26010 8EB63481
+26040 222A5230
+26070 E514A2A2
+26100 8EDD42FC
+KIGEFECHT 26100 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 18 feinde 8
+STATE frame 26100 mode 2 players 8 objects 458 recorder 0 particles 146/1347
+26130 78AA9510
+26160 88BAB171
+KIVERTEIDIGUNG 26163 spieler 3 bedrohung 7500 einheiten 3 wert 750 ort 364 979
+KIANGRIFF 26163 spieler 3 ende eigene_basis phase 2 dauer 14 wert 5850 start 5850
+26190 0B1D74F9
+26220 3AE40716
+26250 670464D9
+26280 BDBDFBF2
+26310 607606AE
+26340 DB524D71
+26370 4D2B8EF0
+26400 EBF3A9E0
+26430 AC9F0306
+26460 4EC961AF
+26490 5664D427
+26520 12BF1BD2
+KIHILFE 26524 spieler 4 verworfen verbuendeter 3 bedrohung 12600 armee 0 einsetzbar 0 kandidaten 0 wert 0
+26550 329C81B9
+26580 89EFF8ED
+26610 F8EBBF99
+26640 3737F154
+KIVERTEIDIGUNG 26643 spieler 3 bedrohung 10700 einheiten 2 wert 450 ort 1083 550
+26670 FBB5CD68
+26700 439AF732
+KIVERTEIDIGUNG 26703 spieler 3 bedrohung 12600 einheiten 1 wert 225 ort 1062 577
+KIHILFE 26704 spieler 4 verworfen verbuendeter 3 bedrohung 9500 armee 0 einsetzbar 0 kandidaten 0 wert 0
+26730 AF8F3A8A
+26760 EDB99CD0
+KIVERTEIDIGUNG 26763 spieler 3 bedrohung 12600 einheiten 1 wert 225 ort 1039 588
+26790 6D279E96
+26820 CA9497C4
+26850 3FA9708C
+26880 D889A163
+KIVERTEIDIGUNG 26883 spieler 3 bedrohung 12600 einheiten 2 wert 525 ort 1008 600
+KIHILFE 26884 spieler 4 verworfen verbuendeter 3 bedrohung 12000 armee 0 einsetzbar 0 kandidaten 0 wert 0
+26910 1CE5F368
+26940 B4306F45
+KIVERTEIDIGUNG 26943 spieler 3 bedrohung 12600 einheiten 6 wert 1500 ort 1001 598
+26970 5B101FE8
+END maxFrames 27000
+KISUPERWAFFE 27000 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 10579 radius 300
+27000 064664CD
+STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
+BENCH ticks 26998 mean 1.516 p50 1.427 p95 3.333 p99 4.976 max 19.202 total 40930 ms
+FRAMES frames 26940 mean 1.521 p50 1.432 p95 3.337 p99 4.979 max 28.730 total 40981 ms
+PFADSUCHE 0.2401 ms je Tick mit Anfragen (13118 Ticks, hoechstens 15.161 ms) anfragen 25996 zellen 6834220 warteschlange 2.0 hoechstens 26 rest 0.03 anfragen_je_tick 6504 4924 1602 88 einzeln_hoechstens 15.161 ms
+PFADSUCHE_ARTEN pfad 20974 zellen 1499888 ms 1137.1 hoechstens 15.15 naechster 668 zellen 1811416 ms 719.1 hoechstens 8.04 angriff 3311 zellen 3517267 ms 1202.7 hoechstens 1.84 kosten 435 zellen 1298 ms 0.1 hoechstens 0.00 boden 62 zellen 40131 ms 82.9 hoechstens 12.53 ausweichen 409 zellen 12581 ms 5.1 hoechstens 0.18 sichtlinie 2607065 schritte 16400426 abbrueche 2598620 vorrat_leer 3594 pfad_fehlschlaege 4 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 22448 kleinste 20704 frei_bei_vorrat_leer 0
+LOGIKPHASEN 27001 Ticks, 1.2121 ms je Tick (Mittel/hoechstens ms): skript 0.0861/12.670 gelaende 0.0001/0.240 befehle 0.0015/25.891 updates 0.7586/13.109 ki 0.2291/250.061 bau 0.0002/0.221 partition 0.1143/6.324 tickende 0.0221/0.637
+LOGIKMODULE 57 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): AIUpdateInterface 0.2883 59.8 8.759 PhysicsBehavior 0.0881 109.6 1.927 JetAIUpdate 0.0704 15.5 2.301 PointDefenseLaserUpdate 0.0497 26.8 1.224 ChinookAIUpdate 0.0318 21.7 0.401 DozerAIUpdate 0.0300 8.5 0.702 ProductionUpdate 0.0267 75.2 12.090 TransportAIUpdate 0.0155 1.6 1.126 ObjectWeaponStatusHelper 0.0152 95.8 0.409 MissileAIUpdate 0.0093 4.4 0.356 StealthDetectorUpdate 0.0084 3.8 0.387 SlowDeathBehavior 0.0047 8.5 2.232
+LOGIKSPITZE ab Tick 31: laengster Tick 27000 26.322 ms: skript 0.423 gelaende 0.000 befehle 25.891 updates 0.000 ki 0.003 bau 0.001 partition 0.002 tickende 0.002; laengstes Update 12.090 ms Tick 12418 ProductionUpdate an AmericaBarracks
+GPUEFFEKTE flags 0x1FFFF samples 1 bilder 53 bild 14.4606 ms (53) bodendetail zeichnungen 0.0 von 0.0 felder 216 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 463.6 umlaeufe 0.16
+PARTIKELZEIT simulation 0.0004 ms je Tick (57 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+EXIT code 0

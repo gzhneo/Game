@@ -1,0 +1,29 @@
+# Strassen frei, Nahpruefung zh dogsofwar
+# frame   x      y      zoom       drehung   neigung
+# kurve cautionstrip
+0         0.164  0.435  0.45       0         standard
+120       0.164  0.435  0.45       0         standard
+240       0.164  0.435  0.22       0         standard
+360       0.164  0.435  0.22       0         standard
+# kurve crosswalkyellow
+480       0.714  0.437  0.45       0         standard
+600       0.714  0.437  0.45       0         standard
+720       0.714  0.437  0.22       0         standard
+840       0.714  0.437  0.22       0         standard
+# kurve crosswalkyellow
+960       0.689  0.543  0.45       0         standard
+1080      0.689  0.543  0.45       0         standard
+1200      0.689  0.543  0.22       0         standard
+1320      0.689  0.543  0.22       0         standard
+# kurve crosswalkyellow
+1440      0.570  0.542  0.45       0         standard
+1560      0.570  0.542  0.45       0         standard
+1680      0.570  0.542  0.22       0         standard
+1800      0.570  0.542  0.22       0         standard
+# kurve crosswalkyellow
+1920      0.437  0.561  0.45       0         standard
+2040      0.437  0.561  0.45       0         standard
+2160      0.437  0.561  0.22       0         standard
+2280      0.437  0.561  0.22       0         standard
+2400      0.50   0.50   standard   0         standard
+2520      0.50   0.50   standard   0         standard

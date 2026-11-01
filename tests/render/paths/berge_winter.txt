@@ -1,0 +1,15 @@
+# Berge: Winter Wolf -- je Ort Standardansicht, nah, nah mit flacher Kamera.
+# Erzeugt von tools/render/berge_aufnahmen.py pfade; Orte aus tools/render/map_hang.py.
+# frame   x      y      zoom       drehung   neigung
+0         0.46   0.29   standard   0         standard
+120       0.46   0.29   standard   0         standard
+121       0.46   0.29   0.35       0         standard
+240       0.46   0.29   0.35       0         standard
+241       0.46   0.29   0.60       0         15
+360       0.46   0.29   0.60       0         15
+361       0.82   0.22   standard   180       standard
+480       0.82   0.22   standard   180       standard
+481       0.82   0.22   0.35       180       standard
+600       0.82   0.22   0.35       180       standard
+601       0.82   0.22   0.60       180       15
+720       0.82   0.22   0.60       180       15

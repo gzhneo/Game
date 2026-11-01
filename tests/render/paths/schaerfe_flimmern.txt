@@ -1,0 +1,11 @@
+# Flimmerprobe fuer Mip-Bias und geschaerfte Bodentexturen (TODO 81): Tournament Lake, langsame Schwenks (unter einem
+# Bildpunkt je Frame), damit Unruhe feiner Texturen sichtbar wird. Zuerst nah ueber Gras (Zoom 0,35, Ort wie in
+# boden_nah.txt), dann in Standardhoehe und -neigung, wo der Boden flach im Bild liegt.
+# Auswertung: Differenz aufeinanderfolgender Bilder (--every 1).
+# frame   x      y      zoom       drehung   neigung
+0         0.168  0.171  0.35       0         standard
+60        0.168  0.171  0.35       0         standard
+180       0.176  0.171  0.35       0         standard
+200       0.300  0.250  standard   0         standard
+260       0.300  0.250  standard   0         standard
+380       0.308  0.250  standard   0         standard

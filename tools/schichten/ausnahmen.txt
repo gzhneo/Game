@@ -1,0 +1,13 @@
+# Bekannte Abweichungen von der Schichtung (tools/schichten/pruefen.py), je Zeile Datei|Ziel|Grund, Pfade relativ zu Code/.
+# Abbauen und dann hier streichen; eine Zeile, die nicht mehr vorkommt, laesst die Pruefung scheitern.
+#
+# (d) Debug-Zyklus: WWDebug leitet seine Zusicherungen an die Engine weiter. Spaeter Debug.h/Debug.cpp in die Basis.
+Core/WWDebug/wwdebug.h|GameEngine/Common/Debug.h|(d) Debug-Zyklus, eigener Auftrag
+# (c) Spiellogik -> Geraeteschicht: ScriptEngine fragt den W3D-Asset-Manager. Spaeter eine Schnittstelle in GameClient.
+GameEngine/GameLogic/ScriptEngine/ScriptEngine.cpp|Platform/W3DDevice/GameClient/W3DAssetManagerExposed.h|(c) eigener Auftrag
+GameEngine/GameLogic/ScriptEngine/ScriptEngineDebug.cpp|Platform/W3DDevice/GameClient/W3DAssetManagerExposed.h|(c) eigener Auftrag
+GameEngine/GameLogic/ScriptEngine/ScriptEngineInit.cpp|Platform/W3DDevice/GameClient/W3DAssetManagerExposed.h|(c) eigener Auftrag
+GameEngine/GameLogic/ScriptEngine/ScriptEngineParticleINI.cpp|Platform/W3DDevice/GameClient/W3DAssetManagerExposed.h|(c) eigener Auftrag
+GameEngine/GameLogic/ScriptEngine/ScriptEngineSequential.cpp|Platform/W3DDevice/GameClient/W3DAssetManagerExposed.h|(c) eigener Auftrag
+GameEngine/GameLogic/ScriptEngine/ScriptEngineVariables.cpp|Platform/W3DDevice/GameClient/W3DAssetManagerExposed.h|(c) eigener Auftrag
+GameEngine/GameLogic/ScriptEngine/ScriptEngineXfer.cpp|Platform/W3DDevice/GameClient/W3DAssetManagerExposed.h|(c) eigener Auftrag

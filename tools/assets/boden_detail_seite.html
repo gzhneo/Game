@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boden-Detail Vergleich</title>
+<style>
+:root { --bg:#f4f3ef; --fg:#1d1d1b; --muted:#6b6a64; --line:#d8d6ce; --accent:#2f6f4f; --card:#ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#171816; --fg:#e8e6df; --muted:#9a988f; --line:#34352f; --accent:#7cc39c; --card:#1f201d; } }
+:root[data-theme="dark"] { --bg:#171816; --fg:#e8e6df; --muted:#9a988f; --line:#34352f; --accent:#7cc39c; --card:#1f201d; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font:14px/1.45 system-ui, "Segoe UI", sans-serif; }
+header { padding:14px 16px 8px; border-bottom:1px solid var(--line); }
+h1 { font-size:18px; margin:0 0 4px; }
+.hint { color:var(--muted); font-size:12.5px; }
+.bar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:8px 16px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:5; }
+button, select { font:inherit; padding:4px 10px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); cursor:pointer; }
+button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+.sep { width:1px; height:22px; background:var(--line); margin:0 4px; }
+main { padding:12px 16px 40px; }
+.view { position:relative; max-width:100%; }
+.view img { width:100%; height:auto; display:block; image-rendering:auto; }
+.pair { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.pair figure { margin:0; }
+.pair figcaption, .cap { font-size:12.5px; color:var(--muted); margin:3px 0 0; }
+#lupe { position:absolute; pointer-events:none; width:300px; height:300px; border:2px solid var(--accent); border-radius:6px; display:none; background-repeat:no-repeat; box-shadow:0 2px 12px rgba(0,0,0,.4); }
+table { border-collapse:collapse; margin:12px 0; font-variant-numeric:tabular-nums; }
+th, td { border-bottom:1px solid var(--line); padding:3px 10px; text-align:right; }
+th:first-child, td:first-child { text-align:left; }
+.shots { display:flex; flex-wrap:wrap; gap:4px; }
+.shots button { padding:2px 8px; font-size:12.5px; }
+@media (max-width: 700px) { .pair { grid-template-columns:1fr; } #lupe { width:180px; height:180px; } }
+</style>
+</head>
+<body>
+<header>
+<h1>Boden-Detail (TODO 57 a): CC0-Fotoscans als Detailebene im Gelände</h1>
+<div class="hint">„alt“ = Filter und Boden wie bisher, „Filter“ = Gelände anisotrop 16x, „Detail“ = Detailebene. Tasten 1–8 wählen die Fassung, Leertaste hält die Partnerfassung (ohne/mit Detail) solange gedrückt, L schaltet die Lupe (3-fach), N nebeneinander, ← → Bild. Helligkeit: mittlere Luminanz (Rec. 709, 0..255) des ganzen Bildes und ohne Befehlsleiste.</div>
+</header>
+<div class="bar">
+  <select id="szene"></select>
+  <span class="sep"></span>
+  <span id="fass"></span>
+  <span class="sep"></span>
+  <button id="lupeBtn">Lupe (L)</button>
+  <button id="nebenBtn">Nebeneinander (N)</button>
+</div>
+<main>
+  <div class="shots" id="shots"></div>
+  <p class="cap" id="info"></p>
+  <div id="ansicht"></div>
+  <table id="hell"></table>
+  <div class="hint" id="fuss"></div>
+</main>
+<script>
+const D = /*DATEN*/null;
+const F = D.fassungen;           // [[key, titel], ...]
+let sz = 0, sh = 0, fa = 1, lupe = false, neben = false, halten = false;
+const $ = id => document.getElementById(id);
+function partner(k) { return k.endsWith("_det") ? k.slice(0, -4) : k + "_det"; }
+function shot() { return D.szenen[sz].shots[sh]; }
+function src(k) { return "bilder/" + D.szenen[sz].name + "/" + shot().shot + "_" + k + ".jpg"; }
+function aktiv() { const k = F[fa][0]; return halten && shot().fassungen.includes(partner(k)) ? partner(k) : k; }
+function titel(k) { const f = F.find(x => x[0] === k); return f ? f[1] : k; }
+function baue() {
+  const s = $("szene"); s.innerHTML = "";
+  D.szenen.forEach((x, i) => { const o = document.createElement("option"); o.value = i; o.textContent = x.titel || x.name; s.appendChild(o); });
+  s.value = sz; s.onchange = () => { sz = +s.value; sh = 0; zeige(); };
+  const fb = $("fass"); fb.innerHTML = "";
+  F.forEach((f, i) => { const b = document.createElement("button"); b.textContent = (i + 1) + " " + f[1]; b.onclick = () => { fa = i; zeige(); }; b.id = "f" + i; fb.appendChild(b); });
+  $("lupeBtn").onclick = () => { lupe = !lupe; zeige(); };
+  $("nebenBtn").onclick = () => { neben = !neben; zeige(); };
+}
+function zeige() {
+  const S = D.szenen[sz], x = shot();
+  const sb = $("shots"); sb.innerHTML = "";
+  S.shots.forEach((t, i) => { const b = document.createElement("button"); b.textContent = t.shot.replace("shot_", ""); if (i === sh) b.className = "on"; b.onclick = () => { sh = i; zeige(); }; sb.appendChild(b); });
+  F.forEach((f, i) => { const b = $("f" + i); b.className = i === fa ? "on" : ""; b.disabled = !x.fassungen.includes(f[0]); });
+  $("lupeBtn").className = lupe ? "on" : ""; $("nebenBtn").className = neben ? "on" : "";
+  const k = aktiv();
+  $("info").textContent = S.beschreibung + " — Bild " + x.shot.replace("shot_", "") + (x.notiz ? " (" + x.notiz + ")" : "");
+  const a = $("ansicht");
+  if (neben) {
+    const k1 = F[fa][0], k2 = partner(k1);
+    a.innerHTML = '<div class="pair"><figure class="view"><img src="' + src(k1) + '"><figcaption>' + titel(k1) + '</figcaption></figure>' +
+      (x.fassungen.includes(k2) ? '<figure class="view"><img src="' + src(k2) + '"><figcaption>' + titel(k2) + '</figcaption></figure>' : '') + '</div><div id="lupe"></div>';
+  } else {
+    a.innerHTML = '<div class="view"><img id="haupt" src="' + src(k) + '"><div id="lupe"></div></div><p class="cap">' + titel(k) + '</p>';
+  }
+  lupenHaken();
+  let h = '<tr><th>Fassung</th><th>Helligkeit</th><th>ohne Leiste</th><th>gegen ohne Detail</th><th>gegen alt</th></tr>';
+  const pz = (a, b) => (a && b) ? ((a[1] / b[1] - 1) * 100).toFixed(2).replace(".", ",") + " %" : "–";
+  F.forEach(f => {
+    const v = x.hell[f[0]]; if (!v) return;
+    const p = f[0].endsWith("_det") ? x.hell[partner(f[0])] : null;
+    const alt = f[0].includes("_") ? x.hell[f[0].split("_")[0]] : null;
+    h += '<tr><td>' + f[1] + '</td><td>' + v[0].toFixed(1).replace(".", ",") + '</td><td>' + v[1].toFixed(1).replace(".", ",") + '</td><td>' + pz(v, p) + '</td><td>' + pz(v, alt) + '</td></tr>';
+  });
+  $("hell").innerHTML = h;
+  $("fuss").textContent = D.fuss || "";
+}
+function lupenHaken() {
+  const l = $("lupe"); if (!l) return;
+  document.querySelectorAll(".view img").forEach(img => {
+    img.onmousemove = e => {
+      if (!lupe) { l.style.display = "none"; return; }
+      const r = img.getBoundingClientRect(), pr = l.parentElement.getBoundingClientRect();
+      const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+      l.style.display = "block";
+      l.style.backgroundImage = 'url("' + img.src + '")';
+      l.style.backgroundSize = (img.naturalWidth * 3) + "px " + (img.naturalHeight * 3) + "px";
+      const lw = l.offsetWidth, lh = l.offsetHeight;
+      l.style.backgroundPosition = (-fx * img.naturalWidth * 3 + lw / 2) + "px " + (-fy * img.naturalHeight * 3 + lh / 2) + "px";
+      l.style.left = (e.clientX - pr.left - lw / 2) + "px"; l.style.top = (e.clientY - pr.top - lh / 2) + "px";
+    };
+    img.onmouseleave = () => { l.style.display = "none"; };
+  });
+}
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "SELECT") return;
+  if (e.key >= "1" && e.key <= String(F.length)) { fa = +e.key - 1; zeige(); }
+  else if (e.key === " ") { e.preventDefault(); if (!halten) { halten = true; zeige(); } }
+  else if (e.key === "l" || e.key === "L") { lupe = !lupe; zeige(); }
+  else if (e.key === "n" || e.key === "N") { neben = !neben; zeige(); }
+  else if (e.key === "ArrowRight") { sh = Math.min(sh + 1, D.szenen[sz].shots.length - 1); zeige(); }
+  else if (e.key === "ArrowLeft") { sh = Math.max(sh - 1, 0); zeige(); }
+});
+document.addEventListener("keyup", e => { if (e.key === " ") { halten = false; zeige(); } });
+baue(); zeige();
+</script>
+</body>
+</html>

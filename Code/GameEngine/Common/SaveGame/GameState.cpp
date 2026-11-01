@@ -1,0 +1,1729 @@
+/*
+**	Command & Conquer Generals(tm) / Generals Zero Hour(tm)
+**	Copyright 2025 Electronic Arts Inc.
+**	Modified by GZH Neo, Copyright (C) 2026 GZH Neo
+**
+**	This program is free software: you can redistribute it and/or modify
+**	it under the terms of the GNU General Public License as published by
+**	the Free Software Foundation, either version 3 of the License, or
+**	(at your option) any later version.
+**
+**	This program is distributed in the hope that it will be useful,
+**	but WITHOUT ANY WARRANTY; without even the implied warranty of
+**	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+**	GNU General Public License for more details.
+**
+**	You should have received a copy of the GNU General Public License
+**	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+////////////////////////////////////////////////////////////////////////////////
+//																																						//
+//  (c) 2001-2003 Electronic Arts Inc.																				//
+//																																						//
+////////////////////////////////////////////////////////////////////////////////
+
+// FILE: GameState.cpp ////////////////////////////////////////////////////////////////////////////
+// Author: Colin Day, September 2002
+// Desc:   Game state singleton from which to load and save the game state
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// INCLUDES ///////////////////////////////////////////////////////////////////////////////////////
+#include "PreRTS.h"
+#include "Common/Xfer.h"
+#include "Common/ArchiveFileSystem.h"
+#include "Common/file.h"
+#include "Common/FileSystem.h"
+#include "Common/GameEdition.h"
+#include "Common/GameEngine.h"
+#include "Common/GameState.h"
+#include "Common/GameStateMap.h"
+#include "Common/LatchRestore.h"
+#include "Common/MapObject.h"
+#include "Common/PlayerList.h"
+#include "Common/RandomValue.h"
+#include "Common/Radar.h"
+#include "Common/Team.h"
+#include "Common/WellKnownKeys.h"
+#include "Common/XferLoad.h"
+#include "Common/XferSave.h"
+#include "GameClient/CampaignManager.h"
+#include "GameClient/GadgetListBox.h"
+#include "GameClient/GameClient.h"
+#include "GameClient/GameText.h"
+#include "GameClient/MapUtil.h"
+#include "GameClient/MessageBox.h"
+#include "GameClient/InGameUI.h"
+#include "GameClient/ParticleSys.h"
+#include "GameClient/TerrainVisual.h"
+#include "GameLogic/AI.h"
+#include "GameLogic/AIPathfind.h"
+#include "GameLogic/GameLogic.h"
+#include "GameLogic/GhostObject.h"
+#include "GameLogic/PartitionManager.h"
+#include "GameLogic/ScriptEngine.h"
+#include "GameLogic/SidesList.h"
+#include "GameLogic/TerrainLogic.h"
+#include "Lib/SafeString.h"
+#include "Engine/UserDataFiles.h"
+#include "Engine/Watchdog.h"
+
+// PUBLIC DATA ////////////////////////////////////////////////////////////////////////////////////
+
+// PRIVATE DATA ///////////////////////////////////////////////////////////////////////////////////
+static const Char *SAVE_FILE_EOF       = "SG_EOF";
+
+// Paths under the user data folder may be UTF-8 (see Engine/UserDataFiles.h).
+static std::filesystem::path diskPath( const AsciiString &path )
+{
+	return ::Engine::pathFromNarrow( path.str() );
+}
+
+// Header of every save file: a marker, the format version and the build id. If the version does
+// not match, loading stops with a clear message instead of reading half the save game.
+//
+// **Increase the format version on every change to the save format.**
+static const Char *SAVE_FILE_MARKER    = "ZHSAVE";
+static const Int   SAVE_FILE_FORMAT_VERSION = 1;
+static const Char *SAVE_GAME_EXTENSION = ".sav";
+
+// Write or read the header. **Every** reader that reads a save file from the start must call
+// readSaveFileHeader(); otherwise it takes the marker for the first block name.
+static void writeSaveFileHeader( Xfer *xfer );
+static void readSaveFileHeader( Xfer *xfer );
+
+
+static const Char *ZERO_NAME_ONLY      = "00000000";
+static const Int MAX_SAVE_FILE_NUMBER  =  99999999;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+constexpr char GAME_STATE_BLOCK_STRING[] = "CHUNK_GameState";  // block of save game data with game info data
+constexpr char CAMPAIGN_BLOCK_STRING[] = "CHUNK_Campaign";		 // block of game data that has campaign info
+
+// ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+SaveGameInfo::SaveGameInfo( void )
+{
+
+	date.day					= 0;
+	date.dayOfWeek		= 0;
+	date.hour					= 0;
+	date.milliseconds = 0;
+	date.minute				= 0;
+	date.month				= 0;
+	date.second				= 0;
+	date.year					= 0;
+	missionNumber			= 0;
+	saveFileType			= SAVE_FILE_TYPE_NORMAL;
+	dataCRC						= 0;
+
+}  // end SaveGameInfo
+
+// ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+SaveGameInfo::~SaveGameInfo( void )
+{
+
+}  // end ~SaveGameInfo
+
+// ------------------------------------------------------------------------------------------------
+/** Is this date newer than the other one passed in? */
+// ------------------------------------------------------------------------------------------------
+Bool SaveDate::isNewerThan( SaveDate *other )
+{
+
+	// year
+	if( year > other->year )
+		return TRUE;
+	else if( year < other->year )
+		return FALSE;
+	else
+	{
+
+		// month
+		if( month > other->month )
+			return TRUE;
+		else if( month < other->month )
+			return FALSE;
+		else
+		{
+			
+			// day
+			if( day > other->day )
+				return TRUE;
+			else if( day < other->day )
+				return FALSE;
+			else
+			{
+
+				// hour
+				if( hour > other->hour )
+					return TRUE;
+				else if( hour < other->hour )
+					return FALSE;
+				else
+				{
+
+					// minute
+					if( minute > other->minute )
+						return TRUE;
+					else if( minute < other->minute )
+						return FALSE;
+					else
+					{
+
+						// second
+						if( second > other->second )
+							return TRUE;
+						else if( second < other->second )
+							return FALSE;
+						else
+						{
+
+							// millisecond
+							if( milliseconds > other->milliseconds )
+								return TRUE;
+							else
+								return FALSE;
+
+						}  // end else
+
+					}  // end else
+
+				}  // end else
+
+			}  // end else
+
+		}  // end else
+
+	}  // end else
+
+}  // end isNewerThan
+
+// ------------------------------------------------------------------------------------------------
+/** Find a snapshot block info that matches the token passed in */
+// ------------------------------------------------------------------------------------------------
+GameState::SnapshotBlock *GameState::findBlockInfoByToken( AsciiString token, SnapshotType which )
+{
+
+	// sanity
+	if( token.isEmpty() )
+		return nullptr;
+
+	// search for match our list
+	SnapshotBlock *blockInfo;
+	SnapshotBlockListIterator it;
+	for( it = m_snapshotBlockList[which].begin(); it != m_snapshotBlockList[which].end(); ++it )
+	{
+
+		// get info
+		blockInfo = &(*it);
+
+		// check for match
+		if( blockInfo->blockName == token )
+			return blockInfo;
+
+	}  // end for
+
+	// not found
+	return nullptr;
+
+}  // end findLexiconEntryByToken
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+UnicodeString getUnicodeDateBuffer(SYSTEMTIME timeVal) 
+{
+	// setup date buffer for local region date format
+	#define DATE_BUFFER_SIZE 256
+	UnicodeString displayDateBuffer;
+	wchar_t dateBuffer[ DATE_BUFFER_SIZE ];
+	// cchDate/cchTime count characters, not bytes, for the W functions.
+	GetDateFormatW( LOCALE_SYSTEM_DEFAULT,
+								 DATE_SHORTDATE,
+								 &timeVal,
+								 nullptr,
+								 dateBuffer, static_cast<int>(sizeof(dateBuffer)/sizeof(dateBuffer[0])) );
+	displayDateBuffer.set(dateBuffer);
+	return displayDateBuffer;
+	//displayDateBuffer.format( L"%ls", dateBuffer );
+}															
+
+UnicodeString getUnicodeTimeBuffer(SYSTEMTIME timeVal) 
+{
+	// setup time buffer for local region time format
+	UnicodeString displayTimeBuffer;
+	// setup time buffer for local region time format
+	#define TIME_BUFFER_SIZE 256
+	wchar_t timeBuffer[ TIME_BUFFER_SIZE ];
+	// cchDate/cchTime count characters, not bytes, for the W functions.
+	GetTimeFormatW( LOCALE_SYSTEM_DEFAULT,
+								 TIME_NOSECONDS,
+								 &timeVal,
+								 nullptr,
+								 timeBuffer,
+								 static_cast<int>(sizeof(timeBuffer)/sizeof(timeBuffer[0])) );
+	displayTimeBuffer.set(timeBuffer);
+	return displayTimeBuffer;
+}
+
+
+// ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+GameState::GameState( void )
+{
+
+	m_availableGames = nullptr;
+	m_isInLoadGame = FALSE;
+
+}  // end GameState
+
+// ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+GameState::~GameState( void )
+{
+
+	// clear our snapshot block list
+	for (Int i=0; i<SNAPSHOT_MAX; ++i)
+	m_snapshotBlockList[i].clear();
+
+	// make certain that the post process list is clean
+	m_snapshotPostProcessList.clear();
+
+	// clear any available game 
+	clearAvailableGames();
+
+}  // end ~GameState
+
+// ------------------------------------------------------------------------------------------------
+/** Init the game state subsystem */
+// ------------------------------------------------------------------------------------------------
+void GameState::init( void )
+{
+
+	// add all the snapshot objects to our list of data blocks for save game files
+	addSnapshotBlock( GAME_STATE_BLOCK_STRING,				TheGameState,							SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( CAMPAIGN_BLOCK_STRING,					TheCampaignManager,				SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_GameStateMap",						TheGameStateMap,					SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_TerrainLogic",						TheTerrainLogic,					SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_TeamFactory",						TheTeamFactory,						SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_Players",								ThePlayerList,						SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_GameLogic",							TheGameLogic,							SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_Radar",									TheRadar,									SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_ScriptEngine",						TheScriptEngine,					SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_SidesList",							TheSidesList,							SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_TacticalView",						TheTacticalView,					SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_GameClient",							TheGameClient,						SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_InGameUI",								TheInGameUI,							SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_Partition",							ThePartitionManager,			SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_ParticleSystem",					TheParticleSystemManager,	SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_TerrainVisual",					TheTerrainVisual,					SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_GhostObject",						TheGhostObjectManager,		SNAPSHOT_SAVELOAD );
+	addSnapshotBlock( "CHUNK_AI",											TheAI,										SNAPSHOT_SAVELOAD );
+
+	// add all the snapshot objects to our list of data blocks for deep CRCs of logic
+	addSnapshotBlock( "CHUNK_TeamFactory",						TheTeamFactory,						SNAPSHOT_DEEPCRC_LOGICONLY );
+	addSnapshotBlock( "CHUNK_Players",								ThePlayerList,						SNAPSHOT_DEEPCRC_LOGICONLY );
+	addSnapshotBlock( "CHUNK_GameLogic",							TheGameLogic,							SNAPSHOT_DEEPCRC_LOGICONLY );
+	addSnapshotBlock( "CHUNK_ScriptEngine",						TheScriptEngine,					SNAPSHOT_DEEPCRC_LOGICONLY );
+	addSnapshotBlock( "CHUNK_SidesList",							TheSidesList,							SNAPSHOT_DEEPCRC_LOGICONLY );
+	addSnapshotBlock( "CHUNK_Partition",							ThePartitionManager,			SNAPSHOT_DEEPCRC_LOGICONLY );
+
+	m_isInLoadGame = FALSE;
+
+}  // end init
+
+// ------------------------------------------------------------------------------------------------
+/** Reset */
+// ------------------------------------------------------------------------------------------------a
+void GameState::reset( void )
+{
+
+	// clear the post process snapshot list
+	m_snapshotPostProcessList.clear();
+
+	// clear any available game 
+	clearAvailableGames();
+
+	m_isInLoadGame = FALSE;
+
+}  // end reset
+
+// ------------------------------------------------------------------------------------------------
+/** Clear any available games entries */
+// ------------------------------------------------------------------------------------------------
+void GameState::clearAvailableGames( void )
+{
+	AvailableGameInfo *gameInfo;
+
+	while( m_availableGames )
+	{
+
+		gameInfo = m_availableGames->next;
+		delete m_availableGames;
+		m_availableGames = gameInfo;
+
+	}  // end while
+
+}  // end clearAvailableGames
+
+// ------------------------------------------------------------------------------------------------
+/** Add a snapshot and block name pair to the systems used to load and save */
+// ------------------------------------------------------------------------------------------------
+void GameState::addSnapshotBlock( AsciiString blockName, Snapshot *snapshot, SnapshotType which )
+{
+
+	// sanity
+	if( blockName.isEmpty() || snapshot == nullptr )
+	{
+
+		DEBUG_CRASH(( "addSnapshotBlock: Invalid parameters\n" ));
+		return;
+
+	}  // end if
+
+	// add to the list
+	SnapshotBlock blockInfo;
+	blockInfo.snapshot = snapshot;
+	blockInfo.blockName = blockName;
+	m_snapshotBlockList[which].push_back( blockInfo );
+
+}  // end addSnapshotBlock
+
+// ------------------------------------------------------------------------------------------------
+/** Given the filename of a save file, find the highest filename number */
+// ------------------------------------------------------------------------------------------------
+static void findHighFileNumber( AsciiString filename, void *userData )
+{
+
+	// sanity
+	if( filename.isEmpty() )
+		return;
+
+	// sanity check for ".sav" at the end of the filename
+	if( filename.endsWithNoCase( SAVE_GAME_EXTENSION ) == FALSE )
+		return;
+
+	// strip off the extension at the end of the filename
+	AsciiString nameOnly = filename;
+	for( Int count = 0; count < strlen( SAVE_GAME_EXTENSION ); count++ )
+		nameOnly.removeLastChar();
+	
+	// convert filename (which is only numbers) to a number
+	Int fileNumber = atoi( nameOnly.str() );
+
+	//
+	// atoi will return zero if the string could not be converted, if the filename is
+	// not literally "00000000.sav" then that means the conversion could not be done so
+	// we should reject this filename from further processing
+	//
+	if( fileNumber == 0 && nameOnly.compare( ZERO_NAME_ONLY ) != 0 )
+		return;
+
+	// compare against the file number we're keeping tally of in the user data parameter
+	Int *highFileNumber = static_cast<Int *>(userData);
+	if( fileNumber >= *highFileNumber )
+		*highFileNumber = fileNumber;
+
+}  // end findHighFileNumber
+
+// ------------------------------------------------------------------------------------------------
+/** Given the save files on disk, find the "next" filename to use when saving a game */
+// ------------------------------------------------------------------------------------------------
+AsciiString GameState::findNextSaveFilename( UnicodeString desc )
+{
+// works, but needs approval from mgmt (srj)
+	// GS activating for patch
+#define COCKBEER_DONT_USE_NORMAL_FILE_NAMES_THANKS
+#ifdef USE_NORMAL_FILE_NAMES_THANKS
+
+	Int i;
+	AsciiString adesc;
+	for (i = 0; i < desc.getLength(); ++i)
+	{
+		char c = (char)desc.getCharAt(i);
+		if (isalnum(c))
+			adesc.concat(c);
+		else
+			adesc.concat('_');
+	}
+
+	for (i = 1; i <= 9999; ++i)
+	{
+		AsciiString leaf;
+		leaf.format("%s_%04d%s", adesc.str(), i, SAVE_GAME_EXTENSION);
+
+		AsciiString path = getFilePathInSaveDirectory(leaf);
+		if( !::Engine::UserDataFiles::exists( diskPath( path ) ) )
+			return leaf;	// note that this returns the leaf, not the full path
+	}
+#else
+	//
+	// This method has code to support two modes of finding the next filename, one of
+	// them starts with a filename of 00000000.sav and counts up the number looking for
+	// a file that doesn't exist and therefore a filename we can use (LOWEST_NUMBER).  
+	// The other method iterates all save files and returns a filename that is one larger 
+	// than the largest filename number encountered (HIGHEST_NUMBER)
+	//
+	enum class FindNextFileType { LOWEST_NUMBER = 0, HIGHEST_NUMBER = 1 };
+	FindNextFileType searchType = FindNextFileType::LOWEST_NUMBER;
+
+	if( searchType == FindNextFileType::HIGHEST_NUMBER )
+	{
+
+		// iterate all the save files in the directory and find the highest file number
+		Int highFileNumber = -1;
+		iterateSaveFiles( findHighFileNumber, &highFileNumber );
+
+		// check for a filename that is too big (this is unlikely but theoretically possible)
+		if( highFileNumber + 1 > MAX_SAVE_FILE_NUMBER )
+			return AsciiString::TheEmptyString;
+
+		// construct filename with a number higher than the highest one we found
+		AsciiString filename;
+		filename.format( "%08d%s", highFileNumber + 1, SAVE_GAME_EXTENSION );
+		return filename;
+				
+	}  // end if
+	else if( searchType == FindNextFileType::LOWEST_NUMBER )
+	{
+		AsciiString filename;
+		AsciiString fullPath;
+		Int i = 0;
+
+		while( TRUE )
+		{
+
+			// construct filename (########.sav)
+			filename.format( "%08d%s", i, SAVE_GAME_EXTENSION );
+
+			// construct full path to file given the filename
+			fullPath = getFilePathInSaveDirectory(filename);
+
+			// if file does not exist we're all good
+			if( !::Engine::UserDataFiles::exists( diskPath( fullPath ) ) )
+				return filename;
+
+			// test the text filename
+			i++;
+
+			// check for at the max limit (this is highly unlikely but possible)
+			if( i > MAX_SAVE_FILE_NUMBER )
+				return AsciiString::TheEmptyString;
+
+		}  // end while
+
+	}  // end else if
+	else
+	{
+
+		DEBUG_CRASH(( "GameState::findNextSaveFilename - Unknown file search type '%d'\n", static_cast<Int>(searchType) ));
+		return AsciiString::TheEmptyString;
+
+	}  // end else
+#endif
+
+	// no appropriate filename could be found, return the empty string
+	return AsciiString::TheEmptyString;
+
+}  // end findNextSaveFilename
+
+// ------------------------------------------------------------------------------------------------
+/** Save the current state of the engine in a save file
+	* NOTE: filename is a *filename only* */
+// ------------------------------------------------------------------------------------------------
+SaveCode GameState::saveGame( AsciiString filename, UnicodeString desc, 
+															SaveFileType saveType, SnapshotType which )
+{
+
+	// if there is no filename, this is a new file being created, find an appropriate filename
+	if( filename.isEmpty() )
+		filename = findNextSaveFilename( desc );
+	if( filename.isEmpty() )
+	{
+
+		DEBUG_CRASH(( "GameState::saveGame - Unable to find valid filename for save game\n" ));
+		return SaveCode::SC_NO_FILE_AVAILABLE;
+
+	}  // end if
+
+	// make absolutely sure the save directory exists
+	::Engine::UserDataFiles::createDirectories( diskPath( getSaveDirectory() ) );
+
+	// construct path to file
+	AsciiString filepath = getFilePathInSaveDirectory(filename);
+
+	// Write to a temp file first, then rename, so a crash or power loss in the middle does not
+	// leave half a save game and destroy the previous one.
+	AsciiString temppath = filepath;
+	temppath.concat( ".tmp" );
+	::Engine::UserDataFiles::remove( diskPath( temppath ) );	// left over from an earlier failed attempt
+
+	// save description as current description in the game state
+	m_gameInfo.description = desc;
+
+	// open the save file
+	XferSave xferSave;
+	try {
+		xferSave.open( temppath );
+	} catch(...) {
+		// print error message to the user
+		TheInGameUI->message( "GUI:Error" );
+		DEBUG_LOG(( "Error opening file '%s'\n", filepath.str() ));
+		return SaveCode::SC_ERROR;
+	}
+
+	// save our save file type
+	SaveGameInfo *gameInfo = getSaveGameInfo();
+	gameInfo->saveFileType = saveType;
+
+	// save our mission map name if applicable
+	if( saveType == SAVE_FILE_TYPE_MISSION )
+		gameInfo->missionMapName = TheCampaignManager->getCurrentMap();
+	else
+		gameInfo->missionMapName.clear();
+
+	// set the pristine map to the current campaign map
+	// this is now done during startNewGame()
+//	gameInfo->pristineMapName = TheCampaignManager->getCurrentMap();
+
+	// write the save file
+	try
+	{
+
+		// save file
+		xferSaveData( &xferSave, which );
+
+	}  // end try
+	catch( ... )
+	{
+
+		UnicodeString ufilepath;
+		ufilepath.translate(filepath);
+
+		UnicodeString msg;
+		msg.format( TheGameText->fetch("GUI:ErrorSavingGame"), ufilepath.str() );
+
+		MessageBoxOk(TheGameText->fetch("GUI:Error"), msg, nullptr);
+
+		// close the file and get out of here
+		xferSave.close();
+		::Engine::UserDataFiles::remove( diskPath( temppath ) );	// do not leave a partial file behind
+		return SaveCode::SC_ERROR;
+		
+	}  // end catch
+
+	// close the file
+	xferSave.close();
+
+	// Only now, with the file complete and closed, move it into place. MOVEFILE_REPLACE_EXISTING
+	// replaces the previous save game in one step; if that fails, the old save stays intact.
+	std::string moveError;
+	if( !::Engine::UserDataFiles::replaceFile( diskPath( temppath ), diskPath( filepath ), &moveError ) )
+	{
+		DEBUG_LOG(( "could not move save game from '%s' to '%s' (%s)\n",
+			temppath.str(), filepath.str(), moveError.c_str() ));
+		::Engine::UserDataFiles::remove( diskPath( temppath ) );
+
+		UnicodeString ufilepath;
+		ufilepath.translate( filepath );
+		UnicodeString errorMsg;
+		errorMsg.format( TheGameText->fetch("GUI:ErrorSavingGame"), ufilepath.str() );
+		MessageBoxOk( TheGameText->fetch("GUI:Error"), errorMsg, nullptr );
+		return SaveCode::SC_ERROR;
+	}
+
+	// print message to the user for game successfully saved
+	UnicodeString msg = TheGameText->fetch( "GUI:GameSaveComplete" );
+	TheInGameUI->message( msg );
+
+	return SaveCode::SC_OK;
+
+}  // end saveGame
+
+// ------------------------------------------------------------------------------------------------
+/** A mission save */
+// ------------------------------------------------------------------------------------------------
+SaveCode GameState::missionSave( void )
+{
+
+	// get campaign
+	Campaign *campaign = TheCampaignManager->getCurrentCampaign();
+
+	// get mission #
+	Int missionNumber = TheCampaignManager->getCurrentMissionNumber() + 1;
+
+	// format a string for the mission save description
+	UnicodeString format = TheGameText->fetch( "GUI:MissionSave" );
+	UnicodeString desc;
+	desc.format( format, TheGameText->fetch( campaign->m_campaignNameLabel ).str(), missionNumber );
+
+	// do an automatic mission save
+	return TheGameState->saveGame( AsciiString(""), desc, SAVE_FILE_TYPE_MISSION );
+
+}  // end missionSave
+
+// ------------------------------------------------------------------------------------------------
+/** Load the save game pointed to by filename */
+// ------------------------------------------------------------------------------------------------
+SaveCode GameState::loadGame( AvailableGameInfo gameInfo )
+{
+
+	// sanity check for file
+	if( doesSaveGameExist( gameInfo.filename ) == FALSE )
+		return SaveCode::SC_FILE_NOT_FOUND;
+
+	// clear game data just like loading from the debug map load screen for mission saves
+	if( gameInfo.saveGameInfo.saveFileType == SAVE_FILE_TYPE_MISSION )
+	{
+
+		if (TheGameLogic->isInGame())
+			TheGameLogic->clearGameData( FALSE );
+
+	}  // end if
+
+	//
+	// clear the save directory of any temporary "scratch pad" maps that were extracted
+	// from any previously loaded save game files
+	//
+	TheGameStateMap->clearScratchPadMaps();
+
+	// construct path to file
+	AsciiString filepath = getFilePathInSaveDirectory(gameInfo.filename);
+
+	// Reading the save builds the map (startNewGame suspends the watchdog only for that part) and then the
+	// objects and the post processing, all without a tick; large maps take longer than the watchdog limit.
+	::Engine::WatchdogSuspension watchdogSuspension;
+
+	// open the save file
+	XferLoad xferLoad;
+	xferLoad.open( filepath );
+
+	// clear out the game engine
+	TheGameEngine->reset();
+
+	// lock creation of new ghost objects
+	TheGhostObjectManager->saveLockGhostObjects( TRUE );
+
+	LatchRestore<Bool> inLoadGame(m_isInLoadGame, TRUE);
+
+	// load the save data
+	Bool error = FALSE;
+	try
+	{
+
+		// load file
+		xferSaveData( &xferLoad, SNAPSHOT_SAVELOAD );
+
+	}  // end try
+	catch( ... )
+	{
+		error = TRUE;
+	}  // end catch
+
+	// close the file
+	xferLoad.close();
+
+	// un-savelock the ghost objects
+	TheGhostObjectManager->saveLockGhostObjects( FALSE );
+
+	try
+	{
+		// do the post-process from a save game load
+		gameStatePostProcessLoad();
+	}
+	catch (...)
+	{
+		error = TRUE;
+	}
+
+	// check for error
+	if( error == TRUE )
+	{
+		// clear it out, again
+		if (TheGameLogic->isInGame())
+			TheGameLogic->clearGameData( FALSE );
+		TheGameEngine->reset();
+
+		// print error message to the user
+		UnicodeString ufilepath;
+		ufilepath.translate(filepath);
+
+		UnicodeString msg;
+		msg.format( TheGameText->fetch("GUI:ErrorLoadingGame"), ufilepath.str() );
+
+		MessageBoxOk(TheGameText->fetch("GUI:Error"), msg, nullptr);
+
+		return SaveCode::SC_INVALID_DATA;	// you can't use a naked "throw" outside of a catch statement!
+
+	}  // end if
+
+	//
+	// when loading a mission save, we want to do as much normal loading stuff as we
+	// can cause we don't have any real save game data to load other than the
+	// game state map info and campaign manager stuff
+	//
+	if( getSaveGameInfo()->saveFileType == SAVE_FILE_TYPE_MISSION )
+	{
+
+		InitRandom(0);
+
+		TheWritableGlobalData->m_pendingFile = getSaveGameInfo()->missionMapName;
+		GameMessage *msg = TheMessageStream->appendMessage( GameMessage::MSG_NEW_GAME );
+		msg->appendIntegerArgument(GAME_SINGLE_PLAYER);
+		msg->appendIntegerArgument(TheCampaignManager->getGameDifficulty());
+		msg->appendIntegerArgument(TheCampaignManager->getRankPoints());
+
+		// remove the mission save data, we've got all we need and have started the load
+		SaveGameInfo *gameInfo2 = getSaveGameInfo();
+		gameInfo2->saveFileType = SAVE_FILE_TYPE_NORMAL;
+		gameInfo2->missionMapName.clear();
+
+	}  // end if
+		
+	return SaveCode::SC_OK;
+
+}  // end loadGame
+
+//-------------------------------------------------------------------------------------------------
+AsciiString GameState::getSaveDirectory() const
+{
+	AsciiString tmp = TheGlobalData->getPath_UserData();
+	tmp.concat("Save\\");
+	return tmp;
+}
+
+//-------------------------------------------------------------------------------------------------
+AsciiString GameState::getFilePathInSaveDirectory(const AsciiString& leaf) const
+{
+	AsciiString tmp = getSaveDirectory();
+	tmp.concat(leaf);
+	return tmp;
+}
+
+//-------------------------------------------------------------------------------------------------
+Bool GameState::isInSaveDirectory(const AsciiString& path) const
+{
+	return path.startsWithNoCase(getSaveDirectory());
+}
+
+// ------------------------------------------------------------------------------------------------
+AsciiString GameState::getMapLeafName(const AsciiString& in) const
+{
+	const char* p = strrchr(in.str(), '\\');
+	if (p)
+	{
+		//
+		// p points to the last '\' (if found), however, if a '\' was found there better
+		// be another character beyond it, otherwise the map filename would actually
+		// be a *directory*  Just move to the first character beyond it so we are looking
+		// at the name only
+		//
+		++p;
+		DEBUG_ASSERTCRASH( p != nullptr && *p != 0, ("GameState::xfer - Illegal map name encountered\n") );
+		return p;
+	}
+	else
+	{
+		return in;
+	}
+}
+
+// ------------------------------------------------------------------------------------------------
+static const char* findLastBackslashInRangeInclusive(const char* start, const char* end)
+{
+	while (end >= start)
+	{
+		if (*end == '\\')
+			return end;
+		--end;
+	}
+	return nullptr;
+}
+
+// ------------------------------------------------------------------------------------------------
+static AsciiString getMapLeafAndDirName(const AsciiString& in)
+{
+	const char* start = in.str();
+	const char* end = in.str() + in.getLength() - 1;
+	const char* p = findLastBackslashInRangeInclusive(start, end);
+	if (p)
+	{
+		const char* p2 = findLastBackslashInRangeInclusive(start, p-1);
+		if (p2)
+		{
+			// we have something like:
+			//	maps\foo\foo.map
+			//	c:\mydocs\c&cdata\maps\foo\foo.map
+			return p2 + 1;
+		}
+		else
+		{
+			// we have something like:
+			//  save\foo.map
+			return in;
+		}
+	}
+	else
+	{
+		DEBUG_CRASH(("Illegal map-dir-name... should have at least one backslash"));
+		return in;
+	}
+}
+
+// ------------------------------------------------------------------------------------------------
+const char* PORTABLE_SAVE				= "Save\\";
+const char* PORTABLE_MAPS				= "Maps\\";
+const char* PORTABLE_USER_MAPS	= "UserData\\Maps\\";
+
+// ------------------------------------------------------------------------------------------------
+AsciiString GameState::realMapPathToPortableMapPath(const AsciiString& in) const
+{
+	AsciiString prefix;
+	if (in.startsWithNoCase(getSaveDirectory()))
+	{
+		prefix = PORTABLE_SAVE;
+		prefix.concat(getMapLeafName(in));
+	}
+	else if (in.startsWithNoCase(TheMapCache->getMapDir()))
+	{
+		prefix = PORTABLE_MAPS;
+		prefix.concat(getMapLeafAndDirName(in));
+	}
+	else if (in.startsWithNoCase(TheMapCache->getUserMapDir()))
+	{
+		prefix = PORTABLE_USER_MAPS;
+		prefix.concat(getMapLeafAndDirName(in));
+	}
+	else
+	{
+		DEBUG_CRASH(("Map file was not found in any of the expected directories; this is impossible"));
+		//throw INI_INVALID_DATA;
+		// uncaught exceptions crash us. better to just use a bad path.
+		prefix = in;
+	}
+	prefix.toLower();
+	return prefix;
+}
+
+// ------------------------------------------------------------------------------------------------
+AsciiString GameState::portableMapPathToRealMapPath(const AsciiString& in) const
+{
+	AsciiString prefix;
+	if (in.startsWithNoCase(PORTABLE_SAVE))
+	{
+		// the save dir ends with "\\"
+		prefix = getSaveDirectory();
+		prefix.concat(getMapLeafName(in));
+	}
+	else if (in.startsWithNoCase(PORTABLE_MAPS))
+	{
+		// the map dir DOES NOT end with "\\", must add it
+		prefix = TheMapCache->getMapDir();
+		prefix.concat("\\");
+		prefix.concat(getMapLeafAndDirName(in));
+	}
+	else if (in.startsWithNoCase(PORTABLE_USER_MAPS))
+	{
+		// the map dir DOES NOT end with "\\", must add it
+		prefix = TheMapCache->getUserMapDir();
+		prefix.concat("\\");
+		prefix.concat(getMapLeafAndDirName(in));
+	}
+	else
+	{
+		DEBUG_CRASH(("Map file was not found in any of the expected directories; this is impossible"));
+		//throw INI_INVALID_DATA;
+		// uncaught exceptions crash us. better to just use a bad path.
+		prefix = in;
+	}
+	prefix.toLower();
+	return prefix;
+}
+
+// ------------------------------------------------------------------------------------------------
+/** Does the save game file exist */
+// ------------------------------------------------------------------------------------------------
+Bool GameState::doesSaveGameExist( AsciiString filename ) 
+{
+
+	// construct full path to file
+	AsciiString filepath = getFilePathInSaveDirectory(filename);
+
+	// open file
+	XferLoad xfer;
+	try
+	{
+
+		// try to open it
+		xfer.open( filepath );
+
+	}  // end try
+	catch( ... )
+	{
+
+		// unable to open file, it must not be here
+		return FALSE;
+
+	}  // end catch
+	
+	// close the file, we don't want to to anything with it right now
+	xfer.close();
+
+	return TRUE;
+
+}  // doesSaveGameExist
+
+// ------------------------------------------------------------------------------------------------
+/** Get save game info from the filename specified */
+// ------------------------------------------------------------------------------------------------
+void GameState::getSaveGameInfoFromFile( AsciiString filename, SaveGameInfo *saveGameInfo )
+{
+	AsciiString token;
+	Int blockSize;
+	Bool done = FALSE;
+	SnapshotBlock *blockInfo;
+
+	// sanity
+	if( filename.isEmpty() == TRUE || saveGameInfo == nullptr )
+	{
+
+		DEBUG_CRASH(( "GameState::getSaveGameInfoFromFile - Illegal parameters\n" ));
+		return;
+
+	}  // end if
+
+	// open file for partial loading
+	XferLoad xferLoad;
+	xferLoad.open( filename );
+
+	//
+	// disable post processing cause we're not really doing a load of game data that
+	// needs post processing and we don't want to keep track of any snapshots we loaded
+	// 
+	xferLoad.setOptions( XO_NO_POST_PROCESSING );
+
+	// Read the header first. Otherwise the loop below takes the marker "ZHSAVE" for the first
+	// block name, findBlockInfoByToken() finds nothing and the file is missing from the list.
+	readSaveFileHeader( &xferLoad );
+
+	// read all data blocks in the file
+	while( done == FALSE )
+	{
+
+		// read next token
+		xferLoad.xferAsciiString( &token );
+
+		// check for end of file token
+		if( token.compareNoCase( SAVE_FILE_EOF ) == 0 )
+		{
+
+			// we should never get here, if we did, we didn't find block of data we needed
+			DEBUG_CRASH(( "GameState::getSaveGameInfoFromFile - Game info not found in file '%s'\n", filename.str() ));
+			done = TRUE;
+
+		}  // end if
+		else
+		{
+
+			// find matching token in the save file lexicon
+			blockInfo = findBlockInfoByToken( token, SNAPSHOT_SAVELOAD );
+			if( blockInfo == nullptr )
+				throw SaveCode::SC_UNKNOWN_BLOCK;
+
+			// read the data size of this block
+			blockSize = xferLoad.beginBlock();
+
+			// is this the block of game info data
+			if( stricmp( token.str(), GAME_STATE_BLOCK_STRING ) == 0 )
+			{
+				GameState tempGameState;
+
+				// parse this data
+				try
+				{
+
+					// load data
+					xferLoad.xferSnapshot( &tempGameState );
+
+				}  // end try
+				catch( ... )
+				{
+
+					DEBUG_CRASH(( "GameState::getSaveGameInfoFromFile - Error loading block '%s' in file '%s'\n",
+												blockInfo->blockName.str(), filename.str() ));
+					throw;
+
+				}  // end catch
+
+				// data was found, copy game state info over
+				*saveGameInfo = *tempGameState.getSaveGameInfo();
+				
+				// we're all done with this file now
+				done = TRUE;
+
+			}  // end if
+			else
+			{
+
+				// not a block we care about, just skip it
+				xferLoad.skip( blockSize );
+
+				// end of block
+				xferLoad.endBlock();
+
+			}  // end else
+
+		}  // end else, valid data block token
+
+	}  // end while, not done
+
+	// close the file
+	xferLoad.close();
+
+}  // end getSaveGameInfoFromFile
+
+// ------------------------------------------------------------------------------------------------
+/** Create game info and add to available list */
+// ------------------------------------------------------------------------------------------------
+static void addGameToAvailableList( AsciiString filename, void *userData )
+{
+	AvailableGameInfo **listHead = static_cast<AvailableGameInfo **>(userData);
+
+	// sanity
+	DEBUG_ASSERTCRASH( listHead != nullptr, ("addGameToAvailableList - Illegal parameters\n") );
+	DEBUG_ASSERTCRASH( filename.isEmpty() == FALSE, ("addGameToAvailableList - Illegal filename\n") );
+ 
+	try {
+	// get header info from this listbox; filename is the leaf name in the save directory
+	SaveGameInfo saveGameInfo;
+	TheGameState->getSaveGameInfoFromFile( TheGameState->getFilePathInSaveDirectory( filename ), &saveGameInfo );
+
+	// allocate new info 
+	AvailableGameInfo *newInfo = new AvailableGameInfo;
+
+	// assign data
+	newInfo->prev = nullptr;
+	newInfo->next = nullptr;
+	newInfo->saveGameInfo = saveGameInfo;
+	newInfo->filename = filename;
+
+	// attach to list
+	if( *listHead == nullptr )
+		*listHead = newInfo;
+	else
+	{
+		AvailableGameInfo *curr, *prev = nullptr;
+
+		// insert this info so that the most recent games are always at the top of this list
+		for( curr = *listHead; curr != nullptr; curr = curr->next )
+		{
+
+			// save current as previous
+			prev = curr;
+
+			// check to see if curr is older than the new info, if so, put new info just ahead of curr
+			if( newInfo->saveGameInfo.date.isNewerThan( &curr->saveGameInfo.date ) )
+			{
+
+				if( curr->prev )
+					curr->prev->next = newInfo;
+				else
+					*listHead = newInfo;
+				newInfo->prev = curr->prev;
+				curr->prev = newInfo;
+				newInfo->next = curr;
+
+				break;
+
+			}  // end if
+
+		}  // end for
+
+		// if not inserted, put at end
+		if( curr == nullptr )
+		{
+
+			prev->next = newInfo;
+			newInfo->prev = prev;
+
+		}  // end if
+
+	}  // end else
+	} catch(...) {
+		// Do nothing - just return.
+	}
+
+
+}  // end addGameToAvailableList
+
+// ------------------------------------------------------------------------------------------------
+/** Populate the listbox passed in with a list of the save games present on the hard drive */
+// ------------------------------------------------------------------------------------------------
+void GameState::populateSaveGameListbox( GameWindow *listbox, SaveLoadLayoutType layoutType )
+{
+	Int index;
+
+	// sanity
+	if( listbox == nullptr )
+		return;
+
+	// first clear all entries in the listbox
+	GadgetListBoxReset( listbox );
+
+	// setup the first entry of the listbox to be a new game when saving is allowed
+	if( layoutType != SaveLoadLayoutType::SLLT_LOAD_ONLY )
+	{
+		UnicodeString newGameText = TheGameText->fetch( "GUI:NewSaveGame" );
+		Color newGameColor = GameMakeColor( 200, 200, 255, 255 );
+
+		index = GadgetListBoxAddEntryText( listbox, newGameText, newGameColor, -1 );
+		GadgetListBoxSetItemData( listbox, nullptr, index );
+	
+	}  // end if
+
+	// clear the available games
+	clearAvailableGames();
+
+	// iterate all the save files in the directory and populate the listbox
+	iterateSaveFiles( addGameToAvailableList, &m_availableGames );
+
+	// add all games found to the list box
+	AvailableGameInfo *info;
+	SaveGameInfo *saveGameInfo;
+	SYSTEMTIME systemTime;
+	UnsignedInt count = 0;
+	for( info = m_availableGames; info; info = info->next, count++ )
+	{
+
+		// get save game info
+		saveGameInfo = &info->saveGameInfo;
+
+		// setup a system time structure given the data we saved in the file
+		systemTime.wYear = saveGameInfo->date.year;
+		systemTime.wMonth = saveGameInfo->date.month;
+		systemTime.wDayOfWeek = saveGameInfo->date.dayOfWeek;
+		systemTime.wDay = saveGameInfo->date.day;
+		systemTime.wHour = saveGameInfo->date.hour;
+		systemTime.wMinute = saveGameInfo->date.minute;
+		systemTime.wSecond = saveGameInfo->date.second;
+		systemTime.wMilliseconds = saveGameInfo->date.milliseconds;
+
+		// setup date buffer for local region date format
+		UnicodeString displayDateBuffer = getUnicodeDateBuffer(systemTime);
+
+		// setup time buffer for local region time format
+		UnicodeString displayTimeBuffer = getUnicodeTimeBuffer(systemTime);
+
+		// description string
+		UnicodeString displayLabel = saveGameInfo->description;
+		if( displayLabel.isEmpty() == TRUE )
+		{
+			Bool exists = FALSE;
+			
+			displayLabel = TheGameText->fetch( saveGameInfo->mapLabel, &exists );
+			if( exists == FALSE )
+				displayLabel.format( L"%S", saveGameInfo->mapLabel.str() );
+
+		}  // end if
+
+		// pick color for text (we alternate it each game)
+		Color color;
+		// Generals shows save games in orange/gold, Zero Hour in white/blue (fixed colors, by GameEdition).
+		if( saveGameInfo->saveFileType == SAVE_FILE_TYPE_MISSION )
+			color = GameMakeColor( 200, 255, 200, 255 );
+		else if( count & 0x1 )
+			color = isGameEditionZeroHour() ? GameMakeColor( 255, 255, 255, 255 ) : GameMakeColor( 255, 128, 0, 255 );
+		else
+			color = isGameEditionZeroHour() ? GameMakeColor( 170, 170, 235, 255 ) : GameMakeColor( 255, 192, 0, 255 );
+
+		// add string to listbox
+		index = GadgetListBoxAddEntryText( listbox, displayLabel, color, -1, 0 );
+		GadgetListBoxAddEntryText( listbox, displayTimeBuffer, color, index, 1 );
+		GadgetListBoxAddEntryText( listbox, displayDateBuffer, color, index, 2 );
+
+		// add this available game info in the user data pointer of that listbox item
+		GadgetListBoxSetItemData( listbox, info, index );
+
+	}  // end for, info
+
+	// select the top "new game" entry
+	GadgetListBoxSetSelected( listbox, 0 );
+
+}  // end pupulateSaveGameListbox
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS ////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ------------------------------------------------------------------------------------------------
+/** Iterate the save game files */
+// ------------------------------------------------------------------------------------------------
+void GameState::iterateSaveFiles( IterateSaveFileCallback callback, void *userData )
+{
+
+	// sanity
+	if( callback == nullptr )
+		return;
+
+	// iterate all files in the save directory, in the order the file system gives
+	for( const ::Engine::UserDataEntry &item : ::Engine::UserDataFiles::list( diskPath( getSaveDirectory() ), "*" ) )
+	{
+
+		// see if this is a file, and therefore a possible save file
+		if( item.directory )
+			continue;
+
+		// see if there is a ".sav" at end of this filename
+		const Char *c = strrchr( item.name.c_str(), '.' );
+		if( c && stricmp( c, ".sav" ) == 0 )
+		{
+
+			// construction asciistring filename
+			AsciiString filename;
+			filename.set( item.name.c_str() );
+
+			// call the callback
+			callback( filename, userData );
+
+		}  // end if, a save file
+
+	}  // end for
+
+}  // end iterateSaveFiles
+
+// ------------------------------------------------------------------------------------------------
+/** Save game to xfer or load game using xfer */
+// ------------------------------------------------------------------------------------------------
+void GameState::friend_xferSaveDataForCRC( Xfer *xfer, SnapshotType which )
+{
+	DEBUG_LOG(("GameState::friend_xferSaveDataForCRC() - SnapshotType %d\n", which));
+	SaveGameInfo *gameInfo = getSaveGameInfo();
+	gameInfo->description.clear();
+	gameInfo->saveFileType = SAVE_FILE_TYPE_NORMAL;
+	gameInfo->missionMapName.clear();
+	gameInfo->pristineMapName.clear();
+
+	xferSaveData(xfer, which);
+}
+
+// ------------------------------------------------------------------------------------------------
+/** Write the header of a save file (marker, format version, build id) */
+// ------------------------------------------------------------------------------------------------
+static void writeSaveFileHeader( Xfer *xfer )
+{
+	AsciiString marker = SAVE_FILE_MARKER;
+	Int formatVersion = SAVE_FILE_FORMAT_VERSION;
+	AsciiString buildId;
+	buildId.format( "%s %s %s", __DATE__, __TIME__, "x64" );
+	xfer->xferAsciiString( &marker );
+	xfer->xferInt( &formatVersion );
+	xfer->xferAsciiString( &buildId );
+
+}  // end writeSaveFileHeader
+
+// ------------------------------------------------------------------------------------------------
+/** Read and check the header of a save file. Throws SC_INVALID_DATA if the marker is missing or
+	* the format version does not match (the file comes from another version). */
+// ------------------------------------------------------------------------------------------------
+static void readSaveFileHeader( Xfer *xfer )
+{
+	AsciiString marker;
+	xfer->xferAsciiString( &marker );
+	if( marker.compareNoCase( SAVE_FILE_MARKER ) != 0 )
+	{
+		DEBUG_LOG(( "save game without a valid header ('%s') -- the file comes from an "
+			"older version and cannot be loaded\n", marker.str() ));
+		throw SaveCode::SC_INVALID_DATA;
+	}
+
+	Int formatVersion = 0;
+	xfer->xferInt( &formatVersion );
+	if( formatVersion != SAVE_FILE_FORMAT_VERSION )
+	{
+		DEBUG_LOG(( "save game has format version %d, this version expects %d\n",
+			formatVersion, SAVE_FILE_FORMAT_VERSION ));
+		throw SaveCode::SC_INVALID_DATA;
+	}
+
+	AsciiString buildId;
+	xfer->xferAsciiString( &buildId );
+	DEBUG_LOG(( "save game from build '%s'\n", buildId.str() ));
+
+}  // end readSaveFileHeader
+
+// ------------------------------------------------------------------------------------------------
+/** Save game to xfer or load game using xfer */
+// ------------------------------------------------------------------------------------------------
+void GameState::xferSaveData( Xfer *xfer, SnapshotType which )
+{
+
+	// sanity
+	if( xfer == nullptr )
+		throw SaveCode::SC_INVALID_XFER;
+
+	// save or load all blocks
+	if( xfer->getXferMode() == XFER_SAVE )
+	{
+		DEBUG_LOG(("GameState::xferSaveData() - XFER_SAVE\n"));
+
+		// Header with marker, format version and build id, only in a real save game. The deep CRC
+		// paths (SNAPSHOT_DEEPCRC*) write with the same code into a comparison file and checksum
+		// its contents; the build id would only add noise there (two builds would always differ).
+		if( which == SNAPSHOT_SAVELOAD )
+			writeSaveFileHeader( xfer );
+
+		// save all blocks
+		AsciiString blockName;
+		SnapshotBlock *blockInfo;
+		SnapshotBlockListIterator it;
+		for( it = m_snapshotBlockList[which].begin(); it != m_snapshotBlockList[which].end(); ++it )
+		{
+		
+			// get list data
+			blockInfo = &(*it);
+
+			// get block name
+			blockName = blockInfo->blockName;
+
+			DEBUG_LOG(("Looking at block '%s'\n", blockName.str()));
+
+			//
+			// for mission save files, we only save the game state block and campaign manager
+			// because anything else is not needed.
+			//
+			if( getSaveGameInfo()->saveFileType != SAVE_FILE_TYPE_MISSION || 
+					(blockName.compareNoCase( GAME_STATE_BLOCK_STRING ) == 0 ||
+					 blockName.compareNoCase( CAMPAIGN_BLOCK_STRING ) == 0) )
+			{
+
+				// xfer block name
+				xfer->xferAsciiString( &blockName );
+
+				// xfer this block
+				try
+				{
+
+					// begin new data block
+					xfer->beginBlock();
+
+					// xfer block data
+					xfer->xferSnapshot( blockInfo->snapshot );
+
+					// end this block
+					xfer->endBlock();
+
+				}  // end try
+				catch( ... )
+				{
+
+					// Pass .str(): an AsciiString as a variadic argument (C4840) would pass the object,
+					// not the text.
+					DEBUG_CRASH(( "Error saving block '%s' in file '%s'\n",
+												blockName.str(), xfer->getIdentifier().str() ));
+					throw;
+
+				}  // end catch
+
+			}  // end if
+
+		}  // end for, all snapshots
+
+		// write an end of file token
+		AsciiString eofToken = SAVE_FILE_EOF;
+		xfer->xferAsciiString( &eofToken );
+				
+	}  // end if, save
+	else
+	{
+		DEBUG_LOG(("GameState::xferSaveData() - not XFER_SAVE\n"));
+
+		// Check the header before reading anything (only in a real save game, symmetric to
+		// writing above)
+		if( which == SNAPSHOT_SAVELOAD )
+			readSaveFileHeader( xfer );
+
+		AsciiString token;
+		Int blockSize;
+		Bool done = FALSE;
+		SnapshotBlock *blockInfo;
+
+		// read all data blocks in the file
+		while( done == FALSE )
+		{
+
+			// read next token
+			xfer->xferAsciiString( &token );
+
+			// check for end of file token
+			if( token.compareNoCase( SAVE_FILE_EOF ) == 0 )
+			{
+
+				// all done
+				done = TRUE;
+
+			}  // end if
+			else
+			{
+
+				// find matching token in the save file lexicon
+				blockInfo = findBlockInfoByToken( token, which );
+				if( blockInfo == nullptr )
+				{
+
+					// log the block not found
+					DEBUG_LOG(( "GameState::xferSaveData - Skipping unknown block '%s'\n", token.str() ));
+
+					//
+					// block was not found, this could have been a block from an older file
+					// format where the block was removed, skip the block data and try to continue
+					//
+					Int dataSize = xfer->beginBlock();
+					xfer->skip( dataSize );
+
+					// continue with while loop reading block tokens
+					continue;
+
+				}  // end if
+
+				try
+				{
+
+					// read block start
+					blockSize = xfer->beginBlock();
+				
+					// parse this data
+					xfer->xferSnapshot( blockInfo->snapshot );
+
+					// read block end
+					xfer->endBlock();
+
+				}  // end try
+				catch( ... )
+				{
+
+					DEBUG_CRASH(( "Error loading block '%s' in file '%s'\n",
+												blockInfo->blockName.str(), xfer->getIdentifier().str() ));
+					throw;
+
+				}  // end catch
+
+			}  // end else, valid data block token
+
+		}  // end while, not done
+
+	}  // end else, load
+
+}  // end xferSaveData
+
+// ------------------------------------------------------------------------------------------------
+/** Add a snapshot to the post process list for later */
+// ------------------------------------------------------------------------------------------------
+void GameState::addPostProcessSnapshot( Snapshot *snapshot )
+{
+
+	// sanity
+	if( snapshot == nullptr )
+	{
+
+		DEBUG_CRASH(( "GameState::addPostProcessSnapshot - invalid parameters\n" ));
+		return;
+
+	}  // end if
+
+/*
+	//
+	// This is n^2 and gets real real, REAL slow on game maps.  jba.
+	// Please keep this code around tho, it can be useful in debugging save games
+	//
+
+	// verify the snapshot isn't in the list already
+	SnapshotListIterator it;
+	for( it = m_snapshotPostProcessList.begin(); it != m_snapshotPostProcessList.end(); ++it )
+	{
+
+		if( (*it) == snapshot )
+		{
+
+			DEBUG_CRASH(( "GameState::addPostProcessSnapshot - snapshot is already in list!\n" ));
+			return;
+
+		}  // end if
+
+	}  // end for, it
+*/
+
+	// add to the list
+	m_snapshotPostProcessList.push_back( snapshot );
+
+}  // end addPostProcessSnapshot
+
+// ------------------------------------------------------------------------------------------------
+/** Post process entry point after all game data has been xferd from disk */
+// ------------------------------------------------------------------------------------------------
+void GameState::gameStatePostProcessLoad( void )
+{
+
+	// post process each snapshot that registered with us
+	SnapshotListIterator it;
+	Snapshot *snapshot;
+	for( it = m_snapshotPostProcessList.begin(); it != m_snapshotPostProcessList.end(); /*emtpy*/ )
+	{
+
+		// get snapshot
+		snapshot = *it;
+
+		// increment iterator
+		++it;
+
+		// do processing
+		snapshot->loadPostProcess();
+
+	}  // end for
+
+	// clear the snapshot post process list as we are now done with it
+	m_snapshotPostProcessList.clear();
+
+	// evil... must ensure this is updated prior to the script engine running the first time.
+	ThePartitionManager->friend_updateAfterLoad();
+
+	// the units marked their pathfind cells in load order
+	TheAI->pathfinder()->friend_applyLoadedUnitMarks();
+
+	// last: whatever loading drew from the logic random numbers, continue with the saved state
+	TheGameLogic->friend_applyLoadedRandomState();
+
+}  // end loadPostProcess
+
+// ------------------------------------------------------------------------------------------------
+/** Xfer method for the game state itself 
+	* Version Info:
+	* 1: Initial version 
+	* 2: Added save file type and mission map name (regular save vs automatic mission save)
+	* 3: Added the loaded mods */
+// ------------------------------------------------------------------------------------------------
+void GameState::xfer( Xfer *xfer )
+{
+
+	// version
+	XferVersion currentVersion = 4;
+	XferVersion version = currentVersion;
+	xfer->xferVersion( &version, currentVersion );
+
+	// get structure for our current game info
+	SaveGameInfo *saveGameInfo = getSaveGameInfo();
+
+	// version 2
+	if( version >= 2 )
+	{
+
+		// file type
+		xfer->xferUser( &saveGameInfo->saveFileType, sizeof( SaveFileType ) );
+
+		// mission map name
+		xfer->xferAsciiString( &saveGameInfo->missionMapName );
+
+	}  // end if
+
+	// current system time
+	SYSTEMTIME systemTime;
+	GetLocalTime( &systemTime );
+
+	// date and time
+	saveGameInfo->date.year = systemTime.wYear;
+	xfer->xferUnsignedShort( &saveGameInfo->date.year );
+	saveGameInfo->date.month = systemTime.wMonth;
+	xfer->xferUnsignedShort( &saveGameInfo->date.month );
+	saveGameInfo->date.day = systemTime.wDay;
+	xfer->xferUnsignedShort( &saveGameInfo->date.day );
+	saveGameInfo->date.dayOfWeek = systemTime.wDayOfWeek;
+	xfer->xferUnsignedShort( &saveGameInfo->date.dayOfWeek );
+	saveGameInfo->date.hour = systemTime.wHour;
+	xfer->xferUnsignedShort( &saveGameInfo->date.hour );
+	saveGameInfo->date.minute = systemTime.wMinute;
+	xfer->xferUnsignedShort( &saveGameInfo->date.minute );
+	saveGameInfo->date.second = systemTime.wSecond;
+	xfer->xferUnsignedShort( &saveGameInfo->date.second );
+	saveGameInfo->date.milliseconds = systemTime.wMilliseconds;
+	xfer->xferUnsignedShort( &saveGameInfo->date.milliseconds );
+
+	// user description
+	xfer->xferUnicodeString( &saveGameInfo->description );
+
+	Bool exists = FALSE;
+	Dict *dict = MapObject::getWorldDict();
+	if( dict )
+		saveGameInfo->mapLabel = dict->getAsciiString( TheKey_mapName, &exists );
+
+	// if no label was found, we'll use the map name (just filename, no directory info)
+	if( exists == FALSE || saveGameInfo->mapLabel == AsciiString::TheEmptyString )
+	{
+		char string[ _MAX_PATH ];
+
+		safe_strcpy( string, TheGlobalData->m_mapName.str() );
+		char *p = strrchr( string, '\\' );
+		if( p == nullptr )
+			saveGameInfo->mapLabel = TheGlobalData->m_mapName;
+		else
+		{
+
+			p++;  // skip the '\' we're on
+			saveGameInfo->mapLabel.set( p );
+
+		}  // end else
+
+	}  // end if
+
+	// xfer map label
+	xfer->xferAsciiString( &saveGameInfo->mapLabel );
+
+	// campaign info
+	Campaign *campaign = TheCampaignManager->getCurrentCampaign();
+	if( campaign )
+	{
+
+		// campaign side
+		saveGameInfo->campaignSide = campaign->m_name;
+		xfer->xferAsciiString( &saveGameInfo->campaignSide );
+
+		// campaign mission number
+		saveGameInfo->missionNumber = TheCampaignManager->getCurrentMissionNumber();
+		xfer->xferInt( &saveGameInfo->missionNumber );
+
+		
+	}  // end if
+	else
+	{
+
+		// write empty campaign side
+		saveGameInfo->campaignSide = AsciiString::TheEmptyString;
+		xfer->xferAsciiString( &saveGameInfo->campaignSide );
+
+		// invalid mission number
+		saveGameInfo->missionNumber = CampaignManager::INVALID_MISSION_NUMBER;
+		xfer->xferInt( &saveGameInfo->missionNumber );
+
+	}  // end else
+
+	// version 3: the mods loaded when saving
+	if( version >= 3 )
+	{
+		if( xfer->getXferMode() == XFER_SAVE )
+			saveGameInfo->modTag = TheArchiveFileSystem ? TheArchiveFileSystem->getModTag() : AsciiString::TheEmptyString;
+		xfer->xferAsciiString( &saveGameInfo->modTag );
+	}
+	else
+		saveGameInfo->modTag.clear();
+
+	// version 4: the checksum of the game data (the INIs of the game logic) when saving
+	if( version >= 4 )
+	{
+		if( xfer->getXferMode() == XFER_SAVE )
+			saveGameInfo->dataCRC = TheGlobalData->m_iniCRC;
+		xfer->xferUnsignedInt( &saveGameInfo->dataCRC );
+	}
+	else
+		saveGameInfo->dataCRC = 0;
+
+}  // end xfer

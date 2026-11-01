@@ -1,0 +1,28 @@
+# LAN-Partie ohne Mitspieler: LAN-Lobby, eigenes Spiel eroeffnen, Platz 2 mit leichter KI belegen, starten --
+# eine Netzwerkpartie (TheNetwork, Verbindungsverwaltung) mit dem Rechner als einzigem Menschen. Nach einer
+# Weile (900 Logik-Frames; Netzwerkpartien laufen in Echtzeit) ueber das Spielmenue verlassen (Mehrspieler: QuitNoSave), Punkteanzeige, zurueck ins Hauptmenue.
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 60
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonStart
+auswahl LanGameOptionsMenu.wnd:ComboBoxPlayer1 2
+warte 60
+klick LanGameOptionsMenu.wnd:ButtonStart
+partie 2000000
+logik 900
+spielmenue
+klick QuitNoSave.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 2000000
+klick ScoreScreen.wnd:ButtonOk
+fenster LanLobbyMenu.wnd:ButtonBack 3000
+warte 60
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+warte 60
+beenden

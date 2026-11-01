@@ -1,0 +1,12 @@
+# TODO 56 (CC0-Naturobjekte): Alpine Assault (Generals, Replay e0-alpine-assault-2ai-seed1).
+# Kiefern (TreePine, in Generals W3DModelDraw: Textur aus dem Modell) bei 0,214/0,788, Rocks1 bei 0,216/0,720,
+# Rocks3 bei 0,334/0,518. Orte aus den Kartendaten (tools/render/map_objekte.py).
+# frame   x      y      zoom       drehung   neigung
+60        0.214  0.760  standard   0         standard
+179       0.214  0.760  standard   0         standard
+180       0.214  0.800  0.35       0         standard
+299       0.214  0.800  0.35       0         standard
+300       0.216  0.722  0.25       0         standard
+419       0.216  0.722  0.25       0         standard
+420       0.334  0.520  0.25       0         standard
+539       0.334  0.520  0.25       0         standard

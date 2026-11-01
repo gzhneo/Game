@@ -1,0 +1,410 @@
+# Erlaubte Zeichenketten mit deutschen Woertern oder Markern: feste Schluessel, die Werkzeuge
+# auswerten, Asset- und Dateinamen. Je Zeile <Datei>TAB<Text>; erzeugt mit texte_im_code.py --schluessel.
+CMakeLists.txt	Use an x64 preset, e.g. cmake --preset x64-debug. Last x86 state: tag x86_Letzter_Stand.
+Code/Core/EngineCore/Engine/ModCatalog.cpp	autor
+Code/Core/EngineCore/Engine/ModCatalog.cpp	beschreibung
+Code/Core/EngineCore/Engine/SettingsSchema.cpp	AntiAliasing
+Code/Core/EngineCore/Engine/SettingsSchema.cpp	Display.AntiAliasing
+Code/Core/EngineCore/Engine/SettingsSchema.cpp	Terrain and road textures: ea (game data) or free (CC0 packages in ProjectData\\Inhalt)
+Code/GameEngine/Common/GlobalData.h	AntiAliasing
+Code/GameEngine/GameClient/ParticleSys.h	PingPong
+Code/GameEngine/Common/FileSystem/ArchivePrefetch.cpp	 abgebrochen
+Code/GameEngine/Common/FileSystem/ArchivePrefetch.cpp	VORABLESEN dateien {:d} mb {:d} ms {:d}{}
+Code/GameEngine/Common/FileSystem/ArchivePrefetch.cpp	VORABLESEN plan dateien {:d} mb {:d}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	FREIER INHALT abgewiesen {} wegen {}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	FREIER INHALT keine Pakete
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	FREIER INHALT manifest unlesbar {}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	FREIER INHALT {} dateien {:d} stufe {} manifest {:d}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	MOD paket {} {} archive {:d} abgewiesen {:d}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	ProjectData\\Inhalt\\
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	TEXTURESTUFE {} wunsch {} ({}) grund {} hoehe {:d} budget {:d} MB uma {} vorhanden SD{}{} paket {:d} abgewiesen {:d}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	TEXTURPAKET abgewiesen {} wegen {} {}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	TEXTURPAKET ersetzt {:d} texturen {:d}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	TEXTURPAKET {} wunsch {} ({}) grund {} hoehe {:d} budget {:d} MB uma {} hoechste {} archive {:d} texturen {:d} fehlerzeilen {:d} abgewiesen {:d}
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	Texturstufen\\Paket\\
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	nein
+Code/GameEngine/Common/FileSystem/TextureTiers.cpp	unbekannt
+Code/GameEngine/Common/FileSystem/VfsArchiveFile.cpp	MOD ordner {} dateien {:d}
+Code/GameEngine/Common/FileSystem/VfsArchiveFile.cpp	MOD zip abgewiesen {} wegen nicht lesbar
+Code/GameEngine/Common/FileSystem/VfsArchiveFile.cpp	MOD zip abgewiesen {} wegen {}
+Code/GameEngine/Common/FileSystem/VfsArchiveFile.cpp	MOD zip {} dateien {:d} ausgelassen {:d}
+Code/GameEngine/Common/FileSystem/VfsArchiveFile.cpp	MOD zip {} eintrag ausgelassen {} wegen {}
+Code/GameEngine/Common/FileSystem/VfsArchiveFile.cpp	MOD zip {} eintrag {} nicht lesbar: {}
+Code/GameEngine/Common/Game/CommandLine.cpp	-bildschirm
+Code/GameEngine/Common/Game/CommandLine.cpp	-schonzeit
+Code/GameEngine/Common/Game/CommandLine.cpp	-testablauf
+Code/GameEngine/Common/Game/CommandLine.cpp	-treffpunkt
+Code/GameEngine/Common/Game/CommandLine.cpp	aufklaerung
+Code/GameEngine/Common/Game/CommandLine.cpp	bestaetigen
+Code/GameEngine/Common/Game/CommandLine.cpp	fabriken
+Code/GameEngine/Common/Game/CommandLine.cpp	gefecht
+Code/GameEngine/Common/Game/CommandLine.cpp	haushalt
+Code/GameEngine/Common/Game/CommandLine.cpp	konter
+Code/GameEngine/Common/Game/CommandLine.cpp	prognose
+Code/GameEngine/Common/Game/CommandLine.cpp	ueberfall
+Code/GameEngine/Common/Game/CommandLine.cpp	verteidigung
+Code/GameEngine/Common/Game/CommandLine.cpp	wachstum
+Code/GameEngine/Common/Game/CommandLine.cpp	ziel
+Code/GameEngine/Common/Game/GameEngine.cpp	ms,art,tick,frame,alpha,anzeige,ticklen\n
+Code/GameEngine/Common/Game/GlobalData.cpp	alle
+Code/GameEngine/Common/Game/GlobalData.cpp	berge
+Code/GameEngine/Common/Game/GlobalData.cpp	dunst
+Code/GameEngine/Common/Game/GlobalData.cpp	hitze
+Code/GameEngine/Common/Game/GlobalData.cpp	lichter
+Code/GameEngine/Common/Game/GlobalData.cpp	schatten
+Code/GameEngine/Common/Game/GlobalData.cpp	lichtstrahlen
+Code/GameEngine/Common/Game/UserSettings.cpp	Display.AntiAliasing
+Code/GameEngine/Common/RTS/ActionManager.cpp	Builder object doest not have a DozerAI interface!\n
+Code/GameEngine/Common/System/Debug.cpp	%s: %f msec, total %f msec, avg %f msec\n
+Code/GameEngine/Common/System/Debug.cpp	-mehrfach
+Code/GameEngine/Common/System/Debug.cpp	Es ist ein gravierender Fehler aufgetreten. Solche Fehler können durch viele verschiedene Dinge wie Viren, überhitzte Hardware und Hardware, die den Mindestanforderungen des Spiels nicht entspricht, ausgelöst werden.
+Code/GameEngine/Common/System/Debug.cpp	Fehler...
+Code/GameEngine/Common/System/GameMemory.cpp	WACHSTUM,%s,ende\n
+Code/GameEngine/Common/System/GameMemory.cpp	WACHSTUM,%s,gesamt,%d,%d,%d,%d,%d,%d,%d\n
+Code/GameEngine/Common/System/GameMemory.cpp	WACHSTUM,%s,gruppe,%d,%d,%s,%s\n
+Code/GameEngine/GameClient/CameraPath.cpp	hoehe
+Code/GameEngine/GameClient/GUI/GUICallbacks/Menus/OptionsMenu.cpp	Display.AntiAliasing
+Code/GameEngine/GameClient/GUI/GUICallbacks/Menus/OptionsMenu.cpp	GUI:AntiAliasing%d
+Code/GameEngine/GameClient/GUI/GUICallbacks/Menus/OptionsMenuTabs.cpp	Display.AntiAliasing
+Code/GameEngine/GameClient/GUI/GUICallbacks/Menus/OptionsMenuTabs.cpp	GUI:AntiAliasing
+Code/GameEngine/GameClient/GUI/GUICallbacks/Menus/SkirmishGameOptionsMenu.cpp	TOOLTIP:StartPosition
+Code/GameEngine/GameClient/GUI/Shell/ShellMenuScheme.cpp	StartPosition
+Code/GameEngine/GameClient/TestAidsClient.cpp	Testhilfen.wnd:Leiste
+Code/GameEngine/GameClient/TestAidsClient.cpp	alle_faehigkeiten
+Code/GameEngine/GameClient/TestAidsClient.cpp	alle_feinde_vernichten
+Code/GameEngine/GameClient/TestAidsClient.cpp	anzeige
+Code/GameEngine/GameClient/TestAidsClient.cpp	auswahl_vernichten
+Code/GameEngine/GameClient/TestAidsClient.cpp	energie_minus
+Code/GameEngine/GameClient/TestAidsClient.cpp	energie_plus
+Code/GameEngine/GameClient/TestAidsClient.cpp	energie_unendlich
+Code/GameEngine/GameClient/TestAidsClient.cpp	geld_einfrieren
+Code/GameEngine/GameClient/TestAidsClient.cpp	karte_aufdecken
+Code/GameEngine/GameClient/TestAidsClient.cpp	keine_wartezeit
+Code/GameEngine/GameClient/TestAidsClient.cpp	menue
+Code/GameEngine/GameClient/TestAidsClient.cpp	sieg
+Code/GameEngine/GameClient/TestAidsClient.cpp	unverwundbar
+Code/GameEngine/GameClient/TestAidsClient.cpp	zeitraffer
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d beenden
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d hauptmenue after %u passes
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d logik %s after %u passes, logic frame %u
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d markierung at %.0f %.0f
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d merke
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d niederlage, %d objects
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d sieg
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d speichern %s
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d spezial %s from %s at %.0f %.0f
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d wachstum %s
+Code/GameEngine/GameClient/TestScript.cpp	auswahl
+Code/GameEngine/GameClient/TestScript.cpp	beenden
+Code/GameEngine/GameClient/TestScript.cpp	bildlauf <taste|rand|ziehen> <rechts|links|hoch|runter> <ticks> [pixels]
+Code/GameEngine/GameClient/TestScript.cpp	fenster
+Code/GameEngine/GameClient/TestScript.cpp	hauptmenue
+Code/GameEngine/GameClient/TestScript.cpp	hoch
+Code/GameEngine/GameClient/TestScript.cpp	klick
+Code/GameEngine/GameClient/TestScript.cpp	liste
+Code/GameEngine/GameClient/TestScript.cpp	logik
+Code/GameEngine/GameClient/TestScript.cpp	markierung
+Code/GameEngine/GameClient/TestScript.cpp	merke
+Code/GameEngine/GameClient/TestScript.cpp	niederlage
+Code/GameEngine/GameClient/TestScript.cpp	partie
+Code/GameEngine/GameClient/TestScript.cpp	rechts
+Code/GameEngine/GameClient/TestScript.cpp	runter
+Code/GameEngine/GameClient/TestScript.cpp	sieg
+Code/GameEngine/GameClient/TestScript.cpp	speichern
+Code/GameEngine/GameClient/TestScript.cpp	spezial
+Code/GameEngine/GameClient/TestScript.cpp	tasteEcht <rechts|links|hoch|runter> [passes]
+Code/GameEngine/GameClient/TestScript.cpp	wachstum
+Code/GameEngine/GameClient/TestScript.cpp	warte
+Code/GameEngine/GameClient/TestScript.cpp	ziehen
+Code/GameEngine/GameClient/TestScript.cpp	ziehenEcht <rechts|links|hoch|runter> [frames] [pixels]
+Code/GameEngine/GameClient/TestScript.cpp	%s line %d rahmen edge %s box %d,%d-%d,%d units %d selected %d of them, %d in all; display %dx%d view %d,%d %dx%d
+Code/GameEngine/GameClient/TestScript.cpp	rahmen
+Code/GameEngine/GameClient/TestScript.cpp	rahmen needs a running game
+Code/GameEngine/GameClient/TestScript.cpp	oben
+Code/GameEngine/GameClient/TestScript.cpp	unten
+Code/GameEngine/GameClient/TestScript.cpp	streifen
+Code/GameEngine/GameClient/TestScript.cpp	streifen needs a running game
+Code/GameEngine/GameClient/TestScript.cpp	mitte
+Code/GameEngine/GameClient/TestScript.cpp	 mitte
+Code/GameEngine/GameClient/TestScript.cpp	OK line %d streifen skipped, no widescreen layout
+Code/GameEngine/GameClient/TestScript.cpp	%s line %d streifen%s unit at %d,%d (target %d,%d) placed %d behind bar %d selected %d, %d in all; view height %d display %dx%d
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	 eingeladen
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIANGRIFF {:d} spieler {:d} ende {} phase {:d} dauer {:d} wert {:.0f} start {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIANGRIFF {:d} spieler {:d} los {} gegner {:d} einheiten {:d} wert {:.0f} ziel {:.0f} {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIANGRIFF {:d} spieler {:d} nachschub einheiten {:d} wert {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIANGRIFF {:d} spieler {:d} sammeln gegner {:d} einheiten {:d} wert {:.0f} einsetzbar {:.0f} ort {:.0f} {:.0f}{}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIAUFKLAERUNG {:d} spieler {:d} fertig einheit {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIAUFKLAERUNG {:d} spieler {:d} spaeher {} ziel {:.0f} {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIBAU {:d} spieler {:d} einheit {} kosten {:d} geld {:d} wahl {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIBAU {:d} spieler {:d} upgrade {} kosten {:d} geld {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIEROEFFNUNG {:d} spieler {:d} startkapital {:d} klasse {} geldfaktor {:.2f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIFOKUS {:d} spieler {:d} gegner {:d} vorher {:d} grund {} kosten {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIGEFECHT {:d} spieler {:d} lage fokus {:d} abstand {:d} verteilt {:d} eigene {:d} feinde {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIGEFECHT {:d} spieler {:d} verteilen einheiten {:d} abstand {:.0f} superwaffe {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIGEGNERMODELL {:d} spieler {:d} ansturm {:d} einigeln {:d} luft {:d} tarnung {:d} armee {:.0f} luftwert {:.0f} abwehr {:.0f} getarnt {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIHAUSHALT {:d} spieler {:d} geld {:d} basis {:d} frei {:d} vorrang_offen {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIHILFE {:d} spieler {:d} ende {} dauer {:d} verbleibend {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIHILFE {:d} spieler {:d} start verbuendeter {:d} bedrohung {:.0f} einheiten {:d} wert {:.0f} ort {:.0f} {:.0f} {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIHILFE {:d} spieler {:d} verstaerkung einheiten {:d} wert {:.0f} bedrohung {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIHILFE {:d} spieler {:d} verworfen verbuendeter {:d} bedrohung {:.0f} {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIMARKIERUNG {:d} spieler {:d} entfernt {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIMARKIERUNG {:d} spieler {:d} setzen_fehlgeschlagen {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIMARKIERUNG {:d} spieler {:d} setzt {} ort {:.0f} {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIMARKIERUNG {:d} spieler {:d} von {:d} art angriff ort {:.0f} {:.0f} gegner {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIMARKIERUNG {:d} spieler {:d} von {:d} art hilfe ort {:.0f} {:.0f} {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIMARKIERUNG {:d} spieler {:d} ziel_ende {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIOHNE {:d} spieler {:d} teile {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KISUPERWACHE {:d} spieler {:d} superwaffe {} wachen {:d} geschickt {:d} wert {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KISUPERWAFFE {:d} spieler {:d} macht {} gegner {:d} ziel_id {:d} wert {:.0f} radius {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KISUPERWAFFE {:d} spieler {:d} macht {} warten wert {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIUEBERFALL {:d} spieler {:d} bau transport {} fahrer {} anzahl {:d} kosten {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIUEBERFALL {:d} spieler {:d} ende {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIUEBERFALL {:d} spieler {:d} heim fahrer {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIUEBERFALL {:d} spieler {:d} los fahrer {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIUEBERFALL {:d} spieler {:d} rueckzug {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIUEBERFALL {:d} spieler {:d} ziel {} id {:d} markierung
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIUEBERFALL {:d} spieler {:d} ziel {} id {:d} sieger {:d} verhaeltnis {:.2f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIVERTEIDIGUNG {:d} spieler {:d} bedrohung {:.0f} einheiten {:d} wert {:.0f} ort {:.0f} {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} auftrag_abgebrochen {} ort {:.0f} {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} ausbau {} vorrat {:.0f} zentren {:d} grund {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} bau {} bestand {:d} ziel {:d} vorrat {:.0f} grund {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} lage vorrat {:.0f} zentren {:d} geld {:d} hacker {:d} sammler {:d} bedarf {:d} einnahmebauten {:d} technik {:d} frei {:d} sammelrate {:.0f} restzeit_min {:.1f} investieren {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} technik {} einheit {} ort {:.0f} {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} technik_ende {} dauer {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} technik_upgrade {}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} vorlauf restzeit_min {:.1f} sammelrate {:.0f} elite_min {:.1f} ertrag_elite {:.0f} bedarf {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIWIRTSCHAFT {:d} spieler {:d} {} {} bestand {:d} ziel {:d}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	KIZIEL {:d} spieler {:d} ziel {} id {:d} sieger {:d} verhaeltnis {:.2f} weg_bedrohung {:.0f}
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	abgelaufen
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	abgelehnt
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	abgewehrt
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	abwehr
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	abwehr_verloren
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	aggressiv
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	allein
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	angenommen
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	angriff
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	angriff_ende
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	armee %.0f einsetzbar %.0f kandidaten %d wert %.0f
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	aufgeloest
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	aussichtslos
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	beschaedigt
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	buendnis
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	detektor
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	druck
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	eigene_basis
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	eingenommen
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	einheit_weg
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	entfernt
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	erreicht
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	ersetzt
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	gegner_besiegt
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	hilfe
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	hilfe_ende
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	igel
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	kein_gegner
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	kein_partner
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	kein_ziel
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	komme
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	konter
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	kosten
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	luftabwehr
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	markierung
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	mit_verbuendetem
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	produktion
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	prognose
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	rueckzug
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	sammeln_zeit
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	sammler
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	techniker
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	verbuendeter_weg
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	verlegt
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	verloren
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	wachstum
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	wahl
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	wechsel
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	zange
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	zeit
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	ziel_weg
+Code/GameEngine/GameLogic/AI/AICommanderPlayer.cpp	zu_schwach
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	 %s %u zellen %.0f ms %.1f hoechstens %.2f
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	 frei_bei_vorrat_leer %.0f
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	 pfad_fehlschlaege %u davon_vorrat_leer %u wiederholt %u frei_beim_start mittel %.0f kleinste %u
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	 sichtlinie %.0f schritte %.0f abbrueche %.0f vorrat_leer %u
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	 time %d msec %d cells
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	PFADSUCHE %.4f ms je Tick mit Anfragen (%u Ticks, hoechstens %.3f ms) anfragen %u zellen %.0f 
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	angriff
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	ausweichen
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	boden
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	flicken
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	hierarchisch
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	kosten
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	naechster
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	pfad
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	sicher
+Code/GameEngine/GameLogic/AI/AIPathfindSearch.cpp	warteschlange %.1f hoechstens %u rest %.2f anfragen_je_tick %u %u %u %u einzeln_hoechstens %.3f ms
+Code/GameEngine/GameLogic/AI/AIPlanner.cpp	KIKONTER {:d} spieler {:d} kandidaten {:d} bewertet {:d}{}
+Code/GameEngine/GameLogic/AI/AIPlanner.cpp	KIPLAN {:d} spieler {:d} eingabe {:d} objekte {:d} pruefsumme {:08X} eigene {:d} wert {:d} gebaeude {:d} verbuendet_wert {:d} feind_gesehen {:d} feind_wert {:d} feind_gebaeude {:d} lager {:d}
+Code/GameEngine/GameLogic/AI/AIPlanner.cpp	KIPROGNOSE {:d} spieler {:d} gegner {:d} feld_sieger {:d} feld_rest {:.2f} feld_verhaeltnis {:.2f} basis_sieger {:d} basis_rest {:.2f} basis_verhaeltnis {:.2f} feind_leben {:d} bedrohung_max {:.0f} trupp {:d} ziel {:d} ziel_sieger {:d} ziel_verhaeltnis {:.2f} ort_sieger {:d} ort_verhaeltnis {:.2f}
+Code/GameEngine/GameLogic/AI/AIPlanner.cpp	KIZEIT {:d} spieler {:d} plaene {:d} worker {:d} objekte {:d} schnappschuss_us {:d} schnappschuss_max {:d} rechnen_us {:d} rechnen_max {:d} warten_us {:d} warten_max {:d}
+Code/GameEngine/GameLogic/AI/AIStats.cpp	 keiner
+Code/GameEngine/GameLogic/AI/AIStats.cpp	KIAUFTRAG {:d} spieler {:d} art {} vorlage {} kosten {:d}
+Code/GameEngine/GameLogic/AI/AIStats.cpp	KISIEG {:d} ende {:d} team {:d} sieger(spieler/platz/art){}
+Code/GameEngine/GameLogic/AI/AIStats.cpp	KISTAT {:d} spieler {:d} platz {:d} seite {} art {:d} team {:d} besiegt {:d} geld {:d} einnahmen {:d} ausgaben {:d} einheiten {:d} armeewert {:d} leerlauf {:d} arbeiter {:d} gebaeude {:d} gebaut_e {:d} gebaut_g {:d} verloren_e {:d} verloren_g {:d} zerstoert_e {:d} zerstoert_g {:d} punkte {:d} rang {:d} gegner {:d} steckt {:d}
+Code/GameEngine/GameLogic/AI/AIStats.cpp	KIVERLUST {:d} spieler {:d} vorlage {} wert {:d} gebaeude {:d} von_spieler {:d} von_vorlage {} von_gebaeude {:d} ort {}
+Code/GameEngine/GameLogic/AI/AIStats.cpp	STECKT {:d} id {:d} vorlage {} spieler {:d} seite {} x {:d} y {:d} seit {:d} blockiert {:d} haengt {:d} ziel {:d} {:d} abstand_ziel {:d} zustand {:d} blockierer {:d} faehrt {:d} gegenseitig {:d} prioritaet {:d} vor_frames {:d}
+Code/GameEngine/GameLogic/AI/AIStats.cpp	WEGFEHL {:d} id {:d} vorlage {} spieler {:d} seite {} von {:d} {:d} nach {:d} {:d} ziel_gueltig {:d} erreichbar {:d} ende_abstand {:d}
+Code/GameEngine/GameLogic/AI/AIStats.cpp	eigene_basis
+Code/GameEngine/GameLogic/AI/AIStats.cpp	einheit
+Code/GameEngine/GameLogic/AI/AIStats.cpp	feld
+Code/GameEngine/GameLogic/AI/AIStats.cpp	gebaeude
+Code/GameEngine/GameLogic/Object/Update/AIUpdate/RailroadGuideAIUpdate.cpp	PingPong
+Code/GameEngine/GameLogic/ScriptEngine/ScriptEngine.cpp	   SCRIPT %s total time %f seconds,\n        evaluated %d times, avg execution %2.3f msec (Goal less than 0.05)\n
+Code/GameEngine/GameLogic/System/GameLogic.cpp	; laengstes Update %.3f ms Tick %u %s an %s
+Code/GameEngine/GameLogic/System/GameLogic.cpp	LOGIKMODULE %u Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms):
+Code/GameEngine/GameLogic/System/GameLogic.cpp	LOGIKPHASEN %u Ticks, %.4f ms je Tick (Mittel/hoechstens ms):
+Code/GameEngine/GameLogic/System/GameLogic.cpp	LOGIKSPITZE ab Tick %u: laengster Tick %u %.3f ms:
+Code/GameEngine/GameLogic/System/GameLogic.cpp	bau
+Code/GameEngine/GameLogic/System/GameLogic.cpp	befehle
+Code/GameEngine/GameLogic/System/GameLogic.cpp	gelaende
+Code/GameEngine/GameLogic/System/GameLogic.cpp	skript
+Code/GameEngine/GameLogic/System/GameLogic.cpp	tickende
+Code/GameEngine/GameNetwork/IPEnumeration.cpp	Hostname is '%s'\n
+Code/Platform/VideoDevice/FFmpeg/FFmpegVideoPlayer.cpp	geladen
+Code/Platform/VideoDevice/FFmpeg/FFmpegVideoPlayer.cpp	nicht lesbar
+Code/Platform/W3DDevice/GameClient/Terrain/TerrainTessMask.cpp	TERRAINTESS maske %d x %d wasserpunkte %d strassen %d
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	    -Slowest 2 script times %.5f msec, %.5f msec \n
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	  Avg time per object scan this frame is %.5f msec\n
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	  Total time for object scans this frame is %.5f msec\n
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	  Total time last frame: %.5f msec\n
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	Average FPS: %.1f (%.5f msec)\n
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	D3D11EFFECTS flags 0x{:X} sharpen {:.2f} msaa {:d} backend {:d} shadowmap {:d} gelaende {:.2f} detailboden {:.2f} berge {:.2f} relief {:.2f} tessellation {:.2f} faktor {:.0f} pixel {:.0f} probe {:d} felstess {:.2f}
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	DRAWSTATS frame {:d} logic {:d} bilder {:d} zeichnungen {:.0f} dreiecke {:.0f} ecken {:.0f} zoom {:.3f} hoehe {:.0f}
+Code/Platform/W3DDevice/GameClient/Display/W3DDisplay.cpp	RENDERSKALIERUNG anteil {:.3f} filter {:d} schaerfe {:.2f} zeitmessung {:d}
+Code/Platform/W3DDevice/GameClient/Display/W3DParticleSys.cpp	PARTIKELZEIT simulation {:.4f} ms je Tick ({:d} Ticks, {:.1f} Partikel) aufbereiten {:.4f} ms je Bild ({:d} Bilder, {:.1f} Partikel sichtbar)
+Code/Platform/W3DDevice/GameClient/Water/W3DWater.cpp	wasser_flusskante.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWater.cpp	wasser_glitzern.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWater.cpp	wasser_rauschen.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	ProjectData\\Textures\\Wasser\\%s
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	himmel_abend.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	himmel_morgen.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	himmel_nacht.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	himmel_tag.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	schaum.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	wasser_fluss.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	wasser_see.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	wasser_trueb.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterReal.cpp	wellen.dds
+Code/Platform/W3DDevice/GameClient/Water/W3DWaterTracks.cpp	wasser_brandung.dds
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	BODENDETAIL klassen {:d} mit_detail {:d} zuordnungen {:d} raster {:d} x {:d} atlas {:d}
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	TERRAINRELIEF kacheln {:d} von {:d} stufe {:d} atlas {:d} x {:d}
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	TERRAINTESS kacheln {:d} von {:d} stufe {:d} klassen {:d} von {:d} gitter {:d} x {:d} abweichend {:d}
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	erde
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	fels
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	gras
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	keins
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	kies
+Code/Platform/W3DDevice/GameClient/Terrain/WorldHeightMap.cpp	schnee
+Code/Platform/Win32Device/GameClient/Win32Mouse.cpp	MOD zeiger {} {}
+Code/Platform/Win32Device/GameClient/Win32Mouse.cpp	geladen
+Code/Platform/Win32Device/GameClient/Win32Mouse.cpp	nicht ladbar
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 berge zeichnungen %.1f hoehenfeld %d x %d texturen %d
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 bodendetail zeichnungen %.1f von %.1f felder %u tabelle %d texturen %d
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 cbring schreiben %.1f umlaeufe %.2f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 gelaendelichter zeichnungen %.1f vorbeleuchtung %.1f hoechstens %u je_pixel %.1f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 modelllicht zeichnungen %.1f normalen %.1f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 atmosphaere bilder %.0f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 meshinstanzen zeichnungen %.1f statt %.1f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 partikel zeichnungen %.1f anzahl %.1f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 relief zeichnungen %.1f atlas %d
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 renderskalierung %.3f filter %u bilder %.0f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 schattenwerfer %.0f zeichnungen %.0f kopien %.1f kante %.0f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 skinning zeichnungen %.1f knochen %.1f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	 tessellation zeichnungen %.1f abschnitte %.2f flecken %.0f punkte %.0f dreiecke %.0f gemessen %.0f hoehen %d fels %.2f
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	GPUEFFEKTE flags 0x%X samples %u bilder %u%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	baeume
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	bild
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	durchsichtig
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	gelaende
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	glanz_hitze
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	nachbearbeitung
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	oberflaeche
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	objekte
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	partikel
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	spiegelung
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	szene
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	tiefe_ssao
+Code/Renderer/WW3D2/Common/rendercore_effects.cpp	wasser
+Code/Renderer/WW3D2/Common/rendercore_terrain.cpp	ProjectData\\Textures\\Berge\\fels_fein.dds
+Code/Renderer/WW3D2/Common/rendercore_terrain.cpp	ProjectData\\Textures\\Berge\\fels_grob.dds
+Code/App/CMakeLists.txt	$<TARGET_FILE_DIR:${GAME_EXE_NAME}>/ProjectData/Inhalt/BaeumeFrei
+Code/App/CMakeLists.txt	$<TARGET_FILE_DIR:${GAME_EXE_NAME}>/ProjectData/Inhalt/FreieStrassen
+Code/App/CMakeLists.txt	$<TARGET_FILE_DIR:${GAME_EXE_NAME}>/ProjectData/Inhalt/FreieStrassen/Texturstufen
+Code/App/CMakeLists.txt	$<TARGET_FILE_DIR:${GAME_EXE_NAME}>/ProjectData/Inhalt/FreierBoden
+Code/App/WinMain.cpp	-mehrfach
+Code/Games/GameTargets.cmake	Code/Games/GameTargets.cmake: parameter ${_param} missing (see Code/Games/<game>/CMakeLists.txt)
+Code/Tests/BabylonTests/BabylonTests.cpp	%d Einheiten
+Code/Tests/BabylonTests/BabylonTests.cpp	%d Einheiten gebaut
+Code/Tests/BabylonTests/BabylonTests.cpp	%d gebaut
+Code/Tests/BabylonTests/BabylonTests.cpp	%d von %s
+Code/Tests/BabylonTests/BabylonTests.cpp	Einheiten
+Code/Tests/BabylonTests/BabylonTests.cpp	Hallo,  Kommandant. \\n Willkommen!
+Code/Tests/BabylonTests/BabylonTests.cpp	Hallo, Kommandant. \n Willkommen!
+Code/Tests/BabylonTests/BabylonTests.cpp	Hallo, Kommandant.\\nWillkommen!
+Code/Tests/BabylonTests/BabylonTests.cpp	Hallo, Kommandant.\nWillkommen!
+Code/Tests/BabylonTests/BabylonTests.cpp	application/vnd.oasis.opendocument.spreadsheet
+Code/Tests/EngineTests/EngineTests.cpp	AntiAliasing = 17\n
+Code/Tests/EngineTests/EngineTests.cpp	Beschreibung = More units\r\n
+Code/Tests/EngineTests/EngineTests.cpp	Display.AntiAliasing
+Code/Tests/EngineTests/EngineTests.cpp	M1\\Texturstufen\\Paket\\a.big
+Code/Tests/EngineTests/EngineTests.cpp	M1\\Texturstufen\\Paket\\b.big
+Code/Tests/EngineTests/EngineTests.cpp	M1\\Texturstufen\\Paket\\z.big
+Code/Tests/EngineTests/EngineTests.cpp	M:\\Mod\\Texturstufen\\Paket\\t.big
+Code/Tests/EngineTests/EngineTests.cpp	Options.ini AntiAliasing = 17: invalid, not imported
+Code/Tests/EngineTests/EngineTests.cpp	ProjectData\\Inhalt\\Frei\\
+Code/Tests/EngineTests/EngineTests.cpp	Texturstufen\\Paket\\
+Code/Tests/EngineTests/EngineTests.cpp	Texturstufen\\Paket\\TexturesPaket.big
+Code/Tests/EngineTests/EngineTests.cpp	Texturstufen\\Paket\\TexturesPaket2.big
+Code/Tests/EngineTests/EngineTests.cpp	\xEF\xBB\xBF# comment\r\nName = Big Mod\r\n; other comment\r\nVersion=1.2\r\nAutor = Someone\r\nSpiel = ZH\r\n
+Code/Tests/EngineTests/EngineTests.cpp	mod1 paket
+Code/Tests/EngineTests/EngineTests.cpp	mod1 paket b
+Code/Tests/EngineTests/EngineTests.cpp	neu
+Code/Tests/EngineTests/EngineTests.cpp	texturstufen\\paket\\texturespaket.BIG
+Code/Tools/Editors/Babylon/App/Dialogs.cpp	Spreadsheet (*.xlsx *.ods *.csv);;Excel workbook (*.xlsx);;OpenDocument spreadsheet (*.ods);;CSV text (*.csv)
+Code/Tools/Editors/Babylon/App/MainWindow.cpp	Deutsch
+Code/Tools/Editors/Babylon/App/SelfTest.cpp	%d Einheiten gebaut
+Code/Tools/Editors/Babylon/App/SelfTest.cpp	Hallo, Kommandant.\\nWillkommen zur\xC3\xBC
+Code/Tools/Editors/Babylon/App/SelfTest.cpp	Hallo, Kommandant.\nWillkommen zur\xC3\xBC
+Code/Tools/Editors/Babylon/Model/Ods.cpp	<manifest:file-entry manifest:full-path=\"/\" manifest:version=\"1.2\" manifest:media-type=\"application/vnd.oasis.opendocument.spreadsheet\"/>
+Code/Tools/Editors/Babylon/Model/Ods.cpp	<manifest:manifest xmlns:manifest=\"urn:oasis:names:tc:opendocument:xmlns:manifest:1.0\" manifest:version=\"1.2\">
+Code/Tools/Editors/Babylon/Model/Ods.cpp	<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" 
+Code/Tools/Editors/Babylon/Model/Ods.cpp	<office:document-meta xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" 
+Code/Tools/Editors/Babylon/Model/Ods.cpp	<office:document-settings xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" 
+Code/Tools/Editors/Babylon/Model/Ods.cpp	<office:document-styles xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" 
+Code/Tools/Editors/Babylon/Model/Ods.cpp	<office:font-face-decls><style:font-face style:name=\"Arial\" svg:font-family=\"Arial\" xmlns:svg=\"urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\"/></office:font-face-decls>
+Code/Tools/Editors/Babylon/Model/Ods.cpp	application/vnd.oasis.opendocument.spreadsheet
+Code/Tools/Editors/Babylon/Model/Ods.cpp	xmlns:config=\"urn:oasis:names:tc:opendocument:xmlns:config:1.0\" office:version=\"1.2\"><office:settings>
+Code/Tools/Editors/Babylon/Model/Ods.cpp	xmlns:meta=\"urn:oasis:names:tc:opendocument:xmlns:meta:1.0\" office:version=\"1.2\">
+Code/Tools/Editors/Babylon/Model/Ods.cpp	xmlns:of=\"urn:oasis:names:tc:opendocument:xmlns:of:1.2\" office:version=\"1.2\">
+Code/Tools/Editors/Babylon/Model/Ods.cpp	xmlns:style=\"urn:oasis:names:tc:opendocument:xmlns:style:1.0\" xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\" office:version=\"1.2\">
+Code/Tools/Editors/Babylon/Model/Ods.cpp	xmlns:style=\"urn:oasis:names:tc:opendocument:xmlns:style:1.0\" xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" 
+Code/Tools/Editors/Babylon/Model/Ods.cpp	xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" xmlns:fo=\"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\" 
+Code/Tools/Editors/Babylon/Model/Sheet.cpp	application/vnd.oasis.opendocument.spreadsheet
+Code/Tools/Editors/GuiEditor/App/EditorWindow.cpp	Deutsch
+Code/Tools/Editors/GuiEditor/App/SelfTest.cpp	&Datei
+Code/Tools/Editors/MapEditor/App/MainWindowDisplay.cpp	Antialiasing (FXAA)
+Code/Tools/Editors/MapEditor/App/MainWindowDisplay.cpp	berge
+Code/Tools/Editors/MapEditor/App/MainWindowDisplay.cpp	schatten
+Code/Tools/Editors/MapEditor/App/MainWindowPalette.cpp	Auf Deutsch umschalten
+Code/Tools/Editors/MapEditor/App/MainWindowPreferences.cpp	Deutsch
+Code/Tools/Editors/MapEditor/Core/ParticleIni.cpp	PingPong
+Code/Tools/Server/Rendezvous/main.cpp	relay_kib_per_session
+Code/Tools/Server/Rendezvous/main.cpp	relay_mib_total
+Code/Tools/Diagnostics/VfsDump/main.cpp	Paket
+Code/Tools/Diagnostics/VfsDump/main.cpp	Texturstufen\\Paket\\
+Code/Games/Generals/CMakeLists.txt	${SHARED_CODE_DIR}/Games/GameTargets.cmake
+Code/Games/ZeroHour/CMakeLists.txt	${SHARED_CODE_DIR}/Games/GameTargets.cmake
+Code/Platform/W3DDevice/GameClient/GUI/W3DMouse.cpp	%s ms=%u von=%d nach=%d modus=%d thread=%lu\n
+Code/Platform/W3DDevice/GameClient/GUI/W3DMouse.cpp	SEKUNDE ms=%u bilder=%u setCursor=%u wechsel=%u neu_gesetzt=%u animbilder=%u modus=%d\n
+CMakeLists.txt	${CMAKE_SOURCE_DIR}/Code/Games/Generals
+CMakeLists.txt	${CMAKE_SOURCE_DIR}/Code/Games/ZeroHour

@@ -1,0 +1,19 @@
+# Zero Hour, Generals-Herausforderung (leicht): ersten General waehlen, spielen, Sieg per Strg+W, Punkteanzeige,
+# "Weiter" zum zweiten Gegner, spielen, beenden.
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonChallenge
+klick MainMenu.wnd:ButtonEasy
+fenster ChallengeMenu.wnd:GeneralPosition0 600
+klick ChallengeMenu.wnd:GeneralPosition0
+warte 120
+klick ChallengeMenu.wnd:ButtonPlay
+partie 20000
+warte 900
+siegBisEnde 20000
+fenster ScoreScreen.wnd:ButtonContinue 900
+warte 60
+klick ScoreScreen.wnd:ButtonContinue
+partie 20000
+warte 900
+beenden

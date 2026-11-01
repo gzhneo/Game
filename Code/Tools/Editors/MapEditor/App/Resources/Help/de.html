@@ -1,0 +1,77 @@
+<!-- MapEditor-Hilfe, Deutsch. Ein Abschnitt je Thema; F1 öffnet den Abschnitt des aktuellen Fensters oder Werkzeugs. -->
+<h1>Hilfe zum Karteneditor</h1>
+<p>F1 öffnet den Teil dieser Hilfe, der zum gerade benutzten Fenster oder Werkzeug gehört. Jeder Befehl steht auch in der Befehlspalette (Strg+Umschalt+P).</p>
+
+<h2 id="start">Startseite</h2>
+<p>Karte öffnen, neue anlegen oder eine der zuletzt benutzten wählen. Das Spiel (Generals oder Zero Hour) bestimmt, welche Spieldaten der Editor lädt.</p>
+
+<h2 id="view">Bewegen auf der Karte</h2>
+<p><b>3D-Ansicht:</b> Das Mausrad zoomt zum Punkt unter dem Zeiger, die rechte Maustaste dreht und neigt die Kamera, die mittlere verschiebt sie. Pfeiltasten verschieben, Bild auf/ab drehen, Pos1 setzt die Kamera auf den Start zurück. <b>2D-Übersicht:</b> Mausrad zoomt, Ziehen mit der mittleren Taste verschiebt; die Minikarte zeigt den Blick der Kamera. Kamera-Lesezeichen merken sich Ansichten einer Karte.</p>
+<p>Ansicht &rsaquo; Grafik wählt den klassischen Anblick oder eine Detailstufe des Spiels (Schattenkarte, Umgebungsverdeckung, Schärfen, Boden-Detail, Fels an steilen Hängen, realistisches Wasser); jeder Effekt lässt sich einzeln abschalten.</p>
+
+<h2 id="objects">Objekte</h2>
+<p>Klick wählt aus, Strg+Klick fügt hinzu, ein aufgezogener Rahmen wählt mehrere. Ziehen verschiebt; Ziehen am Ring dreht. Die Seitenleiste zeigt die Eigenschaften der Auswahl. Der Katalog setzt neue Objekte: eines wählen, dann auf die Karte klicken. Ausschneiden, Kopieren, Einfügen und Duplizieren gehen auch zwischen Karten. Esc beendet ein Ziehen oder Setzen.</p>
+
+<h2 id="waypoints">Wegpunkte</h2>
+<p>Mit dem Wegpunkt-Werkzeug setzt ein Klick einen Wegpunkt; ist einer ausgewählt, wird der nächste von ihm aus verbunden. Strg+L verbindet, Strg+Umschalt+L trennt die ausgewählten Wegpunkte. Startpositionen heißen Player_1_Start bis Player_8_Start.</p>
+
+<h2 id="areas">Auslöser- und Wasserflächen</h2>
+<p>Klicks setzen die Ecken einer Fläche; ein Klick auf die erste Ecke, Doppelklick oder Eingabe schließt sie. Ecken ziehen verschiebt sie, ein Klick auf eine Kante fügt eine hinzu. Wasserflächen erscheinen in der 3D-Ansicht als Wasser.</p>
+
+<h2 id="roads">Straßen und Brücken</h2>
+<p>Ziehen legt ein Straßenstück; Stücke, die sich treffen, werden zu Kurven und Kreuzungen verbunden. Brücken setzt man wie Straßen zwischen zwei Punkten.</p>
+
+<h2 id="placement">Wälder, Zäune, Brandspuren</h2>
+<p>Das Wald-Werkzeug verteilt Bäume in einem Kreis oder Rechteck, nie unter Wasser oder an zu steilen Hängen; das Zaun-Werkzeug setzt Zaunstücke entlang einer Linie; Brandspuren setzt ein Klick.</p>
+
+<h2 id="terrain-height">Höhen</h2>
+<p>Der Pinsel hebt, senkt, setzt oder glättet den Boden; Größe und Stärke stehen in der Seitenleiste, der Kreis zeigt ihn in beiden Ansichten. Taste halten und bewegen malt. Jeder Strich ist ein Rückgängig-Schritt. Die Klippen-Flags folgen den neuen Höhen, wie das Spiel sie berechnet.</p>
+
+<h2 id="terrain-texture">Texturen</h2>
+<p>Textur malen mit weichen oder harten Kanten, Fläche füllen, eine Kante durch Ziehen überblenden, Kanten einer Fläche automatisch überblenden oder Klippentexturen ausrichten. Die Pipette nimmt die Textur unter dem Zeiger. „Ungenutzte Texturen entfernen“ entfernt Klassen, die keine Zelle nutzt.</p>
+
+<h2 id="terrain-shape">Rampen und Mesh Molds</h2>
+<p>Eine Rampe verläuft zwischen zwei geklickten Punkten mit ihrer Breite. Ein Mesh Mold drückt die Form eines Modells in den Boden; verschieben und drehen, dann anwenden oder mit Esc verwerfen.</p>
+
+<h2 id="terrain-pathing">Passierbarkeit</h2>
+<p>Malen, wo Einheiten nicht hinkönnen (Klippen-Flags); rote Zellen in beiden Ansichten sind unpassierbar. „Aus den Höhen setzen“ setzt die Flags aus den Hängen, wie das Spiel es täte.</p>
+<p>Ansicht &rsaquo; Neigung färbt jede Zelle nach ihrer Neigung in der 2D-Karte und die steilen in der 3D-Ansicht, mit dem gewählten Grenzwinkel (45° ist der des Spiels).</p>
+
+<h2 id="buildlist">Baulisten</h2>
+<p>Die Bauliste sagt einem Computerspieler, was er wo baut. Gebäude setzt das Bauliste-Werkzeug; die Liste in der Seitenleiste ordnet sie und setzt ihre Eigenschaften.</p>
+
+<h2 id="settings">Karteneinstellungen</h2>
+<p>Welteinstellungen, Licht (die Sonne auf der Scheibe ziehen: die Ansicht zeigt Licht und Schatten sofort), Schatten, Wasser (Sichttiefe, Farben, Lichtbrechung, Himmelsspiegelung; „In map.ini schreiben“ legt die Werte zur Karte), Spielbereiche und das Vorschaubild. Jede Änderung ist ein Rückgängig-Schritt.</p>
+
+<h2 id="sides">Spieler und Teams</h2>
+<p>Die Spieler der Karte mit Fraktion, Farbe und Verbündeten, und die Teams mit ihren Einheiten, ihrem Heimat-Wegpunkt und ihren Skripten.</p>
+
+<h2 id="scripts">Skripte</h2>
+<p>Skripte der Spieler in Gruppen: Bedingungen (ein ODER-Block muss gelten, darin alle Bedingungen) und Aktionen, dazu Sonst-Aktionen, wenn die Bedingungen nicht gelten. Doppelklick auf eine Zeile bearbeitet sie; die Prüfung markiert Parameter, die nichts auf der Karte benennen. Skripte lassen sich als .scb-Dateien aus- und einlesen.</p>
+
+<h2 id="particles">Partikelsysteme</h2>
+<p>Alle Partikelsysteme der Spieldaten mit Formular, INI-Text und Vorschau in der 3D-Ansicht (am ausgewählten Objekt). Farbe und Alpha laufen als Kurven über das Leben eines Partikels. Änderungen testet „Im Spiel testen“, gespeichert wird in die Daten des Projekts.</p>
+
+<h2 id="problems">Karte prüfen</h2>
+<p>Bearbeiten &rsaquo; Karte prüfen (F7) listet, woran das Spiel scheitern würde: fehlende Startpositionen, Objekte außerhalb der Karte, unbekannte Vorlagen, Skripte, die nichts benennen. Viele Probleme haben eine Schnellkorrektur.</p>
+
+<h2 id="history">Verlauf</h2>
+<p>Bearbeiten &rsaquo; Verlauf (Strg+H) listet jeden Schritt der Karte; rückgängig gemachte sind grau, der gespeicherte Stand ist markiert. Ein Klick springt zu diesem Stand.</p>
+
+<h2 id="search">In der Karte suchen</h2>
+<p>Strg+Umschalt+F sucht Namen und Texte in Skripten, Objekten, Teams, Baulisten und Flächen; „Wo wird das benutzt?“ (Umschalt+F12) beginnt mit dem Namen des ausgewählten Objekts. Doppelklick zeigt die Stelle. „Alle ersetzen“ ändert die Skripte in einem Rückgängig-Schritt.</p>
+
+<h2 id="fairness">Mehrspieler-Fairness</h2>
+<p>Bearbeiten &rsaquo; Mehrspieler-Fairness (Umschalt+F7) misst die Wege über den Boden von jedem Start zu den Versorgungsquellen, den Tech-Gebäuden und den anderen Starts; benachteiligte Starts sind markiert. Die Gebiete zeigen, welcher Start wo zuerst ankommt.</p>
+
+<h2 id="symmetry">Symmetrie</h2>
+<p>Bearbeiten &rsaquo; Symmetrisch machen kopiert einen Teil der Karte auf den Rest: links und rechts gespiegelt, unten und oben, um 180 Grad gedreht oder in vier Viertel, mit Höhen, Texturen, Klippen-Flags, Objekten und Wegpunkten. Start-Wegpunkte der Kopien bekommen das nächste freie Player_n_Start. Ein Rückgängig-Schritt.</p>
+
+<h2 id="poster">Poster und Bilder</h2>
+<p>Datei &rsaquo; Exportieren &rsaquo; Poster der 3D-Ansicht zeichnet das Bild der Kamera in mehrfacher Größe der Ansicht mit allen Effekten, als PNG. Dort gibt es auch das Bild der Karte (2D) und die Höhenkarte.</p>
+
+<h2 id="layers">Ebenen</h2>
+<p>Objekte und Flächen gehören zu Ebenen; ausgeblendete Ebenen werden weder gezeichnet noch gewählt, neue Objekte kommen in die aktive.</p>
+
+<h2 id="shortcuts">Tastenkürzel</h2>
+<p>Einstellungen &rsaquo; Tastatur listet jeden Befehl mit seinen Tasten; jede lässt sich ändern. Esc bricht ein Ziehen oder Werkzeug ab, Entf entfernt die Auswahl, Strg+Z / Strg+Y machen rückgängig und wiederholen.</p>

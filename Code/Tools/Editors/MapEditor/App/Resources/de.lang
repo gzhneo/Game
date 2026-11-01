@@ -1,0 +1,1102 @@
+# German texts of the map editor: English source text, tab, German text. UTF-8.
+# Tested by the self test and by tools/mapeditor/lang_check.py (every T("...") needs a line).
+%1 (%2 water)	%1 (%2 Wasser)
+%1 (active)	%1 (aktiv)
+%1 (added to the map when painted)	%1 (kommt beim Malen in die Karte)
+%1 (in the map)	%1 (in der Karte)
+%1 days ago	vor %1 Tagen
+%1 duplicate objects selected (Delete removes them)	%1 doppelte Objekte ausgewählt (Entf entfernt sie)
+%1 hours ago	vor %1 Stunden
+%1 is not a valid value for %2.	%1 ist kein gültiger Wert für %2.
+%1 is there already; double-click its value to change it.	%1 gibt es schon; Doppelklick auf den Wert ändert ihn.
+%1 junctions	%1 Kreuzungen
+%1 minutes ago	vor %1 Minuten
+%1 object types without GC_ prefix	%1 Objekttypen ohne GC_-Vorsilbe
+%1 objects	%1 Objekte
+%1 objects belong to teams of this player. Remove the player and its teams anyway?	%1 Objekte gehören zu Teams dieses Spielers. Spieler und Teams trotzdem entfernen?
+%1 objects belong to this team. Delete it anyway?	%1 Objekte gehören zu diesem Team. Trotzdem löschen?
+%1 objects copied	%1 Objekte kopiert
+%1 objects copied; the system clipboard is busy, so they can only be pasted in this window	%1 Objekte kopiert; die Zwischenablage von Windows ist belegt, sie lassen sich nur in diesem Fenster einfügen
+The system clipboard is busy; the cut objects can only be pasted in this window	Die Zwischenablage von Windows ist belegt; die ausgeschnittenen Objekte lassen sich nur in diesem Fenster einfügen
+%1 objects grouped: a click on one picks them all	%1 Objekte gruppiert: ein Klick auf eines wählt alle
+%1 objects of team %2 selected	%1 Objekte von Team %2 ausgewählt
+%1 objects of this template selected	%1 Objekte dieser Vorlage ausgewählt
+%1 objects will lie outside the playable area; they stay in the map.	%1 Objekte liegen danach außerhalb des Spielbereichs; sie bleiben in der Karte.
+%1 objects with teams the map lacks: %2	%1 Objekte mit Teams, die die Karte nicht hat: %2
+%1 of %2 templates	%1 von %2 Vorlagen
+%1 points, ID %2	%1 Punkte, ID %2
+%1 problems; a double-click shows the script.	%1 Probleme; ein Doppelklick zeigt das Skript.
+%1 skirmish players added	%1 Gefechtsspieler hinzugefügt
+%1 templates	%1 Vorlagen
+%1 unused textures removed, blend table %2 -> %3 entries	%1 ungenutzte Texturen entfernt, Blend-Tabelle %2 -> %3 Einträge
+%1 × %2 cells	%1 × %2 Zellen
+%1, autosaved %2	%1, automatisch gesichert %2
+(default team)	(Standardteam)
+(inactive)	(inaktiv)
+(mixed)	(gemischt)
+(neutral)	(neutral)
+(no side)	(ohne Seite)
+(none)	(keiner)
+(subroutine)	(Unterprogramm)
+1 hour ago	vor 1 Stunde
+2D overview	2D-Übersicht
+3D view	3D-Ansicht
+3D view not available	3D-Ansicht nicht verfügbar
+A click adds the structure (drag to turn it), dragging an entry moves it, the ring around the selected one turns it.	Ein Klick setzt das Gebäude (Ziehen dreht es), Ziehen an einem Eintrag verschiebt ihn, der Ring um den gewählten dreht ihn.
+A click grows a grove outwards from that point, avoiding water and slopes; a drag scatters the number of trees above in the rectangle.	Ein Klick lässt von dort aus einen Wald wachsen, ohne Wasser und Steilhänge; Ziehen verteilt die oben eingestellte Zahl Bäume im Rechteck.
+A click sets a scorch mark; a click on one picks it, so its kind and radius can be changed on the right.	Ein Klick setzt eine Brandspur; ein Klick auf eine vorhandene wählt sie aus, rechts lassen sich Art und Radius ändern.
+A layer %1 exists already.	Eine Ebene %1 gibt es schon.
+A new map needs the game data: %1	Eine neue Karte braucht die Spieldaten: %1
+A waypoint marks a place for scripts and paths of the computer players.	Ein Wegpunkt markiert einen Ort für Skripte und Wege der Computergegner.
+A waypoint needs a name.	Ein Wegpunkt braucht einen Namen.
+About the MapEditor	Über den MapEditor
+Accent 1	Akzent 1
+Accent 2	Akzent 2
+Accent colour and map folders follow the game.	Akzentfarbe und Kartenordner folgen dem Spiel.
+Action	Aktion
+Active	Aktiv
+Active on/off	Aktiv an/aus
+Add	Hinzufügen
+Add action	Aktion hinzufügen
+Add area	Fläche anlegen
+Add bridge	Brücke anlegen
+Add condition	Bedingung hinzufügen
+Add player	Spieler hinzufügen
+Add property	Eigenschaft hinzufügen
+Add road	Straße anlegen
+Add script	Skript hinzufügen
+Add script group	Skriptgruppe hinzufügen
+Add skirmish players	Gefechtsspieler hinzufügen
+Add team	Team hinzufügen
+Add the neutral player	Neutralen Spieler anlegen
+Add to build list	Zur Bauliste hinzufügen
+Add waypoint	Wegpunkt setzen
+Afternoon	Nachmittag
+Aggressive	Aggressiv
+Alert	Wachsam
+All	Alle
+All of these:	Alle diese:
+All properties	Alle Eigenschaften
+All scripts (otherwise the selected script, group or player)	Alle Skripte (sonst das gewählte Skript, die Gruppe oder der Spieler)
+Ally	Verbündet
+Also in water	Auch im Wasser
+Also on steep slopes	Auch an Steilhängen
+Ambient R	Umgebung R
+An area keeps at least three points; Del without a selected point deletes the area.	Eine Fläche behält mindestens drei Punkte; Entf ohne gewählten Punkt löscht die Fläche.
+An area needs at least three points.	Eine Fläche braucht mindestens drei Punkte.
+Angle	Winkel
+Angled	Eckig
+Anything	Alles
+Appearance	Darstellung
+Apply	Anwenden
+AREA	FLÄCHE
+Area %1: %2 x %3 cells	Bereich %1: %2 × %3 Zellen
+Areas	Flächen
+Areas the scripts name	Flächen, die die Skripte nennen
+Areas: clicks set points, a click on the first point or Enter closes; drag a point, click an edge to insert one, drag inside to move; Del removes; Ctrl+click starts a new area	Flächen: Klicks setzen Punkte, Klick auf den ersten Punkt oder Enter schließt; Punkt ziehen, Klick auf eine Kante fügt einen ein, Ziehen innen verschiebt; Entf entfernt; Strg+Klick beginnt eine neue Fläche
+As the map	Wie die Karte
+Attack a common target	Gemeinsames Ziel angreifen
+Attitude	Haltung
+Audio	Klang
+Auto edge	Auto-Kante
+Autosave	Autosicherung
+Autosave failed: %1	Autosicherung fehlgeschlagen: %1
+Autosaved at %1	Automatisch gesichert um %1
+Avoid threats	Gefahren meiden
+Azimuth	Azimut
+B	B
+Back	Zurück
+Back to the 2D overview	Zurück zur 2D-Übersicht
+Base defence	Basisverteidigung
+Behaviour	Verhalten
+Blend edge	Kante überblenden
+Blue	Blau
+Border	Rand
+Border (cells)	Rand (Zellen)
+Borders	Grenzen
+BRIDGE	BRÜCKE
+Bridge	Brücke
+Bridges	Brücken
+Bridges span between two points; the terrain places the bridge model of the type there.	Brücken spannen sich zwischen zwei Punkten; das Gelände setzt dort das Brückenmodell der Art ein.
+Bridges: drag from bank to bank; a click selects a bridge, Del deletes it	Brücken: von Ufer zu Ufer ziehen; Klick wählt eine Brücke, Entf löscht sie
+Build and check maps for Generals and Zero Hour.	Karten für Generals und Zero Hour bauen und prüfen.
+BUILD LIST	BAULISTE
+Build list	Bauliste
+Build list exported to %1	Bauliste exportiert nach %1
+Build list: %1	Bauliste: %1
+Buildings	Gebäude
+Built at the start	Zu Beginn gebaut
+Built-in shape	Eingebaute Form
+Camera	Kamera
+Camera...	Kamera …
+Cancel	Abbrechen
+Cannot be sold	Nicht verkaufbar
+Cell %1, %2   World %3, %4   Height %5	Zelle %1, %2   Welt %3, %4   Höhe %5
+cells	Zellen
+Centre on selection	Auf Auswahl zentrieren
+Change action	Aktion ändern
+Change area	Fläche ändern
+Change behaviour	Verhalten ändern
+Change build list entry	Bauliste ändern
+Change colour	Farbe ändern
+Change comment	Kommentar ändern
+Change condition	Bedingung ändern
+Change controller	Steuerung ändern
+Change display name	Anzeigename ändern
+Change faction	Fraktion ändern
+Change health	Lebenspunkte ändern
+Change height	Höhe ändern
+Change light	Licht ändern
+Change model	Modell ändern
+Change path	Pfad ändern
+Change playable area	Spielbereich ändern
+Change property	Eigenschaft ändern
+Change relation	Beziehung ändern
+Change road	Straße ändern
+Change script	Skript ändern
+Change script group	Skriptgruppe ändern
+Change sound	Klang ändern
+Change team	Team ändern
+Change team owner	Teambesitzer ändern
+Change veterancy	Veteranenstufe ändern
+Change water height	Wasserhöhe ändern
+Check	Prüfen
+Check every	Prüfen alle
+Choose a script or group. New script adds one after the selection.	Ein Skript oder eine Gruppe wählen. „Neues Skript“ legt eines hinter der Auswahl an.
+Choose a structure for the build list first.	Zuerst ein Gebäude für die Bauliste wählen.
+Choose a template	Vorlage wählen
+Choose a texture first.	Zuerst eine Textur wählen.
+Choose at least one tree for the grove.	Mindestens eine Baumart für den Wald wählen.
+Choose game data folder…	Spieldaten-Ordner wählen …
+Choose...	Wählen …
+Choose…	Wählen …
+Circle	Kreis
+Click a texture region: it takes the chosen texture, up to where other textures begin. With Shift every cell of that texture on the map. Alt+click takes the texture under the cursor.	Auf eine Texturfläche klicken: sie bekommt die gewählte Textur, bis dorthin, wo andere Texturen beginnen. Mit Umschalt jede Zelle dieser Textur auf der ganzen Karte. Alt+Klick übernimmt die Textur unter dem Mauszeiger.
+Click a texture region: its edges blend softly into the textures around it, all around the region.	Auf eine Texturfläche klicken: ihre Ränder gehen rundum weich in die umliegenden Texturen über.
+Click selects, Ctrl+click adds, drag moves, Shift+drag turns, drag on the ground selects a rectangle	Klick wählt, Strg+Klick ergänzt, Ziehen verschiebt, Umschalt+Ziehen dreht, Ziehen auf dem Gelände wählt ein Rechteck
+Click to put the mold on the ground, drag to move it. It shows at once; Enter applies it as one step, Esc discards it. Alt+click takes the height under the cursor.	Klicken setzt die Form auf den Boden, Ziehen verschiebt sie. Sie ist sofort zu sehen; Enter übernimmt sie als einen Schritt, Esc verwirft sie. Alt+Klick übernimmt die Höhe unter dem Mauszeiger.
+Close map	Karte schließen
+Colour	Farbe
+Colour of the faction	Farbe der Fraktion
+Comment	Kommentar
+Comment on the actions	Kommentar zu den Aktionen
+Comment on the conditions	Kommentar zu den Bedingungen
+Compression	Kompression
+Computer player	Computerspieler
+Condition	Bedingung
+Copy	Kopieren
+Copy action	Aktion kopieren
+Copy script	Skript kopieren
+Copy team	Team kopieren
+Corners	Ecken
+Crater	Krater
+Critical	Kritisch
+Curved	Gebogen
+Customise	Anpassen
+Cut	Ausschneiden
+Dark	Dunkel
+Dark is easy on the eyes in long sessions, light suits bright rooms.	Dunkel schont die Augen bei langen Sitzungen, Hell passt zu hellen Räumen.
+Dark theme	Dunkles Thema
+Day	Tag
+Debris	Trümmer
+Default (%1)	Standard (%1)
+Default (none)	Standard (keiner)
+Default layer	Standardebene
+Delete	Löschen
+Delete action	Aktion löschen
+Delete area	Fläche löschen
+Delete bridge	Brücke löschen
+Delete build list entry	Bauliste-Eintrag löschen
+Delete condition	Bedingung löschen
+Delete layer	Ebene löschen
+Delete object	Objekt löschen
+Delete objects	Objekte löschen
+Delete playable area	Spielbereich löschen
+Delete road	Straße löschen
+Delete script	Skript löschen
+Delete team	Team löschen
+Description	Beschreibung
+Destroyed at	Vernichtet bei
+Difficulty	Schwierigkeit
+Diffuse R	Streulicht R
+Direction	Richtung
+Discard	Verwerfen
+Display name	Anzeigename
+Distance	Abstand
+Double-click opens players and teams	Doppelklick öffnet Spieler und Teams
+Down	Runter
+Drag a script onto another place to move it.	Ein Skript an eine andere Stelle ziehen, um es zu verschieben.
+Drag from a cell onto its neighbour: the neighbour gets a soft edge of the texture you started on. With Shift the texture chosen above blends in instead.	Von einer Zelle auf ihre Nachbarzelle ziehen: die Nachbarzelle bekommt einen weichen Rand der Textur, auf der der Zug begann. Mit Umschalt wird stattdessen die oben gewählte Textur eingeblendet.
+Drag from one bank to the other; the terrain places the bridge model between the ends. A click selects a bridge.	Von einem Ufer zum anderen ziehen; das Gelände setzt das Brückenmodell zwischen die Enden. Ein Klick wählt eine Brücke.
+Drag from one cell onto a neighbouring cell of another texture.	Von einer Zelle auf eine benachbarte Zelle mit anderer Textur ziehen.
+Drag from one end of the fence to the other: a piece every spacing, facing along the line. The spacing starts at the template's fence width. Hold Shift to keep the number of pieces and stretch their spacing.	Vom einen Ende des Zauns zum anderen ziehen: je Abstand ein Stück, entlang der Linie ausgerichtet. Der Abstand beginnt mit der Zaunbreite der Vorlage. Mit Umschalt bleibt die Zahl der Teile, ihr Abstand wird gestreckt.
+Drag from one end of the ramp to the other.	Vom einen Ende der Rampe zum anderen ziehen.
+Drag from one end of the ramp to the other: the ground between them becomes an even slope from the height at the start to the height at the end.	Vom einen Ende der Rampe zum anderen ziehen: der Boden dazwischen wird eine gleichmäßige Steigung von der Höhe am Anfang zur Höhe am Ende.
+Drag sideways to turn the model	Zur Seite ziehen dreht das Modell
+Drag to draw a segment; its ends snap to other roads. A click selects a segment, Shift+drag moves a road end.	Ziehen zeichnet ein Straßenstück; seine Enden rasten an anderen Straßen ein. Ein Klick wählt ein Stück, Umschalt+Ziehen verschiebt ein Straßenende.
+Drag to measure a length, or a circle around the point where the drag starts. The ruler changes nothing in the map.	Ziehen misst eine Strecke, oder einen Kreis um den Punkt, an dem das Ziehen beginnt. Das Lineal ändert nichts an der Karte.
+Drag to measure.	Zum Messen ziehen.
+Drag to paint the chosen texture; with soft edges it blends into the textures around it, else the edges stay hard as with the old tile tool. A texture the map lacks is added if the terrain atlas has room. Alt+click takes the texture under the cursor.	Ziehen malt die gewählte Textur; mit weichen Übergängen geht sie in die umliegenden Texturen über, sonst bleiben die Kanten hart wie beim alten Kachelwerkzeug. Eine Textur, die der Karte fehlt, wird aufgenommen, wenn der Textur-Atlas noch Platz hat. Alt+Klick übernimmt die Textur unter dem Mauszeiger.
+Drag to paint. "Set height" pulls the ground to the height above; Alt+click takes the height under the cursor. One stroke is one step to undo.	Ziehen malt. „Auf Höhe“ zieht den Boden auf die Höhe oben; Alt+Klick übernimmt die Höhe unter dem Zeiger. Ein Strich ist ein Schritt zum Rückgängigmachen.
+Duplicate	Duplizieren
+Each area runs from the map's lower left corner. Drag from anywhere for a new one; drag a corner or an edge to resize, Del deletes the chosen one. Scripts switch between the areas.	Jeder Bereich beginnt an der linken unteren Ecke der Karte. Ziehen an beliebiger Stelle legt einen neuen an; Ziehen an einer Ecke oder Kante ändert die Größe, Entf löscht den gewählten. Skripte schalten zwischen den Bereichen um.
+East	Osten
+Easy	Leicht
+Edge	Kante
+Edit	Bearbeiten
+Elevation	Höhe
+Elite	Elite
+ELSE (when the conditions do not hold)	SONST (wenn die Bedingungen nicht gelten)
+Enabled	Aktiv
+Enemy	Feind
+Evening	Abend
+every frame	jedes Bild
+Every object has a team of the map.	Jedes Objekt hat ein Team der Karte.
+Every texture of the map is in use.	Jede Textur der Karte wird verwendet.
+Everything placed moves along with the terrain.	Alles Platzierte wandert mit dem Gelände mit.
+Exit	Beenden
+Export build list	Bauliste exportieren
+Export scripts	Skripte exportieren
+Export...	Exportieren …
+Faction	Fraktion
+Feather	Weichheit
+Fence	Zaun
+Fence: drag from one end to the other	Zaun: vom einen Ende zum anderen ziehen
+Fences	Zäune
+File	Datei
+File missing or unreadable	Datei fehlt oder ist nicht lesbar
+Fill	Füllen
+Fill texture	Textur füllen
+Flat terrain with one texture, from the game data	Flaches Gelände mit einer Textur, aus den Spieldaten
+Folders	Ordner
+For review	Zur Prüfung
+From a map folder or any file	Aus dem Kartenordner oder beliebiger Datei
+From selection	Aus Auswahl
+Full volume within	Volle Lautstärke bis
+G	G
+GAME	SPIEL
+Game	Spiel
+Game data for the 3D view	Spieldaten für die 3D-Ansicht
+Game data of %1	Spieldaten von %1
+Game program	Spielprogramm
+General	Allgemein
+Generals maps	Generals-Karten
+Generals – Zero Hour	Generals – Die Stunde Null
+Generic scripts	Allgemeine Skripte
+Green	Grün
+Ground height	Bodenhöhe
+Group	Gruppieren
+Group objects	Objekte gruppieren
+GROVE	WALD
+Grove	Wald
+Grove: a click grows a grove, a drag scatters trees in a rectangle	Wald: Klick lässt einen Wald wachsen, Ziehen verteilt Bäume im Rechteck
+Hard	Schwer
+Health	Lebenspunkte
+Height	Höhe
+Height %1 taken	Höhe %1 übernommen
+Height (cells)	Höhe (Zellen)
+HEIGHT BRUSH	HÖHENPINSEL
+Height offset	Höhenversatz
+Height under the cursor: %1	Höhe unter dem Zeiger: %1
+Help	Hilfe
+Heroic	Heroisch
+Hidden layers are neither drawn nor picked; new objects go into the active layer. Double-click a name to rename the layer.	Ausgeblendete Ebenen werden weder gezeichnet noch ausgewählt; neue Objekte kommen in die aktive Ebene. Doppelklick auf einen Namen benennt die Ebene um.
+High	Hoch
+Hill	Hügel
+Home	Heimat
+Home waypoint	Heimatwegpunkt
+Identity	Identität
+IF	WENN
+Impassable	Unpassierbar
+Import scripts	Skripte importieren
+Import...	Importieren …
+Imported: %1 scripts, %2 groups, %3 objects, %4 areas, %5 teams, %6 players	Importiert: %1 Skripte, %2 Gruppen, %3 Objekte, %4 Flächen, %5 Teams, %6 Spieler
+Indestructible	Unzerstörbar
+Infantry	Infanterie
+INI files (*.ini)	INI-Dateien (*.ini)
+Initial idle frames	Anfängliche Wartezeit (Frames)
+Insert point	Punkt einfügen
+Interface of the editor. Unit names come from the game data.	Oberfläche des Editors. Namen von Einheiten kommen aus den Spieldaten.
+Join to a road of another type	Übergang zu anderer Straßenart
+just now	gerade eben
+Keep in place	Fest bleibt
+Kind	Art
+Language	Sprache
+Layer	Ebene
+Layers	Ebenen
+Layers...	Ebenen …
+Left button selects · middle button moves · right button turns · wheel zooms · double-click or Home: start camera	Linke Taste wählt · mittlere Taste verschiebt · rechte Taste dreht · Mausrad zoomt · Doppelklick oder Pos1: Startkamera
+Left button selects · middle or right button moves · wheel zooms · double-click fits	Linke Taste wählt · mittlere oder rechte Taste verschiebt · Mausrad zoomt · Doppelklick passt ein
+Length	Länge
+Length %1	Länge %1
+Length %1 (%2 cells)	Länge %1 (%2 Zellen)
+Light	Hell
+Light theme	Helles Thema
+Lighting	Licht
+Link waypoints	Wegpunkte verbinden
+LINKS	VERBINDUNGEN
+Look	Blickrichtung
+Looks at %1, %2 (cell %3, %4)	Blickt auf %1, %2 (Zelle %3, %4)
+Loop count (0: forever)	Wiederholungen (0: endlos)
+Loops	Wiederholt sich
+Low	Niedrig
+Lower	Senken
+Lower only	Nur senken
+Lower terrain	Gelände senken
+Lowest	Am niedrigsten
+Man-made	Menschengemacht
+MAP	KARTE
+Map	Karte
+Map markers	Kartenmarken
+Map name	Kartenname
+Map saved	Karte gespeichert
+Map settings	Karteneinstellungen
+Map settings...	Karteneinstellungen …
+Maps (*.map)	Karten (*.map)
+Maps (*.map);;All files (*)	Karten (*.map);;Alle Dateien (*)
+Mark impassable	Unpassierbar markieren
+Mark passable	Passierbar markieren
+max	max.
+Max instances	Höchstzahl gleichzeitig
+MESH MOLD	MESH MOLD
+Mesh mold	Mesh Mold
+Mesh mold: click to place, drag to move, Enter applies, Esc discards	Mesh Mold: Klicken setzt, Ziehen verschiebt, Enter übernimmt, Esc verwirft
+min	min.
+Minimum volume %	Mindestlautstärke %
+Mold file %1	Form-Datei %1
+Morning	Morgen
+Move action	Aktion verschieben
+Move area	Fläche verschieben
+Move build list entry	Bauliste-Eintrag verschieben
+Move condition	Bedingung verschieben
+Move object	Objekt verschieben
+Move objects	Objekte verschieben
+Move point	Punkt verschieben
+Move road point	Straßenpunkt verschieben
+Move script	Skript verschieben
+Move selection here	Auswahl hierher
+Move team	Team verschieben
+Move to layer	In Ebene verschieben
+Name	Name
+Natural	Natur
+Neutral	Neutral
+New	Neu
+New action	Neue Aktion
+NEW BRIDGES	NEUE BRÜCKEN
+New condition	Neue Bedingung
+NEW FENCE	NEUER ZAUN
+New group	Neue Gruppe
+New map	Neue Karte
+New map...	Neue Karte …
+New objects go into %1	Neue Objekte kommen in %1
+New objects go into the default layer	Neue Objekte kommen in die Standardebene
+New OR	Neues ODER
+New player	Neuer Spieler
+New property	Neue Eigenschaft
+NEW ROADS	NEUE STRASSEN
+NEW SCORCH MARKS	NEUE BRANDSPUREN
+New script	Neues Skript
+New...	Neu …
+Night	Nacht
+No duplicate objects.	Keine doppelten Objekte.
+No game program is set for %1; choose it in the settings.	Für %1 ist kein Spielprogramm eingestellt; bitte in den Einstellungen wählen.
+No links. In the waypoint tool a click on another waypoint links it; Ctrl+L links the selected ones.	Keine Verbindungen. Im Wegpunkt-Werkzeug verbindet ein Klick auf einen anderen Wegpunkt; Strg+L verbindet die gewählten.
+No map matches the filter.	Keine Karte passt zum Filter.
+No maps yet. Open a map to see it here.	Noch keine Karten. Öffne eine Karte, dann erscheint sie hier.
+No model	Kein Modell
+No more players fit into the map.	Es passen keine weiteren Spieler in die Karte.
+No place for trees here (water or slopes).	Hier ist kein Platz für Bäume (Wasser oder Steilhang).
+No problems found.	Keine Probleme gefunden.
+No textures: the texture brush needs the game data.	Keine Texturen: der Texturpinsel braucht die Spieldaten.
+No user map folder yet	Noch kein Kartenordner
+none	keine
+None	Keine
+Normal	Normal
+North	Norden
+Not saved yet	Noch nicht gespeichert
+Not set: the folder with the game's .big archives, or the asset copy of the build.	Nicht gesetzt: der Ordner mit den .big-Archiven des Spiels oder die Asset-Kopie des Builds.
+Not set: the game's program, started with -win -file <map>.	Nicht gesetzt: das Programm des Spiels, gestartet mit -win -file <Karte>.
+Note:	Hinweis:
+Nothing is selected to export.	Zum Exportieren ist nichts ausgewählt.
+Nothing is selected.	Nichts ausgewählt.
+Nothing selected to move, or it is in that layer already.	Nichts ausgewählt, oder es liegt schon in dieser Ebene.
+Nothing to blend here: click a texture that meets other textures, not a blended cell.	Hier gibt es nichts zu überblenden: auf eine Textur klicken, die an andere grenzt, nicht auf eine überblendete Zelle.
+Number	Zahl
+Object	Objekt
+Object types GC_<name> that do not exist become <name>, where that exists.	Objekttypen GC_<Name>, die es nicht gibt, werden zu <Name>, wo es den gibt.
+Objects	Objekte
+OBJECTS	OBJEKTE
+Offset	Versatz
+On	An
+On all clear	Bei Entwarnung
+On create	Beim Erstellen
+On destroyed	Bei Vernichtung
+On enemy sighted	Bei Feindsichtung
+On idle	Im Leerlauf
+On unit destroyed	Bei Verlust einer Einheit
+Only once (deactivate when it ran)	Nur einmal (nach dem Ausführen abschalten)
+Only one instance (singleton)	Nur einmal vorhanden (Einzelteam)
+Opacity	Deckkraft
+Open map	Karte öffnen
+Open...	Öffnen …
+OR all of these:	ODER alle diese:
+Origin	Herkunft
+Other (%1)	Andere (%1)
+Own shadow colour	Eigene Schattenfarbe
+Owner	Besitzer
+Paint	Malen
+Paint texture	Textur malen
+PASSABILITY	PASSIERBARKEIT
+Passability from heights	Passierbarkeit aus den Höhen
+Passability: drag marks cells impassable	Passierbarkeit: Ziehen markiert Zellen als unpassierbar
+Passability: drag marks cells passable	Passierbarkeit: Ziehen markiert Zellen als passierbar
+Passable	Passierbar
+Passive	Passiv
+Paste	Einfügen
+Patch GC	GC bereinigen
+Path in both directions	Pfad in beide Richtungen
+Path label 1	Pfad-Bezeichnung 1
+Path label 2	Pfad-Bezeichnung 2
+Path label 3	Pfad-Bezeichnung 3
+Pathing	Wege
+Perimeter defence	Randverteidigung
+Pick only	Nur auswählen
+Picks anything	Wählt alles aus
+Picks only: %1	Wählt nur: %1
+Pitch	Neigung
+Place fence	Zaun setzen
+Place object	Objekt setzen
+Place scorch mark	Brandspur setzen
+Placing %1: click places, drag sets the direction, Esc ends	Setzen: %1 – Klick setzt, Ziehen gibt die Richtung vor, Esc beendet
+Plant grove	Wald pflanzen
+Plant trees	Bäume pflanzen
+Plateau	Plateau
+Playable	Spielbar
+Playable area %1 x %2 world units	Spielbereich %1 x %2 Welteinheiten
+PLAYABLE AREAS	SPIELBEREICHE
+Playable areas	Spielbereiche
+Playable areas: drag for a new one, drag a corner or edge to resize	Spielbereiche: Ziehen legt einen neuen an, Ziehen an Ecke oder Kante ändert die Größe
+Player	Spieler
+Player colour	Spielerfarbe
+Players	Spieler
+PLAYERS AND TEAMS	SPIELER UND TEAMS
+Players and teams	Spieler und Teams
+Players and teams...	Spieler und Teams …
+Players with their settings	Spieler mit ihren Einstellungen
+Plays from the start	Spielt von Beginn an
+Position	Position
+Power	Energie
+Power %1 / %2	Energie %1 / %2
+Powered	Mit Strom
+Priority	Priorität
+Priority on failure	Priorität bei Misserfolg
+Priority on success	Priorität bei Erfolg
+Production condition	Baubedingung
+Production priority	Baupriorität
+Programs (*.exe);;All files (*)	Programme (*.exe);;Alle Dateien (*)
+PROPERTIES	EIGENSCHAFTEN
+Props	Requisiten
+Radius	Radius
+Radius %1, diameter %2 (%3 cells)	Radius %1, Durchmesser %2 (%3 Zellen)
+Raise	Heben
+Raise and lower	Heben und senken
+Raise only	Nur heben
+Raise terrain	Gelände heben
+RAMP	RAMPE
+Ramp	Rampe
+Ramp: drag from one end to the other	Rampe: vom einen Ende zum anderen ziehen
+Rebuilds	Wiederaufbauten
+Recent maps	Zuletzt geöffnet
+Recently opened	Zuletzt geöffnet
+Recover autosave	Autosicherung wiederherstellen
+Recover unsaved work	Ungesicherte Arbeit wiederherstellen
+Recovered the autosave of %1; save it under a name.	Autosicherung von %1 wiederhergestellt; bitte unter einem Namen speichern.
+Recovered the autosave of an unnamed map; save it under a name.	Autosicherung einer unbenannten Karte wiederhergestellt; bitte unter einem Namen speichern.
+Recruitable by the AI	Von der KI rekrutierbar
+Red	Rot
+Red cells are impassable: units cannot go there. Drag to mark cells; height changes set the cells they touch from the new slope, as the game does.	Rote Zellen sind unpassierbar: dort können keine Einheiten hin. Ziehen markiert Zellen; Höhenänderungen setzen die betroffenen Zellen nach der neuen Steigung, wie das Spiel es tut.
+Redo	Wiederholen
+Redo: %1	Wiederholen: %1
+Regarded as	Gilt als
+Regards this player as	Sieht diesen Spieler als
+Regular	Normal
+Reinforce automatically	Automatisch verstärken
+Reinforcements	Verstärkung
+Relations	Beziehungen
+Remove	Entfernen
+Remove link	Verbindung entfernen
+Remove player	Spieler entfernen
+Remove point	Punkt entfernen
+Remove property	Eigenschaft entfernen
+Remove unused textures	Ungenutzte Texturen entfernen
+Rename area	Fläche umbenennen
+Rename layer	Ebene umbenennen
+Rename object	Objekt umbenennen
+Rename player	Spieler umbenennen
+Rename script	Skript umbenennen
+Rename script group	Skriptgruppe umbenennen
+Rename team	Team umbenennen
+Rename waypoint	Wegpunkt umbenennen
+Replace texture	Textur ersetzen
+Resize map	Kartengröße ändern
+Resize map...	Kartengröße ändern …
+Restart editor	Editor neu starten
+Ridge	Wall
+River (flows from the start point)	Fluss (fließt vom Startpunkt aus)
+ROAD	STRASSE
+Road	Straße
+Roads	Straßen
+Roads are drawn by the terrain between their points; segments join where their ends meet.	Straßen zeichnet das Gelände zwischen ihren Punkten; Stücke verbinden sich, wo ihre Enden aufeinandertreffen.
+Roads: drag draws a segment (ends snap to roads, a start on a road branches off it); a click selects, Shift+drag moves a road end, Del deletes	Straßen: Ziehen zeichnet ein Stück (Enden rasten an Straßen ein, ein Start auf einer Straße zweigt ab); Klick wählt, Umschalt+Ziehen verschiebt ein Straßenende, Entf löscht
+Rotate object	Objekt drehen
+Rotate objects	Objekte drehen
+RULER	LINEAL
+Ruler	Lineal
+Ruler: drag to measure	Lineal: zum Messen ziehen
+Run the condition's actions when the team is built	Aktionen der Bedingung ausführen, wenn das Team gebaut ist
+Save	Speichern
+Save as...	Speichern unter …
+Save map as	Karte speichern unter
+Save them before continuing?	Vor dem Fortfahren speichern?
+Saves the map and starts the game with it in a window (Ctrl+J)	Speichert die Karte und startet das Spiel damit im Fenster (Strg+J)
+Saving failed: %1	Speichern fehlgeschlagen: %1
+Scale	Maßstab
+Scorch %1	Brandspur %1
+Scorch marks	Brandspuren
+Scorch marks: a click sets one or picks the one there	Brandspuren: Klick setzt eine oder wählt die vorhandene
+Script	Skript
+Script %1	Skript %1
+Script check	Skriptprüfung
+Script files (*.scb)	Skriptdateien (*.scb)
+Script name	Skriptname
+Scripts	Skripte
+Scripts exported to %1	Skripte exportiert nach %1
+Scripts...	Skripte …
+Scripts: %1	Skripte: %1
+Search	Suchen
+Search commands	Befehl suchen
+Search maps	Karten suchen
+Search templates	Vorlagen suchen
+Search textures	Texturen suchen
+Select	Auswählen
+Select all	Alles auswählen
+Select an object first; its like are selected with it.	Erst ein Objekt auswählen; gleichartige werden dann dazu ausgewählt.
+Select at least two objects to group them.	Zum Gruppieren mindestens zwei Objekte auswählen.
+Select at least two waypoints that are not linked yet.	Mindestens zwei noch nicht verbundene Wegpunkte wählen.
+Select duplicates	Doppelte auswählen
+Select members	Mitglieder auswählen
+Select none	Auswahl aufheben
+Select objects with invalid teams	Objekte mit ungültigem Team auswählen
+Select similar	Gleichartige auswählen
+Select something to centre on.	Erst etwas auswählen, auf das zentriert werden soll.
+Selectable	Auswählbar
+Selected: %1   X %2   Y %3	Auswahl: %1   X %2   Y %3
+Selected: %1 objects	Auswahl: %1 Objekte
+SELECTION	AUSWAHL
+Selection	Auswahl
+Set from the heights	Aus den Höhen setzen
+Set height	Auf Höhe
+Set terrain height	Gelände auf Höhe setzen
+Settings	Einstellungen
+Shadow	Schatten
+Shadow colour	Schattenfarbe
+Shadows	Schatten
+Shapes	Formen
+Shrubbery	Pflanzen
+Silent beyond	Stumm ab
+Size	Größe
+Skirmish players	Gefechtsspieler
+Sleep	Schlafend
+Smooth	Glätten
+Smooth terrain	Gelände glätten
+Snow	Schnee
+Snowy	Verschneit
+Soft edges	Weiche Übergänge
+SOUND	KLANG
+Sounds	Klänge
+South	Süden
+Spacing	Abstand
+START	BEGINNEN
+Start camera	Startkamera
+Start page	Startseite
+Start position	Startposition
+Start positions	Startpunkte
+Strength	Stärke
+Structure	Gebäude
+Structures	Gebäude
+Subroutine	Unterprogramm
+Subroutine (runs only when a script calls it)	Unterprogramm (läuft nur, wenn ein Skript es aufruft)
+Sun	Sonne
+Switch script	Skript schalten
+Switch to dark theme	Zum dunklen Thema wechseln
+Switch to light theme	Zum hellen Thema wechseln
+System	System
+Targetable	Angreifbar
+Team	Team
+Team %1	Team %1
+Teams	Teams
+Terrain	Gelände
+Terrain and objects	Gelände und Objekte
+Terrain: drag paints with the height brush, Alt+click takes the height under the cursor	Gelände: Ziehen malt mit dem Höhenpinsel, Alt+Klick übernimmt die Höhe unter dem Zeiger
+Test	Test
+Test in game	Im Spiel testen
+Text	Text
+Texture	Textur
+Texture %1 taken	Textur %1 übernommen
+TEXTURE BRUSH	TEXTURPINSEL
+TEXTURES	TEXTUREN
+Textures: choose a texture on the left, then drag to paint it	Texturen: links eine Textur wählen, dann ziehen zum Malen
+Textures: click a region to blend its edges into the textures around it	Texturen: eine Fläche anklicken, um ihre Ränder in die umliegenden Texturen überzublenden
+Textures: click fills a region with %1, Shift+click replaces its texture everywhere	Texturen: Klick füllt eine Fläche mit %1, Umschalt+Klick ersetzt ihre Textur überall
+Textures: drag from a cell onto its neighbour to blend the edge, with Shift the chosen texture	Texturen: von einer Zelle auf die Nachbarzelle ziehen blendet die Kante über, mit Umschalt die gewählte Textur
+Textures: drag paints %1	Texturen: Ziehen malt %1
+The 3D view is needed for this.	Dafür wird die 3D-Ansicht gebraucht.
+The 3D view is not available: MapEditorEngine.dll could not be loaded (error %1).	Die 3D-Ansicht ist nicht verfügbar: MapEditorEngine.dll ließ sich nicht laden (Fehler %1).
+The 3D view is not available: MapEditorEngine.dll does not match this editor.	Die 3D-Ansicht ist nicht verfügbar: MapEditorEngine.dll passt nicht zu diesem Editor.
+The 3D view is running for %1. Switching the game needs a restart of the editor.	Die 3D-Ansicht läuft für %1. Für einen Spielwechsel muss der Editor neu starten.
+The 3D view needs the game data of %1: the folder with its .big archives, or the asset copy of the build.	Die 3D-Ansicht braucht die Spieldaten von %1: den Ordner mit den .big-Archiven oder die Asset-Kopie des Builds.
+The 3D view needs Windows.	Die 3D-Ansicht braucht Windows.
+The accent colour shows the selected game. Opening a map from a game's folder selects the game.	Die Akzentfarbe zeigt das gewählte Spiel. Eine Karte aus dem Ordner eines Spiels wählt beim Öffnen dieses Spiel.
+The active layer cannot be hidden.	Die aktive Ebene lässt sich nicht ausblenden.
+The AI may recruit its units	Die KI darf seine Einheiten einziehen
+The autosave cannot be read: %1	Die Autosicherung lässt sich nicht lesen: %1
+The camera belongs to the 3D view.	Die Kamera gehört zur 3D-Ansicht.
+The chosen texture is not in the map yet: paint it once first.	Die gewählte Textur ist noch nicht in der Karte: erst einmal damit malen.
+The default team of a player holds its units; the game sets its values.	Das Standardteam eines Spielers hält seine Einheiten; seine Werte setzt das Spiel.
+The editor could not be restarted.	Der Editor ließ sich nicht neu starten.
+The file cannot be read: %1	Die Datei lässt sich nicht lesen: %1
+The file cannot be written: %1	Die Datei lässt sich nicht schreiben: %1
+The game cannot be started: %1	Das Spiel lässt sich nicht starten: %1
+The game data has no terrain textures.	Die Spieldaten haben keine Geländetexturen.
+The game data has no trees (editor sorting shrubbery).	Die Spieldaten haben keine Bäume (Editor-Sortierung „Shrubbery“).
+The game does not know this entry; it stays as it is.	Das Spiel kennt diesen Eintrag nicht; er bleibt, wie er ist.
+The game starts with %1	Das Spiel startet mit %1
+The map cannot be made with these values.	Mit diesen Werten lässt sich keine Karte anlegen.
+The map cannot be prepared for the 3D view: %1	Die Karte lässt sich nicht für die 3D-Ansicht aufbereiten: %1
+The map cannot be read: %1	Die Karte lässt sich nicht lesen: %1
+The map has no height map.	Die Karte hat keine Höhenkarte.
+The map has no lighting.	Die Karte hat kein Licht.
+The map has no passability data.	Die Karte hat keine Passierbarkeitsdaten.
+The map has no players, so it has no scripts.	Die Karte hat keine Spieler und damit keine Skripte.
+The map has no players.	Die Karte hat keine Spieler.
+The map has unsaved changes.	Die Karte hat ungespeicherte Änderungen.
+The map is saved, but its preview picture could not be written.	Die Karte ist gespeichert, aber ihr Vorschaubild ließ sich nicht schreiben.
+The name %1 is already used.	Der Name %1 ist schon vergeben.
+The name is empty or taken.	Der Name ist leer oder vergeben.
+The name is empty, taken or has a space.	Der Name ist leer, vergeben oder enthält ein Leerzeichen.
+The neutral player has no build list.	Der neutrale Spieler hat keine Bauliste.
+The new folder is used after a restart of the editor.	Der neue Ordner gilt nach einem Neustart des Editors.
+The object templates need the engine: %1	Die Objektvorlagen brauchen die Engine: %1
+The passability already matches the heights.	Die Passierbarkeit passt schon zu den Höhen.
+The property needs a name.	Die Eigenschaft braucht einen Namen.
+The script file cannot be read: %1	Die Skriptdatei lässt sich nicht lesen: %1
+The selected object has no such name.	Das gewählte Objekt hat keinen solchen Namen.
+The selected waypoints are not linked with each other.	Die gewählten Wegpunkte sind nicht miteinander verbunden.
+The selection has no group.	Die Auswahl hat keine Gruppe.
+The size stays as it is.	Die Größe bleibt, wie sie ist.
+The skirmish players are there already.	Die Gefechtsspieler sind schon da.
+The terrain atlas has no room for %1.	Der Geländeatlas hat keinen Platz für %1.
+The test copy cannot be written: %1	Die Testkopie lässt sich nicht schreiben: %1
+The waypoint ID cannot be removed.	Die Wegpunkt-ID lässt sich nicht entfernen.
+Theme	Thema
+THEN	DANN
+This folder holds neither .big archives nor a Data\INI folder.	Dieser Ordner enthält weder .big-Archive noch einen Ordner Data\INI.
+This map uses older format versions. Saving writes the newest ones, like the old WorldBuilder; the content stays the same.	Diese Karte nutzt ältere Formatversionen. Speichern schreibt die neuesten, wie der alte WorldBuilder; der Inhalt bleibt gleich.
+This place shows %1 already.	Hier ist schon %1.
+Tight curve	Enge Kurve
+Time model	Tageszeit-Modell
+Time of day	Tageszeit
+Tip: Ctrl+Shift+P opens the command search.	Tipp: Strg+Umschalt+P öffnet die Befehlssuche.
+Transport	Transporter
+Transports leave after unloading	Transporter fahren nach dem Entladen weg
+Transports return	Transporter kehren zurück
+Transports start full	Transporter starten voll
+Trees	Bäume
+Trees in a rectangle	Bäume im Rechteck
+Trench	Graben
+Trigger area	Auslösefläche
+Trigger areas start scripts when units enter them; water areas hold standing water or rivers.	Auslöseflächen starten Skripte, wenn Einheiten sie betreten; Wasserflächen enthalten stehendes Wasser oder Flüsse.
+Turn build list entry	Bauliste-Eintrag drehen
+Type	Art
+Undo	Rückgängig
+Undo: %1	Rückgängig: %1
+Ungroup	Gruppierung aufheben
+Ungroup objects	Gruppierung aufheben
+Unicode text	Unicode-Text
+Unit %1	Einheit %1
+Units the scripts name, and the units of the teams they name	Einheiten, die die Skripte nennen, und die Einheiten der genannten Teams
+Unlimited	Unbegrenzt
+Unlink waypoints	Wegpunkte trennen
+Unnamed map	Unbenannte Karte
+Unsellable	Unverkäuflich
+Unsorted	Unsortiert
+Untitled	Unbenannt
+Up	Hoch
+User map folder found	Kartenordner gefunden
+Value	Wert
+Value %1	Wert %1
+Vehicles	Fahrzeuge
+Veteran	Veteran
+Veterancy	Veteranenstufe
+View	Ansehen
+Volume %	Lautstärke %
+WATER AREA	WASSERFLÄCHE
+Water area	Wasserfläche
+Water area over the whole map	Wasserfläche über die ganze Karte
+Water height	Wasserhöhe
+Waypoint	Wegpunkt
+WAYPOINT	WEGPUNKT
+Waypoint here	Wegpunkt hier
+Waypoints	Wegpunkte
+Waypoints and areas	Wegpunkte und Flächen
+Waypoints the scripts name, with the waypoints linked to them	Wegpunkte, die die Skripte nennen, mit den damit verbundenen Wegpunkten
+Waypoints: a click places one linked to the selected waypoint, Ctrl+click starts a new path, a click on a waypoint links or unlinks it, Esc ends	Wegpunkte: Klick setzt einen, verbunden mit dem gewählten; Strg+Klick beginnt einen neuen Pfad; Klick auf einen Wegpunkt verbindet oder trennt; Esc beendet
+Weather	Wetter
+Weather model	Wetter-Modell
+Welcome	Willkommen
+West	Westen
+While a map has unsaved changes, it is saved into the editor's folder; the start page offers to recover it after a crash.	Solange eine Karte ungesicherte Änderungen hat, wird sie in den Ordner des Editors gesichert; nach einem Absturz bietet die Startseite die Wiederherstellung an.
+Whole map	Ganze Karte
+Whole number	Ganze Zahl
+Width	Breite
+Width (cells)	Breite (Zellen)
+Without the game data the conditions and actions show only their names; they cannot be edited.	Ohne Spieldaten zeigen Bedingungen und Aktionen nur ihre Namen; bearbeiten lassen sie sich nicht.
+World %1, %2   Height %3	Welt %1, %2   Höhe %3
+Yes/no	Ja/Nein
+yesterday	gestern
+Zero Hour maps	Zero-Hour-Karten
+"Apply suggestions" renames old object types and factions to the ones the game has and removes duplicate teams, duplicate objects and links to missing waypoints, as one step.	„Vorschläge anwenden“ benennt alte Objekttypen und Fraktionen in die um, die das Spiel hat, und entfernt doppelte Teams, doppelte Objekte und Verbindungen zu fehlenden Wegpunkten, in einem Schritt.
+%1 build list entries	%1 Baulisteneinträge
+%1 objects %2 lie on another of the same kind	%1 Objekte %2 liegen auf einem gleichartigen
+%1 objects are on team %2, which is missing or has no valid owner	%1 Objekte gehören zu Team %2, das fehlt oder keinen gültigen Besitzer hat
+%1 objects have no team	%1 Objekte haben kein Team
+%1 objects lie outside the terrain	%1 Objekte liegen außerhalb des Geländes
+%1 problems	%1 Probleme
+%1 problems fixed	%1 Probleme behoben
+%1 problems; a double-click shows where.	%1 Probleme; ein Doppelklick zeigt, wo.
+%1 team units	%1 Team-Einheiten
+Apply suggestions	Vorschläge anwenden
+Check again	Erneut prüfen
+Check map	Karte prüfen
+Check map...	Karte prüfen...
+Fix problems	Probleme beheben
+Fix teams	Teams reparieren
+Move	Verschieben
+Nothing to fix by suggestion.	Nichts per Vorschlag zu beheben.
+Put on the team of	In das Team von
+Remove all	Alle entfernen
+Remove links	Verbindungen entfernen
+Remove object type	Objekttyp entfernen
+Remove team	Team entfernen
+Replace	Ersetzen
+Replace object type	Objekttyp ersetzen
+Replace with	Ersetzen durch
+Script: %1	Skript: %1
+Set faction	Fraktion setzen
+Set owner	Besitzer setzen
+Show script	Skript zeigen
+Team %1 belongs to no player	Team %1 gehört keinem Spieler
+Team %1 exists twice	Team %1 gibt es doppelt
+The game has no faction %1	Das Spiel hat keine Fraktion %1
+The game has no object %1 (%2)	Das Spiel hat kein Objekt %1 (%2)
+Waypoint links lead to waypoint %1, which does not exist	Wegpunkt-Verbindungen führen zu Wegpunkt %1, den es nicht gibt
+Without the game data, object types, factions and scripts are not checked.	Ohne Spieldaten werden Objekttypen, Fraktionen und Skripte nicht geprüft.
+Ambient sounds and ranges	Umgebungsklänge und Reichweiten
+Choose macro texture...	Makrotextur wählen...
+Clouds	Wolken
+Contour line options...	Höhenlinien-Optionen...
+Contour lines	Höhenlinien
+Contour lines (2D)	Höhenlinien (2D)
+Every (height steps)	Alle (Höhenstufen)
+Game default	Vorgabe des Spiels
+Grid (2D)	Raster (2D)
+Macro texture	Makrotextur
+Models	Modelle
+Noise texture laid over the terrain against visible tiling:	Rauschtextur über dem Gelände gegen sichtbare Kachelung:
+One height step is 0.625 world units; the lines show in the 2D overview.	Eine Höhenstufe sind 0,625 Welteinheiten; die Linien erscheinen in der 2D-Übersicht.
+Show	Anzeigen
+Soft water edges	Weiche Wasserränder
+Three-way blends in black	Dreifach-Übergänge schwarz
+Wireframe	Drahtgitter
+Bounding boxes	Hüllkörper
+Brush outline	Pinsel-Umriss
+Garrisoned buildings	Besetzte Gebäude
+Highlight objects the game lacks	Objekte hervorheben, die dem Spiel fehlen
+Labels (2D)	Beschriftungen (2D)
+Letterbox	Letterbox
+Object icons (2D)	Objekt-Symbole (2D)
+Reload textures	Texturen neu laden
+Sight ranges	Sichtweiten
+Snap to grid	Am Raster einrasten
+Textures reloaded	Texturen neu geladen
+Weapon ranges	Waffenreichweiten
+Atlas %1 of %2 tiles · blends %3 of %4 · %5 cliff mappings	Atlas %1 von %2 Kacheln · Übergänge %3 von %4 · %5 Klippen-Zuordnungen
+BOOKMARKS	LESEZEICHEN
+Camera bookmark	Kamera-Lesezeichen
+Command palette...	Befehlspalette...
+Delete bookmark	Lesezeichen löschen
+Export	Exportieren
+Export map as text	Karte als Text exportieren
+Export picture of the map	Bild der Karte exportieren
+Go to area %1	Gehe zu Fläche %1
+Go to bookmark %1	Gehe zu Lesezeichen %1
+Go to object %1 (%2)	Gehe zu Objekt %1 (%2)
+Go to waypoint %1	Gehe zu Wegpunkt %1
+Map as text...	Karte als Text...
+Merge into active	In die aktive zusammenführen
+Merge layers	Ebenen zusammenführen
+Name:	Name:
+Picture of the map...	Bild der Karte...
+Pictures (*.png)	Bilder (*.png)
+Reflects in water	Spiegelt sich im Wasser
+Save this view	Diese Ansicht merken
+Text (*.txt)	Text (*.txt)
+Type a command, a waypoint, an object or an area	Befehl, Wegpunkt, Objekt oder Fläche eingeben
+View %1	Ansicht %1
+<b>MapEditor</b> of GZH Neo<br>Map editor for Command &amp; Conquer Generals and Zero Hour.<br><br>GZH Neo is a modified version of Command &amp; Conquer Generals / Zero Hour (Electronic Arts), licensed under the GNU GPL v3 or later.<br>Uses Qt %1 (LGPL v3).	<b>MapEditor</b> von GZH Neo<br>Karteneditor für Command &amp; Conquer Generals und Zero Hour.<br><br>GZH Neo ist eine veränderte Fassung von Command &amp; Conquer Generals / Zero Hour (Electronic Arts), lizenziert unter der GNU GPL v3 oder später.<br>Verwendet Qt %1 (LGPL v3).
+LIGHT	LICHT
+Height above ground	Höhe über dem Boden
+Ambient colour	Umgebungsfarbe
+Diffuse colour	Streulichtfarbe
+Full brightness up to	Volle Helligkeit bis
+Dark from	Dunkel ab
+%1 cliffs aligned	%1 Klippen ausgerichtet
+Align all cliffs	Alle Klippen ausrichten
+Click a steep slope: the texture there is laid along the slope instead of being stretched down it, over the whole connected cliff of that texture.	Auf einen steilen Hang klicken: die Textur wird dort am Hang entlang gelegt statt herunter gezogen, über die ganze zusammenhängende Klippe dieser Textur.
+Cliffs	Klippen
+No cliff to align here: click a steep slope.	Hier ist keine Klippe auszurichten: auf einen steilen Hang klicken.
+Remove cliff alignment	Klippen-Ausrichtung entfernen
+Texture cliffs	Klippen ausrichten
+Textures: click a cliff to lay its texture along the slope	Texturen: Klick auf eine Klippe legt ihre Textur am Hang entlang
+The map has no aligned cliffs.	Die Karte hat keine ausgerichteten Klippen.
+The map has no cliff left to align.	Die Karte hat keine Klippe mehr auszurichten.
+Map INI files	Karten-INI-Dateien
+Map INI files saved	Karten-INI-Dateien gespeichert
+Map INI files...	Karten-INI-Dateien...
+Save the map first: its INI files lie beside it.	Erst die Karte speichern: ihre INI-Dateien liegen daneben.
+The game reads these files when it loads the map: map.ini always, solo.ini in single player. They change INI values for this map only, for example the water (WaterSet, WaterTransparency) or weapons and objects of a mission. An empty file is removed.	Das Spiel liest diese Dateien beim Laden der Karte: map.ini immer, solo.ini im Einzelspieler. Sie ändern INI-Werte nur für diese Karte, etwa das Wasser (WaterSet, WaterTransparency) oder Waffen und Objekte einer Mission. Eine leere Datei wird entfernt.
+%1 is taken by %2.	%1 ist schon mit %2 belegt.
+A prefab needs a name.	Ein Prefab braucht einen Namen.
+Command	Befehl
+Delete prefab	Prefab löschen
+Delete prefab...	Prefab löschen...
+Double-click a command to give it another shortcut. Backspace in the field removes it.	Doppelklick auf einen Befehl gibt ihm ein anderes Kürzel. Rücktaste im Feld entfernt es.
+Edit…	Ändern…
+Give menu commands your own keys; they stay when the language changes.	Menübefehlen eigene Tasten geben; sie bleiben beim Sprachwechsel erhalten.
+Keyboard	Tastatur
+Keyboard shortcuts	Tastenkürzel
+Place prefab	Prefab setzen
+Prefab %1 saved; it is in the catalog under Map markers › Prefabs.	Prefab %1 gespeichert; es steht im Katalog unter Kartenmarken › Prefabs.
+Prefab:	Prefab:
+Prefabs	Prefabs
+Reset all	Alle zurücksetzen
+Save as prefab	Als Prefab speichern
+Save selection as prefab...	Auswahl als Prefab speichern...
+Select the objects the prefab is to hold.	Die Objekte auswählen, die das Prefab enthalten soll.
+Shortcut	Kürzel
+Shortcuts	Kürzel
+The prefab cannot be read: %1	Das Prefab lässt sich nicht lesen: %1
+The prefab cannot be written: %1	Das Prefab lässt sich nicht schreiben: %1
+There are no prefabs yet.	Es gibt noch keine Prefabs.
+%1 cells have another texture	%1 Zellen haben eine andere Textur
+%1 differences; a double-click shows an object or area of the open map.	%1 Unterschiede; ein Doppelklick zeigt ein Objekt oder eine Fläche der offenen Karte.
+%1 height samples differ	%1 Höhenpunkte unterscheiden sich
+%1 waypoint links differ	%1 Wegpunkt-Verbindungen unterscheiden sich
+Area %1 changed: %2	Fläche %1 geändert: %2
+Area %1 is gone	Fläche %1 fehlt
+Black becomes height	Schwarz wird Höhe
+Compare with map	Mit Karte vergleichen
+Compare with map...	Mit Karte vergleichen...
+Compared with %1	Verglichen mit %1
+Different size: %1	Andere Größe: %1
+Export height map	Höhenkarte exportieren
+Height map as a picture...	Höhenkarte als Bild...
+Import height map	Höhenkarte importieren
+Import height map...	Höhenkarte importieren...
+Import heights	Höhen importieren
+Map settings differ: %1	Karteneinstellungen unterscheiden sich: %1
+New area %1	Neue Fläche %1
+New object %1	Neues Objekt %1
+New player %1	Neuer Spieler %1
+New script %1 (%2)	Neues Skript %1 (%2)
+New team %1	Neues Team %1
+Object %1 changed: %2	Objekt %1 geändert: %2
+Object %1 is gone	Objekt %1 fehlt
+Object %1 moved (%2)	Objekt %1 verschoben (%2)
+Pictures (*.png *.bmp *.tga *.tif *.tiff *.jpg)	Bilder (*.png *.bmp *.tga *.tif *.tiff *.jpg)
+Player %1 is gone	Spieler %1 fehlt
+Script %1 (%2) changed	Skript %1 (%2) geändert
+Script %1 (%2) is gone	Skript %1 (%2) fehlt
+Team %1 changed: %2	Team %1 geändert: %2
+Team %1 is gone	Team %1 fehlt
+The lighting differs	Die Beleuchtung unterscheidet sich
+The maps are the same.	Die Karten sind gleich.
+The picture cannot be read: %1	Das Bild lässt sich nicht lesen: %1
+The picture gives the same heights.	Das Bild ergibt dieselben Höhen.
+The picture is scaled to the map (north up, as the 2D overview shows it); one height step is 0.625 world units.	Das Bild wird auf die Karte skaliert (Norden oben, wie in der 2D-Übersicht); eine Höhenstufe sind 0,625 Welteinheiten.
+White becomes height	Weiß wird Höhe
+Applied; the preview shows the new values.	Übernommen; die Vorschau zeigt die neuen Werte.
+Colour %1	Farbe %1
+FIELDS	FELDER
+Fields	Felder
+INI text	INI-Text
+Particle systems	Partikelsysteme
+Particle systems...	Partikelsysteme...
+Save all as...	Alle speichern unter...
+Save all particle systems	Alle Partikelsysteme speichern
+Saved: %1	Gespeichert: %1
+Show in the view	In der Ansicht zeigen
+Stop	Anhalten
+The particle editor needs the game data: open a map in the 3D view first.	Der Partikel-Editor braucht die Spieldaten: zuerst eine Karte in der 3D-Ansicht öffnen.
+The particle system cannot be loaded: %1	Das Partikelsystem lässt sich nicht laden: %1
+The particle system cannot be shown.	Das Partikelsystem lässt sich nicht zeigen.
+The preview needs the 3D view with a map.	Die Vorschau braucht die 3D-Ansicht mit einer Karte.
+Changed in this session	In dieser Sitzung geändert
+Changes apply to this editor session and go along with Test in game, in a copy of the map. Saving writes all systems to a file of your choice; for the game it belongs in a mod or the game's Data\INI folder.	Änderungen gelten für diese Editor-Sitzung und kommen bei „Im Spiel testen“ mit, in einer Kopie der Karte. Speichern schreibt alle Systeme in eine frei gewählte Datei; für das Spiel gehört sie in eine Mod oder den Ordner Data\INI des Spiels.
+New in this session	In dieser Sitzung neu
+Nothing to put back.	Nichts zurückzusetzen.
+Only changed systems	Nur geänderte Systeme
+Particle limit:	Partikelgrenze:
+Put every particle system back as the game data have it? Systems made in the editor are dropped.	Alle Partikelsysteme auf den Stand der Spieldaten zurücksetzen? Im Editor angelegte Systeme entfallen.
+Reset	Zurücksetzen
+Reset all...	Alle zurücksetzen...
+Show the emission volume	Emissionsform zeigen
+Systems put back as in the game data: %1	Auf den Stand der Spieldaten zurückgesetzt: %1
+The game starts with %1 and the particle systems changed in the editor.	Das Spiel startet mit %1 und den im Editor geänderten Partikelsystemen.
+as in the game	wie im Spiel
+(new system)	(neues System)
+0 to %1 frames (30 per second); the keys are Color1..8 and Alpha1..8 in the INI text.	0 bis %1 Bilder (30 je Sekunde); die Schlüssel sind Color1..8 und Alpha1..8 im INI-Text.
+ALPHA OVER A PARTICLE'S LIFE	ALPHA ÜBER DAS LEBEN EINES PARTIKELS
+At the selected object, otherwise in the middle of the view.	Am ausgewählten Objekt, sonst in der Mitte der Ansicht.
+COLOUR OVER A PARTICLE'S LIFE	FARBE ÜBER DAS LEBEN EINES PARTIKELS
+Changes	Änderungen
+Changes (%1)	Änderungen (%1)
+Choose a texture	Textur wählen
+Click a key to pick its colour, drag it in time; double-click adds a key, right-click removes one.	Klick auf einen Schlüssel wählt seine Farbe, Ziehen verschiebt ihn in der Zeit; Doppelklick fügt einen Schlüssel hinzu, Rechtsklick entfernt einen.
+Drag a point up or down to change the alpha, sideways to move it in time; with Shift both ends of the range move. Double-click adds a key, right-click removes one.	Einen Punkt nach oben oder unten ziehen ändert das Alpha, zur Seite verschiebt ihn in der Zeit; mit Umschalt bewegen sich beide Enden des Bereichs. Doppelklick fügt einen Schlüssel hinzu, Rechtsklick entfernt einen.
+Field	Feld
+Game data	Spieldaten
+Nothing to redo.	Nichts zu wiederholen.
+Nothing to undo.	Nichts rückgängig zu machen.
+Now	Jetzt
+The texture cannot be read: %1	Die Textur lässt sich nicht lesen: %1
+made in this session	in dieser Sitzung angelegt
+Ambient occlusion (SSAO)	Umgebungsverdeckung (SSAO)
+Antialiasing (FXAA)	Kantenglättung (FXAA)
+As in the game: %1	Wie im Spiel: %1
+Classic (as the old editor)	Klassisch (wie der alte Editor)
+Colour grading	Farbkorrektur
+Effects of this level	Effekte dieser Stufe
+Graphics	Grafik
+Ground detail	Boden-Detail
+Medium	Mittel
+Particle lighting	Partikellicht
+Particles above ground	Partikel über dem Boden
+Realistic water	Realistisches Wasser
+Rock on steep slopes	Fels an Steilhängen
+Sharpening	Nachschärfen
+Soft particles	Weiche Partikel
+Sun shadows (shadow map)	Sonnenschatten (Shadow Map)
+Very high	Sehr hoch
+Drag the sun: round the dial for the direction it comes from (north is up, as in the 2D view), towards the middle for a higher sun. Light and shadows follow in the 3D view at once.	Die Sonne ziehen: im Kreis für die Richtung, aus der sie scheint (Norden oben wie in der 2D-Ansicht), zur Mitte hin für eine höhere Sonne. Licht und Schatten folgen in der 3D-Ansicht sofort.
+The values of the map's time of day. Elevation 90 shines straight down; the view shows every change at once.	Die Werte der Tageszeit der Karte. Höhe 90 scheint senkrecht nach unten; die Ansicht zeigt jede Änderung sofort.
+Move the sun	Sonne bewegen
+Mark steeper than	Markieren ab
+Slope limit...	Neigungsgrenze...
+Slopes	Neigung
+Slopes (coloured in the 2D map and the 3D view)	Neigung (eingefärbt in 2D-Karte und 3D-Ansicht)
+The 2D overview colours every cell by its slope, green on flat ground to red at the limit; the 3D view tints the cells from half the limit on, yellow to red, and the steeper ones dark red. Slopes are measured as the game finds visible cliffs. 45° is the game's default.	Die 2D-Übersicht färbt jede Zelle nach ihrer Neigung, grün auf flachem Boden bis rot an der Grenze; die 3D-Ansicht färbt die Zellen ab der halben Grenze gelb bis rot, die steileren dunkelrot. Gemessen wird wie beim Spiel, das so sichtbare Klippen findet. 45° ist die Vorgabe des Spiels.
+As the game data	Wie die Spieldaten
+Blend additively	Additiv überblenden
+CLASSIC WATER	KLASSISCHES WASSER
+Colour of the depth	Farbe der Tiefe
+Least opacity	Geringste Deckkraft
+REALISTIC WATER (DETAIL LEVEL MEDIUM AND UP)	REALISTISCHES WASSER (AB DETAILSTUFE MITTEL)
+Refraction	Lichtbrechung
+Save the map first: the water values go into the map.ini beside it.	Zuerst die Karte speichern: die Wasserwerte kommen in die map.ini daneben.
+Sky reflection	Himmelsspiegelung
+The 3D view shows every change at once (the realistic water with the graphics level Medium and up). Visibility depth, its colour and refraction act on lakes and ponds; rivers take the colour of the classic water and the sky reflection. A visibility depth of 0 keeps the classic water on this map. "Write to map.ini" saves the values that differ from the game data into the map.ini beside the map, which the game reads over Water.ini.	Die 3D-Ansicht zeigt jede Änderung sofort (das realistische Wasser ab Grafikstufe Mittel). Sichttiefe, ihre Farbe und Lichtbrechung wirken auf Seen und Teiche; Flüsse nehmen die Farbe des klassischen Wassers und die Himmelsspiegelung. Eine Sichttiefe von 0 behält auf dieser Karte das klassische Wasser. „In map.ini schreiben“ speichert die Werte, die von den Spieldaten abweichen, in die map.ini neben der Karte; das Spiel liest sie über die Water.ini.
+The water values are in the map.ini.	Die Wasserwerte stehen in der map.ini.
+The water values need the game data: open the map in the 3D view first.	Die Wasserwerte brauchen die Spieldaten: zuerst die Karte in der 3D-Ansicht öffnen.
+Transparent to depth	Durchsichtig bis Tiefe
+Visibility depth	Sichttiefe
+Water	Wasser
+Write to map.ini	In map.ini schreiben
+%1 x %2 pixels (%3 times the view)	%1 x %2 Pixel (%3-mal die Ansicht)
+A tile of the poster cannot be read: %1	Eine Kachel des Posters lässt sich nicht lesen: %1
+No folder for the tiles of the poster.	Kein Ordner für die Kacheln des Posters.
+Poster of the 3D view	Poster der 3D-Ansicht
+Poster of the 3D view...	Poster der 3D-Ansicht...
+Save the poster	Poster speichern
+The picture shows the camera's view with the effects of the graphics level (View › Graphics).	Das Bild zeigt die Sicht der Kamera mit den Effekten der Grafikstufe (Ansicht › Grafik).
+The poster needs the map in the 3D view.	Das Poster braucht die Karte in der 3D-Ansicht.
+With the markings of the view (waypoints, areas, selection, slopes)	Mit den Einblendungen der Ansicht (Wegpunkte, Flächen, Auswahl, Neigung)
+History	Verlauf
+History...	Verlauf...
+Click a step to go back or forward to it. Greyed steps are undone; the next change drops them.	Ein Klick auf einen Schritt springt zu diesem Stand zurück oder vor. Graue Schritte sind rückgängig gemacht; die nächste Änderung verwirft sie.
+Map opened	Karte geöffnet
+(saved)	(gespeichert)
+%1 at %2, %3	%1 bei %2, %3
+%1 places	%1 Stellen
+%1 values replaced in the scripts.	%1 Werte in den Skripten ersetzt.
+A double-click shows the place. Replacing changes script names, comments and text parameters (teams, waypoints, areas, flags, counters ...) in one undo step; objects, teams and areas keep their names.	Ein Doppelklick zeigt die Stelle. Ersetzen ändert Skriptnamen, Kommentare und Textparameter (Teams, Wegpunkte, Flächen, Schalter, Zähler ...) in einem Rückgängig-Schritt; Objekte, Teams und Flächen behalten ihre Namen.
+Action %1, parameter %2	Aktion %1, Parameter %2
+Area	Fläche
+Condition %1, parameter %2	Bedingung %1, Parameter %2
+Else action %1, parameter %2	Sonst-Aktion %1, Parameter %2
+Find in the map	In der Karte suchen
+Find in the map...	In der Karte suchen...
+Match case	Groß-/Kleinschreibung beachten
+Name, text or template	Name, Text oder Vorlage
+Object property %1	Objekteigenschaft %1
+Object type	Objekttyp
+Place	Ort
+Replace all	Alle ersetzen
+Replace in scripts	In Skripten ersetzen
+Replace in the scripts with:	In den Skripten ersetzen durch:
+Script comment	Skriptkommentar
+Script group	Skriptgruppe
+Team property %1	Teameigenschaft %1
+The scripts do not contain the text.	Die Skripte enthalten den Text nicht.
+Where	Wo
+Where is this used?	Wo wird das benutzt?
+Whole value	Ganzer Wert
+%1 start positions, %2 supplies, %3 tech buildings.	%1 Startpositionen, %2 Versorgungsquellen, %3 Tech-Gebäude.
+%1 starts are worse off (marked).	%1 Startpositionen sind benachteiligt (markiert).
+A fair comparison needs at least two waypoints Player_1_Start, Player_2_Start, ...	Ein Vergleich braucht mindestens zwei Wegpunkte Player_1_Start, Player_2_Start, ...
+Building	Gebäude
+Measure again	Neu messen
+Multiplayer fairness	Mehrspieler-Fairness
+Multiplayer fairness...	Mehrspieler-Fairness...
+Nearest other start	Nächster anderer Start
+Nearest supply	Nächste Versorgung
+No start is worse off.	Keine Startposition ist benachteiligt.
+Out of reach	Unerreichbar
+Path lengths	Weglängen
+Path lengths in world units along the ground units can cross: no cliff flag, not under water, inside the border. Buildings on the way are not counted. A double-click shows a building.	Weglängen in Welteinheiten über den Boden, den Einheiten queren können: ohne Klippen-Flag, nicht unter Wasser, innerhalb des Randes. Gebäude im Weg zählen nicht. Ein Doppelklick zeigt ein Gebäude.
+Player %1	Spieler %1
+Reached first by	Zuerst erreicht von
+Show the territories in the views (each start's colour where it arrives first, white where two arrive together)	Gebiete in den Ansichten zeigen (Farbe des Starts, der zuerst ankommt; weiß, wo zwei gleichzeitig ankommen)
+Start	Start
+Supplies reached first	Versorgung zuerst erreicht
+Tech reached first	Tech zuerst erreicht
+The nearest supply lies %1 % farther for the worst-placed start than for the best.	Die nächste Versorgung liegt für den ungünstigsten Start %1 % weiter entfernt als für den günstigsten.
+contested	umkämpft
+no one	niemand
+unreachable	unerreichbar
+Make symmetric...	Symmetrisch machen...
+Symmetry	Symmetrie
+The map is symmetric already.	Die Karte ist schon symmetrisch.
+Make the map symmetric	Karte symmetrisch machen
+The source part is copied onto the rest of the map. The lines in the views show where it is mirrored.	Der Quellteil wird auf den Rest der Karte kopiert. Die Linien in den Ansichten zeigen, wo gespiegelt wird.
+Mirror left and right (two players side by side)	Links und rechts spiegeln (zwei Spieler nebeneinander)
+Mirror bottom and top (two players one above the other)	Unten und oben spiegeln (zwei Spieler übereinander)
+Turn by 180 degrees (two players in opposite corners)	Um 180 Grad drehen (zwei Spieler in gegenüberliegenden Ecken)
+Four quarters (four players)	Vier Viertel (vier Spieler)
+Take the right or upper part as the source	Den rechten bzw. oberen Teil als Quelle nehmen
+Terrain: heights, textures, cliff flags	Gelände: Höhen, Texturen, Klippen-Flags
+Objects and waypoints (start waypoints get the next free Player_n_Start, other names a suffix)	Objekte und Wegpunkte (Start-Wegpunkte bekommen das nächste freie Player_n_Start, andere Namen eine Endung)
+Corners, then edges	Ecken, dann Kanten
+Circle, opposite pairs	Kreis, Paare gegenüber
+Two sides (odd against even)	Zwei Seiten (ungerade gegen gerade)
+Arrangement	Anordnung

@@ -1,0 +1,4 @@
+# Start bis ins Hauptmenue und sauber beenden (wie die Abnahme mit -quitAfter).
+fenster MainMenu.wnd:ButtonSinglePlayer
+warte 60
+beenden

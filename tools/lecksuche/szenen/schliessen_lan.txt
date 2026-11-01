@@ -1,0 +1,19 @@
+# LAN-Partie (eigenes Spiel, Platz 2 mit leichter KI) und mitten in der Partie das Fenster schliessen (WM_CLOSE,
+# wie Alt+F4): Das Programm endet aus einer laufenden Netzwerkpartie heraus (LAN-Schnittstelle, Verbindungen).
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 60
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonStart
+auswahl LanGameOptionsMenu.wnd:ComboBoxPlayer1 2
+warte 60
+klick LanGameOptionsMenu.wnd:ButtonStart
+partie 2000000
+logik 300
+schliessen
+logik 3000
+# kommt der Ablauf hier an, hat WM_CLOSE nicht gewirkt
+log WM_CLOSE ohne Wirkung
+beenden

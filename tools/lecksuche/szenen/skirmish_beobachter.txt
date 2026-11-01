@@ -1,0 +1,44 @@
+# Skirmish als Beobachter (TODO Nr. 60 a): Platz 0 auf "Beobachter" (letzter Eintrag der Seitenauswahl, -1),
+# Platz 1 klassische KI (schwer), Platz 2 neue KI (Brutal). Partie 1 mit Speichern und Laden als Beobachter,
+# Spielende per Sieg, Punkteanzeige, zurueck ins Skirmish-Menue; Partie 2 ebenso. Danach Platz 0 wieder auf
+# Zufall und Platz 2 geschlossen (das Menue behaelt die Wahl in den Skirmish-Einstellungen), Hauptmenue, beenden.
+# Karte: die zuletzt im Skirmish-Menue gewaehlte (der Beobachter braucht keinen Startplatz, zwei genuegen).
+# Der Spielstand heisst Lecksuche_Beobachter.sav; tools/lecksuche loescht ihn.
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 -1
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer1 4
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer2 5
+warte 10
+# Partie 1 mit Speichern und Laden
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 1800
+speichern Lecksuche_Beobachter.sav
+warte 300
+laden Lecksuche_Beobachter.sav
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+# Partie 2
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 1800
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 0
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer2 1
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+warte 60
+beenden

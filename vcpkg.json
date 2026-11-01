@@ -1,0 +1,42 @@
+{
+	"name": "cnc-generals-zero-hour-modernization",
+	"version-string": "0.1.0",
+	"builtin-baseline": "a1cae005c39be7b18ba319fced856b68d7276271",
+	"dependencies": [
+		"ffmpeg",
+		"directxtex",
+		"zlib",
+		"vulkan-headers",
+		"volk",
+		"vulkan-memory-allocator",
+		"directx-dxc"
+	],
+	"features": {
+		"profiling": {
+			"description": "Tracy profiler client plus its command line tools (capture, csvexport) for automated evaluation",
+			"dependencies": [
+				{
+					"name": "tracy",
+					"features": [ "cli-tools" ]
+				}
+			]
+		},
+		"vulkan": {
+			"description": "Vulkan renderer: its dependencies (Vulkan headers, volk, Vulkan Memory Allocator, DirectX Shader Compiler) are part of the default build; the feature remains for the preset x64-vulkan (ctest VulkanShaders)"
+		},
+		"editor": {
+			"description": "New map editor: Qt 6 Widgets and Svg for Code/Tools/Editors/MapEditor/App",
+			"dependencies": [
+				{
+					"name": "qtbase",
+					"default-features": false,
+					"features": [ "gui", "widgets", "png", "freetype", "harfbuzz", "doubleconversion", "pcre2", "thread" ]
+				},
+				{
+					"name": "qtsvg",
+					"default-features": false
+				}
+			]
+		}
+	}
+}

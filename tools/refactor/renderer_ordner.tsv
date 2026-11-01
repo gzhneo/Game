@@ -1,0 +1,288 @@
+# Zuordnung der Dateien unter WW3D2 (heute Code/Renderer/WW3D2) (TODO Nr. 103 Schritt 1).
+# Spalten (Tab): Datei, Ziel (Common, D3D11, Vulkan oder bleibt), Grund. Eingabe von tools/refactor/renderer_ordner.py
+# und tools/refactor/renderer_schichten.py; Erzeugung und Begruendung: docs/RENDERKERN.md Abschnitt "Schritt 1".
+# Was nicht in Common, D3D11 oder Vulkan steht, bleibt im Ordner WW3D2 (EAs Szenen-Klassen, Hilfsdateien).
+CMakeLists.txt	bleibt	Build-Liste des Ziels WW3D2 (wird nachgezogen)
+DX8Rationalizations.txt	bleibt	EA-Notiz
+DX8Status.txt	bleibt	EA-Notiz
+DX8ToolModifications.txt	bleibt	EA-Notiz
+MAPPERS.TXT	bleibt	EA-Szene oder Hilfsdatei
+RenderObjectGuide.txt	bleibt	EA-Notiz
+RequiredAssets/AddProjectorGradient.tga	bleibt	Laufzeitdaten der Engine
+RequiredAssets/Dazzle.INI	bleibt	Laufzeitdaten der Engine
+RequiredAssets/MultProjectorGradient.tga	bleibt	Laufzeitdaten der Engine
+RequiredAssets/ShatterAVel.tbl	bleibt	Laufzeitdaten der Engine
+RequiredAssets/ShatterPlanes0.w3d	bleibt	Laufzeitdaten der Engine
+RequiredAssets/ShatterVel.tbl	bleibt	Laufzeitdaten der Engine
+RequiredAssets/w3d_missing_texture.tga	bleibt	Laufzeitdaten der Engine
+StateManagement.txt	bleibt	EA-Notiz
+aabtree.cpp	bleibt	EA-Szene oder Hilfsdatei
+aabtree.h	bleibt	EA-Szene oder Hilfsdatei
+aabtreebuilder.cpp	bleibt	EA-Szene oder Hilfsdatei
+aabtreebuilder.h	bleibt	EA-Szene oder Hilfsdatei
+agg_def.cpp	bleibt	EA-Szene oder Hilfsdatei
+agg_def.h	bleibt	EA-Szene oder Hilfsdatei
+animatedsoundmgr.h	bleibt	EA-Szene oder Hilfsdatei
+animatedsoundmgr_stub.cpp	bleibt	EA-Szene oder Hilfsdatei
+animobj.cpp	bleibt	EA-Szene oder Hilfsdatei
+animobj.h	bleibt	EA-Szene oder Hilfsdatei
+assetmgr.cpp	bleibt	EA-Szene oder Hilfsdatei
+assetmgr.h	bleibt	EA-Szene oder Hilfsdatei
+assetstatus.cpp	bleibt	EA-Szene oder Hilfsdatei
+assetstatus.h	bleibt	EA-Szene oder Hilfsdatei
+bitmaphandler.cpp	bleibt	EA-Szene oder Hilfsdatei
+bitmaphandler.h	bleibt	EA-Szene oder Hilfsdatei
+bmp2d.cpp	bleibt	EA-Szene oder Hilfsdatei
+bmp2d.h	bleibt	EA-Szene oder Hilfsdatei
+boxrobj.cpp	bleibt	EA-Szene oder Hilfsdatei
+boxrobj.h	bleibt	EA-Szene oder Hilfsdatei
+bwrender.cpp	bleibt	EA (Schatten-Rasterung, kein Gerät)
+bwrender.h	bleibt	EA
+camera.cpp	bleibt	EA-Szene oder Hilfsdatei
+camera.h	bleibt	EA-Szene oder Hilfsdatei
+collect.cpp	bleibt	EA-Szene oder Hilfsdatei
+collect.h	bleibt	EA-Szene oder Hilfsdatei
+colorspace.h	bleibt	EA-Szene oder Hilfsdatei
+coltest.cpp	bleibt	EA-Szene oder Hilfsdatei
+coltest.h	bleibt	EA-Szene oder Hilfsdatei
+coltype.h	bleibt	EA-Szene oder Hilfsdatei
+composite.cpp	bleibt	EA-Szene oder Hilfsdatei
+composite.h	bleibt	EA-Szene oder Hilfsdatei
+d3d11d3d.h	D3D11	Direct3D-11-Geräteschicht
+d3d11device.cpp	D3D11	Direct3D-11-Geräteschicht
+d3d11device.h	D3D11	Direct3D-11-Geräteschicht
+d3d11device_enums.inl	D3D11	Direct3D-11-Geräteschicht
+dazzle.cpp	bleibt	EA-Szene oder Hilfsdatei
+dazzle.h	bleibt	EA-Szene oder Hilfsdatei
+ddsfile.cpp	bleibt	DDS-Lader (DXGI_FORMAT-Namen als Dateiformat), kein Gerät; Einordnung in Schritt 1b
+ddsfile.h	bleibt	dto.
+decalmsh.cpp	bleibt	EA-Szene oder Hilfsdatei
+decalmsh.h	bleibt	EA-Szene oder Hilfsdatei
+decalsys.cpp	bleibt	EA-Szene oder Hilfsdatei
+decalsys.h	bleibt	EA-Szene oder Hilfsdatei
+distlod.cpp	bleibt	EA-Szene oder Hilfsdatei
+distlod.h	bleibt	EA-Szene oder Hilfsdatei
+dllist.h	bleibt	EA-Szene oder Hilfsdatei
+dynamesh.cpp	bleibt	EA-Szene oder Hilfsdatei
+dynamesh.h	bleibt	EA-Szene oder Hilfsdatei
+font3d.cpp	bleibt	EA-Szene oder Hilfsdatei
+font3d.h	bleibt	EA-Szene oder Hilfsdatei
+formconv.cpp	bleibt	EA-Szene oder Hilfsdatei
+formconv.h	bleibt	EA-Szene oder Hilfsdatei
+gpudevice.cpp	Common	Schnittstelle der Geräteschicht (GpuDevice, GpuContext), von beiden Schichten umgesetzt
+gpudevice.h	Common	Schnittstelle der Geräteschicht; nennt D3D11 nur in Kommentaren
+gputypes.h	Common	neutrale Typen der Geräteschicht (GPU_X entspricht D3D11_X, ohne D3D11-Kopf)
+gputypes_enums.h	Common	erzeugt aus den MinGW-Köpfen (tools/vulkan/gputypes_erzeugen.py), bindet sie aber nicht ein
+hanim.cpp	bleibt	EA-Szene oder Hilfsdatei
+hanim.h	bleibt	EA-Szene oder Hilfsdatei
+hanimmgr.cpp	bleibt	EA-Szene oder Hilfsdatei
+hanimmgr.h	bleibt	EA-Szene oder Hilfsdatei
+hcanim.cpp	bleibt	EA-Szene oder Hilfsdatei
+hcanim.h	bleibt	EA-Szene oder Hilfsdatei
+hlod.cpp	bleibt	EA-Szene oder Hilfsdatei
+hlod.h	bleibt	EA-Szene oder Hilfsdatei
+hmdldef.H	bleibt	EA-Szene oder Hilfsdatei
+hmdldef.cpp	bleibt	EA-Szene oder Hilfsdatei
+hmorphanim.cpp	bleibt	EA-Szene oder Hilfsdatei
+hmorphanim.h	bleibt	EA-Szene oder Hilfsdatei
+hrawanim.cpp	bleibt	EA-Szene oder Hilfsdatei
+hrawanim.h	bleibt	EA-Szene oder Hilfsdatei
+htree.cpp	bleibt	EA-Szene oder Hilfsdatei
+htree.h	bleibt	EA-Szene oder Hilfsdatei
+htreemgr.cpp	bleibt	EA-Szene oder Hilfsdatei
+htreemgr.h	bleibt	EA-Szene oder Hilfsdatei
+indexbuffer.cpp	bleibt	EA-Szene oder Hilfsdatei
+indexbuffer.h	bleibt	EA-Szene oder Hilfsdatei
+intersec.cpp	bleibt	EA-Szene oder Hilfsdatei
+intersec.h	bleibt	EA-Szene oder Hilfsdatei
+intersec.inl	bleibt	EA-Szene oder Hilfsdatei
+inttest.h	bleibt	EA-Szene oder Hilfsdatei
+layer.cpp	bleibt	EA-Szene oder Hilfsdatei
+layer.h	bleibt	EA-Szene oder Hilfsdatei
+light.cpp	bleibt	EA-Szene oder Hilfsdatei
+light.h	bleibt	EA-Szene oder Hilfsdatei
+lightenvironment.cpp	bleibt	EA-Szene oder Hilfsdatei
+lightenvironment.h	bleibt	EA-Szene oder Hilfsdatei
+line3d.cpp	bleibt	EA-Szene oder Hilfsdatei
+line3d.h	bleibt	EA-Szene oder Hilfsdatei
+linegrp.cpp	bleibt	EA-Szene oder Hilfsdatei
+linegrp.h	bleibt	EA-Szene oder Hilfsdatei
+mapper.cpp	bleibt	EA-Szene oder Hilfsdatei
+mapper.h	bleibt	EA-Szene oder Hilfsdatei
+matinfo.cpp	bleibt	EA-Szene oder Hilfsdatei
+matinfo.h	bleibt	EA-Szene oder Hilfsdatei
+matpass.cpp	bleibt	EA-Szene oder Hilfsdatei
+matpass.h	bleibt	EA-Szene oder Hilfsdatei
+matrixmapper.cpp	bleibt	EA-Szene oder Hilfsdatei
+matrixmapper.h	bleibt	EA-Szene oder Hilfsdatei
+mesh.cpp	bleibt	EA-Szene oder Hilfsdatei
+mesh.h	bleibt	EA-Szene oder Hilfsdatei
+meshbuild.cpp	bleibt	EA-Szene oder Hilfsdatei
+meshbuild.h	bleibt	EA-Szene oder Hilfsdatei
+meshgeometry.cpp	bleibt	EA-Szene oder Hilfsdatei
+meshgeometry.h	bleibt	EA-Szene oder Hilfsdatei
+meshmatdesc.cpp	bleibt	EA-Szene oder Hilfsdatei
+meshmatdesc.h	bleibt	EA-Szene oder Hilfsdatei
+meshmdl.cpp	bleibt	EA-Szene oder Hilfsdatei
+meshmdl.h	bleibt	EA-Szene oder Hilfsdatei
+meshmdlio.cpp	bleibt	EA-Szene oder Hilfsdatei
+meshrenderer.cpp	bleibt	EA-Szene
+meshrenderer.h	bleibt	EA-Szene
+meshrendererdebugger.cpp	bleibt	EA-Szene
+meshrendererdebugger.h	bleibt	EA-Szene
+meshrendererlist.h	bleibt	EA-Szene
+metalmap.cpp	bleibt	EA-Szene oder Hilfsdatei
+metalmap.h	bleibt	EA-Szene oder Hilfsdatei
+missingtexture.cpp	bleibt	EA-Szene; DirectXTex auf der CPU
+missingtexture.h	bleibt	EA-Szene oder Hilfsdatei
+motchan.cpp	bleibt	EA-Szene oder Hilfsdatei
+motchan.h	bleibt	EA-Szene oder Hilfsdatei
+nullrobj.cpp	bleibt	EA-Szene oder Hilfsdatei
+nullrobj.h	bleibt	EA-Szene oder Hilfsdatei
+part_buf.cpp	bleibt	EA-Szene oder Hilfsdatei
+part_buf.h	bleibt	EA-Szene oder Hilfsdatei
+part_emt.cpp	bleibt	EA-Szene oder Hilfsdatei
+part_emt.h	bleibt	EA-Szene oder Hilfsdatei
+part_ldr.cpp	bleibt	EA-Szene oder Hilfsdatei
+part_ldr.h	bleibt	EA-Szene oder Hilfsdatei
+pivot.cpp	bleibt	EA-Szene oder Hilfsdatei
+pivot.h	bleibt	EA-Szene oder Hilfsdatei
+pointgr.cpp	bleibt	EA-Szene oder Hilfsdatei
+pointgr.h	bleibt	EA-Szene oder Hilfsdatei
+polygonrenderer.cpp	bleibt	EA-Szene
+polygonrenderer.h	bleibt	EA-Szene
+polyinfo.cpp	bleibt	EA-Szene oder Hilfsdatei
+polyinfo.h	bleibt	EA-Szene oder Hilfsdatei
+pot.cpp	bleibt	EA-Szene oder Hilfsdatei
+pot.h	bleibt	EA-Szene oder Hilfsdatei
+predlod.cpp	bleibt	EA-Szene oder Hilfsdatei
+predlod.h	bleibt	EA-Szene oder Hilfsdatei
+presentlayout.h	bleibt	EA-Szene oder Hilfsdatei
+prim_anim.cpp	bleibt	EA-Szene oder Hilfsdatei
+prim_anim.h	bleibt	EA-Szene oder Hilfsdatei
+projector.cpp	bleibt	EA-Szene oder Hilfsdatei
+projector.h	bleibt	EA-Szene oder Hilfsdatei
+proto.cpp	bleibt	EA-Szene oder Hilfsdatei
+proto.h	bleibt	EA-Szene oder Hilfsdatei
+proxy.h	bleibt	EA-Szene oder Hilfsdatei
+rddesc.h	bleibt	EA-Szene oder Hilfsdatei
+render2d.cpp	bleibt	EA-Szene (2D-Zeichnen über RenderDevice)
+render2d.h	bleibt	EA-Szene
+render2dsentence.cpp	bleibt	EA-Szene
+render2dsentence.h	bleibt	EA-Szene
+renderbackend.h	Common	Schnittstelle RenderBackend; deklariert Create_D3D11_Render_Backend und Create_Vulkan_Render_Backend (Schritt 1b: Anmeldung statt fester Namen)
+rendercaps.cpp	Common	Fähigkeiten des Renderkerns (aus EAs DX8Caps hervorgegangen), API-neutral
+rendercaps.h	Common	dto.
+rendercb.h	Common	C++-Spiegel der Konstantenpuffer, für beide APIs
+rendercore.cpp	Common	Renderkern; Grenzfall: bindet d3d11device.h ein und erzeugt die D3D11-Schicht (Ausnahme bis Schritt 1b)
+rendercore.h	Common	Renderkern
+rendercore_boden.cpp	Common	Renderkern: Licht je Pixel
+rendercore_diagnosis.cpp	Common	Renderkern: Diagnose
+rendercore_effects.cpp	Common	Renderkern: Effekte
+rendercore_gtao.cpp	Common	Renderkern: GTAO
+rendercore_instancing.cpp	Common	Renderkern: Instancing
+rendercore_internal.h	Common	Renderkern: interner Zustand
+rendercore_resources.cpp	Common	Renderkern: Ressourcen (Create_D3D11_Buffer ist nur ein Name, ruft GpuDevice)
+rendercore_shadows.cpp	Common	Renderkern: Schatten
+rendercore_taa.cpp	Common	Renderkern: TAA
+rendercore_terrain.cpp	Common	Renderkern: Gelände
+renderdevice.cpp	Common	Fassade RenderDevice; Grenzfall: bindet d3dcompiler.h ungenutzt ein und wählt fest Vulkan, sonst D3D11 (Ausnahme bis Schritt 1b)
+renderdevice.h	Common	Fassade RenderDevice für EAs Code
+renderformat.cpp	Common	Formatumsetzung des Renderkerns (RenderUnitTests)
+renderformat.h	Common	dto.
+renderfvf.cpp	Common	FVF-Umsetzung (RenderUnitTests)
+renderfvf.h	Common	dto.
+renderobjectrecycler.cpp	bleibt	EA-Szene
+renderobjectrecycler.h	bleibt	EA-Szene
+renderobjects.h	Common	Objekte des Renderkerns (Shader, Texturen, Puffer als Handles)
+renderslots.h	Common	Platztabelle, gleich slots.hlsli (plaetze_pruefen.py)
+renderstates.cpp	Common	Zustandsumsetzung des Renderkerns (RenderUnitTests)
+renderstates.h	Common	dto.
+rendobj.cpp	bleibt	EA-Szene oder Hilfsdatei
+rendobj.h	bleibt	EA-Szene oder Hilfsdatei
+rinfo.cpp	bleibt	EA-Szene oder Hilfsdatei
+rinfo.h	bleibt	EA-Szene oder Hilfsdatei
+ringobj.cpp	bleibt	EA-Szene oder Hilfsdatei
+ringobj.h	bleibt	EA-Szene oder Hilfsdatei
+robjlist.h	bleibt	EA-Szene oder Hilfsdatei
+scene.cpp	bleibt	EA-Szene oder Hilfsdatei
+scene.h	bleibt	EA-Szene oder Hilfsdatei
+segline.cpp	bleibt	EA-Szene oder Hilfsdatei
+segline.h	bleibt	EA-Szene oder Hilfsdatei
+seglinerenderer.cpp	bleibt	EA-Szene
+seglinerenderer.h	bleibt	EA-Szene
+shader.cpp	bleibt	EA ShaderClass (Zustandsbeschreibung), kein Gerät
+shader.h	bleibt	dto.
+shattersystem.cpp	bleibt	EA-Szene oder Hilfsdatei
+shattersystem.h	bleibt	EA-Szene oder Hilfsdatei
+shdlib.h	bleibt	EA-Szene oder Hilfsdatei
+snapPts.h	bleibt	EA-Szene oder Hilfsdatei
+snappts.cpp	bleibt	EA-Szene oder Hilfsdatei
+sortingrenderer.cpp	bleibt	EA-Szene
+sortingrenderer.h	bleibt	EA-Szene
+sphereobj.cpp	bleibt	EA-Szene oder Hilfsdatei
+sphereobj.h	bleibt	EA-Szene oder Hilfsdatei
+static_sort_list.cpp	bleibt	EA-Szene oder Hilfsdatei
+static_sort_list.h	bleibt	EA-Szene oder Hilfsdatei
+statistics.cpp	bleibt	EA-Szene oder Hilfsdatei
+statistics.h	bleibt	EA-Szene oder Hilfsdatei
+streak.cpp	bleibt	EA-Szene oder Hilfsdatei
+streak.h	bleibt	EA-Szene oder Hilfsdatei
+streakRender.cpp	bleibt	EA-Szene
+streakRender.h	bleibt	EA-Szene
+stripoptimizer.cpp	bleibt	EA-Szene oder Hilfsdatei
+stripoptimizer.h	bleibt	EA-Szene oder Hilfsdatei
+surfaceclass.cpp	bleibt	EA-Szene; nutzt DirectXTex für Kopien auf der CPU
+surfaceclass.h	bleibt	EA-Szene oder Hilfsdatei
+texproject.cpp	bleibt	EA-Szene oder Hilfsdatei
+texproject.h	bleibt	EA-Szene oder Hilfsdatei
+texture.cpp	bleibt	EA-Szene oder Hilfsdatei
+texture.h	bleibt	EA-Szene oder Hilfsdatei
+texturefilter.cpp	bleibt	EA-Szene oder Hilfsdatei
+texturefilter.h	bleibt	EA-Szene oder Hilfsdatei
+textureloader.cpp	bleibt	EA-Szene oder Hilfsdatei
+textureloader.h	bleibt	EA-Szene oder Hilfsdatei
+texturemanager.cpp	bleibt	EA-Szene oder Hilfsdatei
+texturemanager.h	bleibt	EA-Szene oder Hilfsdatei
+texutil.cpp	bleibt	Texturformate auf der CPU (DirectXTex), kein Gerät; Einordnung in Schritt 1b
+texutil.h	bleibt	dto.
+vertexbuffer.cpp	bleibt	EA-Szene oder Hilfsdatei
+vertexbuffer.h	bleibt	EA-Szene oder Hilfsdatei
+vertmaterial.cpp	bleibt	EA-Szene oder Hilfsdatei
+vertmaterial.h	bleibt	EA-Szene oder Hilfsdatei
+visrasterizer.cpp	bleibt	EA-Szene oder Hilfsdatei
+visrasterizer.h	bleibt	EA-Szene oder Hilfsdatei
+vulkanbackend.cpp	Vulkan	Vulkan-Geräteschicht
+vulkanbackend.h	Vulkan	Vulkan-Geräteschicht
+vulkandevice.cpp	Vulkan	Vulkan-Geräteschicht
+vulkandevice.h	Vulkan	Vulkan-Geräteschicht
+vulkandevice_context.cpp	Vulkan	Vulkan-Geräteschicht
+vulkandevice_internal.h	Vulkan	Vulkan-Geräteschicht
+vulkandevice_pipeline.cpp	Vulkan	Vulkan-Geräteschicht
+vulkandevice_resources.cpp	Vulkan	Vulkan-Geräteschicht
+vulkandxc.cpp	Vulkan	Vulkan-Geräteschicht
+vulkandxc.h	Vulkan	Vulkan-Geräteschicht
+vulkanloader.cpp	Vulkan	Vulkan-Geräteschicht
+vulkanloader.h	Vulkan	Vulkan-Geräteschicht
+vulkanmemory.cpp	Vulkan	Vulkan-Geräteschicht
+vulkanrequirements.cpp	Vulkan	Vulkan-Geräteschicht
+vulkanrequirements.h	Vulkan	Vulkan-Geräteschicht
+vulkanspirv.cpp	Vulkan	Vulkan-Geräteschicht
+vulkanspirv.h	Vulkan	Vulkan-Geräteschicht
+w3d_dep.cpp	bleibt	EA-Szene oder Hilfsdatei
+w3d_dep.h	bleibt	EA-Szene oder Hilfsdatei
+w3d_file.h	bleibt	EA-Szene oder Hilfsdatei
+w3d_obsolete.h	bleibt	EA-Szene oder Hilfsdatei
+w3d_util.cpp	bleibt	EA-Szene oder Hilfsdatei
+w3d_util.h	bleibt	EA-Szene oder Hilfsdatei
+w3derr.h	bleibt	EA-Szene oder Hilfsdatei
+w3dexclusionlist.cpp	bleibt	EA-Szene oder Hilfsdatei
+w3dexclusionlist.h	bleibt	EA-Szene oder Hilfsdatei
+ww3d.cpp	bleibt	EA-Szene oder Hilfsdatei
+ww3d.h	bleibt	EA-Szene oder Hilfsdatei
+ww3dformat.cpp	bleibt	EA-Szene oder Hilfsdatei
+ww3dformat.h	bleibt	EA-Szene oder Hilfsdatei
+ww3dids.h	bleibt	EA-Szene oder Hilfsdatei
+ww3dtypes.h	bleibt	EA-Typen; nennt DXGI_FORMAT_BC7 nur im Kommentar
+wwd3dmath.cpp	bleibt	EA-Mathematik (D3D-Matrixlayout), kein Gerät
+wwd3dmath.h	bleibt	dto.

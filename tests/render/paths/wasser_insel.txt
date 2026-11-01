@@ -1,0 +1,12 @@
+# Tournament Island (Zero Hour): Wasserarme zwischen den Inseln, tropisches Flachwasser -- Schaerfe und Detail der
+# Wasseroberflaeche und Ufer. Kartenrelativ, Winkel in
+# Grad; jede Pose zwei Stuetzpunkte, damit sie bei --every 60 stillsteht.
+# frame   x      y      zoom      drehung  neigung
+60        0.20   0.50   standard  0        standard
+120       0.20   0.50   standard  0        standard
+180       0.27   0.52   0.30      0        standard
+240       0.27   0.52   0.30      0        standard
+300       0.15   0.50   0.25      45       standard
+360       0.15   0.50   0.25      45       standard
+420       0.50   0.80   0.50      0        25
+480       0.50   0.80   0.50      0        25

@@ -1,0 +1,5 @@
+; DebugWindow.def : Declares the module parameters for the DLL.
+
+LIBRARY      "DebugWindow"
+
+EXPORTS

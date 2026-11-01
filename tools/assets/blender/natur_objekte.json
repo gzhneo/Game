@@ -1,0 +1,107 @@
+{
+  "_hinweis": "Auftrag für objekt_ersetzen.py, baum_ersetzen.py und natur_anordnen.py (TODO 56/78). Pfade außerhalb des Repos, relativ zu GZH_WERKZEUGE; Scans in <modelle> (tools/assets/cc0_laden.py). Liest keine EA-Datei: modell = Name, unter dem die INI das Modell lädt (Schnittstelle); anordnung = eigene Regel für Größe und Anordnung der Scan-Teile (Spielmaßstab 6,5 Einheiten je Meter mal Gestaltungsfaktor); lage = daraus mit natur_anordnen.py gerechnet (Mitte, Winkel, Maßstab); farbziel = eigene Palette, Mittel und Streuung je Kanal (sRGB 0..1); hoehe/kronen_halbmesser der Kiefer in Spieleinheiten.",
+  "vorgaben": {
+    "arbeit": "cc0/arbeit",
+    "modelle": "cc0/modelle",
+    "versenken": 0.15,
+    "harte_kante": 70
+  },
+  "objekte": {
+    "PMRocks01": {
+      "_karten": "Rocks1: Tournament Lake 13, Alpine Assault 4 (beide Spiele, dieselbe Datei); 6 Steine",
+      "modell": "PMRocks01",
+      "quelle": "rock_moss_set_01/rock_moss_set_01_4k.gltf",
+      "anordnung": {"art": "haufen", "massstab": 3.9, "ueberlappung": 0.25, "startwinkel": 20},
+      "zuordnung": [
+        {"quelle": "rock_moss_set_01_rock04", "lage": {"mitte": [-6.93, -3.53], "winkel": -35, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock03", "lage": {"mitte": [1.67, 7.37], "winkel": 138, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock05", "lage": {"mitte": [2.66, -6.9], "winkel": 50, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock06", "lage": {"mitte": [-7.87, 3.12], "winkel": -137, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock02", "lage": {"mitte": [-0.61, 0.12], "winkel": 110, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock01", "lage": {"mitte": [7.23, 2.98], "winkel": 135, "massstab": 3.9}}
+      ],
+      "dreiecke": 900,
+      "textur": "PMRocks01CC",
+      "groesse": 256,
+      "stufen": {"sd": 256, "hd": 1024, "uhd": 2048},
+      "farbziel": {"mittel": [0.42, 0.41, 0.35], "streuung": [0.12, 0.12, 0.11]}
+    },
+    "PMRocks03": {
+      "_karten": "Rocks3: Tournament Lake 8, Alpine Assault 4; 7 Steine",
+      "modell": "PMRocks03",
+      "quelle": "rock_moss_set_01/rock_moss_set_01_4k.gltf",
+      "anordnung": {"art": "reihe", "massstab": 3.9, "ueberlappung": 0.3, "startwinkel": 15},
+      "zuordnung": [
+        {"quelle": "rock_moss_set_01_rock04", "lage": {"mitte": [-20.5, -1.82], "winkel": 15, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock05", "lage": {"mitte": [14.22, 1.17], "winkel": 15, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock02", "lage": {"mitte": [-0.84, -0.43], "winkel": 15, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock06", "lage": {"mitte": [-8.47, -2.08], "winkel": -35, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock03", "lage": {"mitte": [-14.82, -1.86], "winkel": -10, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock01", "lage": {"mitte": [7.04, 1.45], "winkel": 40, "massstab": 3.9}},
+        {"quelle": "rock_moss_set_01_rock03", "lage": {"mitte": [20.4, 1.0], "winkel": 65, "massstab": 3.9}}
+      ],
+      "dreiecke": 1000,
+      "textur": "PMRocks03CC",
+      "groesse": 256,
+      "stufen": {"sd": 256, "hd": 1024, "uhd": 2048},
+      "farbziel": {"mittel": [0.42, 0.41, 0.35], "streuung": [0.12, 0.12, 0.11]}
+    },
+    "PMmcluster": {
+      "_karten": "RockClusterMedium01: Tournament Lake 9, Shell-Map ZH 6; 3 Blöcke",
+      "modell": "PMmcluster",
+      "quelle": "rock_moss_set_02/rock_moss_set_02_4k.gltf",
+      "anordnung": {"art": "haufen", "massstab": 9.75, "ueberlappung": 0.3, "startwinkel": 200},
+      "zuordnung": [
+        {"quelle": "rock_moss_set_02_rock07", "lage": {"mitte": [10.39, -2.77], "winkel": 43, "massstab": 9.75}},
+        {"quelle": "rock_moss_set_02_rock11", "lage": {"mitte": [0.41, 1.37], "winkel": -70, "massstab": 9.75}},
+        {"quelle": "rock_moss_set_02_rock12", "lage": {"mitte": [-10.02, -2.43], "winkel": -45, "massstab": 9.75}}
+      ],
+      "dreiecke": 900,
+      "textur": "PMmclusterCC",
+      "groesse": 256,
+      "stufen": {"sd": 256, "hd": 1024, "uhd": 2048},
+      "farbziel": {"mittel": [0.37, 0.34, 0.27], "streuung": [0.12, 0.11, 0.09]}
+    },
+    "PTPine01": {
+      "_karten": "TreePine (PTPine01): Tournament Lake 225, Alpine Assault 204; TreePine2 (PTPine01_hi, dieselbe TGA): Tournament Lake 162",
+      "art": "baum",
+      "modell": "PTPine01",
+      "quelle": "fir_tree_01/fir_tree_01_1k.blend",
+      "quelle_objekt": "fir_tree_01_a_LOD1",
+      "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_1k.png",
+      "textur": "PTPine01CC",
+      "atlas_tga": {"PTPine01.tga": "PTPine01CC"},
+      "render": 2048,
+      "stufen": {"sd": [256, 0, 256], "hd": [1280, 2, 1024], "uhd": [2560, 4, 2048]},
+      "kegel_ab": 0.3,
+      "schicht_von": 0.3,
+      "kegel_spitze": 0.03,
+      "fassungen": {
+        "hi": {"modell": "PTPine01_hi"},
+        "b": {"modell": "PTPine01_B", "textur": "PTPine01CCB", "dunkel": 0.35, "saettigung": 0.15},
+        "hi_b": {"modell": "PTPine01_hi_B", "textur": "PTPine01CCB"}
+      },
+      "hoehe": 45.5,
+      "kronen_halbmesser": 7.4,
+      "farbziel": {
+        "laub": {"mittel": [0.27, 0.36, 0.14], "streuung": [0.12, 0.14, 0.07]},
+        "rinde": {"mittel": [0.42, 0.34, 0.27], "streuung": [0.1, 0.09, 0.08]}
+      }
+    },
+    "PMgaldrum": {
+      "_karten": "55GallonDrum: Shell-Map ZH 9 (grünes 200-Liter-Fass)",
+      "modell": "PMgaldrum",
+      "quelle": "barrel_03/barrel_03_2k.gltf",
+      "anordnung": {"art": "einzeln", "massstab": 6.5, "startwinkel": 0},
+      "zuordnung": [{"quelle": "barrel_03", "versenken": 0.0, "lage": {"mitte": [0.0, 0.0], "winkel": 0, "massstab": 6.5}}],
+      "dreiecke": 300,
+      "planar": 3,
+      "harte_kante": 50,
+      "textur": "PMgaldrumCC",
+      "groesse": 128,
+      "stufen": {"sd": 128, "hd": 512, "uhd": 1024},
+      "fassungen": {"d": {"modell": "PMgaldrum_D", "textur": "PMgaldrumCCD", "dunkel": 0.7, "saettigung": 0.6}},
+      "farbziel": {"mittel": [0.25, 0.31, 0.19], "streuung": [0.06, 0.07, 0.05]}
+    }
+  }
+}

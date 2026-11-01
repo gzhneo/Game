@@ -1,0 +1,25 @@
+# Testhilfen-Ablauf fuer den Replay-Test
+#
+# Zeilen: Logik-Frame  Befehl  [Ziel: Spielerindex oder kiN = N-ter KI-Spieler; ohne = lokaler Spieler]   (30 Logik-Frames = 1 s Spielzeit)
+# Gedacht fuer runner.py record mit 2 KI: der lokale Spieler ist Beobachter, die Befehle gehen an
+# die KI-Spieler (aufgeloeste Indizes in den Zeilen "TESTHILFE" im CRC-Protokoll). Jede Testhilfe, die die
+# Logik beruehrt, kommt mindestens einmal vor; das Replay muss beim Abspielen CRC-gleich laufen.
+300   geld_plus  ki1
+330   geld_einfrieren  ki1
+360   energie_unendlich  ki1
+390   energie_minus  ki2
+391   energie_minus  ki2
+392   energie_minus  ki2
+420   sofortbau  ki1
+450   unverwundbar  ki2
+480   keine_wartezeit  ki1
+510   generalspunkt  ki1
+540   alle_faehigkeiten  ki2
+570   rang_plus  ki1
+600   karte_aufdecken  ki1
+1500  energie_plus  ki2
+1800  geld_einfrieren  ki1
+2100  unverwundbar  ki2
+2400  karte_aufdecken  ki1
+2700  sofortbau  ki1
+3300  alle_feinde_vernichten  ki1

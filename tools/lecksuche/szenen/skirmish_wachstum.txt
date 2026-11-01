@@ -1,0 +1,58 @@
+# Vier Skirmish-Partien hintereinander (USA gegen eine leichte KI mit China, feste Fraktionen, Sieg per
+# Strg+W, Punkteanzeige, zurueck ins Skirmish-Menue). Nach den ersten Partien sind Modelle, Animationen und
+# Namen einmal geladen (Zwischenspeicher, die bis zum Programmende bleiben); was danach je Partie liegen
+# bleibt, waechst: Merkpunkt im Skirmish-Menue, Bericht nach der naechsten Partie wieder dort.
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 1
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer1 2
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate1 2
+warte 10
+# Partie 1
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+merke
+# Partie 2
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+wachstum partie2
+merke
+# Partie 3
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+wachstum partie3
+merke
+# Partie 4
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+wachstum partie4
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+warte 60
+beenden

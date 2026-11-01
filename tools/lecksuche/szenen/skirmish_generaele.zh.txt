@@ -1,0 +1,115 @@
+# Zero Hour: je General eine Skirmish-Partie gegen eine KI (leicht), Sieg per Strg+W, Punkteanzeige,
+# zurueck ins Skirmish-Menue. Merkpunkt nach der ersten Partie, Wachstum nach der letzten (8 Partien).
+hauptmenue
+klick MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer1 2
+# General 1
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 4
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+merke
+
+# General 2
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 5
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+
+# General 3
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 6
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+
+# General 4
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 7
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+
+# General 5
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 8
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+
+# General 6
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 9
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+
+# General 7
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 10
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+
+# General 8
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 11
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+
+# General 9
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 12
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 900
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 60
+wachstum generaele
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+warte 60
+beenden

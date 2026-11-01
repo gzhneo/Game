@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Berge Vergleich</title>
+<style>
+:root { --bg:#f3f2ee; --fg:#1c1c1a; --muted:#67655f; --line:#d6d3ca; --accent:#5a4a8a; --card:#fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#161615; --fg:#e7e5de; --muted:#9a978e; --line:#33322e; --accent:#a996e0; --card:#1f1f1d; } }
+:root[data-theme="dark"] { --bg:#161615; --fg:#e7e5de; --muted:#9a978e; --line:#33322e; --accent:#a996e0; --card:#1f1f1d; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font:14px/1.45 system-ui, "Segoe UI", sans-serif; }
+header { padding:14px 16px 8px; border-bottom:1px solid var(--line); }
+h1 { font-size:18px; margin:0 0 4px; }
+.hint { color:var(--muted); font-size:12.5px; max-width:110ch; }
+.bar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:8px 16px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:5; }
+button, select { font:inherit; padding:4px 10px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--fg); cursor:pointer; }
+button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+.sep { width:1px; height:22px; background:var(--line); margin:0 4px; }
+main { padding:12px 16px 40px; }
+.view { position:relative; margin:0; }
+.view img { width:100%; height:auto; display:block; }
+.pair { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.cap { font-size:12.5px; color:var(--muted); margin:3px 0 0; }
+.tag { position:absolute; left:8px; top:8px; background:rgba(0,0,0,.6); color:#fff; padding:2px 8px; border-radius:4px; font-size:13px; }
+#lupe { position:fixed; pointer-events:none; width:320px; height:320px; border:2px solid var(--accent); border-radius:6px; display:none; background-repeat:no-repeat; box-shadow:0 2px 12px rgba(0,0,0,.45); z-index:9; }
+table { border-collapse:collapse; margin:12px 0; font-variant-numeric:tabular-nums; }
+th, td { border-bottom:1px solid var(--line); padding:3px 10px; text-align:right; }
+th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align:left; }
+tr.sel td { background:color-mix(in srgb, var(--accent) 15%, transparent); }
+.shots { display:flex; flex-wrap:wrap; gap:4px; }
+.shots button { padding:2px 8px; font-size:12.5px; }
+@media (max-width:700px) { .pair { grid-template-columns:1fr; } #lupe { width:180px; height:180px; } }
+</style>
+</head>
+<body>
+<header>
+<h1>Berge und Klippen (TODO 70): Felsebene an steilen Hängen</h1>
+<div class="hint" id="kopf"></div>
+</header>
+<div class="bar">
+  <select id="szene"></select>
+  <span class="sep"></span>
+  <button id="altBtn">alt</button><button id="neuBtn">neu</button>
+  <span class="sep"></span>
+  <button id="lupeBtn">Lupe (L)</button>
+  <button id="nebenBtn">Nebeneinander (N)</button>
+</div>
+<main>
+  <div class="shots" id="shots"></div>
+  <p class="cap" id="info"></p>
+  <div id="ansicht"></div>
+  <h2 style="font-size:15px;margin-top:22px">Helligkeit (mittlere Luminanz Rec. 709, Bildbereich ohne Befehlsleiste)</h2>
+  <table id="hell"></table>
+  <div class="hint" id="fuss"></div>
+</main>
+<div id="lupe"></div>
+<script>
+const D = /*DATEN*/null;
+let sz = 0, sh = 0, neu = true, lupe = 0, neben = false;
+const $ = id => document.getElementById(id);
+const shot = () => D.szenen[sz].shots[sh];
+const src = k => "bilder/" + D.szenen[sz].name + "/" + shot().shot + "_" + k + ".jpg";
+const pz = v => (v >= 0 ? "+" : "") + v.toFixed(2).replace(".", ",") + " %";
+function baue() {
+  $("kopf").innerHTML = D.kopf;
+  const s = $("szene");
+  D.szenen.forEach((x, i) => { const o = document.createElement("option"); o.value = i; o.textContent = x.titel; s.appendChild(o); });
+  s.onchange = () => { sz = +s.value; sh = 0; zeige(); };
+  $("altBtn").onclick = () => { neu = false; zeige(); };
+  $("neuBtn").onclick = () => { neu = true; zeige(); };
+  $("lupeBtn").onclick = () => { lupe = (lupe + 2) % 6; zeige(); };
+  $("nebenBtn").onclick = () => { neben = !neben; zeige(); };
+  let h = "<tr><th>Szene</th><th>Bild</th><th>alt</th><th>neu</th><th>Abweichung</th><th>Pixel &gt; 8</th></tr>";
+  D.szenen.forEach((S, i) => S.shots.forEach((x, j) => {
+    h += '<tr data-s="' + i + '" data-b="' + j + '"><td>' + S.titel + "</td><td>" + x.shot.replace("shot_", "") + "</td><td>" +
+      x.hell.alt.toFixed(1).replace(".", ",") + "</td><td>" + x.hell.neu.toFixed(1).replace(".", ",") + "</td><td>" + pz(x.abw) +
+      "</td><td>" + x.anteil.toFixed(1).replace(".", ",") + " %</td></tr>";
+  }));
+  $("hell").innerHTML = h;
+  document.querySelectorAll("#hell tr[data-s]").forEach(r => r.onclick = () => { sz = +r.dataset.s; sh = +r.dataset.b; $("szene").value = sz; zeige(); window.scrollTo(0, 0); });
+  $("fuss").innerHTML = D.fuss;
+}
+function zeige() {
+  const S = D.szenen[sz], x = shot();
+  const sb = $("shots"); sb.innerHTML = "";
+  S.shots.forEach((t, i) => { const b = document.createElement("button"); b.textContent = t.shot.replace("shot_", "") + (t.pose ? " " + t.pose : ""); if (i === sh) b.className = "on"; b.onclick = () => { sh = i; zeige(); }; sb.appendChild(b); });
+  $("altBtn").className = neu ? "" : "on"; $("neuBtn").className = neu ? "on" : "";
+  $("lupeBtn").className = lupe ? "on" : ""; $("lupeBtn").textContent = lupe ? "Lupe " + lupe + "x (L)" : "Lupe (L)";
+  $("nebenBtn").className = neben ? "on" : "";
+  $("info").textContent = S.beschreibung + " — Bild " + x.shot.replace("shot_", "") + (x.pose ? " (" + x.pose + ")" : "") +
+    " — Helligkeit alt " + x.hell.alt.toFixed(1) + ", neu " + x.hell.neu.toFixed(1) + " (" + pz(x.abw) + ")";
+  const a = $("ansicht");
+  if (neben)
+    a.innerHTML = '<div class="pair"><figure class="view"><img src="' + src("alt") + '"><span class="tag">alt</span></figure>' +
+      '<figure class="view"><img src="' + src("neu") + '"><span class="tag">neu</span></figure></div>';
+  else
+    a.innerHTML = '<figure class="view"><img src="' + src(neu ? "neu" : "alt") + '"><span class="tag">' + (neu ? "neu" : "alt") +
+      '</span></figure><p class="cap">Leertaste wechselt alt/neu an derselben Stelle.</p>';
+  document.querySelectorAll("#hell tr[data-s]").forEach(r => r.className = (+r.dataset.s === sz && +r.dataset.b === sh) ? "sel" : "");
+  haken();
+}
+function haken() {
+  const l = $("lupe");
+  document.querySelectorAll(".view img").forEach(img => {
+    img.onmousemove = e => {
+      if (!lupe) { l.style.display = "none"; return; }
+      const r = img.getBoundingClientRect();
+      const fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
+      const bw = img.naturalWidth * lupe * r.width / img.naturalWidth, bh = img.naturalHeight * lupe * r.height / img.naturalHeight;
+      l.style.display = "block";
+      l.style.backgroundImage = 'url("' + img.src + '")';
+      l.style.backgroundSize = bw + "px " + bh + "px";
+      const lw = l.offsetWidth, lh = l.offsetHeight;
+      l.style.backgroundPosition = (-fx * bw + lw / 2) + "px " + (-fy * bh + lh / 2) + "px";
+      l.style.left = (e.clientX - lw / 2) + "px"; l.style.top = (e.clientY - lh / 2) + "px";
+    };
+    img.onmouseleave = () => { l.style.display = "none"; };
+  });
+}
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "SELECT") return;
+  if (e.key === " ") { e.preventDefault(); neu = !neu; zeige(); }
+  else if (e.key === "l" || e.key === "L") { lupe = (lupe + 2) % 6; zeige(); }
+  else if (e.key === "n" || e.key === "N") { neben = !neben; zeige(); }
+  else if (e.key === "ArrowRight") { sh = Math.min(sh + 1, D.szenen[sz].shots.length - 1); zeige(); }
+  else if (e.key === "ArrowLeft") { sh = Math.max(sh - 1, 0); zeige(); }
+});
+baue(); zeige();
+</script>
+</body>
+</html>

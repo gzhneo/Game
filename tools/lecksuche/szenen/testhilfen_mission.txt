@@ -1,0 +1,20 @@
+# -mission USA 1 mit -testhilfen (tools/lecksuche setzt die Schalter): Mission ohne Menue, Schnellspeichern,
+# weiterspielen, Schnellladen, Sieg per Testhilfe, Punkteanzeige, zweite Mission, beenden. Der
+# Schnellspeicher heisst Testhilfen-Schnellspeicher.sav; tools/lecksuche loescht ihn danach.
+partie 20000
+# Zwischensequenz am Missionsanfang abwarten (dort sperrt das Spiel das Schnellspeichern)
+warte 2400
+testhilfe schnellspeichern
+warte 300
+testhilfe geld_plus
+testhilfe sofortbau
+warte 300
+testhilfe schnellladen
+partie 20000
+warte 600
+testhilfe sieg
+keinePartie 20000
+klickFalls ScoreScreen.wnd:ButtonContinue 900
+partie 20000
+warte 600
+beenden

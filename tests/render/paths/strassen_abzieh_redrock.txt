@@ -1,0 +1,32 @@
+# Strassen frei, Abziehbilder zh red rock (Nr. 83)
+# frame   x      y      zoom       drehung   neigung
+# drycracks01, drycracks03
+60        0.213  0.077  0.30       0         standard
+120       0.213  0.077  0.30       0         standard
+180       0.213  0.077  0.20       0         standard
+240       0.213  0.077  0.20       0         standard
+# arrowlong, parkspace
+300       0.542  0.174  0.30       0         standard
+360       0.542  0.174  0.30       0         standard
+420       0.542  0.174  0.20       0         standard
+480       0.542  0.174  0.20       0         standard
+# circlecross, helipad
+540       0.463  0.361  0.30       0         standard
+600       0.463  0.361  0.30       0         standard
+660       0.463  0.361  0.20       0         standard
+720       0.463  0.361  0.20       0         standard
+# drycracks02
+780       0.792  0.223  0.30       0         standard
+840       0.792  0.223  0.30       0         standard
+900       0.792  0.223  0.20       0         standard
+960       0.792  0.223  0.20       0         standard
+# drycracks01
+1020      0.185  0.238  0.30       0         standard
+1080      0.185  0.238  0.30       0         standard
+1140      0.185  0.238  0.20       0         standard
+1200      0.185  0.238  0.20       0         standard
+# drycracks03
+1260      0.936  0.213  0.30       0         standard
+1320      0.936  0.213  0.30       0         standard
+1380      0.936  0.213  0.20       0         standard
+1440      0.936  0.213  0.20       0         standard

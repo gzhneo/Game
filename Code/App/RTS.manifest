@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"
+					xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
+
+	<!-- Without this, Windows treats the process as DPI-unaware and stretches its
+			 fixed-resolution window to fill the display, blurring it on any scaled monitor.
+			 PerMonitorV2 (Windows 10 1703+) with a dpiAware fallback. One windowsSettings
+			 container with each child in its own namespace: several sibling windowsSettings
+			 blocks (one per namespace) are rejected by the manifest parser as invalid XML. -->
+	<asmv3:application>
+		<asmv3:windowsSettings>
+			<dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+			<dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+			<!-- Data\ paths built from user supplied map/mod names could exceed MAX_PATH; without
+					 this, CreateFile family calls silently fail past 260 characters on modern Windows
+					 instead of using the transparent long path support the OS already provides. -->
+			<longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+		</asmv3:windowsSettings>
+	</asmv3:application>
+
+	<!-- Declares real support up through Windows 11 (same GUID as 10) so GetVersionEx()/
+			 VerifyVersionInfo() report the true OS version instead of Windows 8's compatibility
+			 lie (6.2) that an unmanifested process gets by default. -->
+	<compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+		<application>
+			<!-- Windows Vista -->
+			<supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}"/>
+			<!-- Windows 7 -->
+			<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>
+			<!-- Windows 8 -->
+			<supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"/>
+			<!-- Windows 8.1 -->
+			<supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/>
+			<!-- Windows 10 and 11, no separate GUID for 11 -->
+			<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+		</application>
+	</compatibility>
+
+	<!-- Never require elevation. Options.ini/save games/replays already live
+			 under %USERPROFILE%\Documents, no reason to ever ask for admin rights. -->
+	<trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+		<security>
+			<requestedPrivileges>
+				<requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+			</requestedPrivileges>
+		</security>
+	</trustInfo>
+
+</assembly>

@@ -1,0 +1,210 @@
+/*
+**	Command & Conquer Generals(tm) / Generals Zero Hour(tm)
+**	Copyright 2025 Electronic Arts Inc.
+**	Modified by GZH Neo, Copyright (C) 2026 GZH Neo
+**
+**	This program is free software: you can redistribute it and/or modify
+**	it under the terms of the GNU General Public License as published by
+**	the Free Software Foundation, either version 3 of the License, or
+**	(at your option) any later version.
+**
+**	This program is distributed in the hope that it will be useful,
+**	but WITHOUT ANY WARRANTY; without even the implied warranty of
+**	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+**	GNU General Public License for more details.
+**
+**	You should have received a copy of the GNU General Public License
+**	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/***********************************************************************************************
+ ***              C O N F I D E N T I A L  ---  W E S T W O O D  S T U D I O S               ***
+ ***********************************************************************************************
+ *                                                                                             *
+ *                 Project Name : WW3D                                                         *
+ *                                                                                             *
+ *                     $Archive:: /Commando/Code/ww3d2/formconv.cpp                           $*
+ *                                                                                             *
+ *              Original Author:: Nathaniel Hoffman                                            *
+ *                                                                                             *
+ *                       Author : Kenny Mitchell                                               * 
+ *                                                                                             * 
+ *                     $Modtime:: 06/27/02 1:27p                                              $*
+ *                                                                                             *
+ *                    $Revision:: 3                                                           $*
+ *                                                                                             *
+ * 06/27/02 KM Z Format support																						*
+ *---------------------------------------------------------------------------------------------*
+ * Functions:                                                                                  *
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+#include "formconv.h"
+#include "ww3dtypes.h"	// WW3D_FMT_BC7
+
+// The tables use the engine's device format (WW3D_FMT_*, numeric values as D3DFORMAT).
+
+WW3DDeviceFormat WW3DFormatToD3DFormatConversionArray[WW3D_FORMAT_COUNT] = {
+	WW3D_FMT_UNKNOWN,
+	WW3D_FMT_R8G8B8,
+	WW3D_FMT_A8R8G8B8,
+	WW3D_FMT_X8R8G8B8,
+	WW3D_FMT_R5G6B5,
+	WW3D_FMT_X1R5G5B5,
+	WW3D_FMT_A1R5G5B5,
+	WW3D_FMT_A4R4G4B4,
+	WW3D_FMT_R3G3B2,
+	WW3D_FMT_A8,
+	WW3D_FMT_A8R3G3B2,
+	WW3D_FMT_X4R4G4B4,
+	WW3D_FMT_A8P8,
+	WW3D_FMT_P8,
+	WW3D_FMT_L8,
+	WW3D_FMT_A8L8,
+	WW3D_FMT_A4L4,
+	WW3D_FMT_V8U8,		// Bumpmap
+	WW3D_FMT_L6V5U5,	// Bumpmap
+	WW3D_FMT_X8L8V8U8,	// Bumpmap
+	WW3D_FMT_DXT1,
+	WW3D_FMT_DXT2,
+	WW3D_FMT_DXT3,
+	WW3D_FMT_DXT4,
+	WW3D_FMT_DXT5,
+	WW3D_FMT_BC7
+};
+
+// adding depth stencil format conversion
+WW3DDeviceFormat WW3DZFormatToD3DFormatConversionArray[WW3D_ZFORMAT_COUNT] =
+{
+	WW3D_FMT_UNKNOWN,
+	WW3D_FMT_D16_LOCKABLE, // 16-bit z-buffer bit depth. This is an application-lockable surface format.
+	WW3D_FMT_D32, // 32-bit z-buffer bit depth.
+	WW3D_FMT_D15S1, // 16-bit z-buffer bit depth where 15 bits are reserved for the depth channel and 1 bit is reserved for the stencil channel.
+	WW3D_FMT_D24S8, // 32-bit z-buffer bit depth using 24 bits for the depth channel and 8 bits for the stencil channel.
+	WW3D_FMT_D16, // 16-bit z-buffer bit depth.
+	WW3D_FMT_D24X8, // 32-bit z-buffer bit depth using 24 bits for the depth channel.
+	WW3D_FMT_D24X4S4, // 32-bit z-buffer bit depth using 24 bits for the depth channel and 4 bits for the stencil channel.
+};
+
+#define HIGHEST_SUPPORTED_D3DFORMAT WW3D_FMT_X8L8V8U8
+// D16 = 80 is the highest value (above D24X4S4 = 79); a smaller bound would make the D16 entry
+// write past the end of the table.
+#define HIGHEST_SUPPORTED_D3DZFORMAT WW3D_FMT_D16
+WW3DFormat D3DFormatToWW3DFormatConversionArray[HIGHEST_SUPPORTED_D3DFORMAT + 1];
+WW3DZFormat D3DFormatToWW3DZFormatConversionArray[HIGHEST_SUPPORTED_D3DZFORMAT + 1];
+
+WW3DDeviceFormat WW3DFormat_To_D3DFormat(WW3DFormat ww3d_format) {
+	if (ww3d_format >= WW3D_FORMAT_COUNT) {
+		return WW3D_FMT_UNKNOWN;
+	} else {
+		return WW3DFormatToD3DFormatConversionArray[static_cast<unsigned int>(ww3d_format)];
+	}
+}
+
+WW3DFormat D3DFormat_To_WW3DFormat(WW3DDeviceFormat d3d_format)
+{
+	switch (d3d_format) {
+	// The DXT-codes are created with FOURCC macro and thus can't be placed in the conversion table
+	case WW3D_FMT_DXT1: return WW3D_FORMAT_DXT1;
+	case WW3D_FMT_DXT2: return WW3D_FORMAT_DXT2;
+	case WW3D_FMT_DXT3: return WW3D_FORMAT_DXT3;
+	case WW3D_FMT_DXT4: return WW3D_FORMAT_DXT4;
+	case WW3D_FMT_DXT5: return WW3D_FORMAT_DXT5;
+	case WW3D_FMT_BC7:  return WW3D_FORMAT_BC7;		// own FourCC
+	default:
+		if (d3d_format > HIGHEST_SUPPORTED_D3DFORMAT) {
+			return WW3D_FORMAT_UNKNOWN;
+		} else {
+			return D3DFormatToWW3DFormatConversionArray[static_cast<unsigned int>(d3d_format)];
+		}
+		break;
+	}
+}
+
+//**********************************************************************************************
+//! Depth Stencil W3D to D3D format conversion
+/*! KJM
+*/
+WW3DDeviceFormat WW3DZFormat_To_D3DFormat(WW3DZFormat ww3d_zformat)
+{
+	if (ww3d_zformat >= WW3D_ZFORMAT_COUNT)
+	{
+		return WW3D_FMT_UNKNOWN;
+	}
+	else
+	{
+		return WW3DZFormatToD3DFormatConversionArray[static_cast<unsigned int>(ww3d_zformat)];
+	}
+}
+
+//**********************************************************************************************
+//! D3D to Depth Stencil W3D format conversion
+/*! KJM
+*/
+WW3DZFormat D3DFormat_To_WW3DZFormat(WW3DDeviceFormat d3d_format)
+{
+	if (d3d_format>HIGHEST_SUPPORTED_D3DZFORMAT)
+	{
+		return WW3D_ZFORMAT_UNKNOWN;
+	}
+	else
+	{
+		return D3DFormatToWW3DZFormatConversionArray[static_cast<unsigned int>(d3d_format)];
+	}
+}
+
+//**********************************************************************************************
+//! Init format conversion tables
+/*!
+ * 06/27/02 KM Z Format support																						*
+*/
+void Init_D3D_To_WW3_Conversion()
+{
+	unsigned i;
+	for (i=0;i<=HIGHEST_SUPPORTED_D3DFORMAT;++i) {	// inclusive bound; the table has +1 entries
+		D3DFormatToWW3DFormatConversionArray[i]=WW3D_FORMAT_UNKNOWN;
+	}
+
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_R8G8B8]=WW3D_FORMAT_R8G8B8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A8R8G8B8]=WW3D_FORMAT_A8R8G8B8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_X8R8G8B8]=WW3D_FORMAT_X8R8G8B8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_R5G6B5]=WW3D_FORMAT_R5G6B5;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_X1R5G5B5]=WW3D_FORMAT_X1R5G5B5;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A1R5G5B5]=WW3D_FORMAT_A1R5G5B5;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A4R4G4B4]=WW3D_FORMAT_A4R4G4B4;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_R3G3B2]=WW3D_FORMAT_R3G3B2;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A8]=WW3D_FORMAT_A8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A8R3G3B2]=WW3D_FORMAT_A8R3G3B2;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_X4R4G4B4]=WW3D_FORMAT_X4R4G4B4;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A8P8]=WW3D_FORMAT_A8P8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_P8]=WW3D_FORMAT_P8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_L8]=WW3D_FORMAT_L8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A8L8]=WW3D_FORMAT_A8L8;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_A4L4]=WW3D_FORMAT_A4L4;
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_V8U8]=WW3D_FORMAT_U8V8;				// Bumpmap
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_L6V5U5]=WW3D_FORMAT_L6V5U5;		// Bumpmap
+	D3DFormatToWW3DFormatConversionArray[WW3D_FMT_X8L8V8U8]=WW3D_FORMAT_X8L8V8U8;	// Bumpmap
+
+	// init depth stencil conversion
+	for (i=0; i<=HIGHEST_SUPPORTED_D3DZFORMAT; i++)
+	{
+		D3DFormatToWW3DZFormatConversionArray[i]=WW3D_ZFORMAT_UNKNOWN;
+	}
+
+	D3DFormatToWW3DZFormatConversionArray[WW3D_FMT_D16_LOCKABLE]=WW3D_ZFORMAT_D16_LOCKABLE;
+	D3DFormatToWW3DZFormatConversionArray[WW3D_FMT_D32]=WW3D_ZFORMAT_D32;
+	D3DFormatToWW3DZFormatConversionArray[WW3D_FMT_D15S1]=WW3D_ZFORMAT_D15S1;
+	D3DFormatToWW3DZFormatConversionArray[WW3D_FMT_D24S8]=WW3D_ZFORMAT_D24S8;
+	D3DFormatToWW3DZFormatConversionArray[WW3D_FMT_D16]=WW3D_ZFORMAT_D16;
+	D3DFormatToWW3DZFormatConversionArray[WW3D_FMT_D24X8]=WW3D_ZFORMAT_D24X8;
+	D3DFormatToWW3DZFormatConversionArray[WW3D_FMT_D24X4S4]=WW3D_ZFORMAT_D24X4S4;
+};
+
+// Backend-neutral conversion (declared in ww3dformat.h).
+WW3DFormat Device_Format_To_WW3DFormat(unsigned device_format)
+{
+	return D3DFormat_To_WW3DFormat(static_cast<WW3DDeviceFormat>(device_format));
+}
+
+unsigned WW3DFormat_To_Device_Format(WW3DFormat format)
+{
+	return static_cast<unsigned>(WW3DFormat_To_D3DFormat(format));
+}

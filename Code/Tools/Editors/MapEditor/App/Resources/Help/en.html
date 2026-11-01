@@ -1,0 +1,77 @@
+<!-- MapEditor help, English. One section per topic; F1 opens the section of the current window or tool. -->
+<h1>MapEditor help</h1>
+<p>F1 opens the part of this help that belongs to the window or tool in use. Every command is also in the command palette (Ctrl+Shift+P).</p>
+
+<h2 id="start">Start page</h2>
+<p>Open a map, create a new one or pick one of the recent maps. The game (Generals or Zero Hour) decides which game data the editor loads.</p>
+
+<h2 id="view">Moving around the map</h2>
+<p><b>3D view:</b> the mouse wheel zooms toward the point under the cursor, the right mouse button turns and tilts the camera, the middle button moves it. The arrow keys move, Page Up/Down turn, Home puts the camera back to the start. <b>2D overview:</b> wheel zooms, dragging with the middle button moves; the minimap shows the camera's view. Camera bookmarks keep views of a map.</p>
+<p>View &rsaquo; Graphics chooses the classic look or a detail level of the game (shadow maps, ambient occlusion, sharpening, ground detail, rock on steep slopes, realistic water); each effect can be switched off on its own.</p>
+
+<h2 id="objects">Objects</h2>
+<p>Click selects, Ctrl+click adds to the selection, dragging a frame selects several. Drag to move; drag the ring to turn. The side panel shows the properties of the selection. The catalog places new objects: choose one, then click on the map. Cut, copy, paste and duplicate work across maps. Esc ends a drag or a placement.</p>
+
+<h2 id="waypoints">Waypoints</h2>
+<p>With the waypoint tool a click sets a waypoint; with a waypoint selected the next one is linked from it. Ctrl+L links, Ctrl+Shift+L unlinks the selected waypoints. Start positions are named Player_1_Start to Player_8_Start.</p>
+
+<h2 id="areas">Trigger and water areas</h2>
+<p>Clicks set the corners of an area; a click on the first corner, a double-click or Enter closes it. Drag a corner to move it, click on an edge to add one. Water areas are drawn as water in the 3D view.</p>
+
+<h2 id="roads">Roads and bridges</h2>
+<p>Drag to lay a road piece; pieces that meet are joined into curves and crossings. Bridges are placed like roads between two points.</p>
+
+<h2 id="placement">Groves, fences, scorch marks</h2>
+<p>The grove tool scatters trees in a circle or a rectangle, never under water or on slopes too steep; the fence tool sets fence pieces along a line; scorch marks are placed by a click.</p>
+
+<h2 id="terrain-height">Heights</h2>
+<p>The brush raises, lowers, sets or smooths the ground; its size and strength are in the side panel, the circle shows it in both views. Hold the button and move to paint. Each stroke is one undo step. The cliff flags follow the new heights as the game computes them.</p>
+
+<h2 id="terrain-texture">Textures</h2>
+<p>Paint a texture with soft or hard edges, fill a region, blend one edge by dragging, auto-edge a region or map cliff textures. The pipette takes the texture under the cursor. "Remove unused textures" drops the classes no cell uses.</p>
+
+<h2 id="terrain-shape">Ramps and mesh molds</h2>
+<p>A ramp runs between two clicked points with its width. A mesh mold presses a model's shape into the ground; move and turn it, then apply or cancel with Esc.</p>
+
+<h2 id="terrain-pathing">Passability</h2>
+<p>Paint where units cannot go (cliff flags); red cells in both views are impassable. "Set from the heights" sets the flags as the game would from the slopes.</p>
+<p>View &rsaquo; Slopes colours every cell by its slope in the 2D map and the steep ones in the 3D view, with the limit angle you choose (45&deg; is the game's).</p>
+
+<h2 id="buildlist">Build lists</h2>
+<p>The build list tells a computer player what to build where. Place buildings with the build list tool; the list in the side panel orders them and sets their properties.</p>
+
+<h2 id="settings">Map settings</h2>
+<p>World settings, lighting (drag the sun on the dial: the view shows light and shadows at once), shadows, water (visibility depth, colours, refraction, sky reflection; "Write to map.ini" keeps the values with the map), playable areas and the map's preview picture. Every change is one undo step.</p>
+
+<h2 id="sides">Players and teams</h2>
+<p>The players of the map with their faction, colour and allies, and the teams with their units, home waypoint and scripts.</p>
+
+<h2 id="scripts">Scripts</h2>
+<p>Players' scripts in groups: conditions (any OR block may hold, all conditions in it must) and actions, else actions when the conditions do not hold. Double-click a line to edit it; the check marks parameters that name nothing on the map. Scripts can be exported and imported as .scb files.</p>
+
+<h2 id="particles">Particle systems</h2>
+<p>All particle systems of the game data with a form, the INI text and a preview in the 3D view (at the selected object). Colour and alpha run as curves over a particle's life. Changes are tested in the game with "Test in the game" and saved into the project's data.</p>
+
+<h2 id="problems">Checking the map</h2>
+<p>Edit &rsaquo; Check map (F7) lists what the game would stumble over: missing start positions, objects outside the map, unknown templates, scripts naming nothing. Many problems have a quick fix.</p>
+
+<h2 id="history">History</h2>
+<p>Edit &rsaquo; History (Ctrl+H) lists every step of the map; undone steps are grey, the saved state is marked. A click goes to that state.</p>
+
+<h2 id="search">Find in the map</h2>
+<p>Ctrl+Shift+F searches names and texts in scripts, objects, teams, build lists and areas; "Where is this used?" (Shift+F12) starts with the selected object's name. A double-click shows the place. "Replace all" changes the scripts in one undo step.</p>
+
+<h2 id="fairness">Multiplayer fairness</h2>
+<p>Edit &rsaquo; Multiplayer fairness (Shift+F7) measures the ground paths from every start to the supplies, the tech buildings and the other starts; starts that are worse off are marked. The territories show which start arrives first where.</p>
+
+<h2 id="symmetry">Symmetry</h2>
+<p>Edit &rsaquo; Make symmetric copies one part of the map onto the rest: mirrored left and right, bottom and top, turned by 180 degrees or into four quarters, with heights, textures, cliff flags, objects and waypoints. Start waypoints of the copies get the next free Player_n_Start. One undo step.</p>
+
+<h2 id="poster">Poster and pictures</h2>
+<p>File &rsaquo; Export &rsaquo; Poster of the 3D view renders the camera's picture at several times the view's size with every effect, as PNG. The picture of the map (2D) and the height map are exported there too.</p>
+
+<h2 id="layers">Layers</h2>
+<p>Objects and areas belong to layers; hidden layers are neither drawn nor picked, new objects go into the active one.</p>
+
+<h2 id="shortcuts">Keyboard shortcuts</h2>
+<p>Settings &rsaquo; Keyboard lists every command with its keys; each can be changed. Esc cancels a drag or a tool, Delete removes the selection, Ctrl+Z / Ctrl+Y undo and redo.</p>

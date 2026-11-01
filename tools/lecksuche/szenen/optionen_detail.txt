@@ -1,0 +1,71 @@
+# Im Fenster mit Zeichnen: Optionsmenue, Detailstufe Niedrig (Eintrag 3) uebernehmen -- die
+# D3D11-Nachbearbeitung schaltet ab --, Skirmish-Partie, dann Ultra (Eintrag 0) uebernehmen, Partie, Hoch
+# (Eintrag 1); dazu ein Aufloesungswechsel hin (Eintrag 1) und zurueck (Eintrag 0) mit Bestaetigung. Die
+# Einstellungen des Nutzers stellt tools/lecksuche nach dem Lauf wieder her.
+hauptmenue
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonAccept
+liste OptionsMenu.wnd:ComboBoxResolution
+auswahl OptionsMenu.wnd:ComboBoxDetail 3
+warte 10
+klick OptionsMenu.wnd:ButtonAccept
+hauptmenue
+warte 300
+# Partie auf Niedrig
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 1
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer1 2
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 600
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+# Ultra
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonAccept
+auswahl OptionsMenu.wnd:ComboBoxDetail 0
+warte 10
+klick OptionsMenu.wnd:ButtonAccept
+hauptmenue
+warte 300
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 600
+sieg
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+# Aufloesung wechseln und bestaetigen, dann zurueck
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonAccept
+auswahl OptionsMenu.wnd:ComboBoxResolution 1
+warte 10
+klick OptionsMenu.wnd:ButtonAccept
+klickFalls MessageBox.wnd:ButtonOk 600
+hauptmenue
+warte 300
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonAccept
+auswahl OptionsMenu.wnd:ComboBoxResolution 0
+auswahl OptionsMenu.wnd:ComboBoxDetail 1
+warte 10
+klick OptionsMenu.wnd:ButtonAccept
+klickFalls MessageBox.wnd:ButtonOk 600
+hauptmenue
+warte 300
+beenden

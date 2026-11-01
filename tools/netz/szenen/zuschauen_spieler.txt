@@ -1,0 +1,28 @@
+# Zuschauen-Test, Mitspieler: das Spiel des Gastgebers waehlen, beitreten, bestaetigen, {LOGIK} Logik-Frames
+# mitspielen, verlassen.
+hauptmenue
+klick MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ListboxGames
+warte 600
+auswahl LanLobbyMenu.wnd:ListboxGames 0
+klick LanLobbyMenu.wnd:ButtonJoin
+fenster LanGameOptionsMenu.wnd:TextEntryChat
+warte 900
+klick LanGameOptionsMenu.wnd:ButtonStart 9000
+partie 2000000
+log SPIEL BEGINNT
+logik {LOGIK}
+spielmenue
+klick QuitNoSave.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 2000000
+klick ScoreScreen.wnd:ButtonOk
+fenster LanLobbyMenu.wnd:ButtonBack 3000
+warte 60
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+warte 60
+beenden

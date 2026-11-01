@@ -1,0 +1,22 @@
+# TODO 87: schwarze Teile mit Tessellation an Steilhaengen nachstellen (Alpine Assault, Orte aus fels_alpine.txt).
+# Je Ort langsam von der Standardansicht auf nah (0,35 und 0,2) und von der Standardneigung auf flach (15), damit der
+# Uebergang von "Kamera ueber dem Gelaende" zu "Auge oder Nahebene im Gelaende" in vielen Bildern liegt (-logCamera
+# meldet je Bild den Abstand). Ein Bild alle 30 Logik-Frames.
+# frame   x      y      zoom       drehung   neigung
+0         0.875  0.875  standard   180       standard
+60        0.875  0.875  standard   180       standard
+300       0.875  0.875  0.35       180       standard
+540       0.875  0.875  0.35       180       15
+780       0.875  0.875  0.20       180       15
+1020      0.875  0.875  0.20       180       standard
+1021      0.625  0.458  standard   0         standard
+1080      0.625  0.458  standard   0         standard
+1320      0.625  0.458  0.35       0         standard
+1560      0.625  0.458  0.35       0         15
+1800      0.625  0.458  0.20       0         15
+2040      0.625  0.458  0.20       0         standard
+2041      0.250  0.500  standard   0         standard
+2100      0.250  0.500  standard   0         standard
+2340      0.250  0.500  0.35       0         15
+2580      0.250  0.500  0.20       90        15
+2820      0.250  0.500  0.20       180       standard

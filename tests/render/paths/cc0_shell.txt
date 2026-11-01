@@ -1,0 +1,12 @@
+# TODO 56 (CC0-Naturobjekte): Shell-Map von Zero Hour (ShellMapMD), Kamerafahrt über der
+# laufenden Hintergrundkarte. Orte aus den Kartendaten (tools/render/map_objekte.py ShellMapMD 55GallonDrum
+# RockClusterMedium01): Fässer bei 0,42/0,54 und 0,50/0,59, Felsgruppe bei 0,681/0,525.
+# frame   x      y      zoom       drehung   neigung
+120       0.505  0.575  0.45       0         standard
+239       0.505  0.575  0.45       0         standard
+240       0.503  0.585  0.22       0         standard
+359       0.503  0.585  0.22       0         standard
+360       0.419  0.539  0.22       0         standard
+479       0.419  0.539  0.22       0         standard
+480       0.681  0.505  0.30       0         standard
+599       0.681  0.505  0.30       0         standard

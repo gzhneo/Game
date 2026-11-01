@@ -1,0 +1,954 @@
+// Texts GZH Neo adds to the game (German). Format as in EA's map.str files: label, quoted text, END.
+
+GZH:LanErrorVersion
+"Der Host spielt eine andere Version des Spiels. Alle Spieler brauchen dieselbe Version."
+END
+
+GZH:LanErrorData
+"Deine Spieldaten weichen von denen des Hosts ab, etwa durch eine andere Mod oder geänderte INI-Dateien."
+END
+
+GZH:LanVersionDetail
+"Host: %ls, Netzwerkprotokoll %u\nDu: %ls, Netzwerkprotokoll %u"
+END
+
+GZH:DirectConnectBadAddress
+"Bitte eine IP-Adresse (etwa 192.168.0.10 oder 2001:db8::10) oder einen Rechnernamen eingeben, ohne Port."
+END
+
+GZH:DirectConnectNoIPv6
+"Dieser Rechner hat keine IPv6-Verbindung. Bitte eine IPv4-Adresse oder einen Rechnernamen eingeben."
+END
+
+GZH:DirectConnectNotFound
+"Zu diesem Rechnernamen wurde keine Adresse gefunden."
+END
+
+GZH:LanGameKeyHost
+"Spielschlüssel: %hs. Er enthält keine Adresse: Wer über das Internet beitritt, gibt die Adresse dieses Rechners zusammen mit dem Schlüssel ein (Adresse#%hs)."
+END
+
+GZH:LanGameKeyJoined
+"Spielschlüssel des Hosts: %hs. Mit dem Host vergleichen, um auszuschließen, dass jemand dazwischensitzt (%hs)."
+END
+
+GZH:LanErrorHostKey
+"Der Spielschlüssel des Hosts passt nicht zum eingegebenen. Womöglich sitzt jemand dazwischen; der Beitritt wurde abgebrochen."
+END
+
+GZH:DirectConnectBadCode
+"Der Spielschlüssel nach # hat die Form K7Q2-9XPA."
+END
+
+GZH:LanGameOtherVersion
+"(andere Version)"
+END
+
+GZH:LanGameOtherData
+"(andere Spieldaten)"
+END
+
+GZH:LanPortsNoRouter
+"Router: Kein Router hat auf UPnP oder NAT-PMP geantwortet; die IPv4-Ports %u und %u bleiben, wie sie sind. Wer sie von Hand an diesen Rechner weitergeleitet hat, kann diese Meldung übergehen."
+END
+
+GZH:LanPortsRefused
+"Router: Der Router hat das Öffnen der IPv4-Ports %u und %u abgelehnt (UPnP-Fehler %d). Bei einer FRITZ!Box für diesen Rechner „Selbstständige Portfreigaben erlauben“ einschalten. Wer die Ports von Hand weitergeleitet hat, kann diese Meldung übergehen."
+END
+
+GZH:LanNoPublicIPv4
+"Router: Dein Anschluss hat keine eigene öffentliche IPv4-Adresse (der Router meldet %hs, etwa bei DS-Lite). Über IPv4 erreicht dich aus dem Internet niemand, auch nicht mit Portfreigabe; Spieler im Internet treten über IPv6 bei."
+END
+
+GZH:LanInternetJoinV6
+"Über IPv6 treten Spieler im Internet per Direktverbindung mit %hs#%hs bei. Dazu muss der Router eingehend UDP %u und %u an diesen Rechner durchlassen (IPv6-Freigabe; das Spiel bittet den Router per UPnP darum, die Router-Zeile sagt, ob es geklappt hat)."
+END
+
+GZH:LanJoinCopied
+"In der Zwischenablage zum Weitergeben: %ls"
+END
+
+GZH:LanNoAnswer
+"Der Host antwortet nicht. Meist lässt sein Router die Verbindung nicht durch: Bei IPv6 muss er eingehend UDP %u und %u an den Rechner des Hosts erlauben (IPv6-Freigabe), bei IPv4 diese Ports an ihn weiterleiten. Bei DS-Lite geht nur IPv6."
+END
+
+GZH:DirectConnectKeyOnly
+"Das ist nur der Spielschlüssel, er enthält keine Adresse. Bitte die Adresse des Hosts zusammen mit dem Schlüssel eingeben, etwa [2001:db8::7]#K7Q2-9XPA oder 203.0.113.5#K7Q2-9XPA. Der Host findet beides im Chat seines Spiels und in seiner Zwischenablage."
+END
+
+GZH:LanPinholesOpen
+"Router: Die IPv6-Firewall lässt UDP %u und %u zu diesem Rechner durch (UPnP)."
+END
+
+GZH:LanPinholesNotNeeded
+"Router: Seine IPv6-Firewall ist aus; über IPv6 erreichen Spieler diesen Rechner direkt."
+END
+
+GZH:LanPinholesNoService
+"Router: Er bietet keine IPv6-Freigabe per UPnP an. Für Spiele über IPv6 im Router eingehend UDP %u und %u für diesen Rechner freigeben."
+END
+
+GZH:LanPinholesRefused
+"Router: Er hat die IPv6-Freigabe für UDP %u und %u abgelehnt (UPnP-Fehler %d). Bei einer FRITZ!Box für diesen Rechner „Selbstständige Portfreigaben erlauben“ einschalten, sonst die Freigabe im Router von Hand einrichten."
+END
+
+GZH:LanRouterLog
+"Router: Einzelheiten zur Portfreigabe (welche Router geantwortet haben und was sie sagen) stehen in %hs. Diese Datei hilft bei der Fehlersuche."
+END
+
+GZH:PlayerReturned
+"%ls ist wieder im Spiel."
+END
+
+GZH:ReturnClosed
+"%ls kann nicht mehr zurückkehren; die Einheiten sind zerstört."
+END
+
+GZH:ReturnComing
+"%ls kehrt in die Partie zurück und holt auf."
+END
+
+GZH:ReturnJoined
+"Zurück in die laufende Partie: sie wird nachgeholt."
+END
+
+GZH:ReturnBack
+"Du bist wieder im Spiel."
+END
+
+GZH:ReturnRefused
+"Der Host hat dich nicht wieder in die Partie aufgenommen."
+END
+
+GZH:ReturnLost
+"Der Host antwortet nicht mehr; der Weg zurück in die Partie ist verloren."
+END
+
+GZH:ReturnLostBeforeStart
+"Die Partie ließ sich nicht wieder starten."
+END
+
+GZH:ReturnOffer
+"Eine Partie von %ls läuft vielleicht noch und nimmt dich wieder auf, falls du entfernt wurdest: /return eingeben."
+END
+
+GZH:ReturnNone
+"Es gibt keine Partie, in die du zurückkehren könntest."
+END
+
+GZH:WatchStarted
+"%ls schaut der Partie jetzt zu."
+END
+
+GZH:WatchStopped
+"%ls schaut nicht mehr zu."
+END
+
+GZH:WatchJoined
+"Die Partie läuft schon: Du schaust zu. Sie wird geladen und holt den Spielstand im Zeitraffer auf."
+END
+
+GZH:WatchLost
+"Die Übertragung der Partie ist abgebrochen; gezeigt wird, was bis dahin ankam."
+END
+
+GZH:WatchLostBeforeStart
+"Die Übertragung der Partie ist abgebrochen, bevor sie beginnen konnte."
+END
+
+GZH:WatchNoMap
+"Zuschauen geht nicht: die Karte der Partie fehlt auf diesem Rechner (Zuschauer bekommen keine Karte übertragen)."
+END
+
+GZH:LanSearchFiltered
+"Router: UPnP ist im Router eingeschaltet, aber seine Antworten auf die Suche kamen auf diesem Rechner nicht an. Vermutlich filtert eine Firewall sie (Windows-Firewall oder Virenscanner). Das Spiel hat den Router deshalb direkt angesprochen."
+END
+
+GZH:LanUpnpOff
+"Router: Weder die UPnP-Suche noch die üblichen Adressen des Routers antworten. UPnP ist im Router vermutlich ausgeschaltet."
+END
+
+GZH:LanPortsOpened
+"Router: Die UDP-Ports %u und %u werden an diesen Rechner weitergeleitet (%hs)."
+END
+
+GZH:LanInternetAddress
+"Deine Adresse im Internet: %hs"
+END
+
+GZH:LanInternetJoin
+"Spieler im Internet treten per Direktverbindung mit %hs#%hs bei"
+END
+
+GZH:DesyncReport
+"Die Spielstände der Spieler sind auseinandergelaufen. Ein Bericht für die Entwickler liegt in %ls"
+END
+
+GZH:LanInvite
+"Einladungscode für Spieler im Internet: %hs (Direktverbindung, Adressfeld)"
+END
+
+GZH:LanInviteNone
+"Kein Treffpunkt-Server hat geantwortet; Spieler im Internet treten über die Adresse bei."
+END
+
+GZH:LanErrorNotFound
+"Kein Treffpunkt-Server kennt diesen Einladungscode. Vielleicht ist der Host nicht mehr da oder der Code vertippt."
+END
+
+GZH:MainMenuInternet
+"Internet"
+END
+
+GZH:InternetWelcome
+"Internet: die Spiele, die die Treffpunkt-Server öffentlich listen. Ein Spiel, das du erstellst, ist privat (nur per Einladungscode), bis du es öffentlich listest."
+END
+
+GZH:InternetNoServers
+"Kein Treffpunkt-Server bekannt. Füge einen hinzu mit /server add <Adresse>."
+END
+
+GZH:InternetCommands
+"Befehle: /servers (Liste), /server add <Adresse>, /server remove <Adresse>, /public und /private (ob dein Spiel gelistet wird)."
+END
+
+GZH:InternetServerEntry
+"Treffpunkt-Server: %hs"
+END
+
+GZH:InternetServerAdded
+"Treffpunkt-Server %hs hinzugefügt."
+END
+
+GZH:InternetServerRemoved
+"Treffpunkt-Server %hs entfernt."
+END
+
+GZH:InternetServerInvalid
+"%hs ist keine Serveradresse (Hostname oder Adresse, wahlweise mit :Port)."
+END
+
+GZH:InternetServerUnchanged
+"Für %hs hat sich nichts geändert."
+END
+
+GZH:InternetServerNotOwn
+"%hs gehört zum Spiel oder wurde von einem anderen Server genannt; entfernen lassen sich nur selbst hinzugefügte Server."
+END
+
+GZH:InternetOnlyHost
+"Nur der Host eines Spiels entscheidet, ob es öffentlich gelistet wird."
+END
+
+GZH:InternetListed
+"Dein Spiel wird öffentlich gelistet: Spieler in der Internet-Lobby sehen es und können beitreten."
+END
+
+GZH:InternetPrivate
+"Dein Spiel ist privat: Spieler treten nur mit dem Einladungscode bei."
+END
+
+GZH:InternetListPublicly
+"Öffentlich listen"
+END
+
+GZH:InternetNoLobbyChat
+"Im Internet gibt es keinen Chat außerhalb eines Spiels: erstelle eins oder tritt einem bei, um zu schreiben."
+END
+
+GZH:LanRelayUsed
+"%ls wird über das Relais des Treffpunkt-Servers erreicht (keine direkte Verbindung)."
+END
+
+GZH:OptionsRetaliation
+"Vergeltung (außer Kampagne)"
+END
+
+GZH:OptionsVulkan
+"Vulkan-Renderer"
+END
+
+GZH:RemoveVote
+"%ls stimmt dafür, %ls aus dem Spiel zu entfernen (%d von %d Stimmen). Zustimmen mit: /remove %ls"
+END
+
+GZH:RemovedByVote
+"%ls wurde per Abstimmung aus dem Spiel entfernt."
+END
+
+GZH:YouWereRemoved
+"Du wurdest per Abstimmung der anderen Spieler aus dem Spiel entfernt."
+END
+
+GZH:RemoveUsage
+"Um einen Spieler zu entfernen, gibt jeder andere Spieler ein: /remove <Name>"
+END
+
+GZH:RemoveRefused
+"%ls kann nicht per Abstimmung entfernt werden: dafür braucht es zwei andere Spieler, die abstimmen (Beobachter stimmen nicht mit)."
+END
+
+GZH:RemoveUnknown
+"In diesem Spiel gibt es keinen Spieler namens %ls."
+END
+
+GUI:DoubleClickAttackMove
+"Doppelklick-Überwachung"
+END
+
+GUI:RetaliationTitle
+"Gegenangriff"
+END
+
+GUI:SelectAllAircraft
+"Alle Flugzeuge wählen"
+END
+
+GUI:SelectAllAircraftDescription
+"Alle Flugzeuge werden ausgewählt."
+END
+
+GZH:NewAISuffix
+"(neue KI)"
+END
+
+GZH:AIBeaconAttack
+"Angriff hier"
+END
+
+GZH:AIBeaconHelp
+"Brauche Hilfe"
+END
+
+GZH:AIBeaconRetreat
+"Rückzug"
+END
+
+GZH:AIBeaconComing
+"Hilfe kommt"
+END
+
+GZH:AIPersonalityAggressive
+"aggressiv"
+END
+
+GZH:AIPersonalityTechnician
+"Techniker"
+END
+
+GZH:AIPersonalityTurtle
+"Igel"
+END
+
+GZH:GracePeriodTimer
+"Schonzeit"
+END
+
+GZH:GracePeriodStart
+"Schonzeit: %d Minuten lang kann niemand einen Gegner angreifen."
+END
+
+GZH:GracePeriodEnded
+"Die Schonzeit ist vorbei. Ab jetzt sind Angriffe möglich."
+END
+
+GZH:GraceNone
+"Schonzeit: keine"
+END
+
+GZH:GraceMinutes
+"Schonzeit: %d Min."
+END
+
+GZH:OptionsTabDisplay
+"Anzeige"
+END
+
+GZH:OptionsTabDetails
+"Details"
+END
+
+GZH:OptionsTabSound
+"Ton"
+END
+
+GZH:OptionsTabControls
+"Steuerung"
+END
+
+GZH:OptionsTabGame
+"Spiel"
+END
+
+GZH:OptionsHeaderQuality
+"Bildqualität"
+END
+
+GZH:OptionsHeaderContent
+"Inhalte"
+END
+
+GZH:OptionsHeaderCommands
+"Befehle"
+END
+
+GZH:OptionsHeaderCamera
+"Kamera"
+END
+
+GZH:OptionsHeaderPointer
+"Zeiger"
+END
+
+GZH:OptionsHeaderScreen
+"Bildschirm"
+END
+
+GZH:OptionsHeaderScaling
+"Skalierung"
+END
+
+GZH:OptionsHeaderVolume
+"Lautstärke"
+END
+
+GZH:OptionsHeaderReplays
+"Wiederholungen"
+END
+
+GZH:OptionsHeaderMultiplayer
+"Mehrspieler"
+END
+
+GZH:OptionsHeaderSystem
+"System"
+END
+
+GZH:OptionsTextureQuality
+"Texturqualität"
+END
+
+GZH:OptionsRenderScale
+"Renderauflösung"
+END
+
+GZH:OptionsRenderScaleFilter
+"Filter"
+END
+
+GZH:OptionsFPSLimit
+"Bildratengrenze"
+END
+
+GZH:OptionsWaterQuality
+"Wasser"
+END
+
+GZH:OptionsTerrainAnisotropy
+"Bodenfilterung"
+END
+
+GZH:OptionsVSync
+"Vertikale Synchronisation"
+END
+
+GZH:OptionsFreeContent
+"Freie Ersatzinhalte"
+END
+
+GZH:OptionsWaterTexture
+"Freie Wassertextur"
+END
+
+GZH:OptionsEdgeScrollInWindow
+"Randbildlauf auch im Fenster"
+END
+
+GZH:OptionsHideCursorWhileDragging
+"Zeiger beim Ziehen ausblenden"
+END
+
+GZH:OptionsConfineCursor
+"Zeiger im Fenster halten"
+END
+
+GZH:OptionsCursorScale
+"Zeigergröße"
+END
+
+GZH:OptionsMaxZoom
+"Größter Zoom"
+END
+
+GZH:OptionsAllowSpectators
+"Zuschauer zulassen"
+END
+
+GZH:OptionsSpectatorDelay
+"Zuschauer-Verzögerung"
+END
+
+GZH:OptionsReturnWindow
+"Rückkehr nach Abbruch"
+END
+
+GZH:OptionsWorkerThreads
+"Hilfsthreads"
+END
+
+GZH:OptionsPrefetchArchives
+"Archive vorab lesen"
+END
+
+GZH:OptionsHardwareHint
+"Hinweis bei schwacher Hardware"
+END
+
+GZH:OptionsTestAids
+"Testhilfen"
+END
+
+GZH:OptionsRestartNote
+"* wirkt nach dem nächsten Start"
+END
+
+GZH:OptionsAuto
+"Automatisch"
+END
+
+GZH:OptionsByDetail
+"Detailstufe"
+END
+
+GZH:OptionsOff
+"Aus"
+END
+
+GZH:OptionsNone
+"Keine"
+END
+
+GZH:OptionsStandard
+"Standard"
+END
+
+GZH:OptionsWaterClassic
+"Klassisch"
+END
+
+GZH:OptionsWaterMedium
+"Mittel"
+END
+
+GZH:OptionsWaterHigh
+"Hoch"
+END
+
+GZH:OptionsFilterBilinear
+"Bilinear"
+END
+
+GZH:OptionsFilterBicubic
+"Bikubisch"
+END
+
+GZH:OptionsFilterCas
+"Scharf (CAS)"
+END
+
+GZH:OptionsSeconds
+"%d s"
+END
+
+GZH:OptionsMinutes
+"%d Min."
+END
+
+GZH:OptionsSaveCamera
+"Kamera speichern"
+END
+
+GZH:OptionsUseCamera
+"Gespeicherte Kamera verwenden"
+END
+
+GZH:MaxZoomNormal
+"Zoom: normal"
+END
+
+GZH:MaxZoomPercent
+"Zoom: bis %d %%"
+END
+
+GZH:OptionsTabEffects
+"Effekte"
+END
+
+GZH:OptionsHeaderEffectsImage
+"Bild und Licht"
+END
+
+GZH:OptionsHeaderEffectsWorld
+"Boden und Luft"
+END
+
+GZH:OptionsEffectAuto
+"Detailstufe"
+END
+
+GZH:OptionsOn
+"An"
+END
+
+GZH:OptionsEffectNormal
+"Normal"
+END
+
+GZH:OptionsEffectStrong
+"Stark"
+END
+
+GZH:OptionsEffectWeak
+"Schwach"
+END
+
+GZH:OptionsEffectMedium
+"Mittel"
+END
+
+GZH:OptionsEffectHalf
+"Halb"
+END
+
+GZH:OptionsEffectFull
+"Voll"
+END
+
+GZH:OptionsEffectFXAA
+"Kantenglättung"
+END
+
+GZH:OptionsEffectSharpen
+"Nachschärfen"
+END
+
+GZH:OptionsEffectColorGrade
+"Farbkorrektur"
+END
+
+GZH:OptionsEffectSSAO
+"SSAO-Schatten"
+END
+
+GZH:OptionsEffectBloom
+"Glanz"
+END
+
+GZH:OptionsEffectLights
+"Lichter"
+END
+
+GZH:OptionsEffectShadowMap
+"Schattenkarte"
+END
+
+GZH:OptionsEffectShadowTerrain
+"Geländeschatten"
+END
+
+GZH:OptionsEffectSoftParticles
+"Weiche Partikel"
+END
+
+GZH:OptionsEffectTerrainDetail
+"Bodendetail"
+END
+
+GZH:OptionsEffectTerrainRock
+"Felshänge"
+END
+
+GZH:OptionsEffectTerrainNormal
+"Bodenrelief"
+END
+
+GZH:OptionsEffectTerrainTess
+"Boden-Tessellation"
+END
+
+GZH:OptionsEffectRockTess
+"Fels-Tessellation"
+END
+
+GZH:OptionsEffectParticleLight
+"Partikellicht"
+END
+
+GZH:OptionsEffectParticleGround
+"Partikel über Boden"
+END
+
+GZH:OptionsDetailChangedTitle
+"Detailstufe"
+END
+
+GZH:OptionsDetailChangedBody
+"Die neue Detailstufe gilt ab sofort. Texturen ändern sich nach dem nächsten Start, Bodenrelief und Tessellation ab der nächsten Karte."
+END
+
+GZH:OptionsEffectSoftShadows
+"Weiche Schatten"
+END
+
+GZH:OptionsEffectContactShadows
+"Kontaktschatten"
+END
+
+GZH:OptionsEffectShadowCascades
+"Schattenkaskaden"
+END
+
+GZH:OptionsEffectAlphaCoverage
+"Laubkanten (MSAA)"
+END
+
+GZH:OptionsEffectMsaaDepth
+"Tiefeneffekte (MSAA)"
+END
+
+GZH:OptionsEffectWithMsaa
+"Mit MSAA"
+END
+
+GZH:OptionsEffectGTAO
+"Umgebungsverdeckung GTAO"
+END
+
+GZH:OptionsEffectWaterSSR
+"Spiegelungen im Wasser"
+END
+
+GZH:OptionsEffectDeband
+"Glatte Verläufe"
+END
+
+GZH:OptionsEffectTAA
+"Zeitliche Kantenglättung (TAA)"
+END
+
+GZH:OptionsEffectHeat
+"Hitzeflimmern"
+END
+
+GZH:OptionsEffectHaze
+"Dunst"
+END
+
+GZH:OptionsEffectsRemoveList
+"Alte Effektliste entfernen"
+END
+
+GZH:OptionsNextMapNote
+"* wirkt ab der nächsten Karte"
+END
+
+GZH:ModProblemsTitle
+"Mods"
+END
+
+GZH:ModProblemsText
+"Diese Mods wurden nicht oder nicht vollständig geladen:"
+END
+
+GZH:ModProblemMissing
+"nicht gefunden"
+END
+
+GZH:ModProblemOtherGame
+"für das andere Spiel"
+END
+
+GZH:ModProblemUnreadable
+"beschädigt"
+END
+
+GZH:ModProblemPartial
+"%d Dateien ausgelassen"
+END
+
+GZH:ModProblemPackage
+"%d Archive des Texturpakets abgewiesen"
+END
+
+GZH:ModProblemManifest
+"mod.txt fehlerhaft, Mod geladen"
+END
+
+GZH:HardwareHintTitle
+"Hinweis zur Hardware"
+END
+
+GZH:HardwareHintText
+"Dieser Prozessor erreicht die empfohlene Ausstattung nicht (4 Kerne, 8 Threads):"
+END
+
+GZH:HardwareHintOnce
+"Das Spiel läuft trotzdem, nutzt aber weniger Parallelität. Dieser Hinweis erscheint nur einmal (Optionen, Karte „Spiel“)."
+END
+
+GZH:HardwareHintCpu
+"Dieser Rechner hat %d Kerne und %d Threads."
+END
+
+GZH:OptionsHeaderMods
+"Mods"
+END
+
+GZH:OptionsModsButton
+"Mods ..."
+END
+
+GZH:OptionsHeaderAbout
+"Über GZH Neo"
+END
+
+GZH:OptionsAboutButton
+"Info ..."
+END
+
+GZH:AboutText
+"Eine modernisierte Fassung von Command & Conquer Generals und Zero Hour, gebaut aus dem Quelltext, den Electronic Arts unter der GNU GPL v3 veröffentlicht hat (github.com/electronicarts).\n\nQuelltext von GZH Neo: github.com/gzhneo/Game\nLizenz: GNU GPL v3 mit Zusatzbedingungen (LICENSE.md und NOTICE.md im Quelltext).\n\nGZH Neo steht in keiner Verbindung zu Electronic Arts und wird von Electronic Arts weder unterstützt noch gefördert. Die Namen „Command & Conquer“ und „Generals“ sind Marken von Electronic Arts Inc."
+END
+
+GZH:ModsTitle
+"Mods"
+END
+
+GZH:ModsSummary
+"%d gefunden, %d aktiv"
+END
+
+GZH:ModsUp
+"Auf"
+END
+
+GZH:ModsDown
+"Ab"
+END
+
+GZH:ModsPrevious
+"Vorige"
+END
+
+GZH:ModsNext
+"Weitere"
+END
+
+GZH:ModsOpenFolder
+"Ordner öffnen"
+END
+
+GZH:ModsBack
+"Zurück"
+END
+
+GZH:ModsNone
+"Im Mod-Ordner liegen keine Mods. „Ordner öffnen“ zeigt ihn."
+END
+
+GZH:ModsNoDescription
+"Keine Beschreibung."
+END
+
+GZH:ModsAuthor
+"Autor: %s"
+END
+
+GZH:ModsForced
+"In diesem Lauf bestimmt die Befehlszeile (-mod) die Mods."
+END
+
+GZH:ModsHint
+"Häkchen schaltet einen Mod ein. Der oberste hat Vorrang. Änderungen wirken nach einem Neustart."
+END
+
+GZH:ModsStateMissing
+"nicht gefunden"
+END
+
+GZH:ModsStateOtherGame
+"anderes Spiel"
+END
+
+GZH:ModsStateUnreadable
+"beschädigt"
+END
+
+GZH:ModsStatePartial
+"%d Dateien fehlen"
+END
+
+GZH:ModsStatePackage
+"Paket: %d abgewiesen"
+END
+
+GZH:ModsStateManifest
+"mod.txt fehlerhaft"
+END
+
+GZH:LanGameOtherMods
+"(andere Mods)"
+END
+
+GZH:LanErrorMods
+"Der Host spielt mit anderen Mods als du. Alle Spieler brauchen dieselben Mods."
+END
+
+GZH:LanModsDetail
+"Host: %ls\nDu: %ls"
+END
+
+GZH:LanHostMods
+"Der Host spielt mit den Mods: %ls"
+END
+
+GZH:ModsNoneShort
+"keine"
+END
+
+GZH:ReplayModsTitle
+"Andere Mods"
+END
+
+GZH:ReplayMods
+"Dieses Replay wurde mit anderen Mods aufgenommen und kann anders ablaufen.\nReplay: %ls\nGeladen: %ls\nTrotzdem abspielen?"
+END
+
+GZH:SaveModsTitle
+"Andere Mods"
+END
+
+GZH:SaveMods
+"Dieser Spielstand wurde mit anderen Mods gespeichert und kann fehlerhaft laden.\nSpielstand: %ls\nGeladen: %ls\nTrotzdem laden?"
+END
+
+GZH:SaveDataTitle
+"Andere Spieldaten"
+END
+
+GZH:SaveData
+"Dieser Spielstand wurde mit anderen Spieldaten gespeichert (andere Version oder geänderte INI-Dateien) und kann fehlerhaft laden oder anders verlaufen.\nTrotzdem laden?"
+END
+
+GZH:OptionsRestartTitle
+"Neustart"
+END
+
+GZH:OptionsRestart
+"Einige Änderungen wirken erst nach einem Neustart. Jetzt neu starten?"
+END
+
+GZH:OptionsRestartLater
+"Einige Änderungen wirken erst beim nächsten Start des Spiels."
+END
+

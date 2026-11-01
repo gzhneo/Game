@@ -1,0 +1,17 @@
+# Zuschauen-Test, Zuschauer: wird erst gestartet, wenn die Partie laeuft. Die laufende Partie in der LAN-Liste
+# waehlen und beitreten (das macht ihn zum Zuschauer), {LOGIK} Logik-Frames zuschauen, dabei die Kamera
+# bewegen (Eingaben eines Zuschauers duerfen die Partie nicht erreichen), dann das Spiel beenden.
+hauptmenue
+klick MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ListboxGames
+warte 300
+auswahl LanLobbyMenu.wnd:ListboxGames 0
+klick LanLobbyMenu.wnd:ButtonJoin
+partie 2000000
+log ZUSCHAUER SIEHT ZU
+logik {LOGIK}
+bildlauf taste rechts 30
+rad 2
+log ZUSCHAUER GEHT
+beenden

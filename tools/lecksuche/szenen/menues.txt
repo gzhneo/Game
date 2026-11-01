@@ -1,0 +1,73 @@
+# Menues durchklicken, jedes Untermenue auf und wieder zu. Ende ueber den Knopf "Beenden" des
+# Hauptmenues (quitCallback), also den Weg, den ein Spieler nimmt.
+hauptmenue
+# Optionen (die Tastaturbelegung ist in den EA-Daten verborgen)
+klick MainMenu.wnd:ButtonOptions
+fenster OptionsMenu.wnd:ButtonBack
+warte 60
+klick OptionsMenu.wnd:ButtonBack
+hauptmenue
+# Mehrspieler: LAN-Lobby, Direktverbindung, eigenes LAN-Spiel eroeffnen und wieder verlassen
+klickFalls MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonBack
+warte 300
+klick LanLobbyMenu.wnd:ButtonDirectConnect
+fenster NetworkDirectConnect.wnd:ButtonBack
+warte 30
+klick NetworkDirectConnect.wnd:ButtonBack
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 30
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonBack
+warte 300
+klick LanGameOptionsMenu.wnd:ButtonBack
+fenster LanLobbyMenu.wnd:ButtonBack
+warte 30
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+# Replays und Spielstaende
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonReplay
+fenster ReplayMenu.wnd:ButtonBack
+warte 60
+klick ReplayMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplay
+klick MainMenu.wnd:ButtonLoadGame
+fenster SaveLoad.wnd:ButtonBack
+warte 60
+klick SaveLoad.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+hauptmenue
+# Einzelspieler: Skirmish-Menue auf und zu
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonBack
+warte 60
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+# Mitwirkende: eine Weile laufen lassen, dann Escape
+klickFalls MainMenu.wnd:ButtonSingleBack
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+klick MainMenu.wnd:ButtonCredits
+fenster CreditsMenu.wnd:ParentCreditsWindow
+warte 900
+esc CreditsMenu.wnd:ParentCreditsWindow
+hauptmenue
+warte 60
+klickFalls MainMenu.wnd:ButtonSingleBack
+klickFalls MainMenu.wnd:ButtonLoadReplayBack
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+klick MainMenu.wnd:ButtonExit
+warte 600
+log Beenden-Knopf ohne Wirkung
+beenden

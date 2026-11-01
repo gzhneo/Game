@@ -1,0 +1,11 @@
+# Heartland Shield (Generals und Zero Hour): der Fluss quer ueber die Karte -- Wasser.
+# Kartenrelativ, Winkel in Grad; jede Pose zwei Stuetzpunkte, damit sie bei --every 60 stillsteht.
+# frame   x      y      zoom      drehung  neigung
+60        0.46   0.45   standard  0        standard
+120       0.46   0.45   standard  0        standard
+180       0.46   0.45   0.50      0        standard
+240       0.46   0.45   0.50      0        standard
+300       0.30   0.68   0.60      60       standard
+360       0.30   0.68   0.60      60       standard
+420       0.62   0.28   1.00      -30      standard
+480       0.62   0.28   1.00      -30      standard

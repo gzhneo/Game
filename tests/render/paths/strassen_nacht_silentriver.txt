@@ -1,0 +1,24 @@
+# Strassen frei, Nahpruefung generals silent river
+# frame   x      y      zoom       drehung   neigung
+# kreuzung4 twolane
+0         0.503  0.242  0.45       0         standard
+120       0.503  0.242  0.45       0         standard
+240       0.503  0.242  0.22       0         standard
+360       0.503  0.242  0.22       0         standard
+# kreuzung3 twolane
+480       0.477  0.684  0.45       0         standard
+600       0.477  0.684  0.45       0         standard
+720       0.477  0.684  0.22       0         standard
+840       0.477  0.684  0.22       0         standard
+# kreuzung3 dirtroad2
+960       0.086  0.805  0.45       0         standard
+1080      0.086  0.805  0.45       0         standard
+1200      0.086  0.805  0.22       0         standard
+1320      0.086  0.805  0.22       0         standard
+# kreuzung3 dirtroad2
+1440      0.301  0.885  0.45       0         standard
+1560      0.301  0.885  0.45       0         standard
+1680      0.301  0.885  0.22       0         standard
+1800      0.301  0.885  0.22       0         standard
+1920      0.50   0.50   standard   0         standard
+2040      0.50   0.50   standard   0         standard

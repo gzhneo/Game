@@ -1,0 +1,44 @@
+# CMake build output (Phase-1-Modernisierung, siehe CMakeLists.txt)
+/build/
+**/build/
+# Frueherer Build-Ordner des x86-asan-Presets (x86 entfernt 2026-09-26) und der des Presets
+# x64-asan, getrennt von build-x64/.
+/build-asan/
+/build-x64-asan/
+# Eigener Build-Ordner fuer BUILD_TOOLS=ON (Phase 12: Tools), getrennt von /build/, damit ein
+# paralleler Hauptspiel-Build waehrend der Tools-Arbeit bestehen bleibt.
+/build-tools/
+# Zusaetzlicher Tools-Build-Ordner fuer die GeneralsMD-Spiegelung (Phase 12 Fortsetzung),
+# getrennt von /build-tools/ fuer parallele Sessions.
+/build-tools-zh/
+# Tools-Build fuer x64 (TODO 9), beide Baeume
+/build-tools-x64/
+# 64-Bit-Presets (X-04) und Profil-Build mit Tracy
+/build-x64/
+/build-x64-profile/
+# Preset x64-tools: Spiele und Werkzeuge beider Baeume als x64 (BUILD.md "Tools")
+/build-x64-tools/
+/build-x64-d3d11-only/
+/build-x64-vulkan-only/
+/build-x64-editor/
+CMakeUserPresets.json
+
+# Build-/Debug-Protokolle, die während der Modernisierung anfallen
+*.log
+# Tick-Zeiten der Runner-Laeufe (E-0.4), Messartefakte neben den Referenz-.crc-Dateien
+tests/replays/*.ticks.csv
+crash_analysis*.txt
+
+# Python-Bytecode der Werkzeuge (tools/*.py)
+__pycache__/
+*.pyc
+
+# Nebendateien der CRC-Protokolle (-crcLog schreibt .frames.csv/.ticks.csv daneben), nicht einchecken
+tests/replays/**/*.csv
+/build-guiedit/
+/build-leak/
+# Diagnose-Build mit Werkzeugen und ENABLE_MEMORYPOOL_STACKTRACE=ON (R-99, 2026-09-23).
+/build-leak-tools/
+/render-out/
+# Ausgabe von tools/lecksuche (Standard --out).
+/lecksuche-*/

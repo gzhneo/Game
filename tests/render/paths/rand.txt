@@ -1,0 +1,6 @@
+# Die Kartenraender abfahren -- Randbehandlung und Kameraklemmung. Karte beliebig.
+0       0.02  0.02  standard  0    standard
+450     0.98  0.02  standard  0    standard
+900     0.98  0.98  standard  0    standard
+1350    0.02  0.98  standard  0    standard
+1800    0.02  0.02  standard  0    standard

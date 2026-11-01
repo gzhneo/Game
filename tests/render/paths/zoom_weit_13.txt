@@ -1,0 +1,16 @@
+# Weiter herauszoomen: sieben feste Stellen je 120 Logik-Frames, Bild in der Mitte jeder Stelle (--every 120,
+# Bilder 960 bis 1680). Zoom: 1,3-fache Hoehe, braucht -maxZoom 1.3 oder mehr. Karte beliebig; Replay mit mindestens 1740 Frames.
+900     0.50  0.50  hoehe1.3  0    standard   # Mitte
+1019    0.50  0.50  hoehe1.3  0    standard
+1020    0.50  0.95  hoehe1.3  0    standard   # oberer Kartenrand
+1139    0.50  0.95  hoehe1.3  0    standard
+1140    0.50  0.05  hoehe1.3  0    standard   # unterer Kartenrand
+1259    0.50  0.05  hoehe1.3  0    standard
+1260    0.05  0.50  hoehe1.3  0    standard   # linker Kartenrand
+1379    0.05  0.50  hoehe1.3  0    standard
+1380    0.25  0.25  hoehe1.3  0    standard   # Viertel unten links
+1499    0.25  0.25  hoehe1.3  0    standard
+1500    0.50  0.50  hoehe1.3  45   standard   # Mitte, 45 Grad gedreht
+1619    0.50  0.50  hoehe1.3  45   standard
+1620    0.50  0.50  hoehe1.3  90   standard   # Mitte, 90 Grad gedreht
+1739    0.50  0.50  hoehe1.3  90   standard

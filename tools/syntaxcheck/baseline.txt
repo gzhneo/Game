@@ -1,0 +1,10 @@
+# Dateien unter Code/, die tools/syntaxcheck/check.sh bekannt nicht uebersetzt (Grenzen des
+# Werkzeugs oder der MinGW-Header, unter MSVC uebersetzen sie). tools/gate.sh --full schlaegt fehl,
+# wenn eine Datei ausserhalb dieser Liste ausfaellt, und meldet Eintraege, die inzwischen
+# durchgehen -- dann hier streichen. Eine Datei pro Zeile, Pfad relativ zu Code/.
+Platform/VideoDevice/FFmpeg/FFmpegFile.cpp
+Platform/VideoDevice/FFmpeg/FFmpegVideoPlayer.cpp
+Platform/W3DDevice/GameClient/Terrain/TerrainTileImage.cpp
+Platform/XAudio2Device/Mp3Parser.cpp
+Platform/XAudio2Device/XAudio2AudioManager.cpp
+Renderer/WW3D2/Material/texutil.cpp

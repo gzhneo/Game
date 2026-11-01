@@ -1,0 +1,5 @@
+# Tournament Lake (beide Spiele): feste Pose am Ufer des Kratersees fuer Bewegungsbilder (GIF) des Wassers
+# (TODO 61). Mit --every 2 entstehen 45 Bilder in 90 Logik-Frames (3 s).
+# frame   x      y      zoom      drehung  neigung
+60        0.53   0.49   0.45      0        standard
+150       0.53   0.49   0.45      0        standard

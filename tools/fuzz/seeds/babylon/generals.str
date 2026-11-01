@@ -1,0 +1,14 @@
+// seed
+GUI:Ok
+"OK"
+END
+
+// MAXLEN: 30
+GUI:Built
+// COMMENT: %d is a number
+"%d units built"
+END
+
+DIALOG:Hello
+"Hello,\ncommander!" = HELLO01e
+END

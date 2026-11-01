@@ -1,0 +1,210 @@
+# German texts of Babylon: "English<TAB>German", UTF-8 (EditorCommon/Language.h).
+%1 days ago	vor %1 Tagen
+%1 game file	Spieldatei (%1)
+%1 hours ago	vor %1 Stunden
+%1 minutes ago	vor %1 Minuten
+  %1 texts exported. DONE	  %1 Texte exportiert. FERTIG
+%1 texts will be exported	%1 Texte werden exportiert
+&Help	&Hilfe
+&Project	&Projekt
+, changed	, geändert
+, not up to date with Generals.str	, nicht auf dem Stand von Generals.str
+, read only	, schreibgeschützt
+1 hour ago	vor 1 Stunde
+<p>Select a text to see its details.</p>	<p>Einen Text wählen, um seine Einzelheiten zu sehen.</p>
+A sample (about 50 texts)	Eine Probe (etwa 50 Texte)
+A spreadsheet for translators (.xlsx, .ods, .csv)	Eine Tabelle für Übersetzer (.xlsx, .ods, .csv)
+About Babylon	Über Babylon
+All texts	Alle Texte
+Always continue	Immer fortfahren
+Babylon keeps the translations of the game's texts: Generals.str is the English master, main.db holds every translation, translators work in spreadsheets (.xlsx, .ods, .csv) that any office suite opens, and the game loads the generated .csf files.	Babylon verwaltet die Übersetzungen der Spieltexte: Generals.str ist die englische Vorlage, main.db enthält alle Übersetzungen, Übersetzer arbeiten in Tabellen (.xlsx, .ods, .csv), die jedes Office-Paket öffnet, und das Spiel lädt die erzeugten .csf-Dateien.
+Browse...	Durchsuchen...
+Cancel	Abbrechen
+Check	Prüfen
+Check the imported row	Importierte Zeile prüfen
+Chinese	Chinesisch
+Comment	Kommentar
+Compiled .csf (what the game loads)	Kompilierte .csf (lädt das Spiel)
+Contents	Inhalt
+Context	Zusammenhang
+Continue	Fortfahren
+Correction: keep translations	Korrektur: Übersetzungen behalten
+Database	Datenbank
+Different: stop the import	Anders: Import abbrechen
+Discard changes	Änderungen verwerfen
+Do you want to continue anyway?	Trotzdem fortfahren?
+Does not match	Passt nicht
+Does the change alter the meaning? Then every language must translate it again. A correction (typo, punctuation) keeps the translations.	Ändert sich die Bedeutung? Dann muss jede Sprache neu übersetzen. Eine Korrektur (Tippfehler, Satzzeichen) behält die Übersetzungen.
+  DONE	  FERTIG
+empty	leer
+English	Englisch
+English text	Englischer Text
+Errors	Fehler
+Export	Exportieren
+Export failed: %1	Export fehlgeschlagen: %1
+Export sheet...	Tabelle exportieren...
+Export translation sheet	Übersetzungstabelle exportieren
+Exporting %1 texts (%2) to "%3"...	Exportiere %1 Texte (%2) nach "%3"...
+  FAILED: %1	  FEHLGESCHLAGEN: %1
+FAILED: %1	FEHLGESCHLAGEN: %1
+File	Datei
+File (.xlsx, .ods or .csv)	Datei (.xlsx, .ods oder .csv)
+File name	Dateiname
+Fill in the current translations	Aktuelle Übersetzungen eintragen
+Folder	Ordner
+Folder with Data/Generals.str	Ordner mit Data/Generals.str
+Forget for all %1 recordings that they were verified?	Für alle Aufnahmen (%1) vergessen, dass sie geprüft wurden?
+Forget which recordings of the language were verified	Vergessen, welche Aufnahmen der Sprache geprüft wurden
+Format	Format
+format	Format
+French	Französisch
+Game	Spiel
+Generals.str errors:	Fehler in Generals.str:
+Generals.str has %1 errors. Click "Errors" for the list; the database cannot be updated until they are fixed.	Generals.str hat %1 Fehler. "Fehler" zeigt die Liste; die Datenbank lässt sich erst nach der Behebung abgleichen.
+Generals.str has changed, but the database is read only, so it cannot be updated.	Generals.str hat sich geändert, aber die Datenbank ist schreibgeschützt und kann nicht abgeglichen werden.
+Generals.str has changed. Update the database now?	Generals.str hat sich geändert. Datenbank jetzt abgleichen?
+Generals.str has errors, so the translation database is not up to date. Fix Generals.str first.	Generals.str hat Fehler, die Übersetzungsdatenbank ist daher nicht aktuell. Zuerst Generals.str berichtigen.
+Generals.str warnings:	Warnungen in Generals.str:
+Generals.str: %1 labels, %2 errors, %3 warnings	Generals.str: %1 Labels, %2 Fehler, %3 Warnungen
+Generals.str: not found	Generals.str: nicht gefunden
+Generals.str: not readable	Generals.str: nicht lesbar
+Generate	Erzeugen
+Generate game files	Spieldateien erzeugen
+Generate game files...	Spieldateien erzeugen...
+Generating game files:	Erzeuge Spieldateien:
+German	Deutsch
+ID	ID
+Import sheet...	Tabelle importieren...
+Import translation sheet	Übersetzungstabelle importieren
+Importing "%1"...	Importiere "%1"...
+In the database	In der Datenbank
+In the sheet	In der Tabelle
+Invert	Umkehren
+Italian	Italienisch
+Jabberwockie (test)	Jabberwockie (Test)
+Japanese	Japanisch
+just now	gerade eben
+Korean	Koreanisch
+Label	Label
+Label %1	Label %1
+Language	Sprache
+  Language: %1	  Sprache: %1
+Languages	Sprachen
+List each problem if there are fewer than	Jedes Problem auflisten, wenn es weniger sind als
+List the errors of Generals.str	Die Fehler von Generals.str auflisten
+List the warnings of Generals.str	Die Warnungen von Generals.str auflisten
+Listen to recordings that are not verified yet	Noch nicht geprüfte Aufnahmen anhören
+Listener	Zuhörer
+main.db: %1 labels, %2 texts	main.db: %1 Labels, %2 Texte
+main.db: cannot be read	main.db: nicht lesbar
+Mark as sent...	Als verschickt markieren...
+Mark the texts of a sheet as sent to the translators	Die Texte einer Tabelle als an die Übersetzer verschickt markieren
+Marking the texts of "%1" as sent...	Markiere die Texte von "%1" als verschickt...
+Match	Zuordnen
+Matches the text	Passt zum Text
+Maximum length	Höchstlänge
+missing	fehlt
+Missing, outdated, too long and badly formatted translations	Fehlende, veraltete, zu lange und falsch formatierte Übersetzungen
+Needs work	Zu bearbeiten
+New database. Fill it from Generals.str now?	Neue Datenbank. Jetzt aus Generals.str füllen?
+New meaning: translate again	Neue Bedeutung: neu übersetzen
+New text	Neuer Text
+No	Nein
+No match: new text	Keine Zuordnung: neuer Text
+No translation!	Keine Übersetzung!
+Nothing to export	Nichts zu exportieren
+  Nothing to export.	  Nichts zu exportieren.
+Nothing to export.	Nichts zu exportieren.
+Now	Jetzt
+obsolete	entfallen
+Obsolete text	Veralteter Text
+Obsolete texts	Entfallene Texte
+OK	OK
+ok	ok
+Open folder...	Ordner öffnen...
+outdated	veraltet
+outdated (revision %1)	veraltet (Revision %1)
+Play	Abspielen
+Protect the sheet: only the translation column can be edited	Tabelle schützen: nur die Übersetzungsspalte ist bearbeitbar
+Quit	Beenden
+Read Generals.str and main.db again	Generals.str und main.db neu einlesen
+Reload	Neu laden
+Replaces the old text	Ersetzt den alten Text
+Report...	Bericht...
+Reset speech	Sprachprüfung zurücksetzen
+Rev.	Rev.
+Same text: import	Gleicher Text: importieren
+Save	Speichern
+Save main.db (the old file stays as main_back_up.db)	main.db speichern (die alte Datei bleibt als main_back_up.db)
+Saving failed: %1	Speichern fehlgeschlagen: %1
+Search label, text or ID	Label, Text oder ID suchen
+Select all	Alle wählen
+Session date: %1	Sitzung vom %1
+Sheet that was sent to the translators	Tabelle, die an die Übersetzer ging
+Skip all	Alle überspringen
+Skip label	Label überspringen
+Spanish	Spanisch
+Speaker	Sprecher
+Speaker: %1	Sprecher: %1
+Speech file	Sprachdatei
+Speech files	Sprachdateien
+Speech texts	Sprechtexte
+Speech texts only	Nur Sprechtexte
+Speech texts whose recording is missing	Sprechtexte ohne Aufnahme
+Speech texts whose recording is not verified	Sprechtexte mit ungeprüfter Aufnahme
+Speech verification of %1 reset.	Sprachprüfung von %1 zurückgesetzt.
+Spreadsheet (*.xlsx *.ods *.csv);;Excel workbook (*.xlsx);;OpenDocument spreadsheet (*.ods);;CSV text (*.csv)	Tabelle (*.xlsx *.ods *.csv);;Excel-Arbeitsmappe (*.xlsx);;OpenDocument-Tabelle (*.ods);;CSV-Text (*.csv)
+State	Zustand
+Stop	Abbrechen
+String files of the game (*.csf *.str)	Textdateien des Spiels (*.csf *.str)
+String ID / revision	String-ID / Revision
+String ID, so gaps stand out in the game	String-ID, damit Lücken im Spiel auffallen
+Take a game file...	Spieldatei übernehmen...
+Take new, changed and removed texts of Generals.str into the database	Neue, geänderte und entfernte Texte von Generals.str in die Datenbank übernehmen
+Take the translations of a returned sheet	Die Übersetzungen einer zurückgekommenen Tabelle übernehmen
+Taking the %1 texts of "%2"...	Übernehme die Texte (%1) aus "%2"...
+Text (*.txt)	Text (*.txt)
+Text .str	Text .str
+Text changed in Generals.str	Text in Generals.str geändert
+Texts	Texte
+Texts not marked as sent	Nicht als verschickt markierte Texte
+Texts that need work (missing, outdated, too long, wrong format)	Zu bearbeitende Texte (fehlend, veraltet, zu lang, falsches Format)
+Texts without speech	Texte ohne Sprachaufnahme
+The database cannot be updated (Generals.str missing or with errors, or the database is read only).	Die Datenbank lässt sich nicht abgleichen (Generals.str fehlt oder hat Fehler, oder die Datenbank ist schreibgeschützt).
+The database is read only or could not be read; nothing can be imported.	Die Datenbank ist schreibgeschützt oder nicht lesbar; es kann nichts importiert werden.
+The English text of string %1 in the sheet differs from the database and its label does not confirm it. Is it still the same text? If not, the string IDs of the sheet are wrong and the import stops.	Der englische Text von String %1 in der Tabelle weicht von der Datenbank ab, und sein Label bestätigt ihn nicht. Ist es noch derselbe Text? Wenn nicht, sind die String-IDs der Tabelle falsch und der Import bricht ab.
+The file cannot be read: %1	Die Datei ist nicht lesbar: %1
+The file is no translation sheet of a known language.	Die Datei ist keine Übersetzungstabelle einer bekannten Sprache.
+the file must end in .xlsx, .ods or .csv	die Datei muss auf .xlsx, .ods oder .csv enden
+The sheet cannot be read: %1	Die Tabelle ist nicht lesbar: %1
+The sheet has wrong string IDs. Fix them and import again.	Die Tabelle hat falsche String-IDs. Berichtigen und erneut importieren.
+The translation database has changed. Save it?	Die Übersetzungsdatenbank wurde geändert. Speichern?
+The translation database is not up to date: Generals.str has changed since the last update. Update the database first.	Die Übersetzungsdatenbank ist nicht aktuell: Generals.str hat sich seit dem letzten Abgleich geändert. Zuerst die Datenbank abgleichen.
+too long	zu lang
+Total errors: %1	Fehler gesamt: %1
+Total warnings: %1	Warnungen gesamt: %1
+Translation	Übersetzung
+Translations	Übersetzungen
+Translations of the chosen language from a .csf or .str file of the game, matched by label	Übersetzungen der gewählten Sprache aus einer .csf- oder .str-Datei des Spiels, zugeordnet über das Label
+Translators	Übersetzer
+UK English	Britisches Englisch
+Unmatched text in label %1	Nicht zugeordneter Text in Label %1
+Untranslated texts	Unübersetzte Texte
+Update from Generals.str	Aus Generals.str abgleichen
+US English	US-Englisch
+US English comes from Generals.str. Choose the language of the game file first.	US-Englisch kommt aus Generals.str. Zuerst die Sprache der Spieldatei wählen.
+Verify speech	Sprache prüfen
+Verify texts	Texte prüfen
+Verifying %1 dialog...	Prüfe Sprachaufnahmen (%1)...
+Verifying %1 text...	Prüfe Texte (%1)...
+WARNING	WARNUNG
+Warnings	Warnungen
+Was	Vorher
+Write	Schreiben
+Write <prefix>_<xx>.csf or .str for the chosen languages	<Präfix>_<xx>.csf oder .str für die gewählten Sprachen schreiben
+Write report	Bericht schreiben
+Write the state of the translations and speech files to a text file	Den Stand der Übersetzungen und Sprachaufnahmen in eine Textdatei schreiben
+  Writing %1 - %2...	  Schreibe %1 - %2...
+Writing report "%1"...	Schreibe Bericht "%1"...
+Yes	Ja
+yesterday	gestern

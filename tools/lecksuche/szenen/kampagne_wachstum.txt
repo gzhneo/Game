@@ -1,0 +1,58 @@
+# Dieselbe Kampagnenmission (USA 1, leicht) dreimal: starten, eine Minute spielen, ueber das Spielmenue
+# verlassen ("Mission verlassen", Rueckfrage mit Ja), Punkteanzeige, Hauptmenue. Merkpunkt im Hauptmenue nach
+# dem ersten Mal, Wachstum nach dem zweiten und dritten: gleiche Inhalte, Zwischenspeicher wachsen kaum, was
+# bleibt, bleibt je Mission liegen.
+hauptmenue
+# Mission 1, erstes Mal
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonUSA
+klick MainMenu.wnd:ButtonEasy
+partie 20000
+warte 1800
+spielmenue
+klick QuitMenu.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 20000
+klickFalls ScoreScreen.wnd:ButtonOk 900
+klickFalls ScoreScreen.wnd:ButtonContinue 60
+hauptmenue 20000
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+merke
+# zweites Mal
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonUSA
+klick MainMenu.wnd:ButtonEasy
+partie 20000
+warte 1800
+spielmenue
+klick QuitMenu.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 20000
+klickFalls ScoreScreen.wnd:ButtonOk 900
+klickFalls ScoreScreen.wnd:ButtonContinue 60
+hauptmenue 20000
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+wachstum mission2
+merke
+# drittes Mal
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonUSA
+klick MainMenu.wnd:ButtonEasy
+partie 20000
+warte 1800
+spielmenue
+klick QuitMenu.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 20000
+klickFalls ScoreScreen.wnd:ButtonOk 900
+klickFalls ScoreScreen.wnd:ButtonContinue 60
+hauptmenue 20000
+klickFalls MainMenu.wnd:ButtonSingleBack
+hauptmenue
+warte 60
+wachstum mission3
+beenden

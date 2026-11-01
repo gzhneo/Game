@@ -1,0 +1,12 @@
+@echo off
+rem Copyright (C) 2026 GZH Neo
+rem Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
+rem (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
+rem setlocal: no variable of this script may stay in the console (CMake reads RC as the resource compiler).
+setlocal
+rem Baut den neuen Karteneditor (Qt 6) unter Windows; Einzelheiten in bauen_windows.ps1.
+rem Weitere Schalter werden durchgereicht, etwa: bauen_windows.cmd -Config Debug -Starten
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0bauen_windows.ps1" %*
+set SKRIPT_RC=%ERRORLEVEL%
+if not defined BAUEN_OHNE_PAUSE pause
+exit /b %SKRIPT_RC%

@@ -1,0 +1,17 @@
+# Bäume frei: Tournament Lake, Skirmish. Hartriegel 4/5 in Gruppen am Ostrand, dazu der
+# Kiefernwald (frei seit der Kiefer, bleibt unverändert). Orte aus tools/render/map_objekte.py --cluster.
+# frame   x      y      zoom       drehung   neigung
+60        0.887  0.391  standard   0         standard
+119       0.887  0.391  standard   0         standard
+120       0.887  0.391  0.40       0         standard
+179       0.887  0.391  0.40       0         standard
+180       0.887  0.391  0.22       0         standard
+239       0.887  0.391  0.22       0         standard
+240       0.930  0.231  standard   0         standard
+299       0.930  0.231  standard   0         standard
+300       0.930  0.231  0.40       90        standard
+359       0.930  0.231  0.40       90        standard
+360       0.944  0.581  0.30       0         -20
+419       0.944  0.581  0.30       0         -20
+420       0.449  0.369  standard   0         standard
+479       0.449  0.369  standard   0         standard

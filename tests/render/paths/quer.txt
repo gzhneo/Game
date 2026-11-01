@@ -1,0 +1,11 @@
+# Quer ueber die ganze Karte in Bahnen, wie ein Spieler scrollt -- Gelaende-Nachschub (TODO 31).
+# Karte beliebig. Spalten: frame x y zoom drehung neigung
+0       0.10  0.10  standard  0  standard
+300     0.90  0.10  standard  0  standard
+450     0.90  0.40  standard  0  standard
+750     0.10  0.40  standard  0  standard
+900     0.10  0.70  standard  0  standard
+1200    0.90  0.70  standard  0  standard
+1350    0.90  0.90  standard  0  standard
+1650    0.10  0.90  standard  0  standard
+1800    0.50  0.50  standard  0  standard

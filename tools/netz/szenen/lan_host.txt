@@ -1,0 +1,26 @@
+# LAN-Partie mit mehreren Instanzen, Gastgeber (Instanz 1): Spiel eroeffnen, auf die Beitretenden warten,
+# starten, 900 Logik-Frames spielen, ueber das Spielmenue verlassen. {WARTE} = Wartezeit auf die Beitretenden.
+hauptmenue
+klick MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 60
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonStart
+{KARTE}warte {WARTE}
+klick LanGameOptionsMenu.wnd:ButtonStart 9000
+partie 2000000
+logik 900
+spielmenue
+klick QuitNoSave.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 2000000
+klick ScoreScreen.wnd:ButtonOk
+fenster LanLobbyMenu.wnd:ButtonBack 3000
+warte 60
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+warte 60
+beenden

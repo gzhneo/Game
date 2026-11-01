@@ -1,0 +1,22 @@
+# Strassen frei, Abziehbilder zh thefrontline (Nr. 83)
+# frame   x      y      zoom       drehung   neigung
+# helipad, wordcaution
+60        0.864  0.227  0.30       0         standard
+120       0.864  0.227  0.30       0         standard
+180       0.864  0.227  0.20       0         standard
+240       0.864  0.227  0.20       0         standard
+# wordstophere
+300       0.160  0.725  0.30       0         standard
+360       0.160  0.725  0.30       0         standard
+420       0.160  0.725  0.20       0         standard
+480       0.160  0.725  0.20       0         standard
+# helipad, wordcaution
+540       0.909  0.187  0.30       0         standard
+600       0.909  0.187  0.30       0         standard
+660       0.909  0.187  0.20       0         standard
+720       0.909  0.187  0.20       0         standard
+# helipad, wordcaution
+780       0.095  0.816  0.30       0         standard
+840       0.095  0.816  0.30       0         standard
+900       0.095  0.816  0.20       0         standard
+960       0.095  0.816  0.20       0         standard

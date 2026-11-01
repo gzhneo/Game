@@ -1,0 +1,6 @@
+# KI gegen KI ohne Menue: -skirmish "Tournament Lake" -skirmishAI "N1,N1,K2,K2" (tools/lecksuche setzt die
+# Parameter), der lokale Spieler schaut zu. 20000 Durchlaeufe (im Runner je einer ein Logik-Frame, gut elf
+# Minuten Spielzeit), dann beenden.
+partie 20000
+warte 20000
+beenden

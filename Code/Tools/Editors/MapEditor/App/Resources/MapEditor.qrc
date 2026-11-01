@@ -1,0 +1,10 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+	<qresource prefix="/mapeditor">
+		<file alias="de.lang">de.lang</file>
+		<file alias="help/de.html">Help/de.html</file>
+		<file alias="help/en.html">Help/en.html</file>
+		<!-- The game's detail levels, so the 3D view draws a map as the game does at each level. -->
+		<file alias="GameLODOverride.ini">../../../../../../Data/INI/GameLODOverride.ini</file>
+	</qresource>
+</RCC>

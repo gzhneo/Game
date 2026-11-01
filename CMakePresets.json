@@ -1,0 +1,171 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "x64-debug",
+      "displayName": "x64 Debug (VS Build Tools 2026)",
+      "description": "Default configuration, see BUILD.md. vcpkg builds FFmpeg, DirectXTex and zlib for x64-windows. The vcpkg toolchain is deliberately not set here: $env{VCPKG_ROOT} expands to an invalid path when the variable is empty and would abort the configure at project(); the root CMakeLists.txt resolves VCPKG_ROOT itself, with a fallback to the default VS Build Tools 2026 installation.",
+      "generator": "Visual Studio 18 2026",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build-x64",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows"
+      }
+    },
+    {
+      "name": "x64-profile",
+      "displayName": "x64 profiling build with Tracy",
+      "description": "Like x64, plus ENABLE_TRACY=ON and the vcpkg manifest feature 'profiling' (Tracy client and capture/csvexport). Own build folder build-x64-profile; measure in the Release build (build preset x64-profile).",
+      "inherits": "x64-debug",
+      "binaryDir": "${sourceDir}/build-x64-profile",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "VCPKG_MANIFEST_FEATURES": "profiling",
+        "ENABLE_TRACY": "ON"
+      }
+    },
+    {
+      "name": "x64-tools",
+      "displayName": "x64 with tools",
+      "description": "Like x64-debug, plus BUILD_TOOLS=ON: one configuration builds the games and the tools of both games (Code/Tools, once per game; Zero Hour with the MD suffix). Own build folder build-x64-tools, so build-x64 stays untouched.",
+      "inherits": "x64-debug",
+      "binaryDir": "${sourceDir}/build-x64-tools",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "BUILD_TOOLS": "ON",
+        "BUILD_ZERO_HOUR": "ON"
+      }
+    },
+    {
+      "name": "x64-asan",
+      "displayName": "x64 AddressSanitizer",
+      "description": "Own build folder build-x64-asan, so the normal Debug build (build-x64) stays untouched during an ASan run. Sets ENABLE_ASAN=ON (/fsanitize=address, MEMORYPOOL_ASAN_BYPASS in GameMemory.cpp); the build copies the ASan runtime clang_rt.asan_dynamic-x86_64.dll next to the game.",
+      "inherits": "x64-debug",
+      "binaryDir": "${sourceDir}/build-x64-asan",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "ENABLE_ASAN": "ON"
+      }
+    },
+    {
+      "name": "x64-editor",
+      "displayName": "x64 with map editor (Qt 6)",
+      "description": "Like x64-debug, plus the new map editor (BUILD_MAPEDITOR_APP=ON) with Qt 6 from the vcpkg feature 'editor'. Own build folder build-x64-editor. The first time, vcpkg builds Qt (about an hour). Build script: tools/mapeditor/bauen_windows.cmd.",
+      "inherits": "x64-debug",
+      "binaryDir": "${sourceDir}/build-x64-editor",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "VCPKG_MANIFEST_FEATURES": "editor",
+        "BUILD_MAPEDITOR_APP": "ON"
+      }
+    },
+    {
+      "name": "x64-vulkan",
+      "displayName": "x64 with Vulkan",
+      "description": "Like x64-debug, plus ENABLE_VULKAN=ON and the vcpkg feature 'vulkan'. Own build folder build-x64-vulkan; includes the ctest VulkanShaders (all shader variants to SPIR-V with dxc.exe).",
+      "inherits": "x64-debug",
+      "binaryDir": "${sourceDir}/build-x64-vulkan",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "VCPKG_MANIFEST_FEATURES": "vulkan",
+        "ENABLE_VULKAN": "ON"
+      }
+    },
+    {
+      "name": "x64-d3d11-only",
+      "displayName": "x64 Direct3D 11 only",
+      "description": "Like x64-debug, without the Vulkan device layer (GZH_RENDER_VULKAN=OFF): no WW3D2/Vulkan, Vulkan packages or dxcompiler.dll. Own build folder build-x64-d3d11-only. Shows that Direct3D 11 builds and runs without Vulkan.",
+      "inherits": "x64-debug",
+      "binaryDir": "${sourceDir}/build-x64-d3d11-only",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "GZH_RENDER_VULKAN": "OFF"
+      }
+    },
+    {
+      "name": "x64-vulkan-only",
+      "displayName": "x64 Vulkan only",
+      "description": "Like x64-debug, without the Direct3D 11 device layer (GZH_RENDER_D3D11=OFF): no WW3D2/D3D11, d3d11.lib, dxgi.lib or d3dcompiler.lib. Own build folder build-x64-vulkan-only. Shows that Vulkan builds and runs without Direct3D 11.",
+      "inherits": "x64-debug",
+      "binaryDir": "${sourceDir}/build-x64-vulkan-only",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "GZH_RENDER_D3D11": "OFF"
+      }
+    },
+    {
+      "name": "x64-analyze",
+      "displayName": "x64 static analysis (/analyze)",
+      "description": "Like x64-tools with ENABLE_ANALYZE=ON (/analyze /analyze:WX- /analyze:stacksize 100000, root CMakeLists.txt). Own build folder build-x64-analyze, about three times as long as a normal build. Run it before merging to main and when a target is switched to /W4 /WX.",
+      "inherits": "x64-tools",
+      "binaryDir": "${sourceDir}/build-x64-analyze",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "ENABLE_ANALYZE": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "x64-debug",
+      "configurePreset": "x64-debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-release",
+      "configurePreset": "x64-debug",
+      "configuration": "Release"
+    },
+    {
+      "name": "x64-profile",
+      "configurePreset": "x64-profile",
+      "configuration": "Release"
+    },
+    {
+      "name": "x64-tools-debug",
+      "configurePreset": "x64-tools",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-tools-release",
+      "configurePreset": "x64-tools",
+      "configuration": "Release"
+    },
+    {
+      "name": "x64-asan",
+      "configurePreset": "x64-asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-editor-debug",
+      "configurePreset": "x64-editor",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-editor-release",
+      "configurePreset": "x64-editor",
+      "configuration": "Release"
+    },
+    {
+      "name": "x64-vulkan",
+      "configurePreset": "x64-vulkan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-d3d11-only",
+      "configurePreset": "x64-d3d11-only",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-vulkan-only",
+      "configurePreset": "x64-vulkan-only",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x64-analyze",
+      "configurePreset": "x64-analyze",
+      "configuration": "Debug"
+    }
+  ]
+}

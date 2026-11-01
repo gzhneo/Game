@@ -1,0 +1,15 @@
+# Kampagne USA (leicht), erste Mission gewinnen und in der Punkteanzeige das Fenster schliessen (WM_CLOSE,
+# wie Alt+F4) -- das Programm endet zwischen zwei Missionen.
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonUSA
+klick MainMenu.wnd:ButtonEasy
+partie 20000
+warte 600
+siegBisEnde 20000
+fenster ScoreScreen.wnd:ButtonContinue 900
+warte 60
+schliessen
+warte 600
+log WM_CLOSE ohne Wirkung
+beenden

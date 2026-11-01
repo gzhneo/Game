@@ -1,0 +1,15 @@
+# Kampagne USA im Fenster mit Zeichnen, Ton und Videos (Zwischensequenzen, Missionsvideo): erste Mission,
+# Sieg, Punkteanzeige, "Weiter", zweite Mission eine Weile, beenden.
+hauptmenue
+klickFalls MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonUSA
+klick MainMenu.wnd:ButtonEasy
+partie 40000
+warte 1800
+siegBisEnde 40000
+fenster ScoreScreen.wnd:ButtonContinue 1800
+warte 60
+klick ScoreScreen.wnd:ButtonContinue
+partie 40000
+warte 1800
+beenden

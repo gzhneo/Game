@@ -1,0 +1,10 @@
+# TODO 62 (Humvee-Pilot): Replay e0zh-tournament-lake-3ai-seed2 (Zero Hour x64).
+# Zwei Humvees (ID 328, 337) fahren ab Frame 7200 von der Basis von Player_2 nach Westen und kämpfen um
+# Frame 8400 bis 8700 bei x 0.40, y 0.75 (Orte aus Deep-CRC-Abzügen alle 300 Frames). Die Kamera folgt
+# ihnen mit nahem Zoom (Räder, Fahrt) und hält dann über dem Gefecht (Turmdrehung, Mündungsfeuer).
+# frame   x      y      zoom   drehung   neigung
+7500      0.728  0.801  0.30   0         standard
+7800      0.630  0.788  0.30   0         standard
+8100      0.475  0.760  0.30   0         standard
+8400      0.404  0.749  0.30   0         standard
+8700      0.390  0.748  0.30   0         standard

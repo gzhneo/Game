@@ -1,0 +1,1397 @@
+/*
+**	Command & Conquer Generals(tm) / Generals Zero Hour(tm)
+**	Copyright 2025 Electronic Arts Inc.
+**	Modified by GZH Neo, Copyright (C) 2026 GZH Neo
+**
+**	This program is free software: you can redistribute it and/or modify
+**	it under the terms of the GNU General Public License as published by
+**	the Free Software Foundation, either version 3 of the License, or
+**	(at your option) any later version.
+**
+**	This program is distributed in the hope that it will be useful,
+**	but WITHOUT ANY WARRANTY; without even the implied warranty of
+**	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+**	GNU General Public License for more details.
+**
+**	You should have received a copy of the GNU General Public License
+**	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+////////////////////////////////////////////////////////////////////////////////
+//																																						//
+//  (c) 2001-2003 Electronic Arts Inc.																				//
+//																																						//
+////////////////////////////////////////////////////////////////////////////////
+
+// FILE: MapUtil.cpp //////////////////////////////////////////////////////////////////////////////
+// Author: Matt Campbell, December 2001
+// Description: Map utility/convenience routines
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// INCLUDES ///////////////////////////////////////////////////////////////////////////////////////
+#include "PreRTS.h"	// This must go first in EVERY cpp file int the GameEngine
+
+#include <format>
+#include <memory>
+#include <string>
+
+#include "Common/crc.h"
+#include "Common/FileSystem.h"
+#include "Common/GameEdition.h"
+#include "Common/LocalFileSystem.h"
+#include "Common/file.h"
+#include "Common/GlobalData.h"
+#include "Common/GameState.h"
+#include "Common/GameEngine.h"
+#include "Common/NameKeyGenerator.h"
+#include "Common/DataChunk.h"
+#include "Common/MapReaderWriterInfo.h"
+#include "Common/MessageStream.h"
+#include "Common/WellKnownKeys.h"
+#include "Common/INI.h"
+#include "Common/QuotedPrintable.h"
+#include "Common/SkirmishBattleHonors.h"
+#include "Common/ThingFactory.h"
+#include "Common/ThingTemplate.h"
+#include "Common/MapObject.h"
+#include "GameClient/GameText.h" 
+#include "GameClient/WindowLayout.h"
+#include "GameClient/Gadget.h"
+#include "GameClient/Image.h"
+#include "GameClient/Shell.h"
+#include "GameClient/GameWindowManager.h"
+#include "GameClient/GadgetListBox.h"
+#include "GameClient/MapUtil.h"
+#include "GameLogic/GameLogic.h"
+#include "GameLogic/FPUControl.h"
+#include "GameNetwork/GameInfo.h"
+#include "GameNetwork/NetworkDefs.h"
+#include "Lib/SafeString.h"
+#include "Engine/UserDataFiles.h"
+
+
+// Writes formatted text to the cache file (the formats give the same text as the printf calls they replace).
+static void putText(std::string &out, const std::string &text)
+{
+	out += text;
+}
+
+//-------------------------------------------------------------------------------
+// PRIVATE DATA ///////////////////////////////////////////////////////////////////////////////////
+static const char *mapExtension = ".map";
+
+static Int m_width = 0;						///< Height map width.
+static Int m_height = 0;					///< Height map height (y size of array).
+static Int m_borderSize = 0;			///< Non-playable border area.
+static std::vector<ICoord2D> m_boundaries;	///< All the boundaries we use for the map
+static Dict worldDict = 0;
+
+static WaypointMap *m_waypoints = 0;
+static Coord3DList	m_supplyPositions;
+static Coord3DList	m_techPositions;
+
+static Int m_mapDX = 0;
+static Int m_mapDY = 0;
+
+// The map's name from the map.str next to it; fname is the map's path as the file list gives it.
+static UnicodeString fetchMapName( const AsciiString &fname, const AsciiString &tag )
+{
+	AsciiString stringFileName = fname;
+	while (stringFileName.getLength() && stringFileName.getCharAt(stringFileName.getLength()-1) != '\\'
+		&& stringFileName.getCharAt(stringFileName.getLength()-1) != '/')
+		stringFileName.removeLastChar();
+	stringFileName.concat("map.str");
+	TheGameText->initMapStringFile(stringFileName);
+	UnicodeString name = TheGameText->fetch(tag);
+	TheGameText->reset();
+	return name;
+}
+
+static UnsignedInt calcCRC( AsciiString dirName, AsciiString fname )
+{
+	CRC theCRC;
+	theCRC.clear();
+
+	// Try the official map dir
+	AsciiString asciiFile;
+	char	tempBuf[_MAX_PATH];
+	char	filenameBuf[_MAX_PATH];
+	int length = 0;
+	safe_strcpy(tempBuf, fname.str());
+	length = static_cast<Int>(strlen( tempBuf ));
+	if( length >= 4 )
+	{
+		memset( filenameBuf, '\0', _MAX_PATH);
+		strncpy( filenameBuf, tempBuf, length - 4);
+	}
+
+	File *fp;
+	asciiFile = fname;
+	fp = TheFileSystem->openFile(asciiFile.str(), File::READ);
+	if( !fp )
+	{
+		DEBUG_CRASH(("Couldn't open '%s'\n", fname.str()));
+		return 0;
+	}
+
+	UnsignedByte buf[4096];
+	Int num;
+	while ( (num=fp->read(buf, 4096)) > 0 )
+	{
+		theCRC.computeCRC(buf, num);
+	}
+
+	fp->close();
+	fp = nullptr;
+
+	return theCRC.get();
+}
+
+static Bool ParseObjectDataChunk(DataChunkInput &file, DataChunkInfo *info, void *userData)
+{
+	Bool readDict = info->version >= K_OBJECTS_VERSION_2;
+
+	Coord3D loc;
+	loc.x = file.readReal();
+	loc.y = file.readReal();
+	loc.z = file.readReal();
+	if (info->version <= K_OBJECTS_VERSION_2) 
+	{
+		loc.z = 0;
+	}
+
+	Real angle = file.readReal();
+	Int flags = file.readInt(); 
+	AsciiString name = file.readAsciiString();
+	Dict d;
+	if (readDict)
+	{
+		d = file.readDict();
+	}
+	MapObject *pThisOne;
+	
+	// create the map object
+	pThisOne = newInstance( MapObject )( loc, name, angle, flags, &d, 
+														TheThingFactory->findTemplate( name, FALSE ) );
+
+//DEBUG_LOG(("obj %s owner %s\n",name.str(),d.getAsciiString(TheKey_originalOwner).str()));
+
+	if (pThisOne->getProperties()->getType(TheKey_waypointID) == Dict::DICT_INT)
+	{
+		pThisOne->setIsWaypoint();
+
+		// grab useful info
+		(*m_waypoints)[pThisOne->getWaypointName()] = loc;
+	}
+	else if (pThisOne->getThingTemplate() && pThisOne->getThingTemplate()->isKindOf(KINDOF_TECH_BUILDING))
+	{
+		m_techPositions.push_back(loc);
+	}
+	else if (pThisOne->getThingTemplate() && pThisOne->getThingTemplate()->isKindOf(KINDOF_SUPPLY_SOURCE_ON_PREVIEW))
+	{
+		m_supplyPositions.push_back(loc);
+	}
+
+	deleteInstanceOf(pThisOne);
+	return TRUE;
+}
+
+static Bool ParseObjectsDataChunk(DataChunkInput &file, DataChunkInfo *info, void *userData)
+{
+	file.m_currentObject = nullptr;
+	file.registerParser( AsciiString("Object"), info->label, ParseObjectDataChunk );
+	return (file.parse(userData));
+}
+
+static Bool ParseWorldDictDataChunk(DataChunkInput &file, DataChunkInfo *info, void *userData)
+{
+	worldDict = file.readDict();
+	return true;
+}
+
+static Bool ParseSizeOnly(DataChunkInput &file, DataChunkInfo *info, void *userData)
+{
+	m_width = file.readInt();
+	m_height = file.readInt();
+	if (info->version >= K_HEIGHT_MAP_VERSION_3) {
+		m_borderSize = file.readInt();
+	} else {
+		m_borderSize = 0;
+	}
+
+	if (info->version >= K_HEIGHT_MAP_VERSION_4) {
+		Int numBorders = file.readInt();
+		// value from the map file; a few boundaries at most in practice
+		if (numBorders < 0 || numBorders > 1024) {
+			throw ERROR_CORRUPT_FILE_FORMAT;
+		}
+		m_boundaries.resize(numBorders);
+		for (int i = 0; i < numBorders; ++i) {
+			m_boundaries[i].x = file.readInt();
+			m_boundaries[i].y = file.readInt();
+		}
+	}
+	return true;
+}
+
+static Bool ParseSizeOnlyInChunk(DataChunkInput &file, DataChunkInfo *info, void *userData)
+{
+	return ParseSizeOnly(file, info, userData);
+}
+
+static Bool loadMap( AsciiString filename )
+{
+	char	tempBuf[_MAX_PATH];
+	char	filenameBuf[_MAX_PATH];
+	AsciiString asciiFile;
+	int length = 0;
+
+	safe_strcpy(tempBuf, filename.str());
+
+	length = static_cast<Int>(strlen( tempBuf ));
+	if( length >= 4 )
+	{
+		memset( filenameBuf, '\0', _MAX_PATH);
+		strncpy( filenameBuf, tempBuf, length - 4);
+	}
+
+	CachedFileInputStream fileStrm;
+
+	asciiFile = filename;
+	if( !fileStrm.open(asciiFile) )
+	{
+		return FALSE;
+	}
+
+	ChunkInputStream *pStrm = &fileStrm;
+
+	DataChunkInput file( pStrm );
+
+	m_waypoints = NEW WaypointMap;
+
+	file.registerParser( AsciiString("HeightMapData"), AsciiString::TheEmptyString, ParseSizeOnlyInChunk );
+	file.registerParser( AsciiString("WorldInfo"), AsciiString::TheEmptyString, ParseWorldDictDataChunk );
+	file.registerParser( AsciiString("ObjectsList"), AsciiString::TheEmptyString, ParseObjectsDataChunk );
+	if (!file.parse(nullptr)) {
+		throw(ERROR_CORRUPT_FILE_FORMAT);
+	}
+
+	m_mapDX = m_width  - 2*m_borderSize;
+	m_mapDY = m_height - 2*m_borderSize;
+
+	return TRUE;
+}
+
+static void resetMap( void )
+{
+	if (m_waypoints)
+	{
+		delete m_waypoints;
+		m_waypoints = 0;
+	}
+	m_techPositions.clear();
+	m_supplyPositions.clear();
+	// The statics would otherwise keep the last parsed map's data until static destruction, which comes
+	// after the debug leak report.
+	worldDict.clear();
+	std::vector<ICoord2D>().swap(m_boundaries);
+}
+
+static void getExtent( Region3D *extent )
+{
+	extent->lo.x = 0.0f;
+
+	extent->lo.y = 0.0f;
+
+	// Note - m_mapDX & Y are the number of height map grids wide, so we have to
+	// multiply by the grid width.
+	extent->hi.x = m_mapDX*MAP_XY_FACTOR;
+	extent->hi.y = m_mapDY*MAP_XY_FACTOR;
+
+	extent->lo.z = 0;
+	extent->hi.z = 0;
+}
+
+//-------------------------------------------------------------------------------
+
+void WaypointMap::update( void )
+{
+	if (!m_waypoints)
+	{
+		m_numStartSpots = 1;
+		return;
+	}
+
+	this->clear();
+
+	AsciiString startingCamName = TheNameKeyGenerator->keyToName(TheKey_InitialCameraPosition);
+	WaypointMap::const_iterator it;
+
+	it = m_waypoints->find(startingCamName);
+	if (it != m_waypoints->end())
+	{
+		(*this)[startingCamName] = it->second;
+	}
+
+	m_numStartSpots = 0;
+	for (Int i=0; i<MAX_SLOTS; ++i)
+	{
+		startingCamName.format("Player_%d_Start", i+1); // start pos waypoints are 1-based
+		it = m_waypoints->find(startingCamName);
+		if (it != m_waypoints->end())
+		{
+			(*this)[startingCamName] = it->second;
+			++m_numStartSpots;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	m_numStartSpots = max(1, m_numStartSpots);
+}
+
+const char * MapCache::m_mapCacheName = "MapCache.ini";
+
+AsciiString MapCache::getMapDir() const 
+{ 
+	return AsciiString("Maps"); 
+}
+
+AsciiString MapCache::getUserMapDir() const
+{
+	AsciiString tmp = TheGlobalData->getPath_UserData();
+	tmp.concat(getMapDir());
+	return tmp;
+}
+
+AsciiString MapCache::getMapExtension() const
+{
+	return AsciiString("map");
+}
+
+void MapCache::writeCacheINI( Bool userDir )
+{
+	AsciiString mapDir;
+	if (!userDir || TheGlobalData->m_buildMapCache)
+	{
+		mapDir = getMapDir();
+	}
+	else
+	{
+		mapDir = getUserMapDir();
+	}
+
+	AsciiString filepath = mapDir;
+	filepath.concat('\\');
+
+	TheFileSystem->createDirectory(mapDir);
+
+	filepath.concat(m_mapCacheName);
+	std::string out;
+	putText(out, std::format("; FILE: {} /////////////////////////////////////////////////////////////\n", filepath.str()));
+	putText(out, std::format("; This INI file is auto-generated - do not modify\n"));
+	putText(out, std::format("; /////////////////////////////////////////////////////////////////////////////\n"));
+	mapDir.toLower();
+
+	MapCache::iterator it = begin();
+	MapMetaData md;
+	while (it != end())
+	{
+		if (it->first.startsWithNoCase(mapDir.str()))
+		{
+			md = it->second;
+			putText(out, std::format("\nMapCache {}\n", AsciiStringToQuotedPrintable(it->first.str()).str()));
+			putText(out, std::format("  fileSize = {:d}\n", static_cast<unsigned>(md.m_filesize)));
+			putText(out, std::format("  fileCRC = {:d}\n", static_cast<unsigned>(md.m_CRC)));
+			putText(out, std::format("  timestampLo = {:d}\n", static_cast<int>(md.m_timestamp.m_lowTimeStamp)));
+			putText(out, std::format("  timestampHi = {:d}\n", static_cast<int>(md.m_timestamp.m_highTimeStamp)));
+			putText(out, std::format("  isOfficial = {}\n", (md.m_isOfficial)?"yes":"no"));
+
+			putText(out, std::format("  isMultiplayer = {}\n", (md.m_isMultiplayer)?"yes":"no"));
+			putText(out, std::format("  numPlayers = {:d}\n", static_cast<int>(md.m_numPlayers)));
+
+			putText(out, std::format("  extentMin = X:{:2.2f} Y:{:2.2f} Z:{:2.2f}\n", md.m_extent.lo.x, md.m_extent.lo.y, md.m_extent.lo.z));
+			putText(out, std::format("  extentMax = X:{:2.2f} Y:{:2.2f} Z:{:2.2f}\n", md.m_extent.hi.x, md.m_extent.hi.y, md.m_extent.hi.z));
+
+// BAD AND NOW UNUSED:  the mapcache.ini should not contain localized data... using the lookup tag instead
+//			fprintf(fp, "  displayName = %s\n", UnicodeStringToQuotedPrintable(md.m_displayName).str());
+			// the tag comes from the map file; INIMapCache decodes it, a line break could not end the entry
+			putText(out, std::format("  nameLookupTag = {}\n", AsciiStringToQuotedPrintable(md.m_nameLookupTag).str()));
+
+			Coord3D pos;
+			WaypointMap::iterator itw = md.m_waypoints.begin();
+			while (itw != md.m_waypoints.end())
+			{
+				pos = itw->second;
+				putText(out, std::format("  {} = X:{:2.2f} Y:{:2.2f} Z:{:2.2f}\n", itw->first.str(), pos.x, pos.y, pos.z));
+				++itw;
+			}
+			Coord3DList::iterator itc3d = md.m_techPositions.begin();
+			while (itc3d != md.m_techPositions.end())
+			{
+				pos = *itc3d;
+				putText(out, std::format("  techPosition = X:{:2.2f} Y:{:2.2f} Z:{:2.2f}\n", pos.x, pos.y, pos.z));
+				itc3d++;
+			}
+			
+			itc3d = md.m_supplyPositions.begin();
+			while (itc3d != md.m_supplyPositions.end())
+			{
+				pos = *itc3d;
+				putText(out, std::format("  supplyPosition = X:{:2.2f} Y:{:2.2f} Z:{:2.2f}\n", pos.x, pos.y, pos.z));
+				itc3d++;
+			}
+			putText(out, std::format("END\n\n"));
+		}
+		else
+		{
+			//DEBUG_LOG(("%s does not start %s\n", mapDir.str(), it->first.str()));
+		}
+		++it;
+	}
+
+	// CRLF as before; written in one step, so a crash cannot leave half a cache behind
+	std::string text;
+	text.reserve(out.size() + out.size() / 16);
+	for (char c : out)
+	{
+		if (c == '\n')
+			text += '\r';
+		text += c;
+	}
+	std::string error;
+	[[maybe_unused]] const Bool written = ::Engine::UserDataFiles::writeAtomically(::Engine::pathFromNarrow(filepath.str()), text, &error);
+	DEBUG_ASSERTCRASH(written, ("Failed to write %s: %s", filepath.str(), error.c_str()));
+}
+
+void MapCache::updateCache( void )
+{
+	setFPMode();
+
+	TheFileSystem->createDirectory(getUserMapDir());
+
+	if (loadUserMaps())
+	{
+		writeCacheINI( TRUE );
+	}
+	loadStandardMaps();	// we shall overwrite info from matching user maps to prevent munkees from getting rowdy :)
+#if defined(_DEBUG)
+	if (TheLocalFileSystem->doesFileExist(getMapDir().str()))
+	{
+		// only create the map cache file if "Maps" exist
+		Bool wasBuildMapCache = TheGlobalData->m_buildMapCache;
+		TheWritableGlobalData->m_buildMapCache = true;
+		loadUserMaps();
+		TheWritableGlobalData->m_buildMapCache = wasBuildMapCache;
+		writeCacheINI( FALSE );
+	}
+#endif
+}
+
+Bool MapCache::clearUnseenMaps( AsciiString dirName )
+{
+	dirName.toLower();
+	Bool erasedSomething = FALSE;
+
+	std::map<AsciiString, Bool>::iterator it = m_seen.begin();
+
+	while (it != m_seen.end())
+	{
+		AsciiString mapName = it->first;
+		if (it->second == FALSE && mapName.startsWithNoCase(dirName.str()))
+		{
+			// not seen in the dir - clear it out.
+			erase(mapName);
+			erasedSomething = TRUE;
+		}
+		++it;
+	}
+	return erasedSomething;
+}
+
+void MapCache::loadStandardMaps(void)
+{
+	INI ini;
+	AsciiString fname;
+	fname.format("%s\\%s", getMapDir().str(), m_mapCacheName);
+#if defined(_DEBUG)
+	File *fp = TheFileSystem->openFile(fname.str(), File::READ);
+	if (fp != nullptr)
+	{
+		fp->close();
+		fp = nullptr;
+#endif
+		ini.load( fname, INILoadType::INI_LOAD_OVERWRITE, nullptr );
+#if defined(_DEBUG)
+	}
+#endif
+}
+
+Bool MapCache::loadUserMaps()
+{
+	// Read in map list from disk
+	AsciiString mapDir;
+	if (TheGlobalData->m_buildMapCache)
+	{
+		mapDir = getMapDir();
+	}
+	else
+	{
+		mapDir = getUserMapDir();
+
+		INI ini;
+		AsciiString fname;
+		fname.format("%s\\%s", mapDir.str(), m_mapCacheName);
+		File *fp = TheFileSystem->openFile(fname.str(), File::READ);
+		if (fp)
+		{
+			fp->close();
+			// The game writes this file from the maps in the folder (also transferred ones). If it
+			// cannot be read, drop what it gave and read the maps again instead of ending the game.
+			try
+			{
+				ini.load( fname, INILoadType::INI_LOAD_OVERWRITE, nullptr );
+			}
+			catch (...)
+			{
+				DEBUG_LOG(("MapCache::loadUserMaps - %s cannot be read, the maps are read again\n", fname.str()));
+				clear();
+			}
+		}
+
+	}
+
+	// mark all as unseen
+	m_seen.clear();
+	MapCache::iterator it = begin();
+	while (it != end())
+	{
+		m_seen[it->first] = FALSE;
+		++it;
+	}
+
+	FilenameList filenameList;
+	FilenameListIter iter;
+	AsciiString toplevelPattern;
+	toplevelPattern.format("%s\\", mapDir.str());
+	Bool parsedAMap = FALSE;
+	AsciiString filenamepattern;
+	filenamepattern.format("*.%s", getMapExtension().str());
+
+	TheFileSystem->getFileListInDirectory(toplevelPattern, filenamepattern, filenameList, TRUE);
+
+	iter = filenameList.begin();
+
+	while (iter != filenameList.end()) {
+		FileInfo fileInfo;
+		AsciiString tempfilename;
+		tempfilename = (*iter);
+		tempfilename.toLower();
+
+		const char *s = tempfilename.reverseFind('\\');
+		if (!s)
+		{
+			DEBUG_CRASH(("Couldn't find \\ in map name!"));
+		}
+		else
+		{
+			AsciiString endingStr;
+			AsciiString fname = s+1;
+			for (Int i=0; i<strlen(mapExtension); ++i)
+				fname.removeLastChar();
+
+			endingStr.format("%s\\%s%s", fname.str(), fname.str(), mapExtension);
+
+			Bool skipMap = FALSE;
+			if (TheGlobalData->m_buildMapCache)
+			{
+				std::set<AsciiString>::const_iterator sit = m_allowedMaps.find(fname);
+				if (m_allowedMaps.size() != 0 && sit == m_allowedMaps.end())
+				{
+					//DEBUG_LOG(("Skipping map: '%s'\n", fname.str()));
+					skipMap = TRUE;
+				}
+				else
+				{
+					//DEBUG_LOG(("Parsing map: '%s'\n", fname.str()));
+				}
+			}
+
+			if (!skipMap)
+			{
+				if (!tempfilename.endsWithNoCase(endingStr.str()))
+				{
+					DEBUG_CRASH(("Found map '%s' in wrong spot (%s)", fname.str(), tempfilename.str()));
+				}
+				else
+				{
+					if (TheFileSystem->getFileInfo(tempfilename, &fileInfo)) {
+						char funk[_MAX_PATH];
+						safe_strcpy(funk, tempfilename.str());
+						char *filenameptr = funk;
+						char *tempchar = funk;
+						while (*tempchar != 0) {
+							if ((*tempchar == '\\') || (*tempchar == '/')) {
+								filenameptr = tempchar+1;
+							}
+							++tempchar;
+						}
+
+						m_seen[tempfilename] = TRUE;
+						parsedAMap |= addMap(mapDir, *iter, &fileInfo, TheGlobalData->m_buildMapCache);
+					} else {
+						DEBUG_CRASH(("Could not get file info for map %s", (*iter).str()));
+					}
+				}
+			}
+		}
+		iter++;
+	}
+
+	// clean out unseen maps
+	if (clearUnseenMaps(mapDir))
+		return TRUE;
+
+	return parsedAMap;
+}
+
+//Bool MapCache::addMap( AsciiString dirName, AsciiString fname, WinTimeStamp timestamp, UnsignedInt filesize, Bool isOfficial )
+Bool MapCache::addMap( AsciiString dirName, AsciiString fname, FileInfo *fileInfo, Bool isOfficial)
+{
+	if (fileInfo == nullptr) {
+		return FALSE;
+	}
+
+	AsciiString lowerFname;
+	lowerFname = fname;
+	lowerFname.toLower();
+	MapCache::iterator it = find(lowerFname);
+
+	MapMetaData md;
+	UnsignedInt filesize = fileInfo->sizeLow;
+
+	if (it != end())
+	{
+		// Found the map in our cache.  Check to see if it has changed.
+		md = it->second;
+
+		if ((md.m_filesize == filesize) &&
+				(md.m_CRC != 0))
+		{
+			// Force a lookup so that we don't display the English localization in all builds.
+			// The Generals MapCache.ini has a ready displayName instead of the nameLookupTag (INIMapCache.cpp
+			// takes it). Keep it instead of replacing it with the file name ("Alpine Assault (2)" instead of
+			// "Alpine Assault.map (2)"). Without a displayName line INIMapCache builds the name from the cache
+			// key, which is the Zero Hour case.
+			AsciiString cacheDisplayName;
+			cacheDisplayName = lowerFname.reverseFind('\\') + 1;
+			UnicodeString cacheName;
+			cacheName.translate(cacheDisplayName);
+			if (md.m_numPlayers >= 2)
+			{
+				UnicodeString extension;
+				extension.format(L" (%d)", md.m_numPlayers);
+				cacheName.concat(extension);
+			}
+			if (md.m_nameLookupTag.isEmpty() && !md.m_displayName.isEmpty() && md.m_displayName.compare(cacheName) != 0)
+			{
+				// keep the display name from the displayName line (Generals data)
+			}
+			else if (md.m_nameLookupTag.isEmpty())
+			{
+				// unofficial maps or maps without names
+				AsciiString tempdisplayname;
+				tempdisplayname = fname.reverseFind('\\') + 1;
+				(*this)[lowerFname].m_displayName.translate(tempdisplayname);
+				if (md.m_numPlayers >= 2)
+				{
+					UnicodeString extension;
+					extension.format(L" (%d)", md.m_numPlayers);
+					(*this)[lowerFname].m_displayName.concat(extension);
+				}
+			}
+			else
+			{
+				// maps with name tags (official ones in the game's strings, others in their map.str)
+				(*this)[lowerFname].m_displayName = md.m_isOfficial ? TheGameText->fetch(md.m_nameLookupTag) : fetchMapName(fname, md.m_nameLookupTag);
+				if (md.m_numPlayers >= 2)
+				{
+					UnicodeString extension;
+					extension.format(L" (%d)", md.m_numPlayers);
+					(*this)[lowerFname].m_displayName.concat(extension);
+				}
+			}
+//			DEBUG_LOG(("MapCache::addMap - found match for map %s\n", lowerFname.str()));
+			return FALSE;	// OK, it checks out.
+		}
+		DEBUG_LOG(("%s didn't match file in MapCache\n", fname.str()));
+		DEBUG_LOG(("size: %d / %d\n", filesize, md.m_filesize));
+		DEBUG_LOG(("time1: %d / %d\n", fileInfo->timestampHigh, md.m_timestamp.m_highTimeStamp));
+		DEBUG_LOG(("time2: %d / %d\n", fileInfo->timestampLow, md.m_timestamp.m_lowTimeStamp));
+//		DEBUG_LOG(("size: %d / %d\n", filesize, md.m_filesize));
+//		DEBUG_LOG(("time1: %d / %d\n", timestamp.m_highTimeStamp, md.m_timestamp.m_highTimeStamp));
+//		DEBUG_LOG(("time2: %d / %d\n", timestamp.m_lowTimeStamp, md.m_timestamp.m_lowTimeStamp));
+	}
+
+	DEBUG_LOG(("MapCache::addMap(): caching '%s' because '%s' was not found\n", fname.str(), lowerFname.str()));
+
+	// A damaged map (ERROR_CORRUPT_FILE_FORMAT from the readers) is left out of the list.
+	try
+	{
+		loadMap(fname); // Just load for querying the data, since we aren't playing this map.
+	}
+	catch (...)
+	{
+		DEBUG_LOG(("MapCache::addMap(): '%s' is damaged, not listed\n", fname.str()));
+		resetMap();
+		return FALSE;
+	}
+
+	// The map is now loaded.  Pick out what we need.
+	md.m_fileName = lowerFname;
+	md.m_filesize = filesize;
+	md.m_isOfficial = isOfficial;
+	md.m_waypoints.update();
+	md.m_numPlayers = md.m_waypoints.m_numStartSpots;
+	md.m_isMultiplayer = (md.m_numPlayers >= 2);
+	md.m_timestamp.m_highTimeStamp = fileInfo->timestampHigh;
+	md.m_timestamp.m_lowTimeStamp = fileInfo->timestampLow;
+	md.m_supplyPositions = m_supplyPositions;
+	md.m_techPositions = m_techPositions;
+	md.m_CRC = calcCRC(dirName, fname);
+
+	Bool exists = false;
+	AsciiString munkee = worldDict.getAsciiString(TheKey_mapName, &exists);
+	md.m_nameLookupTag = munkee;
+	if (!exists || munkee.isEmpty())
+	{
+		DEBUG_LOG(("Missing TheKey_mapName!\n"));
+		AsciiString tempdisplayname;
+		tempdisplayname = fname.reverseFind('\\') + 1;
+		md.m_displayName.translate(tempdisplayname);
+		if (md.m_numPlayers >= 2)
+		{
+			UnicodeString extension;
+			extension.format(L" (%d)", md.m_numPlayers);
+			md.m_displayName.concat(extension);
+		}
+		TheGameText->reset();
+	}
+	else
+	{
+		md.m_displayName = fetchMapName(fname, munkee);
+		if (md.m_numPlayers >= 2)
+		{
+			UnicodeString extension;
+			extension.format(L" (%d)", md.m_numPlayers);
+			md.m_displayName.concat(extension);
+		}
+		DEBUG_LOG(("Map name is now '%ls'\n", md.m_displayName.str()));
+		TheGameText->reset();
+	}
+
+	getExtent(&(md.m_extent));
+
+	(*this)[lowerFname] = md;
+
+	DEBUG_LOG(("  filesize = %d bytes\n", md.m_filesize));
+	DEBUG_LOG(("  displayName = %ls\n", md.m_displayName.str()));
+	DEBUG_LOG(("  CRC = %X\n", md.m_CRC));
+	DEBUG_LOG(("  timestamp = %u/%u\n", md.m_timestamp.m_highTimeStamp, md.m_timestamp.m_lowTimeStamp));
+	DEBUG_LOG(("  isOfficial = %s\n", (md.m_isOfficial)?"yes":"no"));
+
+	DEBUG_LOG(("  isMultiplayer = %s\n", (md.m_isMultiplayer)?"yes":"no"));
+	DEBUG_LOG(("  numPlayers = %d\n", md.m_numPlayers));
+
+	DEBUG_LOG(("  extent = (%2.2f,%2.2f) -> (%2.2f,%2.2f)\n",
+		md.m_extent.lo.x, md.m_extent.lo.y,
+		md.m_extent.hi.x, md.m_extent.hi.y));
+
+	Coord3D pos;
+	WaypointMap::iterator itw = md.m_waypoints.begin();
+	while (itw != md.m_waypoints.end())
+	{
+		pos = itw->second;
+		DEBUG_LOG(("    waypoint %s: (%2.2f,%2.2f)\n", itw->first.str(), pos.x, pos.y));
+		++itw;
+	}
+
+	resetMap();
+
+	return TRUE;
+}
+
+
+// PUBLIC FUNCTIONS //////////////////////////////////////////////////////////////////////////////
+
+Bool WouldMapTransfer( const AsciiString& mapName )
+{
+	return mapName.startsWithNoCase(TheMapCache->getUserMapDir());
+}
+
+//-------------------------------------------------------------------------------------------------
+/** Load the listbox with all the map files available to play */
+//-------------------------------------------------------------------------------------------------
+Int populateMapListboxNoReset( GameWindow *listbox, Bool useSystemMaps, Bool isMultiplayer, AsciiString mapToSelect )
+{
+	if(!TheMapCache)
+		return -1;
+
+	if (!listbox)
+		return -1;
+	
+	// reset the listbox content
+	//GadgetListBoxReset( listbox );
+	
+	Int numColumns = GadgetListBoxGetNumColumns( listbox );
+	const Image *easyImage = nullptr;
+	const Image *mediumImage = nullptr;
+	const Image *brutalImage = nullptr;
+	const Image *maxBrutalImage = nullptr;
+	std::unique_ptr<SkirmishBattleHonors> battleHonors;
+	Int w = 10, h = 10;
+	if (numColumns > 1)
+	{
+		easyImage = TheMappedImageCollection->findImageByName("Star-Bronze");
+		mediumImage = TheMappedImageCollection->findImageByName("Star-Silver");
+		brutalImage = TheMappedImageCollection->findImageByName("Star-Gold");
+		maxBrutalImage = TheMappedImageCollection->findImageByName("RedYell_Star");
+		battleHonors = std::make_unique<SkirmishBattleHonors>();
+
+		w = (brutalImage)?brutalImage->getImageWidth():10;
+		w = min(GadgetListBoxGetColumnWidth(listbox, 0), w);
+		h = w;
+	}
+
+	Color color = GameMakeColor( 255, 255, 255, 255 );
+	UnicodeString mapDisplayName;
+
+	Int selectionIndex = 0; // always select *something*
+
+	MapCache::iterator it = TheMapCache->begin();
+	AsciiString mapDir;
+	if (useSystemMaps)
+	{
+		mapDir = TheMapCache->getMapDir();
+	}
+	else
+	{
+		mapDir = TheGlobalData->getPath_UserData();
+		mapDir.concat(TheMapCache->getMapDir());
+	}
+	mapDir.toLower();
+
+using MapNameList = std::set<UnicodeString, rts::less_than_nocase<UnicodeString> >;
+using MapNameListIter = MapNameList::iterator;
+
+using MapDisplayToFileNameList = std::map<UnicodeString, AsciiString>;
+using MapDisplayToFileNameListIter = MapDisplayToFileNameList::iterator;
+
+	MapNameList tempCache;
+	MapDisplayToFileNameList filenameMap;
+	UnsignedInt numMapsListed = 0;
+	UnsignedInt curNumPlayersInMap = 0;
+
+	while (numMapsListed < TheMapCache->size()) {
+
+		DEBUG_LOG(("Adding maps with %d players\n", curNumPlayersInMap));
+		it = TheMapCache->begin();
+		while (it != TheMapCache->end()) {
+			const MapMetaData *md = &(it->second);
+			if (md != nullptr) {
+				if (md->m_numPlayers == static_cast<Int>(curNumPlayersInMap)) {
+					tempCache.insert(it->second.m_displayName);
+					filenameMap[it->second.m_displayName] = it->first;
+					DEBUG_LOG(("Adding map %s to temp cache.\n", it->first.str()));
+					++numMapsListed;
+				}
+			}
+			++it;
+		}
+
+		MapNameListIter tempit = tempCache.begin();
+
+		while (tempit != tempCache.end())
+		{
+
+			AsciiString asciiMapName;
+			asciiMapName = filenameMap[*tempit];
+			it = TheMapCache->find(asciiMapName);
+			/*
+			if (it != TheMapCache->end())
+			{
+				DEBUG_LOG(("populateMapListbox(): looking at %s (displayName = %ls), mp = %d (== %d?) mapDir=%s (ok=%d)\n",
+					it->first.str(), it->second.m_displayName.str(), it->second.m_isMultiplayer, isMultiplayer,
+					mapDir.str(), it->first.startsWith(mapDir.str())));
+			}
+			*/
+			
+			//Patch 1.03 -- Purposely filter out these broken maps that exist in Generals.
+			// Zero Hour only; in Generals these are regular multiplayer maps.
+			if( isGameEditionZeroHour() && ( !asciiMapName.compare( "maps\\armored fury\\armored fury.map" ) ||
+				!asciiMapName.compare( "maps\\scorched earth\\scorched earth.map" ) ) )
+			{
+				++tempit;
+				continue;
+			}
+
+			DEBUG_ASSERTCRASH(it != TheMapCache->end(), ("Map %ls not found in map cache.", (*tempit).str()));
+			if (it->first.startsWithNoCase(mapDir.str()) && isMultiplayer == it->second.m_isMultiplayer && !it->second.m_displayName.isEmpty())
+			{
+				/// @todo: mapDisplayName = TheGameText->fetch(it->second.m_displayName.str());
+				mapDisplayName = it->second.m_displayName;
+				Int index = -1;
+				Int imageItemData = -1;
+				if (numColumns > 1 && it->second.m_isMultiplayer)
+				{
+					Int numEasy = battleHonors->getEnduranceMedal(it->first.str(), SLOT_EASY_AI);
+					Int numMedium = battleHonors->getEnduranceMedal(it->first.str(), SLOT_MED_AI);
+					Int numBrutal = battleHonors->getEnduranceMedal(it->first.str(), SLOT_BRUTAL_AI);
+					if (numBrutal)
+					{
+						int maxBrutalSlots = it->second.m_numPlayers - 1;
+						// the Generals data have no RedYell_Star; use the gold star then
+						if (numBrutal == maxBrutalSlots && maxBrutalImage)
+						{
+							index = GadgetListBoxAddEntryImage( listbox, maxBrutalImage, index, 0, w, h, TRUE);
+							imageItemData = 4;
+						}
+						else	
+						{
+							index = GadgetListBoxAddEntryImage( listbox, brutalImage, index, 0, w, h, TRUE);
+							imageItemData = 3;
+						}
+					}
+					else if (numMedium)
+					{
+						imageItemData = 2;
+						index = GadgetListBoxAddEntryImage( listbox, mediumImage, index, 0, w, h, TRUE);
+					}
+					else if (numEasy)
+					{
+						imageItemData = 1;
+						index = GadgetListBoxAddEntryImage( listbox, easyImage, index, 0, w, h, TRUE);
+					}
+					else
+					{
+						imageItemData = 0;
+						index = GadgetListBoxAddEntryImage( listbox, nullptr, index, 0, w, h, TRUE);
+					}
+				}
+				index = GadgetListBoxAddEntryText( listbox, mapDisplayName, color, index, numColumns-1 );
+
+				if (it->first == mapToSelect)
+				{
+					selectionIndex = index;
+				}
+
+				// now set the char* as the item data.  this works because the map cache isn't being
+				// modified while a map listbox is up.
+				GadgetListBoxSetItemData( listbox, (void *)(it->first.str()), index );
+
+				if (numColumns > 1)
+				{
+					GadgetListBoxSetItemData( listbox, reinterpret_cast<void *>(static_cast<intptr_t>(imageItemData)), index, 1 );
+				}
+			}
+			++tempit;
+		}
+
+		tempCache.clear();
+		filenameMap.clear();
+		++curNumPlayersInMap;
+	}
+
+	battleHonors.reset();
+
+	GadgetListBoxSetSelected(listbox, &selectionIndex, 1);
+	if (selectionIndex >= 0)
+	{
+		Int topIndex = GadgetListBoxGetTopVisibleEntry(listbox);
+		Int bottomIndex = GadgetListBoxGetBottomVisibleEntry(listbox);
+		Int rowsOnScreen = bottomIndex - topIndex;
+
+		if (selectionIndex >= bottomIndex)
+		{
+			Int newTop = max( 0, selectionIndex - max( 1, rowsOnScreen / 2 ) ); 
+		//The trouble is that rowsonscreen/2 can be zero if bottom is 1 and top is zero
+			GadgetListBoxSetTopVisibleEntry( listbox, newTop );
+		}
+	}
+	return selectionIndex;
+
+}  // end loadMapListbox
+
+//-------------------------------------------------------------------------------------------------
+/** Load the listbox with all the map files available to play */
+//-------------------------------------------------------------------------------------------------
+Int populateMapListbox( GameWindow *listbox, Bool useSystemMaps, Bool isMultiplayer, AsciiString mapToSelect )
+{
+	if(!TheMapCache)
+		return -1;
+
+	if (!listbox)
+		return -1;
+	
+	// reset the listbox content
+	GadgetListBoxReset( listbox );
+
+	return populateMapListboxNoReset( listbox, useSystemMaps, isMultiplayer, mapToSelect );
+}
+	
+
+
+//-------------------------------------------------------------------------------------------------
+/** Validate a map */
+//-------------------------------------------------------------------------------------------------
+Bool isValidMap( AsciiString mapName, Bool isMultiplayer )
+{
+	if(!TheMapCache || mapName.isEmpty())
+		return FALSE;
+	TheMapCache->updateCache();
+
+	mapName.toLower();
+	MapCache::iterator it = TheMapCache->find(mapName);
+	if (it != TheMapCache->end())
+	{
+		if (isMultiplayer == it->second.m_isMultiplayer)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}  // end isValidMap
+
+//-------------------------------------------------------------------------------------------------
+/** Find a valid map */
+//-------------------------------------------------------------------------------------------------
+AsciiString getDefaultMap( Bool isMultiplayer )
+{
+	if(!TheMapCache)
+		return AsciiString::TheEmptyString;
+	TheMapCache->updateCache();
+
+	MapCache::iterator it = TheMapCache->begin();
+	while (it != TheMapCache->end())
+	{
+		if (isMultiplayer == it->second.m_isMultiplayer)
+		{
+			return it->first;
+		}
+		++it;
+	}
+
+	return AsciiString::TheEmptyString;
+}
+
+
+AsciiString getDefaultOfficialMap()
+{
+	if(!TheMapCache)
+		return AsciiString::TheEmptyString;
+	TheMapCache->updateCache();
+
+	MapCache::iterator it = TheMapCache->begin();
+	while (it != TheMapCache->end())
+	{
+		if (it->second.m_isMultiplayer && it->second.m_isOfficial)
+		{
+			return it->first;
+		}
+		++it;
+	}
+	return AsciiString::TheEmptyString;
+}
+
+
+Bool isOfficialMap( AsciiString mapName )
+{
+	if(!TheMapCache || mapName.isEmpty())
+		return FALSE;
+	TheMapCache->updateCache();
+	mapName.toLower();
+	MapCache::iterator it = TheMapCache->find(mapName);
+	if (it != TheMapCache->end())
+		return it->second.m_isOfficial;
+	return FALSE;
+}
+
+
+const MapMetaData *MapCache::findMap(AsciiString mapName)
+{
+	mapName.toLower();
+	MapCache::iterator it = find(mapName);
+	if (it == end())
+		return nullptr;
+	return &(it->second);
+}
+
+// ------------------------------------------------------------------------------------------------
+/** Embed the pristine map into the xfer stream */
+// ------------------------------------------------------------------------------------------------
+static void copyFromBigToDir( const AsciiString& infile, const AsciiString& outfile )
+{
+	// open the map file
+
+	File *file = TheFileSystem->openFile( infile.str(), File::READ | File::BINARY );
+	if( file == nullptr )
+	{
+		DEBUG_CRASH(( "copyFromBigToDir - Error opening source file '%s'\n", infile.str() ));
+		throw SaveCode::SC_INVALID_DATA;
+	} // end if
+
+	// how big is the map file
+	Int fileSize = file->seek( 0, File::seekMode::END );
+
+
+	// rewind to beginning of file
+	file->seek( 0, File::seekMode::START );
+
+	// allocate buffer big enough to hold the entire map file
+	char *buffer = NEW char[ fileSize ];
+	if( buffer == nullptr )
+	{
+		DEBUG_CRASH(( "copyFromBigToDir - Unable to allocate buffer for file '%s'\n", infile.str() ));
+		throw SaveCode::SC_INVALID_DATA;
+	} // end if
+
+	// copy the file to the buffer
+	if( file->read( buffer, fileSize ) < fileSize )
+	{
+		DEBUG_CRASH(( "copyFromBigToDir - Error reading from file '%s'\n", infile.str() ));
+		throw SaveCode::SC_INVALID_DATA;
+	} // end if
+	// close the BIG file
+	file->close();
+	
+	File *filenew = TheFileSystem->openFile( outfile.str(), File::WRITE | File::CREATE | File::BINARY );
+	
+	if( !filenew || filenew->write(buffer, fileSize) < fileSize)
+	{
+		DEBUG_CRASH(( "copyFromBigToDir - Error writing to file '%s'\n", outfile.str() ));
+		throw SaveCode::SC_INVALID_DATA;
+	} // end if
+
+	filenew->close();
+
+	// delete the buffer
+	delete [] buffer;
+} // end embedPristineMap
+
+Image *getMapPreviewImage( AsciiString mapName )
+{
+	if(!TheGlobalData)
+		return nullptr;
+	DEBUG_LOG(("%s Map Name \n", mapName.str()));
+	AsciiString tgaName = mapName;
+	AsciiString name;
+	AsciiString tempName;
+	AsciiString filename;
+	tgaName.removeLastChar(); // p
+	tgaName.removeLastChar(); // a
+	tgaName.removeLastChar(); // m
+	tgaName.removeLastChar(); // .
+	name = tgaName;//.reverseFind('\\') + 1;
+	filename = tgaName.reverseFind('\\') + 1;
+	//tgaName = name;
+	filename.concat(".tga");
+	tgaName.concat(".tga");
+
+	AsciiString portableName = TheGameState->realMapPathToPortableMapPath(name);
+	tempName.set(AsciiString::TheEmptyString);
+	for(Int i = 0; i < portableName.getLength(); ++i)
+	{
+		char c = portableName.getCharAt(i);
+		if (c == '\\' || c == ':')
+			tempName.concat('_');
+		else
+			tempName.concat(c);
+	}
+	
+	name = tempName;
+	name.concat(".tga");
+
+	
+	// copy file over	
+	// copy source tgaName, to name
+
+	Image *image = const_cast<Image *>(TheMappedImageCollection->findImageByName(tempName));
+	if(!image)
+	{
+
+		if(!TheFileSystem->doesFileExist(tgaName.str()))
+			return nullptr;	
+		AsciiString mapPreviewDir;
+		mapPreviewDir.format("%s%s", TheGlobalData->getPath_UserData().str(), MAP_PREVIEW_DIR_NAME);
+		TheFileSystem->createDirectory(mapPreviewDir);
+
+		mapPreviewDir.concat(name);
+
+		Bool success = false;
+		try
+		{
+			copyFromBigToDir(tgaName, mapPreviewDir);	
+			success = true;
+		} 
+		catch (...)
+		{
+			success = false;	// no rethrow
+		}
+		
+		if (success)
+		{
+    	image = newInstance(Image);
+			image->setName(tempName);
+			//image->setFullPath("mission.tga");
+			image->setFilename(name);
+			image->setStatus(IMAGE_STATUS_NONE);
+			Region2D uv;
+			uv.hi.x = 1.0f;
+			uv.hi.y = 1.0f;
+			uv.lo.x	= 0.0f;
+			uv.lo.y = 0.0f;
+			image->setUV(&uv);
+			image->setTextureHeight(128);
+			image->setTextureWidth(128);
+			TheMappedImageCollection->addImage(image);
+		}
+		else
+		{
+			image = nullptr;
+		}
+	}
+
+	return image;
+
+	
+	
+/*
+	// sanity
+	if( mapName.isEmpty() )
+		return NULL;
+	Region2D uv;
+	mapPreviewImage = TheMappedImageCollection->findImageByName("MapPreview");
+	if(mapPreviewImage)
+		deleteInstanceOf(mapPreviewImage);
+	
+	mapPreviewImage = TheMappedImageCollection->newImage();
+	mapPreviewImage->setName("MapPreview");
+	mapPreviewImage->setStatus(IMAGE_STATUS_RAW_TEXTURE);
+// allocate our terrain texture
+	TextureClass * texture = new TextureClass( size.x, size.y, 
+																			 WW3D_FORMAT_X8R8G8B8, TextureClass::MIP_LEVELS_1 );
+	uv.lo.x = 0.0f;
+	uv.lo.y = 1.0f;
+	uv.hi.x = 1.0f;
+	uv.hi.y = 0.0f;
+	mapPreviewImage->setStatus( IMAGE_STATUS_RAW_TEXTURE );
+	mapPreviewImage->setRawTextureData( texture );
+	mapPreviewImage->setUV( &uv );
+	mapPreviewImage->setTextureWidth( size.x );
+	mapPreviewImage->setTextureHeight( size.y );
+	mapPreviewImage->setImageSize( &size );
+
+
+	CachedFileInputStream theInputStream;
+	if (theInputStream.open(AsciiString(mapName.str()))) 
+	{
+		ChunkInputStream *pStrm = &theInputStream;
+		pStrm->absoluteSeek(0);
+		DataChunkInput file( pStrm );
+		if (file.isValidFileType()) {	// Backwards compatible files aren't valid data chunk files.
+			// Read the waypoints.
+			file.registerParser( AsciiString("MapPreview"), AsciiString::TheEmptyString, parseMapPreviewChunk );
+			if (!file.parse(NULL)) {
+				DEBUG_ASSERTCRASH(false,("Unable to read MapPreview info."));
+				deleteInstanceOf(mapPreviewImage);
+				return NULL;
+			}
+		}
+		theInputStream.close();
+	}
+	else
+	{
+		deleteInstanceOf(mapPreviewImage);
+		return NULL;
+	}
+	
+
+	return mapPreviewImage;
+	
+*/
+	return nullptr;
+}
+
+Bool parseMapPreviewChunk(DataChunkInput &file, DataChunkInfo *info, void *userData)
+{
+/*
+	ICoord2D size;
+	
+	SurfaceClass *surface;
+	size.x = file.readInt();
+	size.y = file.readInt();
+
+
+	surface = (TextureClass *)mapPreviewImage->getRawTextureData()->Get_Surface_Level();
+	//texture->Get_Surface_Level();
+	
+	DEBUG_LOG(("BeginMapPreviewInfo\n"));
+	UnsignedInt *buffer = new UnsignedInt[size.x * size.y];
+	Int x,y;
+	for (y=0; y<size.y; y++) {
+		for(x = 0; x< size.x; x++)
+		{
+			surface->DrawPixel( x, y, file.readInt() );
+			buffer[y + x] = file.readInt();
+			DEBUG_LOG(("x:%d, y:%d, %X\n", x, y, buffer[y + x]));
+		}
+	}
+	mapPreviewImage->setRawTextureData(buffer);
+	DEBUG_ASSERTCRASH(file.atEndOfChunk(), ("Unexpected data left over."));
+	DEBUG_LOG(("EndMapPreviewInfo\n"));
+	REF_PTR_RELEASE(surface);
+	return true;
+*/
+	return FALSE;
+}
+
+void findDrawPositions( Int startX, Int startY, Int width, Int height, Region3D extent,
+															 ICoord2D *ul, ICoord2D *lr )
+{
+
+	Real ratioWidth;
+	Real ratioHeight;
+	Coord2D radar;
+	ratioWidth = extent.width()/(width * 1.0f);
+	ratioHeight = extent.height()/(height* 1.0f);
+	
+	if( ratioWidth >= ratioHeight)
+	{
+		radar.x = extent.width() / ratioWidth;
+		radar.y = extent.height()/ ratioWidth;
+		ul->x = 0;
+		ul->y = static_cast<Int>((height - radar.y) / 2.0f);
+		lr->x = static_cast<Int>(radar.x);
+		lr->y = height - ul->y;
+	}
+	else
+	{
+		radar.x = extent.width() / ratioHeight;
+		radar.y = extent.height()/ ratioHeight;
+		ul->x = static_cast<Int>((width - radar.x ) / 2.0f);
+		ul->y = 0;
+		lr->x = width - ul->x;
+		lr->y = static_cast<Int>(radar.y);
+	}
+
+	// make them pixel positions
+	ul->x += startX;
+	ul->y += startY;
+	lr->x += startX;
+	lr->y += startY;
+
+}  // end findDrawPositions
+

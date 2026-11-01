@@ -1,0 +1,17 @@
+# TODO 62 (Humvee-Pilot): Replay e0zh-tournament-lake-3ai-seed2 (Zero Hour x64).
+# Orte aus Deep-CRC-Abzügen (-deepCRCFrames): Frame 7000 bis 7450 stehen fünf Humvees an der Basis von
+# Player_2 (USA), zwei davon (ID 263, 272) parken dort bis mindestens Frame 9000.
+# Bilder alle 50 Frames: 7000 Spielsicht (Standardzoom), 7050/7100 näher, ab 7150 Nahaufnahme der beiden
+# geparkten Humvees mit Drehung der Kamera um 0/90/180/270 Grad, 7350 bis 7450 steil von oben.
+# frame   x      y      zoom       drehung   neigung
+7000      0.812  0.843  standard   0         standard
+7049      0.812  0.843  standard   0         standard
+7050      0.812  0.843  0.55       0         standard
+7100      0.800  0.845  0.40       0         standard
+7150      0.790  0.847  0.20       0         standard
+7200      0.790  0.847  0.20       90        standard
+7250      0.790  0.847  0.20       180       standard
+7300      0.790  0.847  0.20       270       standard
+7350      0.790  0.847  0.20       360       30
+7400      0.790  0.847  0.30       360       30
+7450      0.790  0.847  0.30       360       standard

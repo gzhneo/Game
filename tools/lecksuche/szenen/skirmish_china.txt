@@ -1,0 +1,19 @@
+# Skirmish ueber das Menue: China gegen eine KI (leicht), Niederlage (alle eigenen Objekte vernichtet),
+# Punkteanzeige, zurueck ueber das Skirmish-Menue ins Hauptmenue, beenden.
+hauptmenue
+klick MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 2
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer1 2
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+warte 1800
+niederlage
+keinePartie
+klick ScoreScreen.wnd:ButtonOk
+klick SkirmishGameOptionsMenu.wnd:ButtonBack
+hauptmenue
+warte 60
+beenden

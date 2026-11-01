@@ -1,0 +1,12 @@
+# Silent River (beide Spiele) bei Nacht: Flusslauf als stehendes Wasser (Kartenpolygon auf Hoehe 7) -- Wasser bei
+# Nacht. Tournament Tundra hat trotz Wasserflaeche kein sichtbares Wasser (das
+# Gelaende liegt ueberall hoeher). Kartenrelativ, Winkel in Grad; jede Pose zwei Stuetzpunkte (--every 60).
+# frame   x      y      zoom      drehung  neigung
+60        0.45   0.78   standard  0        standard
+120       0.45   0.78   standard  0        standard
+180       0.22   0.55   0.50      0        standard
+240       0.22   0.55   0.50      0        standard
+300       0.50   0.53   0.60      90       standard
+360       0.50   0.53   0.60      90       standard
+420       0.80   0.28   1.00      -45      standard
+480       0.80   0.28   1.00      -45      standard

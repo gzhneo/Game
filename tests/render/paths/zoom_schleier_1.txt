@@ -1,0 +1,14 @@
+# Schleier (Nebel des Krieges) beim weiten Zoom: Skirmish aus Sicht des Spielers, sechs Stellen je 120 Logik-Frames,
+# Bild in der Mitte jeder Stelle (--every 120, Bilder 360 bis 960). Zoom: normale Hoechsthoehe (mit -maxZoom 1.5). Karte beliebig.
+300     0.15  0.15  hoehe1    0    standard   # Ecke unten links
+419     0.15  0.15  hoehe1    0    standard
+420     0.85  0.85  hoehe1    0    standard   # Ecke oben rechts
+539     0.85  0.85  hoehe1    0    standard
+540     0.15  0.85  hoehe1    0    standard   # Ecke oben links
+659     0.15  0.85  hoehe1    0    standard
+660     0.85  0.15  hoehe1    0    standard   # Ecke unten rechts
+779     0.85  0.15  hoehe1    0    standard
+780     0.50  0.50  hoehe1    0    standard   # Mitte
+899     0.50  0.50  hoehe1    0    standard
+900     0.50  0.50  hoehe1    45   standard   # Mitte, 45 Grad gedreht
+1019    0.50  0.50  hoehe1    45   standard

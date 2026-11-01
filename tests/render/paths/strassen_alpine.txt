@@ -1,0 +1,29 @@
+# Strassen frei, Nahpruefung generals alpine assault
+# frame   x      y      zoom       drehung   neigung
+# kreuzung4 twolane
+0         0.509  0.463  0.45       0         standard
+120       0.509  0.463  0.45       0         standard
+240       0.509  0.463  0.22       0         standard
+360       0.509  0.463  0.22       0         standard
+# kreuzung3 twolane
+480       0.493  0.374  0.45       0         standard
+600       0.493  0.374  0.45       0         standard
+720       0.493  0.374  0.22       0         standard
+840       0.493  0.374  0.22       0         standard
+# kreuzung3 twolane
+960       0.492  0.299  0.45       0         standard
+1080      0.492  0.299  0.45       0         standard
+1200      0.492  0.299  0.22       0         standard
+1320      0.492  0.299  0.22       0         standard
+# kreuzung3 twolane
+1440      0.603  0.564  0.45       0         standard
+1560      0.603  0.564  0.45       0         standard
+1680      0.603  0.564  0.22       0         standard
+1800      0.603  0.564  0.22       0         standard
+# kreuzung3 twolane
+1920      0.602  0.465  0.45       0         standard
+2040      0.602  0.465  0.45       0         standard
+2160      0.602  0.465  0.22       0         standard
+2280      0.602  0.465  0.22       0         standard
+2400      0.50   0.50   standard   0         standard
+2520      0.50   0.50   standard   0         standard

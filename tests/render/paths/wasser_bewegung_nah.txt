@@ -1,0 +1,5 @@
+# Tournament Lake (beide Spiele): feste Pose ganz nah ueber dem Kratersee fuer Bewegungsbilder des Wassers -- Flimmern
+# der Feinstruktur. Mit --every 1 entstehen 60 Bilder in 60 Logik-Frames (2 s).
+# frame   x      y      zoom      drehung  neigung
+60        0.53   0.49   0.22      0        standard
+120       0.53   0.49   0.22      0        standard

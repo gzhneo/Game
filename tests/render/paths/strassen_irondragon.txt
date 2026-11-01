@@ -1,0 +1,29 @@
+# Strassen frei, Nahpruefung zh iron dragon
+# frame   x      y      zoom       drehung   neigung
+# kreuzung3 cobblestone
+0         0.217  0.177  0.45       0         standard
+120       0.217  0.177  0.45       0         standard
+240       0.217  0.177  0.22       0         standard
+360       0.217  0.177  0.22       0         standard
+# kreuzung3 dirtroad4
+480       0.616  0.801  0.45       0         standard
+600       0.616  0.801  0.45       0         standard
+720       0.616  0.801  0.22       0         standard
+840       0.616  0.801  0.22       0         standard
+# kreuzung3 dirtroad4
+960       0.619  0.199  0.45       0         standard
+1080      0.619  0.199  0.45       0         standard
+1200      0.619  0.199  0.22       0         standard
+1320      0.619  0.199  0.22       0         standard
+# kreuzung3 dirtroad4
+1440      0.342  0.204  0.45       0         standard
+1560      0.342  0.204  0.45       0         standard
+1680      0.342  0.204  0.22       0         standard
+1800      0.342  0.204  0.22       0         standard
+# kreuzung3 dirtroad4
+1920      0.344  0.812  0.45       0         standard
+2040      0.344  0.812  0.45       0         standard
+2160      0.344  0.812  0.22       0         standard
+2280      0.344  0.812  0.22       0         standard
+2400      0.50   0.50   standard   0         standard
+2520      0.50   0.50   standard   0         standard

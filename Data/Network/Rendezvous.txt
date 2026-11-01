@@ -1,0 +1,3 @@
+# Rendezvous servers shipped with the game, one per line: host[:port] (port 8090 if omitted).
+# They are asked after the servers given with -treffpunkt and those in <user folder>\Rendezvous.txt.
+# How to run one: Code/Tools/Server/Rendezvous/README.md.

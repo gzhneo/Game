@@ -1,0 +1,29 @@
+# Strassen frei, Nahpruefung zh death valley
+# frame   x      y      zoom       drehung   neigung
+# kreuzung4 dirtroad4
+0         0.538  0.910  0.45       0         standard
+120       0.538  0.910  0.45       0         standard
+240       0.538  0.910  0.22       0         standard
+360       0.538  0.910  0.22       0         standard
+# kreuzung4 dirtroadtracks2
+480       0.399  0.260  0.45       0         standard
+600       0.399  0.260  0.45       0         standard
+720       0.399  0.260  0.22       0         standard
+840       0.399  0.260  0.22       0         standard
+# kreuzung4 dirtroadtracks2
+960       0.633  0.082  0.45       0         standard
+1080      0.633  0.082  0.45       0         standard
+1200      0.633  0.082  0.22       0         standard
+1320      0.633  0.082  0.22       0         standard
+# kreuzung3 dirtroadtracks2
+1440      0.538  0.308  0.45       0         standard
+1560      0.538  0.308  0.45       0         standard
+1680      0.538  0.308  0.22       0         standard
+1800      0.538  0.308  0.22       0         standard
+# kreuzung3 dirtroad4
+1920      0.513  0.668  0.45       0         standard
+2040      0.513  0.668  0.45       0         standard
+2160      0.513  0.668  0.22       0         standard
+2280      0.513  0.668  0.22       0         standard
+2400      0.50   0.50   standard   0         standard
+2520      0.50   0.50   standard   0         standard

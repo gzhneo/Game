@@ -1,0 +1,18 @@
+# TODO 58 (BC7-Stufen): Tournament Lake, Referenzreplay mit drei KI (Seed 2,
+# beide Spiele). Ab Frame 6000 stehen die Basen; je Startpunkt (tools/render/map_wegpunkte.py, wie humvee_basen.txt)
+# ein Halt mit nahem Zoom (Gebaeude, Einheiten), dazu Boden aus der Naehe und eine Standardansicht.
+# Mit --every 200 faellt je Halt genau ein Bild auf den Anfang des Halts (die Kamera springt dort in einem Frame).
+# frame   x      y      zoom       drehung   neigung
+6000      0.134  0.874  0.30       0         standard
+6199      0.134  0.874  0.30       0         standard
+6200      0.860  0.868  0.30       0         standard
+6399      0.860  0.868  0.30       0         standard
+6400      0.869  0.129  0.30       0         standard
+6599      0.869  0.129  0.30       0         standard
+6600      0.138  0.140  0.30       0         standard
+6799      0.138  0.140  0.30       0         standard
+6800      0.300  0.250  0.35       0         standard
+6999      0.300  0.250  0.35       0         standard
+7000      0.134  0.874  standard   0         standard
+7199      0.134  0.874  standard   0         standard
+7200      0.860  0.868  standard   0         standard

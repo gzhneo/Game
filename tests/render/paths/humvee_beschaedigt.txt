@@ -1,0 +1,11 @@
+# TODO 62 (Humvee-Pilot): schwer beschädigter Humvee (REALLYDAMAGED -> Modell AvHummer_D). Skirmish Tournament
+# Lake, 3 KI, Seed 7: Lazr_AmericaVehicleHumvee ID 356 steht ab Frame 8480 mit 50 von 240 Lebenspunkten
+# (unter der Schwelle UnitReallyDamagedThreshold 0.35) bei x 0.522, y 0.806 (Leben aus Deep-CRC-Abzügen,
+# Offset 69 im Objekteintrag). Standardzoom, dann nah.
+# frame   x      y      zoom       drehung   neigung
+8470      0.522  0.806  standard   0         standard
+8489      0.522  0.806  standard   0         standard
+8490      0.522  0.806  0.35       0         standard
+8505      0.522  0.806  0.20       0         standard
+8520      0.522  0.806  0.20       0         standard
+8535      0.522  0.806  0.20       90        standard

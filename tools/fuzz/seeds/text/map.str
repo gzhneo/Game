@@ -1,0 +1,9 @@
+// Kartentexte
+MAP:Title
+"Die Insel \"Alpha\""
+END
+
+SCRIPT:Hint
+"Zeile eins
+  Zeile zwei" = hint_voice2
+END

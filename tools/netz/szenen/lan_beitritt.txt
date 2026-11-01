@@ -1,0 +1,28 @@
+# LAN-Partie mit mehreren Instanzen, Beitretender: das Spiel des Gastgebers in der Lobby waehlen, beitreten,
+# bestaetigen, mitspielen, verlassen. {WARTE} = Wartezeit, bis der Gastgeber sein Spiel angekuendigt hat.
+hauptmenue
+klick MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ListboxGames
+warte {WARTE}
+auswahl LanLobbyMenu.wnd:ListboxGames 0
+klick LanLobbyMenu.wnd:ButtonJoin
+fenster LanGameOptionsMenu.wnd:TextEntryChat
+warte 900
+# Der Host meldet sich bereit, dann wird der Knopf "Annehmen" (ButtonStart beim Beitretenden) bedienbar
+klick LanGameOptionsMenu.wnd:ButtonStart 9000
+partie 2000000
+logik 900
+spielmenue
+klick QuitNoSave.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 2000000
+klick ScoreScreen.wnd:ButtonOk
+fenster LanLobbyMenu.wnd:ButtonBack 3000
+warte 60
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+warte 60
+beenden

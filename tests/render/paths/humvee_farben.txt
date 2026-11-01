@@ -1,0 +1,11 @@
+# TODO 62 (Humvee-Pilot): zweite Teamfarbe. Skirmish Tournament Lake, 3 KI, Seed 7 -- zwei KI spielen den
+# Laser-General (Lazr_AmericaVehicleHumvee, ebenfalls Modell AVHUMMER) auf Player_1 und Player_2 in
+# verschiedenen Farben. Orte aus Deep-CRC-Abzügen: Frame 6000 Humvees bei x 0.245/0.293, Frame 7000 bei
+# x 0.197 (Player_1) und x 0.81 (Player_2).
+# frame   x      y      zoom   drehung   neigung
+5950      0.270  0.880  0.35   0         standard
+6050      0.270  0.880  0.35   0         standard
+6950      0.197  0.925  0.25   0         standard
+7000      0.197  0.925  0.25   0         standard
+7001      0.790  0.831  0.35   0         standard
+7050      0.790  0.831  0.35   0         standard

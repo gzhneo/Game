@@ -1,0 +1,30 @@
+# Auswahl bei Breitbild: Skirmish als Spieler (USA gegen eine KI) ueber das Menue.
+# rahmen: Auswahlrahmen ueber alle eigenen Einheiten im Bild, alle muessen ausgewaehlt sein; mit Kante (oben, unten,
+# links, rechts) ist der Rahmen 200 Pixel groesser und die Einheiten stehen nahe dieser Kante, nicht auf der Linie.
+# zeichenbereich: der Boden unter den Raendern der ganzen 3D-Ansicht liegt im Bereich, der je Bild gezeichnet wird.
+# streifen: eine eigene Einheit neben der Leiste wird mit "alle im Bild" ausgewaehlt, hinter der Leiste (mitte) nicht;
+# bei 4:3 uebersprungen. Ergebnis: Zeilen "TESTABLAUF OK|MISS line .." im Runner-Protokoll (-crcLog).
+# Mit -win -xres 3440 -yres 1440 -testablauf <diese Datei> -crcLog <Datei>. Karte: die zuletzt gewaehlte.
+hauptmenue
+klick MainMenu.wnd:ButtonSinglePlayer
+klick MainMenu.wnd:ButtonSkirmish
+fenster SkirmishGameOptionsMenu.wnd:ButtonStart
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayerTemplate0 1
+auswahl SkirmishGameOptionsMenu.wnd:ComboBoxPlayer1 2
+warte 10
+klick SkirmishGameOptionsMenu.wnd:ButtonStart
+partie
+logik 150
+rahmen 8
+zeichenbereich
+rad -40
+logik 60
+rahmen 4
+zeichenbereich
+rahmen 12 oben
+rahmen 12 unten
+rahmen 12 links
+rahmen 12 rechts
+streifen
+streifen mitte
+beenden

@@ -1,0 +1,7 @@
+# Referenzreplay im Fenster mit Zeichnen und Ton bis zum Ende (tools/lecksuche setzt -replay). Danach je nach
+# Weg Punkteanzeige oder Hauptmenue; dann beenden.
+partie 20000
+keinePartie 400000
+klickFalls ScoreScreen.wnd:ButtonOk 600
+warte 300
+beenden

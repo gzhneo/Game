@@ -1,0 +1,6 @@
+﻿German,3
+Speech filename,Label,Person Speaking,Person(s) listening,String ID,US English Text,German Translation,Context of the string,"Comments, direction of actors (if applicable)",Max allowed length,Current length,Errors,String Version
+,GUI:Ok,,,10000,OK,,,,10000,,,1
+,GUI:Built,,,10001,%d units built,,,%d is a number,30,,,1
+HELLO01G.WAV,DIALOG:Hello,,,10002,"Hello, \n commander!",,,,30,,,1
+,,,,-1

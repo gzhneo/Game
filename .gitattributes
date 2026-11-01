@@ -1,0 +1,22 @@
+# Automatische Zeilenenden-Normalisierung (LF im Repo, CRLF im Windows-Working-Tree)
+* text=auto
+
+# Binärformate, die nicht als Text interpretiert werden dürfen
+*.big binary
+*.bik binary
+*.dds binary
+*.tga binary
+*.wav binary
+*.mp3 binary
+*.pso binary
+*.vso binary
+*.dll binary
+*.lib binary
+*.exe binary
+*.rep binary
+
+# Shell-Skripte immer mit LF, auch im Windows-Working-Tree -- Git-Bash scheitert sonst an CR
+*.sh text eol=lf
+
+# Fuzz-Saat bytegenau (CRLF-Faelle der .str-Saat)
+tools/fuzz/seeds/** binary

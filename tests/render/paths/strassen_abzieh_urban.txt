@@ -1,0 +1,22 @@
+# Strassen frei, Abziehbilder zh tournament urban (Nr. 83)
+# frame   x      y      zoom       drehung   neigung
+# helipad, wordcaution
+60        0.322  0.806  0.30       0         standard
+120       0.322  0.806  0.30       0         standard
+180       0.322  0.806  0.20       0         standard
+240       0.322  0.806  0.20       0         standard
+# helipad, wordcaution
+300       0.259  0.806  0.30       0         standard
+360       0.259  0.806  0.30       0         standard
+420       0.259  0.806  0.20       0         standard
+480       0.259  0.806  0.20       0         standard
+# helipad, wordcaution
+540       0.321  0.870  0.30       0         standard
+600       0.321  0.870  0.30       0         standard
+660       0.321  0.870  0.20       0         standard
+720       0.321  0.870  0.20       0         standard
+# helipad, wordcaution
+780       0.257  0.870  0.30       0         standard
+840       0.257  0.870  0.30       0         standard
+900       0.257  0.870  0.20       0         standard
+960       0.257  0.870  0.20       0         standard

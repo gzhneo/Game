@@ -1,0 +1,6 @@
+# TODO 56 (CC0-Naturobjekte): Kiefern im Wind (Tournament Lake, Replay
+# e0zh-tournament-lake-3ai-seed2). Mit --every 4: Bildfolge alle 4 Frames bei nahem Zoom auf eine Kiefer
+# (TreePine bei 0,462/0,369; der Kamerapunkt liegt im Bild unterhalb der Mitte -- die Kamera steht deshalb bei größerem y).
+# frame   x      y      zoom       drehung   neigung
+100       0.462  0.400  0.30       0         standard
+220       0.462  0.400  0.30       0         standard

@@ -1,0 +1,18 @@
+# TODO 62 (Humvee-Pilot): Erkundung, wo im Replay e0zh-tournament-lake-3ai-seed2 Humvees
+# stehen. Startpunkte aus tools/render/map_wegpunkte.py; die beiden USA-KI starten auf Player_1 und Player_2
+# (SLOT-Zeilen im .crc: Vorlage 5 = USA Superwaffen, 2 = USA). Je Startpunkt ein Halt mit mittlerem Zoom.
+# frame   x      y      zoom   drehung   neigung
+2400      0.134  0.874  0.55   0         standard
+2800      0.134  0.874  0.55   0         standard
+2900      0.860  0.868  0.55   0         standard
+3300      0.860  0.868  0.55   0         standard
+3400      0.869  0.129  0.55   0         standard
+3800      0.869  0.129  0.55   0         standard
+3900      0.138  0.140  0.55   0         standard
+4300      0.138  0.140  0.55   0         standard
+4400      0.134  0.874  0.55   0         standard
+5200      0.134  0.874  0.55   0         standard
+5300      0.860  0.868  0.55   0         standard
+6100      0.860  0.868  0.55   0         standard
+6200      0.500  0.500  0.90   0         standard
+7000      0.500  0.500  0.90   0         standard

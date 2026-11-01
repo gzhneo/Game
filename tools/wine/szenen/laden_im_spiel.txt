@@ -1,0 +1,18 @@
+# Speichern und Laden in der Partie unter Wine (Testdaten), ueber das Lade-Fenster des Spielmenues.
+# Aufruf: tools/wine/run_game.sh <Datenordner> -skirmish TestSkirmish -skirmishAI 2 -testablauf laden_im_spiel.txt -crcLog x.crc
+# (die Datei liegt dazu im Datenordner). Eintrag 0 der Liste ist "Neuer Spielstand", 1 der juengste Spielstand.
+# Bleibt der Ablauf bei "klick PopupSaveLoad.wnd:ButtonLoad" stehen, ist die Liste leer (Spielstaende nicht gefunden).
+partie
+warte 60
+speichern Wine_Testablauf.sav
+warte 30
+spielmenue
+klick QuitMenu.wnd:ButtonSaveLoad
+fenster PopupSaveLoad.wnd:ListboxGames
+auswahl PopupSaveLoad.wnd:ListboxGames 1
+warte 10
+klick PopupSaveLoad.wnd:ButtonLoad
+klickFalls PopupSaveLoad.wnd:ButtonLoadConfirm
+partie
+warte 60
+beenden

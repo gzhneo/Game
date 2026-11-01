@@ -1,0 +1,29 @@
+# Strassen frei, Nahpruefung zh whiteout
+# frame   x      y      zoom       drehung   neigung
+# kreuzung4 twolaneold2snow
+0         0.099  0.740  0.45       0         standard
+120       0.099  0.740  0.45       0         standard
+240       0.099  0.740  0.22       0         standard
+360       0.099  0.740  0.22       0         standard
+# kreuzung3 twolaneold2snow
+480       0.434  0.451  0.45       0         standard
+600       0.434  0.451  0.45       0         standard
+720       0.434  0.451  0.22       0         standard
+840       0.434  0.451  0.22       0         standard
+# kreuzung3 twolaneold2snow
+960       0.194  0.868  0.45       0         standard
+1080      0.194  0.868  0.45       0         standard
+1200      0.194  0.868  0.22       0         standard
+1320      0.194  0.868  0.22       0         standard
+# kurve twolaneold2snow
+1440      0.342  0.711  0.45       0         standard
+1560      0.342  0.711  0.45       0         standard
+1680      0.342  0.711  0.22       0         standard
+1800      0.342  0.711  0.22       0         standard
+# kurve twolaneold2snow
+1920      0.244  0.472  0.45       0         standard
+2040      0.244  0.472  0.45       0         standard
+2160      0.244  0.472  0.22       0         standard
+2280      0.244  0.472  0.22       0         standard
+2400      0.50   0.50   standard   0         standard
+2520      0.50   0.50   standard   0         standard

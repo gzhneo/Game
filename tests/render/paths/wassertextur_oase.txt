@@ -1,0 +1,8 @@
+# Golden Oasis (Zero Hour): Wuestenfluss.
+# Freie Wassertextur: EA- gegen freie Wasserfarbe. Kartenrelativ, Winkel in Grad;
+# jede Pose zwei Stuetzpunkte, damit sie bei --every 60 stillsteht.
+# frame   x      y      zoom      drehung  neigung
+60        0.36   0.31   standard  0        standard
+120       0.36   0.31   standard  0        standard
+180       0.80   0.20   0.50      0        standard
+240       0.80   0.20   0.50      0        standard

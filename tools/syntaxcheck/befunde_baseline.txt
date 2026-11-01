@@ -1,0 +1,6 @@
+# Bekannte, eingeordnete clang-Befunde (tools/syntaxcheck/befunde.sh), die bewusst stehen bleiben: Aenderung waere
+# eine Logik- oder Verhaltensaenderung mit eigener Entscheidung (docs/review.md R-289, R-301). Neue Befunde lassen
+# tools/gate.sh --full fehlschlagen. Format: Datei (klein geschrieben)|Meldung.
+gameengine/gameclient/messagestream/lookatxlat.cpp|unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+gameengine/gamelogic/scriptengine/scriptengine.cpp|assigning field to itself [-Wself-assign-field]
+gameengine/gamelogic/scriptengine/scriptengine.cpp|unannotated fall-through between switch labels [-Wimplicit-fallthrough]

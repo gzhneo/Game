@@ -1,0 +1,29 @@
+# Strassen frei, Nahpruefung generals lone eagle
+# frame   x      y      zoom       drehung   neigung
+# kreuzung4 dirtroadsnow
+0         0.106  0.167  0.45       0         standard
+120       0.106  0.167  0.45       0         standard
+240       0.106  0.167  0.22       0         standard
+360       0.106  0.167  0.22       0         standard
+# kreuzung3 dirtroadsnow
+480       0.305  0.143  0.45       0         standard
+600       0.305  0.143  0.45       0         standard
+720       0.305  0.143  0.22       0         standard
+840       0.305  0.143  0.22       0         standard
+# kreuzung3 dirtroadsnow
+960       0.299  0.325  0.45       0         standard
+1080      0.299  0.325  0.45       0         standard
+1200      0.299  0.325  0.22       0         standard
+1320      0.299  0.325  0.22       0         standard
+# kreuzung3 dirtroadsnow
+1440      0.674  0.627  0.45       0         standard
+1560      0.674  0.627  0.45       0         standard
+1680      0.674  0.627  0.22       0         standard
+1800      0.674  0.627  0.22       0         standard
+# kreuzung3 dirtroadsnow
+1920      0.780  0.359  0.45       0         standard
+2040      0.780  0.359  0.45       0         standard
+2160      0.780  0.359  0.22       0         standard
+2280      0.780  0.359  0.22       0         standard
+2400      0.50   0.50   standard   0         standard
+2520      0.50   0.50   standard   0         standard

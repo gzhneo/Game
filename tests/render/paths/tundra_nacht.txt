@@ -1,0 +1,11 @@
+# Tournament Tundra (beide Spiele): Nacht, verschneiter Boden (die Karte hat kein map.ini, also fallen keine Flocken),
+# verschneiter Boden und Wasser. Das Fenster liegt
+# nach der Aufbauphase, wenn Einheiten unterwegs sind. Kartenrelativ, Winkel in Grad.
+# frame   x      y      zoom      drehung  neigung
+3600      0.50   0.50   standard  0        standard
+3900      0.20   0.25   standard  0        standard
+4200      0.80   0.25   standard  45       standard
+4500      0.80   0.75   0.60      90       standard
+4800      0.20   0.75   standard  180      10
+5100      0.50   0.50   1.30      270      standard
+5400      0.50   0.50   standard  360      standard

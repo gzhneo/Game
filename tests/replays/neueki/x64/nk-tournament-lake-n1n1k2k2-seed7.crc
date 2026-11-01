@@ -1,0 +1,1220 @@
+TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
+MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
+FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
+MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
+FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
+TEXTURPAKET ersetzt 0 texturen 63
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+WORKERS 30
+D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
+STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
+SLOTS mode 2 seed 7 localSlot 0
+SLOT 0 state 5 ai 0 template -2 start 1 color 7 team -1 kind 0
+SLOT 1 state 4 ai 1 template 4 start 3 color 0 team 0 kind 1
+SLOT 2 state 4 ai 1 template 3 start 2 color 3 team 0 kind 1
+SLOT 3 state 4 ai 1 template 3 start 1 color 2 team 1 kind 0
+SLOT 4 state 4 ai 1 template 2 start 0 color 1 team 1 kind 0
+TERRAINTILES dds Art/Terrain/TMGras12a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras12b.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras02a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMDirt03a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMDirt05a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff07a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff12a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMGras28c.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TXDirt01a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff23a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TXRock04a.dds tiles 4 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff02a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff13a.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff15b.dds tiles 16 extent 128
+TERRAINTILES dds Art/Terrain/TMCliff16a.dds tiles 16 extent 128
+BODENDETAIL klassen 15 mit_detail 15 zuordnungen 253 raster 28 x 15 atlas 1024
+TERRAINRELIEF kacheln 216 von 216 stufe 2 atlas 4096 x 2048
+TERRAINTESS kacheln 216 von 216 stufe 1 klassen 15 von 15 gitter 420 x 420 abweichend 0
+KIOHNE 0 spieler 3 teile 14336
+KIOHNE 0 spieler 4 teile 14336
+0 18FBE9CC
+STATE frame 0 mode 2 players 8 objects 803 recorder 0 particles 4/0
+STATE frame 1 mode 2 players 8 objects 807 recorder 0 particles 4/0
+30 071E750E
+60 2F949368
+KIEROEFFNUNG 63 spieler 3 startkapital 10000 klasse standard geldfaktor 1.00
+KIHAUSHALT 63 spieler 3 geld 13500 basis 500 frei 13000 vorrang_offen 1
+KIWIRTSCHAFT 63 spieler 3 lage vorrat 30000 zentren 1 geld 13500 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+KIEROEFFNUNG 64 spieler 4 startkapital 10000 klasse standard geldfaktor 1.00
+KIHAUSHALT 64 spieler 4 geld 14300 basis 500 frei 13800 vorrang_offen 1
+KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 14300 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+90 35E3BD8F
+120 6804E26D
+150 D003EB5B
+180 F181BB99
+210 C1AF843E
+240 5523F5FD
+270 94CA30C1
+300 A10E1936
+330 91962A8A
+360 83F10E02
+390 5712DF78
+420 E9DE0693
+450 DDC28EA7
+480 EC6AD133
+510 52686612
+540 32DB4237
+570 8E1BE260
+600 21A65999
+630 BF033AB9
+660 0E9F8272
+690 CE9909CC
+720 7B2B48F7
+750 CF8A02B6
+780 38523471
+810 F6958FF2
+840 5E6AD383
+870 F98788E8
+900 C4EA9C41
+STATE frame 900 mode 2 players 8 objects 816 recorder 0 particles 8/0
+930 55270871
+960 A2CF1B1A
+990 0755DDD1
+1020 0D48C48D
+1050 D4B21F01
+1080 47AB84AE
+1110 96530BF2
+1140 EDB1FA4B
+1170 8003DDD9
+1200 BC5E9C40
+1230 DE37EA2B
+1260 413249E7
+1290 049897BD
+1320 7FA30FDD
+1350 B6F5BA71
+1380 66D2676D
+1410 12814AB1
+1440 84D8E417
+1470 3B4D28B1
+1500 5AA35677
+1530 34AA35D0
+1560 6062102D
+1590 BD88F5E7
+1620 BB0F5D8C
+1650 BF7C4BE6
+1680 CC338627
+1710 713EB348
+1740 9C82BDE6
+1770 E4BADC79
+1800 9B07C45C
+STATE frame 1800 mode 2 players 8 objects 834 recorder 0 particles 8/0
+1830 F137A23A
+1860 622E93B9
+KIHAUSHALT 1863 spieler 3 geld 8150 basis 0 frei 8150 vorrang_offen 0
+KIWIRTSCHAFT 1863 spieler 3 lage vorrat 29700 zentren 1 geld 8150 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 300 restzeit_min 99.0 investieren 1
+KIHAUSHALT 1864 spieler 4 geld 7900 basis 0 frei 7900 vorrang_offen 0
+KIWIRTSCHAFT 1864 spieler 4 lage vorrat 30000 zentren 1 geld 7900 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+1890 CF29152C
+1920 5AE94D31
+1950 283E896B
+1980 06C0E937
+2010 1D608769
+2040 A6B24628
+2070 011A9CD6
+2100 BE7C795E
+2130 05FD591A
+2160 6654EF56
+2190 3AAAF64C
+2220 B47D4595
+2250 E9466A86
+2280 2B0187D3
+2310 1E215C20
+2340 8A3BAC77
+2370 1072733F
+2400 DAA0926C
+2430 00C0E814
+2460 D936C024
+2490 F5CE3E32
+2520 ACBA6207
+2550 8D81E6EF
+2580 0665C350
+KIWIRTSCHAFT 2584 spieler 4 technik TechOilDerrick einheit ChinaInfantryRedguard ort 2437 1335
+2610 F14002CE
+2640 F348DFCD
+2670 F02FF270
+2700 3B45D04D
+STATE frame 2700 mode 2 players 8 objects 849 recorder 0 particles 8/0
+2730 F902C998
+2760 78F8BA03
+KIWIRTSCHAFT 2763 spieler 3 technik TechOilDerrick einheit GLAInfantryRebel ort 383 1349
+KIWIRTSCHAFT 2764 spieler 4 ausbau ChinaSupplyCenter vorrat 29025 zentren 1 grund wachstum
+2790 FB1D8D81
+2820 03ECAA43
+2850 2A532D4F
+2880 66011BAE
+2910 713E70F4
+2940 20A1E396
+2970 802FB058
+3000 5DE4911E
+3030 B46103E7
+3060 C11F8969
+3090 7C3AA685
+3120 28044B85
+3150 F023369C
+3180 138E4ECB
+3210 30EECA7F
+3240 97B72CA9
+3270 6B8ADA6E
+3300 0C5564C6
+KIWIRTSCHAFT 3303 spieler 3 ausbau GLASupplyStash vorrat 28050 zentren 1 grund wachstum
+3330 240FB9A8
+3360 7B7C3304
+3390 645DD7C7
+3420 C1663010
+3450 233E9BBE
+3480 4DAA0D3C
+3510 72184118
+3540 E58E166E
+3570 671D21F0
+3600 038B1D0B
+STATE frame 3600 mode 2 players 8 objects 877 recorder 0 particles 22/0
+3630 A9106FA2
+3660 42796FEF
+KIHAUSHALT 3663 spieler 3 geld 5250 basis 0 frei 5250 vorrang_offen 1
+KIWIRTSCHAFT 3663 spieler 3 lage vorrat 27525 zentren 1 geld 5250 hacker 0 sammler 9 bedarf 1500 einnahmebauten 0 technik 0 frei 6 sammelrate 1238 restzeit_min 22.2 investieren 1
+KIWIRTSCHAFT 3664 spieler 4 sammler ChinaVehicleSupplyTruck bestand 3 ziel 6
+KIHAUSHALT 3664 spieler 4 geld 5500 basis 0 frei 4900 vorrang_offen 0
+KIWIRTSCHAFT 3664 spieler 4 lage vorrat 106350 zentren 2 geld 5500 hacker 0 sammler 3 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+3690 D2912F9A
+3720 6F6AF32F
+3750 703F3165
+3780 46B20A59
+3810 1D9223D8
+3840 D2A0B10B
+3870 D17D8B48
+3900 218167FD
+3930 C8AD5A76
+3960 DEB321D3
+3990 EABC2419
+4020 D78BA650
+KIWIRTSCHAFT 4024 spieler 4 sammler ChinaVehicleSupplyTruck bestand 4 ziel 6
+4050 09F842BB
+4080 BC000AD2
+4110 22E288FC
+4140 5EF399B9
+4170 2478DE6F
+4200 FA11CB9D
+KIWIRTSCHAFT 4204 spieler 4 ausbau ChinaSupplyCenter vorrat 105600 zentren 2 grund wachstum
+KIWIRTSCHAFT 4204 spieler 4 technik_ende eingenommen dauer 54
+4230 0EE7F819
+4260 A6DC6594
+4290 62B68D09
+4320 610314E5
+4350 CA708AA5
+4380 FE74A108
+KIAUFKLAERUNG 4383 spieler 3 spaeher GLAInfantryRebel ziel 423 2377
+KIWIRTSCHAFT 4384 spieler 4 technik TechOilDerrick einheit ChinaInfantryRedguard ort 1727 1203
+4410 0A7B231A
+4440 C462CABD
+4470 A1ECA91E
+KIFOKUS 4500 spieler 3 gegner 5 vorher -1 grund wahl kosten 1481
+KIFOKUS 4500 spieler 4 gegner 5 vorher -1 grund buendnis kosten 0
+4500 EA55756D
+STATE frame 4500 mode 2 players 8 objects 895 recorder 0 particles 38/0
+4530 365F49FD
+4560 04B87B28
+4590 5211151E
+4620 54016FCC
+4650 766718AD
+4680 D8C79581
+4710 8FFB6C4C
+4740 95876289
+KIWIRTSCHAFT 4743 spieler 3 ausbau GLASupplyStash vorrat 97050 zentren 2 grund wachstum
+4770 DFC31F58
+4800 D24EC366
+4830 88FF8C51
+4860 BA717A00
+4890 A3C5E4C5
+4920 F029D8EA
+4950 0430AA17
+4980 3428048A
+5010 024EFE87
+5040 6B425D54
+5070 D7FCF479
+5100 E99B0F6C
+5130 86E4AC6C
+5160 C7FBD7DB
+5190 B02D7878
+5220 47DDB514
+5250 B430427E
+5280 8D9FB1E1
+KIWIRTSCHAFT 5283 spieler 3 technik_ende eingenommen dauer 84
+5310 5530F9AE
+5340 B3F6BDE5
+KIGEGNERMODELL 5343 spieler 3 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 3750 luftwert 0 abwehr 0 getarnt 0
+KIVERTEIDIGUNG 5343 spieler 3 bedrohung 900 einheiten 3 wert 250 ort 830 1163
+5370 AEF67799
+5400 3859CA37
+STATE frame 5400 mode 2 players 8 objects 928 recorder 0 particles 50/37
+5430 94E53F60
+5460 A0227181
+KIHAUSHALT 5463 spieler 3 geld 3400 basis 0 frei 3400 vorrang_offen 1
+KIWIRTSCHAFT 5463 spieler 3 lage vorrat 95925 zentren 2 geld 3400 hacker 0 sammler 9 bedarf 1500 einnahmebauten 0 technik 1 frei 2 sammelrate 1238 restzeit_min 77.5 investieren 0
+KIHAUSHALT 5464 spieler 4 geld 200 basis 0 frei 200 vorrang_offen 1
+KIWIRTSCHAFT 5464 spieler 4 lage vorrat 102450 zentren 2 geld 200 hacker 0 sammler 7 bedarf 1500 einnahmebauten 0 technik 1 frei 2 sammelrate 3000 restzeit_min 34.2 investieren 1
+5490 08393DB7
+5520 58FE80E5
+5550 87B09E1E
+5580 2AEED5D6
+5610 44022089
+5640 B861AF51
+5670 E0D76671
+5700 9889B668
+KIHILFE 5704 spieler 4 start verbuendeter 3 bedrohung 2750 einheiten 8 wert 2400 ort 582 1343 armee 8000 einsetzbar 5600 kandidaten 8 wert 2400
+KIGEFECHT 5715 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 8 feinde 4
+5730 9458B83D
+5760 E0B6E549
+5790 FD0989C4
+5820 65016B0C
+5850 54D03602
+5880 FB1436D8
+5910 11413FF2
+5940 EC16FEEF
+5970 6E8C9456
+6000 5AB23B79
+KIWIRTSCHAFT 6004 spieler 4 technik_ende eingenommen dauer 54
+6030 4D75A46B
+6060 8E1B3AA4
+6090 C07BD9B5
+6120 45674F7F
+6150 45A59603
+6180 0D26D106
+6210 E9FEB304
+6240 8C919DBF
+6270 80DF5F91
+6300 8F86FB8E
+STATE frame 6300 mode 2 players 8 objects 947 recorder 0 particles 185/932
+6330 71B7F364
+6360 577803DC
+6390 045B1351
+6420 B39447C0
+6450 CDF04D41
+6480 0BCB9E50
+6510 8B52D6D0
+6540 0780A11A
+KIHILFE 6543 spieler 3 verworfen verbuendeter 4 bedrohung 4800 armee 5250 einsetzbar 2625 kandidaten 12 wert 2850
+6570 FEBD84DA
+6600 51C99647
+KIWIRTSCHAFT 6603 spieler 3 auftrag_abgebrochen GLASupplyStash ort 84 2454
+6630 DEB6CB4C
+6660 CB0DE4C1
+6690 50FCC0DB
+6720 B754C5D5
+6750 A9685F3B
+6780 0358B6F5
+6810 6D59C4F3
+6840 6FAC0B8F
+6870 BE8D0C8E
+6900 6AFAA872
+KIWIRTSCHAFT 6904 spieler 4 sammler ChinaVehicleSupplyTruck bestand 5 ziel 6
+6930 887F5751
+6960 6E13F12F
+6990 1C36C576
+7020 9F5DA111
+7050 CC57A6C9
+KIGEFECHT 7065 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 7 feinde 10
+7080 D5F652F9
+7110 22CFC062
+7140 F3B972D6
+KIVERTEIDIGUNG 7143 spieler 3 bedrohung 1125 einheiten 2 wert 300 ort 973 845
+7170 41B444FA
+7200 4C82985D
+STATE frame 7200 mode 2 players 8 objects 923 recorder 0 particles 106/260
+7230 4B96E498
+7260 5D63ECA3
+KIHAUSHALT 7263 spieler 3 geld 3120 basis 800 frei 2320 vorrang_offen 1
+KIWIRTSCHAFT 7263 spieler 3 lage vorrat 92250 zentren 2 geld 3120 hacker 0 sammler 14 bedarf 0 einnahmebauten 0 technik 0 frei 1 sammelrate 2081 restzeit_min 44.3 investieren 0
+KIHILFE 7264 spieler 4 ende abgewehrt dauer 52 verbleibend 7
+KIHAUSHALT 7264 spieler 4 geld 800 basis 0 frei 800 vorrang_offen 1
+KIWIRTSCHAFT 7264 spieler 4 lage vorrat 97050 zentren 2 geld 800 hacker 0 sammler 6 bedarf 1500 einnahmebauten 0 technik 3 frei 1 sammelrate 4162 restzeit_min 23.3 investieren 1
+7290 6425C1DF
+7320 71CFFF67
+7350 D11B30E5
+7380 CE1A2C86
+7410 FA97B127
+7440 5FEC649C
+KIWIRTSCHAFT 7444 spieler 4 technik TechOilDerrick einheit ChinaInfantryRedguard ort 1165 1659
+7470 5160D3C5
+7500 FEC7711A
+7530 6A1D7305
+7560 A4196474
+7590 867E9985
+7620 82E75894
+7650 529453D8
+7680 B4FB4AE1
+7710 E955ADF3
+7740 236836FB
+7770 719C65A0
+7800 DACAD15C
+7830 BE730477
+7860 8407A698
+7890 FC4F350F
+7920 0CD8FE46
+7950 CCA2D1CD
+7980 ED85C75B
+8010 836091F0
+8040 281FB7A9
+8070 A043B7B1
+8100 D790E695
+STATE frame 8100 mode 2 players 8 objects 924 recorder 0 particles 149/399
+KIHILFE 8103 spieler 3 start verbuendeter 4 bedrohung 600 einheiten 3 wert 1250 ort 2438 1376 armee 4700 einsetzbar 2350 kandidaten 9 wert 3650
+8130 5C4BD63D
+8160 73E8B643
+KIWIRTSCHAFT 8163 spieler 3 technik TechOilDerrick einheit GLAInfantryRebel ort 1165 1659
+8190 957A923F
+8220 C1DF265F
+KIVERTEIDIGUNG 8223 spieler 3 bedrohung 900 einheiten 1 wert 150 ort 734 435
+KIHILFE 8223 spieler 3 ende eigene_basis dauer 4 verbleibend 3
+8250 ADF4096D
+8280 0EBC895C
+8310 F7E11097
+8340 D67C753C
+8370 4D4F5B0C
+8400 8FA030A0
+8430 D97F77A2
+8460 FEC96F4C
+KIHILFE 8464 spieler 4 start verbuendeter 3 bedrohung 900 einheiten 5 wert 1500 ort 759 315 armee 19400 einsetzbar 13580 kandidaten 21 wert 11300
+KIGEFECHT 8475 spieler 4 lage fokus 13 abstand 0 verteilt 0 eigene 5 feinde 6
+8490 C0ED2C90
+8520 C05AC6ED
+8550 7B5E82C6
+8580 39113236
+8610 F6D83FDD
+8640 6C456182
+8670 A06B627A
+8700 6BED674E
+8730 93C29DB4
+8760 DDD28B6D
+8790 1D160A8A
+8820 D591C8A5
+KIHILFE 8823 spieler 3 start verbuendeter 4 bedrohung 600 einheiten 2 wert 1200 ort 2438 1376 armee 4850 einsetzbar 2425 kandidaten 7 wert 3300
+KIGEFECHT 8835 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 2 feinde 29
+KIFOKUS 8850 spieler 3 gegner 6 vorher 5 grund wechsel kosten 1464
+KIFOKUS 8850 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+8850 270FBD77
+8880 4F1B5DA1
+8910 910AFCCE
+8940 44209C8D
+8970 AFFD4DA3
+9000 43C26F69
+STATE frame 9000 mode 2 players 8 objects 897 recorder 0 particles 172/527
+9030 0D3AC594
+9060 FC6728E5
+KIAUFKLAERUNG 9063 spieler 3 spaeher GLAVehicleTechnicalChassisThree ziel 423 2377
+KIHAUSHALT 9063 spieler 3 geld 16345 basis 900 frei 15445 vorrang_offen 1
+KIWIRTSCHAFT 9063 spieler 3 lage vorrat 86925 zentren 2 geld 16345 hacker 0 sammler 17 bedarf 0 einnahmebauten 0 technik 0 frei 1 sammelrate 3178 restzeit_min 27.4 investieren 0
+KIHAUSHALT 9064 spieler 4 geld 800 basis 0 frei 800 vorrang_offen 0
+KIWIRTSCHAFT 9064 spieler 4 lage vorrat 138075 zentren 3 geld 800 hacker 0 sammler 6 bedarf 0 einnahmebauten 0 technik 2 frei 1 sammelrate 4331 restzeit_min 31.9 investieren 1
+9090 740F5EB2
+9120 63CF037D
+KIAUFKLAERUNG 9124 spieler 4 spaeher ChinaInfantryRedguard ziel 2371 2377
+KIHILFE 9124 spieler 4 verstaerkung einheiten 6 wert 1800 bedrohung 2100
+KIGEFECHT 9135 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 2 feinde 25
+KIGEFECHT 9135 spieler 4 lage fokus 1 abstand 3 verteilt 0 eigene 11 feinde 12
+9150 9EC4C468
+9180 5460E204
+9210 D7DA1B90
+9240 8DDB1491
+KIWIRTSCHAFT 9244 spieler 4 sammler ChinaVehicleSupplyTruck bestand 6 ziel 9
+9270 ED26482F
+9300 C45968B6
+9330 CE0D1C1E
+9360 0DB358DB
+KIAUFKLAERUNG 9364 spieler 4 spaeher ChinaInfantryRedguard ziel 423 2377
+9390 D9FDDC6B
+9420 8279065A
+KIWIRTSCHAFT 9424 spieler 4 sammler ChinaVehicleSupplyTruck bestand 6 ziel 9
+KIGEFECHT 9435 spieler 4 lage fokus 3 abstand 75 verteilt 0 eigene 11 feinde 12
+9450 F1E63916
+9480 A3B0B78E
+9510 29774383
+9540 5FE331A5
+9570 469C066F
+KIGEFECHT 9570 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 2 feinde 7
+9600 D8598965
+9630 7DA4F949
+9660 6F033689
+9690 065261EF
+9720 BDF58072
+KIGEFECHT 9735 spieler 4 lage fokus 0 abstand 78 verteilt 0 eigene 10 feinde 8
+9750 30EB7347
+9780 2C42F8B7
+9810 4936AFF1
+9840 8D100E98
+9870 55B7C497
+KIGEFECHT 9870 spieler 3 lage fokus 0 abstand 17 verteilt 0 eigene 2 feinde 1
+9900 78105F9E
+STATE frame 9900 mode 2 players 8 objects 877 recorder 0 particles 253/1146
+9930 DD3FAE91
+9960 2257BC0E
+9990 E7070276
+10020 AC0FA664
+KIGEFECHT 10035 spieler 4 lage fokus 0 abstand 60 verteilt 0 eigene 10 feinde 7
+10050 AB08E704
+10080 7E6563CC
+10110 89E16C7D
+10140 9E96D84D
+KIWIRTSCHAFT 10143 spieler 3 technik_ende eingenommen dauer 66
+10170 C482D15A
+KIGEFECHT 10170 spieler 3 lage fokus 1 abstand 15 verteilt 0 eigene 2 feinde 0
+10200 FF45E581
+KIVERTEIDIGUNG 10203 spieler 3 bedrohung 700 einheiten 2 wert 750 ort 834 1137
+KIHILFE 10203 spieler 3 ende eigene_basis dauer 46 verbleibend 2
+10230 AF093D40
+10260 E2201819
+KIVERTEIDIGUNG 10263 spieler 3 bedrohung 1625 einheiten 1 wert 150 ort 867 1101
+10290 25E3EEC8
+10320 AD151A52
+KIWIRTSCHAFT 10324 spieler 4 technik_ende zeit dauer 96
+KIGEFECHT 10335 spieler 4 lage fokus 5 abstand 39 verteilt 0 eigene 6 feinde 9
+10350 3BC9663B
+10380 4269267F
+10410 CF097EA3
+10440 158700F6
+10470 3489406E
+10500 5600CC74
+KIHILFE 10504 spieler 4 verstaerkung einheiten 5 wert 3000 bedrohung 2725
+KIWIRTSCHAFT 10504 spieler 4 vorlauf restzeit_min 3.2 sammelrate 27891 elite_min 10.5 ertrag_elite 240 bedarf 14
+10530 8C2C7643
+10560 492F5F03
+10590 3BBBB51A
+10620 4919B626
+KIGEFECHT 10635 spieler 4 lage fokus 18 abstand 18 verteilt 0 eigene 11 feinde 35
+10650 0513FEC2
+10680 8EDCF84E
+10710 F797DC0B
+10740 8DBADEEA
+10770 7D2BA154
+10800 5C8502AE
+STATE frame 10800 mode 2 players 8 objects 900 recorder 0 particles 261/676
+KIBAU 10804 spieler 4 upgrade Upgrade_ChinaAircraftArmor kosten 1000 geld 7000
+10830 6220D29D
+10860 219B040E
+KIHAUSHALT 10863 spieler 3 geld 15895 basis 900 frei 14995 vorrang_offen 1
+KIWIRTSCHAFT 10863 spieler 3 lage vorrat 83400 zentren 2 geld 15895 hacker 0 sammler 11 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 4139 restzeit_min 20.1 investieren 0
+KIHAUSHALT 10864 spieler 4 geld 8300 basis 2000 frei 6300 vorrang_offen 1
+KIWIRTSCHAFT 10864 spieler 4 lage vorrat 87225 zentren 2 geld 8300 hacker 0 sammler 8 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 27891 restzeit_min 3.1 investieren 1
+10890 2F5B9442
+10920 FCCF7CF6
+KIHILFE 10924 spieler 4 verstaerkung einheiten 6 wert 1800 bedrohung 2925
+KIGEFECHT 10935 spieler 4 lage fokus 15 abstand 19 verteilt 0 eigene 12 feinde 12
+10950 B2E6A52C
+10980 4C364DB3
+11010 EB11E6E0
+11040 93E65AB1
+11070 EB4A0DD6
+11100 9B397F42
+11130 E59CA1E4
+11160 72E022D5
+11190 5D263EDE
+11220 F347A374
+KIGEFECHT 11235 spieler 4 lage fokus 12 abstand 0 verteilt 0 eigene 12 feinde 17
+11250 4759425C
+11280 D3BE11CA
+11310 2EDDDA4A
+11340 C3213F03
+11370 1B5F68A7
+11400 87E2A257
+11430 88FAC7B9
+11460 8F5AAFBB
+KIHILFE 11464 spieler 4 verstaerkung einheiten 11 wert 3300 bedrohung 5400
+11490 6AB4889A
+11520 39617F43
+KIGEFECHT 11535 spieler 4 lage fokus 46 abstand 0 verteilt 0 eigene 21 feinde 15
+11550 C0DD092F
+11580 3EA9D5C4
+KIWIRTSCHAFT 11584 spieler 4 sammler ChinaVehicleSupplyTruck bestand 8 ziel 9
+11610 2BBF712E
+11640 724262BE
+11670 D3A52D7A
+11700 434C4C76
+STATE frame 11700 mode 2 players 8 objects 837 recorder 0 particles 266/869
+11730 CA788A60
+11760 476E9120
+KIWIRTSCHAFT 11764 spieler 4 sammler ChinaVehicleSupplyTruck bestand 8 ziel 9
+11790 ED378468
+11820 BCD46851
+KIGEFECHT 11835 spieler 4 lage fokus 38 abstand 0 verteilt 0 eigene 18 feinde 17
+11850 7695F133
+11880 8DE0B956
+11910 EC92A776
+11940 92923369
+11970 008EC40C
+12000 CE68070A
+KIGEGNERMODELL 12004 spieler 4 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 17525 luftwert 0 abwehr 2050 getarnt 0
+KIHILFE 12004 spieler 4 ende eigene_basis dauer 118 verbleibend 16
+12030 638834D3
+12060 03E51239
+12090 9D556432
+12120 A7CA302C
+KIBAU 12124 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 5200 wahl konter
+12150 6F178D04
+12180 A8CD5F36
+12210 6C8EB94F
+12240 AF0D0090
+KIHILFE 12244 spieler 4 start verbuendeter 3 bedrohung 4500 einheiten 12 wert 3600 ort 777 945 armee 15900 einsetzbar 7950 kandidaten 12 wert 3600
+KIGEFECHT 12255 spieler 4 lage fokus 16 abstand 1 verteilt 0 eigene 12 feinde 15
+12270 D6A0229D
+KISUPERWAFFE 12300 spieler 3 macht SuperweaponRebelAmbush gegner 6 ziel_id 1971 wert 3372 radius 50
+12300 8C32F451
+KIHILFE 12304 spieler 4 ende eigene_basis dauer 2 verbleibend 12
+12330 F7E449D6
+12360 6D8FA002
+KIVERTEIDIGUNG 12364 spieler 4 bedrohung 600 einheiten 2 wert 600 ort 1708 958
+12390 E6311686
+12420 EBF62DBF
+KIBAU 12424 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 4400 wahl konter
+12450 359E23E5
+12480 B4C998E2
+KIVERTEIDIGUNG 12484 spieler 4 bedrohung 600 einheiten 2 wert 600 ort 1745 863
+12510 A9D7A719
+12540 B7D24314
+12570 A87D7387
+12600 08B27EEC
+STATE frame 12600 mode 2 players 8 objects 877 recorder 0 particles 324/761
+KIHILFE 12604 spieler 4 start verbuendeter 3 bedrohung 2500 einheiten 13 wert 3900 ort 1179 1380 armee 16500 einsetzbar 8250 kandidaten 13 wert 3900
+KIBAU 12604 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 4400 wahl konter
+KIGEFECHT 12615 spieler 4 lage fokus 0 abstand 4 verteilt 0 eigene 13 feinde 7
+12630 A8637223
+12660 D7AC7DAE
+KIHAUSHALT 12663 spieler 3 geld 6932 basis 900 frei 6032 vorrang_offen 1
+KIWIRTSCHAFT 12663 spieler 3 lage vorrat 80475 zentren 2 geld 6932 hacker 0 sammler 14 bedarf 2500 einnahmebauten 0 technik 0 frei 0 sammelrate 3645 restzeit_min 22.1 investieren 0
+KIHAUSHALT 12664 spieler 4 geld 4600 basis 1000 frei 3600 vorrang_offen 1
+KIWIRTSCHAFT 12664 spieler 4 lage vorrat 94575 zentren 3 geld 4600 hacker 0 sammler 10 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 27891 restzeit_min 3.4 investieren 0
+12690 46AAE258
+12720 3824F109
+12750 4B360865
+12780 17091922
+12810 4A158F15
+12840 4C693485
+12870 BC662870
+12900 1C578BCB
+KIGEFECHT 12915 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 13 feinde 3
+12930 D49EED21
+12960 AD0381A8
+12990 1CA99940
+13020 688E3CCE
+13050 7911566F
+13080 E90D0EF7
+13110 D9C667A6
+13140 E1F9C8C4
+13170 46DCA2D6
+13200 3FA83506
+KIGEFECHT 13215 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 13 feinde 2
+13230 4E5341EF
+13260 D3797595
+13290 EEBAF506
+13320 CDF1E1CA
+KIAUFKLAERUNG 13324 spieler 4 spaeher ChinaInfantryTankHunter ziel 423 2377
+13350 D2F623BA
+13380 E317167C
+KIBAU 13384 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 5100 wahl konter
+13410 A5AA21D3
+13440 E509E53D
+13470 3379205C
+13500 5EBF8033
+STATE frame 13500 mode 2 players 8 objects 861 recorder 0 particles 184/518
+KIGEFECHT 13515 spieler 4 lage fokus 24 abstand 0 verteilt 0 eigene 11 feinde 7
+13530 30059CD1
+13560 B25B2860
+KIHILFE 13563 spieler 3 start verbuendeter 4 bedrohung 1800 einheiten 5 wert 2750 ort 1563 1099 armee 9200 einsetzbar 4600 kandidaten 18 wert 7400
+KIBAU 13564 spieler 4 einheit ChinaInfantryRedguard kosten 300 geld 4700 wahl konter
+KIGEFECHT 13575 spieler 3 lage fokus 1 abstand 1 verteilt 0 eigene 5 feinde 7
+13590 9BC9BCD8
+13620 0D477FBA
+13650 EBA59617
+13680 5A2A2318
+13710 8454CD1A
+13740 BF2BC91F
+13770 79D99269
+KISUPERWAFFE 13800 spieler 4 macht SuperweaponArtilleryBarrage gegner 6 ziel_id 807 wert 2000 radius 125
+13800 84248717
+KIAUFKLAERUNG 13804 spieler 4 fertig einheit ChinaInfantryTankHunter
+KIGEFECHT 13815 spieler 4 lage fokus 3 abstand 0 verteilt 0 eigene 9 feinde 7
+13830 E498D10F
+13860 33C111F8
+KIGEGNERMODELL 13863 spieler 3 ansturm 1 einigeln 0 luft 0 tarnung 1 armee 10500 luftwert 0 abwehr 2050 getarnt 600
+KIGEGNERMODELL 13864 spieler 4 ansturm 1 einigeln 0 luft 0 tarnung 1 armee 10500 luftwert 0 abwehr 2050 getarnt 600
+KIGEFECHT 13875 spieler 3 lage fokus 3 abstand 1 verteilt 0 eigene 5 feinde 8
+13890 A8F9931D
+13920 4681F033
+KIBAU 13924 spieler 4 einheit ChinaInfantryRedguard kosten 300 geld 4900 wahl konter
+13950 33F208EE
+13980 647B3888
+14010 357DEF5D
+14040 98292892
+KIHILFE 14043 spieler 3 ende abgewehrt dauer 16 verbleibend 5
+14070 17FFAD4B
+14100 0299543A
+KIGEFECHT 14115 spieler 4 lage fokus 4 abstand 0 verteilt 0 eigene 9 feinde 7
+14130 507F4663
+14160 5623AD97
+14190 568036A2
+14220 C85901FB
+14250 561A9C92
+14280 6ADC5335
+14310 958A81AE
+14340 605D99F1
+14370 ABE6235E
+KIFOKUS 14400 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2621
+KIFOKUS 14400 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+14400 70E5FC57
+STATE frame 14400 mode 2 players 8 objects 880 recorder 0 particles 204/594
+KIGEFECHT 14415 spieler 4 lage fokus 16 abstand 2 verteilt 0 eigene 9 feinde 4
+14430 E3711485
+14460 9FB37E4B
+KIWIRTSCHAFT 14463 spieler 3 ausbau GLASupplyStash vorrat 10125 zentren 1 grund knapp
+KIHAUSHALT 14463 spieler 3 geld 131 basis 800 frei -669 vorrang_offen 1
+KIWIRTSCHAFT 14463 spieler 3 lage vorrat 10125 zentren 1 geld 131 hacker 0 sammler 15 bedarf 1500 einnahmebauten 1 technik 0 frei 0 sammelrate 3360 restzeit_min 3.0 investieren 0
+KIHAUSHALT 14464 spieler 4 geld 1100 basis 5000 frei -3900 vorrang_offen 1
+KIWIRTSCHAFT 14464 spieler 4 lage vorrat 85875 zentren 3 geld 1100 hacker 0 sammler 11 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 18220 restzeit_min 4.7 investieren 0
+14490 A82DF14C
+14520 EF8FCEF7
+14550 65B06899
+14580 6D492C0D
+14610 D096AFCE
+14640 EE73714A
+14670 FC3B5448
+14700 5C8DA3EB
+KIGEFECHT 14715 spieler 4 lage fokus 16 abstand 0 verteilt 0 eigene 9 feinde 2
+14730 B980D0F8
+14760 8D0F04D1
+14790 078C87EB
+14820 10FB39CC
+14850 B21F80FC
+14880 F1AE5558
+14910 B1FECDF6
+14940 41F053E8
+14970 CEA96866
+15000 F2ACC47A
+KIGEFECHT 15015 spieler 4 lage fokus 2 abstand 1 verteilt 0 eigene 8 feinde 3
+15030 94795D6E
+15060 7348BA08
+15090 59C5B831
+15120 AB022159
+15150 30CD5DCA
+15180 72EECC14
+15210 A472119F
+15240 5CBA1905
+15270 4A534FD2
+15300 B529DDE0
+STATE frame 15300 mode 2 players 8 objects 885 recorder 0 particles 272/1210
+KIGEFECHT 15315 spieler 4 lage fokus 11 abstand 0 verteilt 0 eigene 3 feinde 3
+15330 C72B129C
+15360 4006EDAF
+15390 97CB021E
+15420 F626DA60
+15450 5D6B2136
+15480 6AC121E8
+KIHILFE 15484 spieler 4 ende verloren dauer 96 verbleibend 0
+15510 6C5086BA
+15540 49AF486D
+15570 90ABDFF6
+15600 99C08CD1
+15630 E96B0BBD
+15660 D0652D60
+KIHILFE 15663 spieler 3 start verbuendeter 4 bedrohung 600 einheiten 2 wert 1300 ort 1920 1644 armee 14450 einsetzbar 7225 kandidaten 20 wert 10850
+15690 3D471642
+15720 FD3D28D4
+15750 824D9897
+15780 30526613
+15810 737FD613
+15840 4DC4DACB
+15870 672FFC86
+KIFOKUS 15900 spieler 3 gegner 6 vorher 5 grund wechsel kosten 1917
+KIFOKUS 15900 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+15900 B842D5EF
+15930 D26ACFD9
+15960 6E19A042
+KIHILFE 15963 spieler 3 verstaerkung einheiten 5 wert 2500 bedrohung 2300
+KIGEFECHT 15975 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 7 feinde 12
+15990 BA070028
+16020 B67FCC96
+16050 E25E9840
+16080 E8A94632
+KIWIRTSCHAFT 16084 spieler 4 hacker ChinaInfantryHacker bestand 0 ziel 14
+16110 9A2ED2AC
+16140 5E83D380
+16170 0404A766
+16200 814B88AF
+STATE frame 16200 mode 2 players 8 objects 864 recorder 0 particles 133/307
+16230 7EBEBF2D
+16260 373A732A
+KIHILFE 16263 spieler 3 verstaerkung einheiten 5 wert 2700 bedrohung 5900
+KIHAUSHALT 16263 spieler 3 geld 306 basis 800 frei -494 vorrang_offen 1
+KIWIRTSCHAFT 16263 spieler 3 lage vorrat 73350 zentren 2 geld 306 hacker 0 sammler 14 bedarf 1500 einnahmebauten 1 technik 0 frei 0 sammelrate 3667 restzeit_min 20.0 investieren 0
+KIHAUSHALT 16264 spieler 4 geld 75 basis 0 frei 75 vorrang_offen 0
+KIWIRTSCHAFT 16264 spieler 4 lage vorrat 77400 zentren 3 geld 75 hacker 0 sammler 11 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 13385 restzeit_min 5.8 investieren 0
+KIGEFECHT 16275 spieler 3 lage fokus 5 abstand 0 verteilt 0 eigene 12 feinde 23
+16290 BD1FE1C9
+16320 28249805
+16350 57D4A6D7
+16380 ADF0F112
+16410 674BDC53
+16440 E6743244
+16470 8EEA5477
+16500 B8D95A6D
+16530 587F3901
+16560 1FF8C3A6
+KIVERTEIDIGUNG 16564 spieler 4 bedrohung 1400 einheiten 10 wert 3000 ort 2028 1208
+KIGEFECHT 16575 spieler 3 lage fokus 18 abstand 0 verteilt 0 eigene 10 feinde 41
+16590 59E4675A
+16620 BE23EC99
+16650 4E4D847A
+16680 D69CB09C
+16710 0B651A0D
+16740 10466A2A
+16770 A21710BE
+16800 E3D7B202
+16830 DAB273BA
+16860 1A6C53AD
+KIGEFECHT 16875 spieler 3 lage fokus 6 abstand 12 verteilt 0 eigene 9 feinde 41
+16890 70B02F83
+16920 7A40983E
+16950 25824584
+16980 BDE84BFA
+17010 F6DA9BD8
+17040 D436B6A6
+17070 8CCC15A5
+17100 E3B29502
+STATE frame 17100 mode 2 players 8 objects 885 recorder 0 particles 282/1009
+17130 0051482C
+17160 8DFCC645
+KIGEFECHT 17175 spieler 3 lage fokus 21 abstand 25 verteilt 0 eigene 8 feinde 41
+17190 56AA0CCE
+17220 AFAD10C9
+17250 60692C2C
+17280 843B97D0
+17310 545322CC
+17340 FC6C6BA2
+17370 17E08527
+17400 F6EDAB7B
+17430 4B508ED4
+17460 28CADBFA
+KIGEFECHT 17475 spieler 3 lage fokus 11 abstand 35 verteilt 0 eigene 7 feinde 33
+17490 B2BC0688
+17520 A7FEE9C1
+17550 5796431F
+17580 FD1FF5D9
+17610 CA882D37
+17640 F39A14E3
+KIHILFE 17644 spieler 4 start verbuendeter 3 bedrohung 7575 einheiten 17 wert 9100 ort 1026 1290 armee 19100 einsetzbar 9550 kandidaten 19 wert 11300
+KIGEFECHT 17655 spieler 4 lage fokus 9 abstand 0 verteilt 0 eigene 17 feinde 20
+17670 3754D911
+17700 DCA77682
+KIWIRTSCHAFT 17703 spieler 3 bau GLABlackMarket bestand 1 ziel 2 vorrat 4800 grund knapp
+17730 5400B25E
+17760 AFA66349
+KIGEFECHT 17775 spieler 3 lage fokus 2 abstand 24 verteilt 0 eigene 5 feinde 9
+17790 C51E7331
+17820 62DD2186
+17850 AE8BAD8F
+17880 D093AB72
+KIHILFE 17883 spieler 3 ende abgewehrt dauer 74 verbleibend 5
+17910 5C1F4B98
+17940 55D823BC
+KIHILFE 17944 spieler 4 verstaerkung einheiten 3 wert 1900 bedrohung 7575
+KIGEFECHT 17955 spieler 4 lage fokus 2 abstand 14 verteilt 0 eigene 18 feinde 20
+17970 FFE14CA5
+18000 0CD35283
+STATE frame 18000 mode 2 players 8 objects 852 recorder 0 particles 137/452
+KIGEGNERMODELL 18004 spieler 4 ansturm 0 einigeln 0 luft 0 tarnung 1 armee 18075 luftwert 0 abwehr 3000 getarnt 0
+18030 9BD2A78A
+18060 4F69DF14
+KIHAUSHALT 18063 spieler 3 geld 109 basis 800 frei -691 vorrang_offen 1
+KIWIRTSCHAFT 18063 spieler 3 lage vorrat 4200 zentren 1 geld 109 hacker 0 sammler 12 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 3334 restzeit_min 1.3 investieren 0
+KIHAUSHALT 18064 spieler 4 geld 935 basis 1200 frei -265 vorrang_offen 1
+KIWIRTSCHAFT 18064 spieler 4 lage vorrat 68700 zentren 3 geld 935 hacker 1 sammler 11 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 11005 restzeit_min 6.2 investieren 1
+18090 2717EFE1
+18120 E147849C
+18150 7BD5D43D
+18180 C5685B5C
+KIGEGNERMODELL 18183 spieler 3 ansturm 0 einigeln 0 luft 0 tarnung 1 armee 17175 luftwert 0 abwehr 3000 getarnt 0
+18210 C455B1C8
+18240 BF4ADB49
+KIGEFECHT 18255 spieler 4 lage fokus 20 abstand 13 verteilt 0 eigene 16 feinde 10
+18270 EA0D076B
+18300 102AFE07
+18330 11262978
+18360 A40DD27D
+18390 75C7A7DA
+18420 0BD52619
+18450 99685BB5
+18480 3AC3B3D2
+18510 141E9CB2
+18540 3C9B1795
+KIGEFECHT 18555 spieler 4 lage fokus 58 abstand 0 verteilt 0 eigene 14 feinde 7
+18570 13BE5C09
+18600 AD16AABC
+KIHILFE 18603 spieler 3 start verbuendeter 4 bedrohung 800 einheiten 3 wert 1300 ort 1821 1526 armee 8800 einsetzbar 6160 kandidaten 10 wert 3400
+KIGEFECHT 18615 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 3 feinde 6
+18630 4ED3E8A1
+18660 F95016BD
+18690 E2B5CE80
+18720 4DDAE251
+18750 F31E0497
+18780 3CEB9C6E
+18810 B39429F0
+18840 E25EE41A
+KIGEFECHT 18855 spieler 4 lage fokus 44 abstand 15 verteilt 0 eigene 11 feinde 2
+18870 BC788B23
+18900 A69980BB
+STATE frame 18900 mode 2 players 8 objects 858 recorder 0 particles 165/532
+KIBAU 18904 spieler 4 upgrade Upgrade_ChinaSubliminalMessaging kosten 500 geld 2120
+KIGEFECHT 18915 spieler 3 lage fokus 6 abstand 0 verteilt 0 eigene 3 feinde 2
+18930 81FED7FB
+18960 BB1A9D7C
+18990 2822FEBE
+19020 CCF010A5
+KIHILFE 19023 spieler 3 verstaerkung einheiten 7 wert 2100 bedrohung 2400
+19050 787DC5A6
+19080 47E2003C
+19110 9299D79F
+19140 227BE4D1
+KIGEFECHT 19155 spieler 4 lage fokus 5 abstand 7 verteilt 0 eigene 9 feinde 5
+19170 11BB3C25
+19200 81C1BA0C
+KIGEFECHT 19215 spieler 3 lage fokus 4 abstand 0 verteilt 0 eigene 10 feinde 10
+19230 2B0ACA92
+19260 66F3E070
+19290 7E677B38
+19320 2A194B04
+19350 F9B9D114
+19380 77CA6E28
+19410 EE74585F
+19440 1691DB6F
+KIHILFE 19444 spieler 4 ende eigene_basis dauer 60 verbleibend 9
+19470 F48A8024
+KISUPERWAFFE 19500 spieler 3 macht SuperweaponRebelAmbush gegner 6 ziel_id 807 wert 2000 radius 50
+19500 75802B2F
+KIWIRTSCHAFT 19504 spieler 4 sammler ChinaVehicleSupplyTruck bestand 11 ziel 12
+KIGEFECHT 19515 spieler 3 lage fokus 3 abstand 18 verteilt 0 eigene 10 feinde 8
+19530 77C42A0D
+19560 54F99D40
+19590 D694BB97
+19620 54D99DF2
+KIFOKUS 19650 spieler 3 gegner 5 vorher 6 grund druck kosten 1434
+KIFOKUS 19650 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+19650 0DA2245C
+19680 F53EB4D6
+19710 7329F69A
+19740 9359F90C
+19770 2F8E8664
+19800 E22ADB9F
+STATE frame 19800 mode 2 players 8 objects 878 recorder 0 particles 290/1035
+KIVERTEIDIGUNG 19804 spieler 4 bedrohung 4200 einheiten 1 wert 300 ort 2215 1182
+KIGEFECHT 19815 spieler 3 lage fokus 11 abstand 13 verteilt 0 eigene 9 feinde 3
+19830 3AD35B60
+19860 C01FD865
+KIHAUSHALT 19863 spieler 3 geld 287 basis 800 frei -513 vorrang_offen 1
+KIWIRTSCHAFT 19863 spieler 3 lage vorrat 1275 zentren 1 geld 287 hacker 0 sammler 18 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 36204 restzeit_min 0.0 investieren 1
+KIHAUSHALT 19864 spieler 4 geld 830 basis 0 frei 830 vorrang_offen 0
+KIWIRTSCHAFT 19864 spieler 4 lage vorrat 60225 zentren 4 geld 830 hacker 4 sammler 9 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 9928 restzeit_min 6.1 investieren 0
+19890 EA2E4216
+19920 71961C74
+19950 74940B75
+19980 81CD575A
+20010 A50D63A3
+20040 00F3405C
+KIWIRTSCHAFT 20044 spieler 4 sammler ChinaVehicleSupplyTruck bestand 9 ziel 12
+20070 5ACB3B34
+20100 0CF5B017
+KIGEFECHT 20115 spieler 3 lage fokus 5 abstand 1 verteilt 0 eigene 9 feinde 17
+20130 0C435645
+20160 2C022F6E
+20190 9BB1D2E1
+20220 1E009B24
+20250 E6BB32D3
+20280 C0D75487
+20310 E0E1755C
+20340 D1855E58
+KIVERTEIDIGUNG 20344 spieler 4 bedrohung 3500 einheiten 1 wert 800 ort 2120 1085
+20370 1886E990
+20400 7FBD1B58
+KIGEFECHT 20415 spieler 3 lage fokus 15 abstand 0 verteilt 0 eigene 9 feinde 14
+20430 D476AC7B
+20460 5035E8CC
+20490 D95ACA7C
+20520 BCFCF8B6
+20550 4B07EE2F
+20580 275B9699
+KIHILFE 20583 spieler 3 ende aussichtslos dauer 66 verbleibend 9
+20610 FB9DAE66
+20640 9BDCAC0F
+20670 04FDB8CF
+20700 63A572F9
+STATE frame 20700 mode 2 players 8 objects 801 recorder 0 particles 134/584
+20730 D3424C14
+20760 E748BB02
+20790 756231ED
+20820 9777B4C1
+20850 CFB9F865
+20880 28CFE7D8
+20910 6E9D3BFE
+20940 9F72B775
+20970 D0DB4FB1
+21000 06173CB9
+21030 2413C59A
+21060 9EC1348F
+KIVERTEIDIGUNG 21064 spieler 4 bedrohung 1400 einheiten 1 wert 300 ort 1977 1043
+21090 26DA3A68
+21120 FF20F967
+21150 394E67C2
+21180 F71E0E03
+KIVERTEIDIGUNG 21184 spieler 4 bedrohung 1100 einheiten 1 wert 300 ort 2046 1045
+21210 8B360FAD
+21240 2DD34806
+KIHILFE 21243 spieler 3 start verbuendeter 4 bedrohung 2000 einheiten 9 wert 3100 ort 1896 1127 armee 9400 einsetzbar 6580 kandidaten 9 wert 3100
+KIVERTEIDIGUNG 21244 spieler 4 bedrohung 1700 einheiten 1 wert 300 ort 1885 993
+KIGEFECHT 21255 spieler 3 lage fokus 5 abstand 0 verteilt 0 eigene 9 feinde 6
+21270 89D3E5F1
+21300 D17C7C70
+21330 0238F1D7
+21360 B7FDB28D
+21390 B4168432
+21420 0AE2B3BA
+21450 C87673D3
+21480 3C5A144D
+21510 B26D52F0
+21540 991AE351
+KIGEFECHT 21555 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 2
+21570 EA81622E
+21600 C63AA060
+STATE frame 21600 mode 2 players 8 objects 789 recorder 0 particles 63/337
+21630 B7978042
+21660 7A5F0391
+KIHAUSHALT 21663 spieler 3 geld 37 basis 800 frei -763 vorrang_offen 1
+KIWIRTSCHAFT 21663 spieler 3 lage vorrat 0 zentren 1 geld 37 hacker 0 sammler 21 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 19602 restzeit_min 0.0 investieren 1
+KIHAUSHALT 21664 spieler 4 geld 510 basis 0 frei 510 vorrang_offen 0
+KIWIRTSCHAFT 21664 spieler 4 lage vorrat 56175 zentren 4 geld 510 hacker 1 sammler 10 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 8676 restzeit_min 6.5 investieren 1
+21690 788C9179
+21720 609225F0
+21750 FEA070B5
+21780 FCAF0161
+21810 5637919E
+21840 BE9AB35C
+KIGEFECHT 21855 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 1
+21870 29031CF2
+21900 DA713E16
+21930 4F5F0BA1
+21960 230B1B00
+21990 0A7B0EB5
+22020 72AF8C8A
+22050 792A5263
+22080 1FD0A37E
+KIHILFE 22083 spieler 3 ende eigene_basis dauer 28 verbleibend 9
+KIHILFE 22084 spieler 4 start verbuendeter 3 bedrohung 1600 einheiten 6 wert 3000 ort 588 979 armee 15200 einsetzbar 10640 kandidaten 13 wert 7200
+KIGEFECHT 22095 spieler 4 lage fokus 15 abstand 23 verteilt 0 eigene 6 feinde 6
+22110 2270904C
+22140 EFAA2D0A
+22170 77B9E211
+22200 AB13E115
+22230 EF4D6E93
+22260 6AC22233
+22290 6CCD0002
+22320 C422D29B
+22350 FA9C4DA8
+22380 8C9638F2
+KIGEFECHT 22395 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 5 feinde 6
+22410 2F8204DB
+22440 7FC97947
+22470 13799B25
+22500 2E3EAFCC
+STATE frame 22500 mode 2 players 8 objects 799 recorder 0 particles 127/499
+22530 0047503E
+22560 F3F170AB
+22590 8A106BA7
+22620 02C9AD45
+22650 1CCB2272
+22680 B353F2C2
+KIGEFECHT 22695 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 5 feinde 10
+22710 90D2EB58
+22740 362F1097
+22770 84FB7A07
+KISUPERWAFFE 22800 spieler 4 macht SuperweaponArtilleryBarrage gegner 5 ziel_id 6429 wert 4770 radius 125
+22800 71E9A29A
+KIHILFE 22804 spieler 4 ende eigene_basis dauer 24 verbleibend 4
+22830 345A75B7
+22860 B0940983
+22890 BF6F4FEF
+22920 07C735F0
+22950 387DC65E
+22980 AA349EAE
+23010 897F8305
+23040 B81D2188
+23070 75250775
+KIFOKUS 23100 spieler 3 gegner 6 vorher 5 grund druck kosten 2166
+KIFOKUS 23100 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
+23100 5A603B1A
+23130 CC55F5F6
+23160 A3296CDA
+KIVERTEIDIGUNG 23163 spieler 3 bedrohung 600 einheiten 2 wert 1300 ort 812 922
+23190 CC552F06
+23220 787C7E55
+23250 46998D03
+23280 0D13C344
+KIVERTEIDIGUNG 23283 spieler 3 bedrohung 600 einheiten 1 wert 150 ort 830 816
+KIWIRTSCHAFT 23284 spieler 4 sammler ChinaVehicleSupplyTruck bestand 10 ziel 12
+23310 F21EFBC4
+23340 8EEC61F7
+23370 F0161C4B
+23400 851632DE
+STATE frame 23400 mode 2 players 8 objects 802 recorder 0 particles 190/844
+23430 BDB11049
+23460 FC4A264F
+KIHAUSHALT 23463 spieler 3 geld 192 basis 800 frei -608 vorrang_offen 1
+KIWIRTSCHAFT 23463 spieler 3 lage vorrat 0 zentren 1 geld 192 hacker 0 sammler 12 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 9989 restzeit_min 0.0 investieren 1
+KIHAUSHALT 23464 spieler 4 geld 390 basis 0 frei 390 vorrang_offen 0
+KIWIRTSCHAFT 23464 spieler 4 lage vorrat 53775 zentren 4 geld 390 hacker 3 sammler 10 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 5876 restzeit_min 9.2 investieren 1
+23490 E42F08A6
+23520 EF354F43
+23550 F7ECCA74
+23580 C9243361
+23610 57DCFCC2
+23640 4BB197A9
+23670 3DF50ACB
+23700 0782FE53
+23730 67EB814F
+23760 296C487C
+23790 85190CB4
+23820 10AA9174
+23850 7E404A2D
+23880 B5AF7BFF
+23910 43AA9FB0
+23940 DBA4C7C9
+23970 5DAE97AD
+24000 94282694
+24030 C0C988BB
+24060 3E8383D5
+24090 EFC81B88
+24120 4509F4D4
+24150 9D15E8F8
+24180 4DA38F81
+24210 D597D450
+24240 0AE3CCF1
+24270 D66039F2
+24300 DBCECC43
+STATE frame 24300 mode 2 players 8 objects 737 recorder 0 particles 70/319
+24330 948A5082
+24360 3819DE62
+24390 DC1543EC
+24420 4013313B
+24450 09A36747
+24480 B83FCFD4
+24510 D7AD416C
+24540 62802FDF
+24570 45D57E51
+24600 FD47DADE
+24630 42E3EAAF
+24660 F1A45BD9
+24690 BA5967EE
+24720 D021F3EA
+KIWIRTSCHAFT 24724 spieler 4 sammler ChinaVehicleSupplyTruck bestand 11 ziel 12
+24750 930E4A1A
+24780 BEB1D9D4
+24810 7D7196B6
+24840 7EA2C65F
+24870 3B05E54B
+24900 87975800
+24930 00F3C90E
+24960 DA0875A8
+24990 8303C27C
+25020 268857CD
+25050 CB1305C6
+25080 BBD9A3AC
+25110 311C7869
+25140 F138E2C9
+25170 CD0498FB
+25200 72C2A31B
+STATE frame 25200 mode 2 players 8 objects 797 recorder 0 particles 155/723
+25230 D1D58D84
+25260 9FF5DDE4
+KIHAUSHALT 25263 spieler 3 geld 167 basis 800 frei -633 vorrang_offen 1
+KIWIRTSCHAFT 25263 spieler 3 lage vorrat 0 zentren 1 geld 167 hacker 0 sammler 16 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 4994 restzeit_min 0.0 investieren 1
+KIHAUSHALT 25264 spieler 4 geld 840 basis 0 frei 840 vorrang_offen 0
+KIWIRTSCHAFT 25264 spieler 4 lage vorrat 50700 zentren 4 geld 840 hacker 3 sammler 12 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 3913 restzeit_min 13.0 investieren 1
+25290 7D79A9F3
+25320 A46EFD06
+25350 BA303449
+25380 28487E87
+25410 C1B9D2B3
+25440 6E9416B4
+25470 51B78A9B
+25500 91279E89
+25530 1348B002
+25560 CC265BFF
+25590 5051FA27
+25620 F862B440
+25650 41CA5EF6
+25680 36CE9A57
+25710 B3BA59AB
+25740 68C697D0
+25770 B1C3ACBF
+25800 3168763E
+25830 5FA51AEB
+25860 A0DF6F77
+25890 AE660B02
+25920 106FDB62
+25950 FA43FFB2
+25980 5A6CF238
+26010 BAFE3777
+26040 8695B1A3
+26070 5191CAF6
+26100 C23644E7
+STATE frame 26100 mode 2 players 8 objects 738 recorder 0 particles 118/373
+26130 9FE6AD75
+26160 5BA5EA0E
+26190 F4F0E3CD
+26220 ED5092E0
+26250 E4C1480C
+26280 FFC40F49
+KIVERTEIDIGUNG 26283 spieler 3 bedrohung 675 einheiten 6 wert 2350 ort 563 1186
+26310 2D26FACB
+26340 77D3FED6
+KIWIRTSCHAFT 26344 spieler 4 vorlauf restzeit_min 12.4 sammelrate 3869 elite_min 10.5 ertrag_elite 240 bedarf 14
+26370 94796CC4
+26400 3DC3208E
+26430 4D405A00
+26460 B72A13E3
+26490 C97E7DA4
+26520 F31BA9E0
+26550 D088CFD2
+26580 894B4BC2
+26610 346CB2C9
+26640 6A1083A2
+26670 07AE1EF6
+KISUPERWAFFE 26700 spieler 3 macht SuperweaponRebelAmbush gegner 6 ziel_id 807 wert 2000 radius 50
+26700 FBED46B2
+KIWIRTSCHAFT 26704 spieler 4 hacker ChinaInfantryHacker bestand 3 ziel 15
+26730 227B7F71
+26760 B84AE906
+26790 C1A828D1
+26820 E6CD1BB7
+KIFOKUS 26850 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2740
+KIFOKUS 26850 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
+26850 74AAAC7D
+26880 95F3B726
+26910 BFF6B08D
+26940 9DD78BE0
+26970 4E1F5DFC
+END maxFrames 27000
+27000 3DA1827F
+STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
+BENCH ticks 26998 mean 1.529 p50 1.380 p95 3.312 p99 5.285 max 35.206 total 41271 ms
+FRAMES frames 26940 mean 1.534 p50 1.384 p95 3.317 p99 5.301 max 35.207 total 41318 ms
+PFADSUCHE 0.3432 ms je Tick mit Anfragen (14658 Ticks, hoechstens 31.736 ms) anfragen 32922 zellen 10237321 warteschlange 2.3 hoechstens 26 rest 0.04 anfragen_je_tick 6949 5334 1979 396 einzeln_hoechstens 31.528 ms
+PFADSUCHE_ARTEN pfad 26660 zellen 2297499 ms 2025.5 hoechstens 29.25 naechster 1592 zellen 2930779 ms 1263.9 hoechstens 9.07 angriff 5021 zellen 4997332 ms 1609.4 hoechstens 2.52 flicken 1 zellen 0 ms 0.0 hoechstens 0.00 kosten 8 zellen 74 ms 0.0 hoechstens 0.00 boden 14 zellen 14905 ms 28.7 hoechstens 7.69 ausweichen 7118 zellen 28208 ms 30.0 hoechstens 0.35 sichtlinie 4161837 schritte 27818298 abbrueche 4148226 vorrat_leer 417 pfad_fehlschlaege 6 davon_vorrat_leer 1 wiederholt 0 frei_beim_start mittel 24042 kleinste 22873 frei_bei_vorrat_leer 23650
+LOGIKPHASEN 27001 Ticks, 1.1717 ms je Tick (Mittel/hoechstens ms): skript 0.0830/27.170 gelaende 0.0001/0.187 befehle 0.0014/23.424 updates 0.7044/31.749 ki 0.2654/229.456 bau 0.0002/0.216 partition 0.1017/8.577 tickende 0.0155/0.505
+LOGIKMODULE 62 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): AIUpdateInterface 0.3906 54.2 8.065 PhysicsBehavior 0.0522 72.1 1.176 WorkerAIUpdate 0.0312 13.4 0.552 ProductionUpdate 0.0252 50.2 31.699 SupplyTruckAIUpdate 0.0249 10.4 0.549 TransportAIUpdate 0.0184 1.1 0.558 ObjectWeaponStatusHelper 0.0146 99.0 0.403 StealthDetectorUpdate 0.0113 3.4 0.383 JetAIUpdate 0.0104 2.7 0.820 DozerAIUpdate 0.0092 4.6 0.579 SlowDeathBehavior 0.0054 10.9 2.406 MissileAIUpdate 0.0043 2.0 0.883
+LOGIKSPITZE ab Tick 31: laengster Tick 1443 34.807 ms: skript 0.019 gelaende 0.000 befehle 0.000 updates 31.749 ki 3.001 bau 0.001 partition 0.034 tickende 0.004; laengstes Update 31.699 ms Tick 1443 ProductionUpdate an ChinaBarracks
+GPUEFFEKTE flags 0x1FFFF samples 8 bilder 53 bild 14.8713 ms (53) bodendetail zeichnungen 0.0 von 0.0 felder 216 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 324.8 umlaeufe 0.11
+PARTIKELZEIT simulation 0.0003 ms je Tick (57 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+EXIT code 0

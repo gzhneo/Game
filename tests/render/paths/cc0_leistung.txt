@@ -1,0 +1,8 @@
+# TODO 56: Bildzeit und Grafikspeicher SD gegen HD in einer Waldszene (Tournament Lake,
+# Replay e0zh-tournament-lake-3ai-seed2): Standardzoom über dem Kiefernwald bei 0,449/0,369, 900 Frames ruhig,
+# dann nah. Mit -noFPSLimit -logTextureStats 300 laufen lassen; BENCH/FRAMES und TEXSTATS aus run.log.
+# frame   x      y      zoom       drehung   neigung
+60        0.449  0.369  standard   0         standard
+960       0.449  0.369  standard   0         standard
+961       0.462  0.395  0.22       0         standard
+1260      0.462  0.395  0.22       0         standard

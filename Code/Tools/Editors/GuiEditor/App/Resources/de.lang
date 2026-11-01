@@ -1,0 +1,257 @@
+# German texts of the GUI editor: "English<TAB>German", UTF-8 (EditorCommon/Language.h).
+just now	gerade eben
+%1 minutes ago	vor %1 Minuten
+1 hour ago	vor 1 Stunde
+%1 hours ago	vor %1 Stunden
+yesterday	gestern
+%1 days ago	vor %1 Tagen
+GUI Editor	GUI-Editor
+&File	&Datei
+&Open layout...	Layout &öffnen …
+Open layout	Layout öffnen
+Window layouts (*.wnd)	Fensterlayouts (*.wnd)
+Start the editor with --data <game data folder>.	Den Editor mit --data <Ordner der Spieldaten> starten.
+%1 (game data)	%1 (Spieldaten)
+%1 cannot be read.	%1 lässt sich nicht lesen.
+%1 windows	%1 Fenster
+&Language	&Sprache
+&Quit	&Beenden
+&Recent	&Zuletzt geöffnet
+&Resolution	&Auflösung
+&Settings	&Einstellungen
+&Theme	&Thema
+&View	&Ansicht
+(no name)	(ohne Namen)
+bold	fett
+All fields	Alle Felder
+Border colour	Randfarbe
+Callbacks	Rückrufe
+Colour	Farbe
+Dark	Dunkel
+Disabled	Gesperrt
+Draw	Zeichnen
+Enabled	Aktiv
+Error	Fehler
+File text	Dateitext
+File version	Dateiversion
+Font	Schrift
+Game layouts	Layouts des Spiels
+Header template	Kopfvorlage
+Hidden: the game shows it later	Versteckt: das Spiel zeigt es später
+Highlighted	Hervorgehoben
+Init	Start
+Input	Eingabe
+Layout	Layout
+Light	Hell
+Look: %1	Aussehen: %1
+Made for	Angelegt für
+Name	Name
+No problems: the game reads the layout as the file says.	Keine Probleme: das Spiel liest das Layout so, wie die Datei es sagt.
+Open from &game data	Aus den &Spieldaten öffnen
+Problems (%1)	Probleme (%1)
+Properties	Eigenschaften
+Property	Eigenschaft
+Re&load	&Neu laden
+Search layouts	Layouts suchen
+Search windows	Fenster suchen
+Show &hidden windows	&Versteckte Fenster zeigen
+Shows the windows the game shows only later (transitions, game events); the file stays as it is.	Zeigt die Fenster, die das Spiel erst später einblendet (Übergänge, Spielereignisse); die Datei bleibt, wie sie ist.
+Shutdown	Ende
+Size	Größe
+Status	Status
+Style	Stil
+System	System
+Text	Text
+The engine is not started.	Die Engine ist nicht gestartet.
+The game data have no layouts.	Die Spieldaten enthalten keine Layouts.
+Tooltip	Tooltip
+Type	Typ
+Update	Aktualisieren
+Value	Wert
+Warning	Warnung
+Window	Fenster
+Windows	Fenster
+hidden windows shown	versteckte Fenster sichtbar
+the layouts' own	die der Layouts
+%1 (game data, saving makes a copy)	%1 (Spieldaten, Speichern legt eine Kopie an)
+%1 cannot be written.	%1 lässt sich nicht schreiben.
+%1 has changes that are not saved. Save them?	%1 hat ungespeicherte Änderungen. Speichern?
+%1 layouts; double-click opens one, saving makes a copy.	%1 Layouts; Doppelklick öffnet eines, Speichern legt eine Kopie an.
+%1 selected, showing the last	%1 ausgewählt, das letzte wird gezeigt
+%1 window(s) copied	%1 Fenster kopiert
+%1 windows selected	%1 Fenster ausgewählt
+&Copy	&Kopieren
+&Duplicate	&Duplizieren
+&Edit	&Bearbeiten
+&Insert	&Einfügen
+&New layout	&Neues Layout
+&Paste	Ei&nfügen
+&Redo	&Wiederholen
+&Redo: %1	&Wiederholen: %1
+&Save	&Speichern
+&Undo	&Rückgängig
+&Undo: %1	&Rückgängig: %1
+A colour is four numbers from 0 to 255: red, green, blue, alpha.	Eine Farbe sind vier Zahlen von 0 bis 255: Rot, Grün, Blau, Alpha.
+A field needs a value.	Ein Feld braucht einen Wert.
+A font needs a name.	Eine Schrift braucht einen Namen.
+A name needs letters, digits or _ and no spaces, quotes or colons.	Ein Name besteht aus Buchstaben, Ziffern oder _, ohne Leerzeichen, Anführungszeichen oder Doppelpunkt.
+Another window is called %1.	Ein anderes Fenster heißt schon %1.
+Bring &forward	Eine Ebene nach &vorn
+Bring forward	Nach vorn
+Bring to fr&ont	Ganz nach v&orn
+Callback	Rückruf
+Check box	Kästchen
+Combo box	Auswahlliste
+Cu&t	&Ausschneiden
+De&lete	&Löschen
+Delete	Löschen
+Double-click a value to change it; colours open a colour picker.	Doppelklick auf einen Wert ändert ihn; Farben öffnen eine Farbwahl.
+Enter a whole number.	Eine ganze Zahl eingeben.
+Field %1	Feld %1
+Height	Höhe
+Horizontal slider	Schieber waagrecht
+Insert %1	%1 einfügen
+Later in the list is drawn above. Drag windows to put them into another window or in another order.	Weiter unten in der Liste wird darüber gezeichnet. Fenster ziehen, um sie in ein anderes Fenster oder an eine andere Stelle zu setzen.
+Layout callback	Layout-Rückruf
+Left	Links
+List box	Liste
+Look	Aussehen
+Move	Verschieben
+Move by %1, %2	Verschieben um %1, %2
+Move in the tree	Im Baum verschieben
+Names for %1	Namen für %1
+New layout, not saved yet	Neues Layout, noch nicht gespeichert
+Paste	Einfügen
+Progress bar	Fortschrittsbalken
+Push button	Knopf
+Radio button	Optionsfeld
+Rename	Umbenennen
+Resize	Größe ändern
+Resize by %1, %2	Größe ändern um %1, %2
+Save &as...	Speichern &unter …
+Save layout	Layout speichern
+Saved: %1	Gespeichert: %1
+Send &backward	Eine Ebene nach &hinten
+Send backward	Nach hinten
+Send to bac&k	Ganz nach h&inten
+Static text	Text
+Text entry	Texteingabe
+The clipboard holds no windows.	Die Zwischenablage enthält keine Fenster.
+The game keeps only %1 characters of a name with its file.	Das Spiel behält von einem Namen samt Datei nur %1 Zeichen.
+The game would read %1 window(s) differently from what the file says (see Problems). Save anyway?	Das Spiel würde %1 Fenster anders lesen, als die Datei sagt (siehe Probleme). Trotzdem speichern?
+Tooltip delay	Tooltip-Verzögerung
+Top	Oben
+User window	Fenster
+Vertical slider	Schieber senkrecht
+Width	Breite
+%1 %2 is not a function of the game	%1 %2 ist keine Funktion des Spiels
+(not in the string table: the game shows MISSING)	(nicht in der Texttabelle: das Spiel zeigt MISSING)
+A value without ; : or quotes is needed.	Ein Wert ohne ; : oder Anführungszeichen ist nötig.
+Gadget: %1	Gadget: %1
+Image	Bild
+Search	Suchen
+Shown	Angezeigt
+Text colours	Textfarben
+Text from the string table	Text aus der Texttabelle
+header template %1 does not exist	Kopfvorlage %1 gibt es nicht
+image %1 (%2) is not in the game data	Bild %1 (%2) ist nicht in den Spieldaten
+no picture	kein Bild
+none	keine
+text %1 is not in the string table; the game shows MISSING	Text %1 ist nicht in der Texttabelle; das Spiel zeigt MISSING
+%1 pixels	%1 Pixel
+&Background colour...	&Hintergrundfarbe …
+&Grid	&Raster
+&Outline hidden and see-through windows	&Umrisse versteckter und durchsichtiger Fenster
+&Properties	&Eigenschaften
+&Show grid	Raster &zeigen
+Background colour	Hintergrundfarbe
+S&nap to grid	Am Raster &einrasten
+Tab control	Register
+%1 (only here)	%1 (nur hier)
+%1 (only there)	%1 (nur dort)
+%1 is no layout scheme.	%1 ist kein Layout-Schema.
+&Compare with...	&Vergleichen mit …
+&Forget the scheme	Schema &vergessen
+&Load scheme...	Schema &laden …
+&Save the layout's scheme as...	Schema des Layouts &speichern unter …
+(none)	(keins)
+Apply scheme	Schema anwenden
+Apply scheme to the selection	Schema auf die Auswahl anwenden
+Apply to the &layout	Auf das &Layout anwenden
+Apply to the s&elected windows	Auf die &ausgewählten Fenster anwenden
+Compare the layout with another one or with its saved version (File menu).	Das Layout mit einem anderen oder mit seiner gespeicherten Fassung vergleichen (Menü Datei).
+Compare with layout	Mit Layout vergleichen
+Compare with the &saved version	Mit der gespeicherten &Fassung vergleichen
+Compared with %1: left its value, right the value of this layout.	Verglichen mit %1: links dessen Wert, rechts der Wert dieses Layouts.
+Comparison	Vergleich
+Comparison (%1)	Vergleich (%1)
+Layout block	Layout-Block
+Layout schemes (*.ls)	Layout-Schemata (*.ls)
+Load scheme	Schema laden
+No differences to %1.	Keine Unterschiede zu %1.
+No scheme loaded	Kein Schema geladen
+Other	Anderes
+S&cheme	Sche&ma
+Save scheme	Schema speichern
+Scheme: %1	Schema: %1
+Stop comparing	Vergleich beenden
+This layout	Dieses Layout
+Window / field	Fenster / Feld
+parent window	Elternfenster
+scheme %1	Schema %1
+the saved version	der gespeicherten Fassung
+top level	oberste Ebene
+pressed	gedrückt
+ticked	angehakt
+unticked	nicht angehakt
+pressed with the right button	mit der rechten Taste gedrückt
+slider at %1	Schieber auf %1
+slider let go at %1	Schieber bei %1 losgelassen
+row %1 chosen	Zeile %1 gewählt
+row %1 double-clicked	Zeile %1 doppelt geklickt
+row %1 clicked with the right button	Zeile %1 mit der rechten Taste geklickt
+entry chosen	Eintrag gewählt
+input finished	Eingabe beendet
+text changed	Text geändert
+text: %1	Text: %1
+Test mode (Ctrl+T): mouse and keys work the windows as in the game; what they report shows here.	Test-Modus (Strg+T): Maus und Tasten bedienen die Fenster wie im Spiel; was sie melden, steht hier.
+Work the windows with the mouse and the keyboard.	Die Fenster mit Maus und Tastatur bedienen.
+Test (%1)	Test (%1)
+Test	Test
+&Test mode	&Test-Modus
+Mouse and keys work the windows as in the game; the layout stays as it is.	Maus und Tasten bedienen die Fenster wie im Spiel; das Layout bleibt, wie es ist.
+test mode	Test-Modus
+Align	Ausrichten
+Distribute	Verteilen
+Same size	Gleiche Größe
+(as opened)	(wie geöffnet)
+%1 was not saved when the editor ended (%2). Open the copy?	%1 war beim Beenden des Editors nicht gespeichert (%2). Die Kopie öffnen?
+Autosave copy	Kopie der Autosicherung
+&Arrange	&Anordnen
+Align &left edges	&Linke Kanten ausrichten
+Align &centres (vertical line)	&Mitten ausrichten (senkrechte Linie)
+Align &right edges	&Rechte Kanten ausrichten
+Align &top edges	&Obere Kanten ausrichten
+Align c&entres (horizontal line)	M&itten ausrichten (waagrechte Linie)
+Align &bottom edges	&Untere Kanten ausrichten
+Spread &horizontally	&Waagrecht verteilen
+Spread &vertically	&Senkrecht verteilen
+Same &width	Gleiche &Breite
+Same hei&ght	Gleiche &Höhe
+Same &size	Gleiche &Größe
+(hidden in the editor)	(im Editor ausgeblendet)
+(locked)	(gesperrt)
+Tools	Werkzeuge
+Insert	Einfügen
+Arrange	Anordnen
+&Hide in the editor	Im Editor &ausblenden
+The editor does not draw it; the file and the game keep it.	Der Editor zeichnet es nicht; Datei und Spiel behalten es.
+&Lock	&Sperren
+A click in the drawing does not select it; the tree still does.	Ein Klick in der Zeichnung wählt es nicht; im Baum geht es weiter.
+Show all hidden in the editor	Alle im Editor ausgeblendeten zeigen
+History	Verlauf
+Background &picture...	Hintergrund&bild …
+A scene of the game under the layout, to see it as in the game.	Eine Spielszene unter dem Layout, um es wie im Spiel zu sehen.
+Background picture	Hintergrundbild
+Pictures (*.png *.jpg *.jpeg *.bmp *.tga)	Bilder (*.png *.jpg *.jpeg *.bmp *.tga)
+No background picture	Kein Hintergrundbild

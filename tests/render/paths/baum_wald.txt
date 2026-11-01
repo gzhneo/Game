@@ -1,0 +1,20 @@
+# Bäume frei: ForgottenForestZH, Skirmish. Hartriegel und Herbsteichen (TreeDogwood3/6,
+# TreeOakFall1/4/5/6) in Gruppen; Orte aus tools/render/map_objekte.py --cluster. Je Halt ein Bild (alle 60 Frames):
+# Standardzoom, näher, ganz nah, gedreht, flacher.
+# frame   x      y      zoom       drehung   neigung
+60        0.168  0.631  standard   0         standard
+119       0.168  0.631  standard   0         standard
+120       0.168  0.631  0.40       0         standard
+179       0.168  0.631  0.40       0         standard
+180       0.170  0.633  0.22       0         standard
+239       0.170  0.633  0.22       0         standard
+240       0.536  0.593  standard   0         standard
+299       0.536  0.593  standard   0         standard
+300       0.536  0.593  0.40       60        standard
+359       0.536  0.593  0.40       60        standard
+360       0.705  0.403  standard   0         standard
+419       0.705  0.403  standard   0         standard
+420       0.705  0.403  0.22       0         -20
+479       0.705  0.403  0.22       0         -20
+480       0.459  0.153  0.40       0         standard
+539       0.459  0.153  0.40       0         standard

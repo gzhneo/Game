@@ -1,0 +1,29 @@
+# Zuschauen-Test, Gastgeber ohne Mitspieler: Spiel eroeffnen, Platz 1 mit einer leichten KI besetzen, starten, {LOGIK}
+# Logik-Frames spielen (lange genug, dass ein Zuschauer zweimal beitritt), ueber das Spielmenue verlassen.
+hauptmenue
+klick MainMenu.wnd:ButtonMultiplayer
+klick MainMenu.wnd:ButtonNetwork
+fenster LanLobbyMenu.wnd:ButtonHost
+warte 60
+klick LanLobbyMenu.wnd:ButtonHost
+fenster LanGameOptionsMenu.wnd:ButtonStart
+warte 60
+auswahl LanGameOptionsMenu.wnd:ComboBoxPlayer1 2
+warte 60
+klick LanGameOptionsMenu.wnd:ButtonStart 9000
+partie 2000000
+log SPIEL BEGINNT
+logik {LOGIK}
+spielmenue
+klick QuitNoSave.wnd:ButtonExit
+klick QuitMessageBox.wnd:ButtonYes
+keinePartie 2000000
+klick ScoreScreen.wnd:ButtonOk
+fenster LanLobbyMenu.wnd:ButtonBack 3000
+warte 60
+klick LanLobbyMenu.wnd:ButtonBack
+hauptmenue
+klickFalls MainMenu.wnd:ButtonMultiBack
+hauptmenue
+warte 60
+beenden

@@ -1,0 +1,4425 @@
+{
+ "_hinweis": "Massenauftrag für baum_frei.py. Liest keine EA-Datei: Modell- und Texturnamen sind Schnittstelle (Vorlage aus baum_bestand.py über 'baum_frei.py auftrag'), Höhe nach eigener Tabelle in Metern (x massstab Spieleinheiten je Meter), Kronenbreite aus den Proportionen des Scans, Farbe aus dem Scan (Sommer, mit farbziel zum Anteil 'anteil' gezogen) bzw. aus echten Herbstblättern (blattsaetze, ambientCG). Je TGA-Schnittstelle (Schlüssel unter 'texturen') entsteht eine eigene Textur <Stamm>_tree.dds; alle Modelle, die die TGA in der INI nutzen, liegen auf ihrer Aufteilung. Pfade außerhalb des Repos, relativ zu GZH_WERKZEUGE (Scans: tools/assets/cc0_laden.py). Farbvarianten (Abschnitt 'varianten'): je Variante Ton der Sommer- und der Herbstbäume; Jahreszeit je Textur aus Name und Verwendung in den Karten ('baum_frei.py jahreszeit'), Herbsttöne als ganze echte Blätter, nach ihrem eigenen Farbton aus den ambientCG-Sätzen gewählt.",
+ "vorgaben": {
+  "arbeit": "cc0/arbeit/baeume",
+  "modelle": "cc0/modelle",
+  "texconv": "directxtex/texconv.exe",
+  "massstab": 6.5,
+  "render": 2048,
+  "proben": 48,
+  "stufen": {
+   "sd": 512,
+   "hd": 1024,
+   "uhd": 2048
+  },
+  "format": {
+   "sd": "DXT5",
+   "hd": "BC7",
+   "uhd": "BC7"
+  },
+  "alpha_schwelle": 0.5,
+  "hell_ziel": 0.42,
+  "saettigung": 1.25,
+  "variante": "rotorange",
+  "hell_ziel_herbst": 0.34,
+  "hell_faktor_max": 1.35,
+  "verbrannt": 0.6
+ },
+ "quellen": {
+  "island01": {
+   "datei": "island_tree_01/island_tree_01_2k.blend",
+   "objekt": "island_tree_01_LOD1",
+   "blatt_material": "island_tree_01_leaves",
+   "blatt_farbe": "island_tree_01/textures/island_tree_01_leaves_diff_2k.png",
+   "blatt_alpha": "island_tree_01/textures/island_tree_01_leaves_alpha_2k.png",
+   "blatt_skala": 1.9
+  },
+  "island02": {
+   "datei": "island_tree_02/island_tree_02_2k.blend",
+   "objekt": "island_tree_02_LOD1",
+   "blatt_material": "island_tree_02_leaves",
+   "blatt_farbe": "island_tree_02/textures/island_tree_02_leaves_diff_2k.png",
+   "blatt_alpha": "island_tree_02/textures/island_tree_02_leaves_alpha_2k.png",
+   "blatt_skala": 1.9
+  },
+  "fir01a": {
+   "datei": "fir_tree_01/fir_tree_01_2k.blend",
+   "objekt": "fir_tree_01_a_LOD1",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png"
+  },
+  "fir01b": {
+   "datei": "fir_tree_01/fir_tree_01_2k.blend",
+   "objekt": "fir_tree_01_b_LOD1",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png"
+  },
+  "fir01c": {
+   "datei": "fir_tree_01/fir_tree_01_2k.blend",
+   "objekt": "fir_tree_01_c_LOD1",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png"
+  },
+  "kiefer_a": {
+   "datei": "pine_sapling_medium/pine_sapling_medium_2k.blend",
+   "objekt": "pine_sapling_medium_a_LOD1",
+   "rinde": "pine_sapling_medium/textures/pine_sapling_medium_bark_diff_2k.png"
+  },
+  "kiefer_b": {
+   "datei": "pine_sapling_medium/pine_sapling_medium_2k.blend",
+   "objekt": "pine_sapling_medium_b_LOD1",
+   "rinde": "pine_sapling_medium/textures/pine_sapling_medium_bark_diff_2k.png"
+  },
+  "kiefer_c": {
+   "datei": "pine_sapling_medium/pine_sapling_medium_2k.blend",
+   "objekt": "pine_sapling_medium_c_LOD1",
+   "rinde": "pine_sapling_medium/textures/pine_sapling_medium_bark_diff_2k.png"
+  },
+  "tanne_a": {
+   "datei": "fir_sapling_medium/fir_sapling_medium_2k.blend",
+   "objekt": "fir_sapling_medium_a_LOD0",
+   "rinde": "fir_sapling_medium/textures/fir_sapling_medium_branches_diff_2k.png"
+  },
+  "tanne_b": {
+   "datei": "fir_sapling_medium/fir_sapling_medium_2k.blend",
+   "objekt": "fir_sapling_medium_b_LOD0",
+   "rinde": "fir_sapling_medium/textures/fir_sapling_medium_branches_diff_2k.png"
+  },
+  "tanne_c": {
+   "datei": "fir_sapling_medium/fir_sapling_medium_2k.blend",
+   "objekt": "fir_sapling_medium_c_LOD0",
+   "rinde": "fir_sapling_medium/textures/fir_sapling_medium_branches_diff_2k.png"
+  },
+  "tanne_b_dicht": {
+   "datei": "fir_sapling_medium/fir_sapling_medium_2k.blend",
+   "objekt": "fir_sapling_medium_b_LOD0",
+   "rinde": "fir_sapling_medium/textures/fir_sapling_medium_branches_diff_2k.png",
+   "blatt_material": "fir_sapling_medium_twigs",
+   "blatt_skala": 1.8
+  },
+  "shrub04a": {
+   "datei": "shrub_04/shrub_04_2k.blend",
+   "objekt": "shrub_04_a_LOD0"
+  },
+  "rooibos_a": {
+   "datei": "wild_rooibos_bush/wild_rooibos_bush_2k.blend",
+   "objekt": "wild_rooibos_bush_a"
+  },
+  "rooibos_b": {
+   "datei": "wild_rooibos_bush/wild_rooibos_bush_2k.blend",
+   "objekt": "wild_rooibos_bush_b"
+  },
+  "didelta_m": {
+   "datei": "didelta_spinosa/didelta_spinosa_2k.blend",
+   "objekt": "didelta_spinosa_medium_LOD0"
+  },
+  "didelta_s": {
+   "datei": "didelta_spinosa/didelta_spinosa_2k.blend",
+   "objekt": "didelta_spinosa_small_LOD0"
+  },
+  "leipoldtia": {
+   "datei": "leipoldtia_schultzei/leipoldtia_schultzei_2k.blend",
+   "objekt": "leipoldtia_schultzei_Large_LOD0"
+  },
+  "koecher1": {
+   "datei": "quiver_tree_01/quiver_tree_01_2k.blend",
+   "objekt": "quiver_tree_01_LOD0"
+  },
+  "koecher2": {
+   "datei": "quiver_tree_02/quiver_tree_02_2k.blend",
+   "objekt": "quiver_tree_02_LOD0"
+  },
+  "othonna_b": {
+   "datei": "othonna_cerarioides/othonna_cerarioides_2k.blend",
+   "objekt": "othonna_cerarioides_b_LOD0"
+  },
+  "cheiri_b": {
+   "datei": "cheiridopsis_succulent/cheiridopsis_succulent_2k.blend",
+   "objekt": "cheiridopsis_succulent_b_LOD0"
+  },
+  "cheiri_c": {
+   "datei": "cheiridopsis_succulent/cheiridopsis_succulent_2k.blend",
+   "objekt": "cheiridopsis_succulent_c_LOD0"
+  },
+  "zweige_a": {
+   "datei": "dry_branches_medium_01/dry_branches_medium_01_2k.blend",
+   "objekt": "dry_branches_medium_01_a"
+  },
+  "searsia_a": {
+   "datei": "searsia_lucida/searsia_lucida_2k.blend",
+   "objekt": "searsia_lucida_a_LOD0",
+   "blatt_material": "searsia_lucida_leaves",
+   "blatt_skala": 1.4
+  },
+  "searsia_b": {
+   "datei": "searsia_lucida/searsia_lucida_2k.blend",
+   "objekt": "searsia_lucida_b_LOD0",
+   "blatt_material": "searsia_lucida_leaves",
+   "blatt_skala": 1.4
+  },
+  "searsia_c": {
+   "datei": "searsia_lucida/searsia_lucida_2k.blend",
+   "objekt": "searsia_lucida_c_LOD0",
+   "blatt_material": "searsia_lucida_leaves",
+   "blatt_skala": 1.4
+  },
+  "searsia_d": {
+   "datei": "searsia_lucida/searsia_lucida_2k.blend",
+   "objekt": "searsia_lucida_d_LOD0",
+   "blatt_material": "searsia_lucida_leaves",
+   "blatt_skala": 1.4
+  },
+  "searsia_e": {
+   "datei": "searsia_lucida/searsia_lucida_2k.blend",
+   "objekt": "searsia_lucida_e_LOD0",
+   "blatt_material": "searsia_lucida_leaves",
+   "blatt_skala": 1.4
+  },
+  "birke_a": {
+   "datei": "eigen/birke_a.blend",
+   "objekt": "baum",
+   "wachsen": {
+    "art": "baum",
+    "keim": 11,
+    "hoehe": 12.0,
+    "stamm_radius": 0.16,
+    "stamm_krumm": 0.04,
+    "aeste": 30,
+    "ast_ab": 0.3,
+    "ast_winkel": 40,
+    "ast_laenge": 0.3,
+    "haengen": 0.06,
+    "zweige": 6,
+    "blatt_bild": "LeafSet014/LeafSet014_2K-PNG",
+    "blatt_groesse": 0.45,
+    "blatt_dichte": 12,
+    "rinde": "birke"
+   }
+  },
+  "weide_a": {
+   "datei": "eigen/weide_a.blend",
+   "objekt": "baum",
+   "wachsen": {
+    "art": "baum",
+    "keim": 21,
+    "hoehe": 8.0,
+    "stamm_radius": 0.3,
+    "stamm_krumm": 0.08,
+    "aeste": 18,
+    "ast_ab": 0.5,
+    "ast_winkel": 30,
+    "ast_laenge": 0.75,
+    "haengen": 0.5,
+    "zweige": 4,
+    "blatt_bild": "Foliage006/Foliage006_2K-PNG",
+    "blatt_groesse": 0.5,
+    "blatt_dichte": 8,
+    "blatt_haengen": true,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_anteil": 0.45
+   }
+  },
+  "bambus_a": {
+   "datei": "eigen/bambus_a.blend",
+   "objekt": "baum",
+   "wachsen": {
+    "art": "halme",
+    "keim": 31,
+    "hoehe": 9.0,
+    "stamm_radius": 0.05,
+    "halme": 14,
+    "streuung": 0.9,
+    "neigung": 12,
+    "biegen": 0.12,
+    "zweige": 7,
+    "haengen": 0.15,
+    "blatt_bild": "Foliage006/Foliage006_2K-PNG",
+    "blatt_groesse": 0.6,
+    "blatt_dichte": 10,
+    "rinde": "Bamboo001A/Bamboo001A_2K-PNG_Color.png"
+   }
+  },
+  "birke_b": {
+   "datei": "eigen/birke_b.blend",
+   "objekt": "baum",
+   "wachsen": {
+    "art": "baum",
+    "keim": 12,
+    "hoehe": 11.0,
+    "stamm_radius": 0.16,
+    "stamm_krumm": 0.04,
+    "aeste": 26,
+    "ast_ab": 0.3,
+    "ast_winkel": 35,
+    "ast_laenge": 0.3,
+    "haengen": 0.06,
+    "zweige": 6,
+    "blatt_bild": "LeafSet014/LeafSet014_2K-PNG",
+    "blatt_groesse": 0.45,
+    "blatt_dichte": 12,
+    "rinde": "birke"
+   }
+  },
+  "birke_c": {
+   "datei": "eigen/birke_c.blend",
+   "objekt": "baum",
+   "wachsen": {
+    "art": "baum",
+    "keim": 13,
+    "hoehe": 13.0,
+    "stamm_radius": 0.16,
+    "stamm_krumm": 0.04,
+    "aeste": 34,
+    "ast_ab": 0.3,
+    "ast_winkel": 50,
+    "ast_laenge": 0.24,
+    "haengen": 0.14,
+    "zweige": 6,
+    "blatt_bild": "LeafSet014/LeafSet014_2K-PNG",
+    "blatt_groesse": 0.45,
+    "blatt_dichte": 12,
+    "rinde": "birke"
+   }
+  },
+  "weide_b": {
+   "datei": "eigen/weide_b.blend",
+   "objekt": "baum",
+   "wachsen": {
+    "art": "baum",
+    "keim": 22,
+    "hoehe": 8.0,
+    "stamm_radius": 0.3,
+    "stamm_krumm": 0.08,
+    "aeste": 22,
+    "ast_ab": 0.5,
+    "ast_winkel": 38,
+    "ast_laenge": 0.75,
+    "haengen": 0.5,
+    "zweige": 4,
+    "blatt_bild": "Foliage006/Foliage006_2K-PNG",
+    "blatt_groesse": 0.5,
+    "blatt_dichte": 8,
+    "blatt_haengen": true,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_anteil": 0.4
+   }
+  },
+  "bambus_b": {
+   "datei": "eigen/bambus_b.blend",
+   "objekt": "baum",
+   "wachsen": {
+    "art": "halme",
+    "keim": 32,
+    "hoehe": 8.0,
+    "stamm_radius": 0.05,
+    "halme": 20,
+    "streuung": 1.2,
+    "neigung": 16,
+    "biegen": 0.12,
+    "zweige": 7,
+    "haengen": 0.15,
+    "blatt_bild": "Foliage006/Foliage006_2K-PNG",
+    "blatt_groesse": 0.6,
+    "blatt_dichte": 10,
+    "rinde": "Bamboo001A/Bamboo001A_2K-PNG_Color.png"
+   }
+  },
+  "palme_a": {
+   "datei": "eigen/palme_a.blend",
+   "objekt": "baum",
+   "rinde": "palm_tree_bark/palm_tree_bark_diff_2k.png",
+   "wedel_objekte": [
+    "wedel_1",
+    "wedel_2"
+   ],
+   "wachsen": {
+    "art": "palme",
+    "keim": 41,
+    "hoehe": 9.0,
+    "stamm_radius": 0.2,
+    "neigung": 10,
+    "wedel": 14,
+    "wedel_laenge": 3.6,
+    "wedel_breite": 1.0,
+    "fiedern": 40,
+    "blatt_bild": "Foliage006/Foliage006_2K-PNG",
+    "rinde": "palm_tree_bark/palm_tree_bark_diff_2k.png",
+    "blatt_deckend": true,
+    "fieder_breite": 0.1
+   }
+  },
+  "palme_b": {
+   "datei": "eigen/palme_b.blend",
+   "objekt": "baum",
+   "rinde": "palm_tree_bark/palm_tree_bark_diff_2k.png",
+   "wedel_objekte": [
+    "wedel_1",
+    "wedel_2"
+   ],
+   "wachsen": {
+    "art": "palme",
+    "keim": 42,
+    "hoehe": 9.0,
+    "stamm_radius": 0.2,
+    "neigung": 10,
+    "wedel": 14,
+    "wedel_laenge": 3.2,
+    "wedel_breite": 0.85,
+    "fiedern": 34,
+    "blatt_bild": "Foliage006/Foliage006_2K-PNG",
+    "rinde": "palm_tree_bark/palm_tree_bark_diff_2k.png",
+    "blatt_deckend": true,
+    "fieder_breite": 0.1
+   }
+  },
+  "ahorn_a": {
+   "datei": "eigen/ahorn_a.blend",
+   "objekt": "baum",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+   "wachsen": {
+    "art": "baum",
+    "keim": 51,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_krumm": 0.06,
+    "zweige": 5,
+    "hoehe": 10.0,
+    "stamm_radius": 0.22,
+    "aeste": 26,
+    "ast_ab": 0.3,
+    "ast_winkel": 50,
+    "ast_laenge": 0.38,
+    "haengen": 0.05,
+    "blatt_bild": "LeafSet010/LeafSet010_2K-PNG",
+    "blatt_groesse": 0.6,
+    "blatt_dichte": 11
+   }
+  },
+  "ahorn_b": {
+   "datei": "eigen/ahorn_b.blend",
+   "objekt": "baum",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+   "wachsen": {
+    "art": "baum",
+    "keim": 52,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_krumm": 0.06,
+    "zweige": 5,
+    "hoehe": 9.0,
+    "stamm_radius": 0.2,
+    "aeste": 24,
+    "ast_ab": 0.25,
+    "ast_winkel": 58,
+    "ast_laenge": 0.42,
+    "haengen": 0.08,
+    "blatt_bild": "LeafSet010/LeafSet010_2K-PNG",
+    "blatt_groesse": 0.6,
+    "blatt_dichte": 11
+   }
+  },
+  "orange_a": {
+   "datei": "eigen/orange_a.blend",
+   "objekt": "baum",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+   "wachsen": {
+    "art": "baum",
+    "keim": 61,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_krumm": 0.06,
+    "zweige": 5,
+    "hoehe": 5.0,
+    "stamm_radius": 0.12,
+    "stamm_anteil": 0.5,
+    "aeste": 24,
+    "ast_ab": 0.6,
+    "ast_winkel": 45,
+    "ast_laenge": 0.45,
+    "haengen": 0.06,
+    "blatt_bild": "LeafSet023/LeafSet023_2K-PNG",
+    "blatt_groesse": 0.35,
+    "blatt_dichte": 18
+   }
+  },
+  "bonsai_a": {
+   "datei": "eigen/bonsai_a.blend",
+   "objekt": "baum",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+   "wachsen": {
+    "art": "baum",
+    "keim": 71,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_krumm": 0.25,
+    "zweige": 6,
+    "hoehe": 4.0,
+    "stamm_radius": 0.14,
+    "stamm_anteil": 0.7,
+    "aeste": 12,
+    "ast_ab": 0.35,
+    "ast_winkel": 80,
+    "ast_laenge": 0.4,
+    "haengen": 0.0,
+    "blatt_bild": "LeafSet024/LeafSet024_2K-PNG",
+    "blatt_groesse": 0.3,
+    "blatt_dichte": 20
+   }
+  },
+  "kirsche_a": {
+   "datei": "eigen/kirsche_a.blend",
+   "objekt": "baum",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+   "wachsen": {
+    "art": "baum",
+    "keim": 81,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_krumm": 0.06,
+    "zweige": 5,
+    "hoehe": 7.0,
+    "stamm_radius": 0.18,
+    "stamm_anteil": 0.5,
+    "aeste": 22,
+    "ast_ab": 0.5,
+    "ast_winkel": 55,
+    "ast_laenge": 0.5,
+    "haengen": 0.06,
+    "blatt_bild": "LeafSet024/LeafSet024_2K-PNG",
+    "blatt_groesse": 0.4,
+    "blatt_dichte": 16,
+    "blatt_toenung": [
+     1.0,
+     0.62,
+     0.78
+    ]
+   }
+  },
+  "kirsche_b": {
+   "datei": "eigen/kirsche_b.blend",
+   "objekt": "baum",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+   "wachsen": {
+    "art": "baum",
+    "keim": 82,
+    "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png",
+    "stamm_krumm": 0.06,
+    "zweige": 5,
+    "hoehe": 6.5,
+    "stamm_radius": 0.17,
+    "stamm_anteil": 0.45,
+    "aeste": 20,
+    "ast_ab": 0.5,
+    "ast_winkel": 62,
+    "ast_laenge": 0.52,
+    "haengen": 0.1,
+    "blatt_bild": "LeafSet024/LeafSet024_2K-PNG",
+    "blatt_groesse": 0.4,
+    "blatt_dichte": 16,
+    "blatt_toenung": [
+     1.0,
+     0.7,
+     0.85
+    ]
+   }
+  },
+  "eiche": {
+   "datei": "jacaranda_tree/jacaranda_tree_2k.blend",
+   "objekt": "jacaranda_tree_LOD1",
+   "rinde": "fir_tree_01/textures/fir_tree_01_bark_diff_2k.png"
+  }
+ },
+ "basen": {
+  "i01a": {
+   "quelle": "island01",
+   "azimute": [
+    0,
+    90
+   ]
+  },
+  "i01b": {
+   "quelle": "island01",
+   "azimute": [
+    45,
+    135
+   ]
+  },
+  "i01c": {
+   "quelle": "island01",
+   "azimute": [
+    180,
+    270
+   ]
+  },
+  "i01d": {
+   "quelle": "island01",
+   "azimute": [
+    225,
+    315
+   ]
+  },
+  "i02a": {
+   "quelle": "island02",
+   "azimute": [
+    30,
+    120
+   ]
+  },
+  "i02b": {
+   "quelle": "island02",
+   "azimute": [
+    75,
+    165
+   ]
+  },
+  "i02c": {
+   "quelle": "island02",
+   "azimute": [
+    210,
+    300
+   ]
+  },
+  "i02d": {
+   "quelle": "island02",
+   "azimute": [
+    255,
+    345
+   ]
+  },
+  "c_fa1": {
+   "quelle": "fir01a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_fa2": {
+   "quelle": "fir01a",
+   "azimute": [
+    45,
+    135
+   ],
+   "grundtyp": "C"
+  },
+  "c_fa3": {
+   "quelle": "fir01a",
+   "azimute": [
+    200,
+    290
+   ],
+   "grundtyp": "C"
+  },
+  "c_fb1": {
+   "quelle": "fir01b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_fb2": {
+   "quelle": "fir01b",
+   "azimute": [
+    120,
+    210
+   ],
+   "grundtyp": "C"
+  },
+  "c_fb3": {
+   "quelle": "fir01b",
+   "azimute": [
+    300,
+    30
+   ],
+   "grundtyp": "C"
+  },
+  "c_fc2": {
+   "quelle": "fir01c",
+   "azimute": [
+    60,
+    150
+   ],
+   "grundtyp": "C"
+  },
+  "c_ka1": {
+   "quelle": "kiefer_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_kb1": {
+   "quelle": "kiefer_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_kc1": {
+   "quelle": "kiefer_c",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_ta1": {
+   "quelle": "tanne_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_ta2": {
+   "quelle": "tanne_a",
+   "azimute": [
+    90,
+    180
+   ],
+   "grundtyp": "C"
+  },
+  "c_ta3": {
+   "quelle": "tanne_a",
+   "azimute": [
+    200,
+    290
+   ],
+   "grundtyp": "C"
+  },
+  "c_tb1": {
+   "quelle": "tanne_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_tb2": {
+   "quelle": "tanne_b",
+   "azimute": [
+    45,
+    135
+   ],
+   "grundtyp": "C"
+  },
+  "c_tc1": {
+   "quelle": "tanne_c",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "C"
+  },
+  "c_tc2": {
+   "quelle": "tanne_c",
+   "azimute": [
+    150,
+    240
+   ],
+   "grundtyp": "C"
+  },
+  "c_saeule": {
+   "quelle": "tanne_b_dicht",
+   "azimute": [
+    270,
+    0
+   ],
+   "grundtyp": "C_saeule"
+  },
+  "c_tc3": {
+   "quelle": "tanne_c",
+   "azimute": [
+    270,
+    0
+   ],
+   "grundtyp": "C"
+  },
+  "c_tb3": {
+   "quelle": "tanne_b",
+   "azimute": [
+    180,
+    270
+   ],
+   "grundtyp": "C"
+  },
+  "e_b01": {
+   "quelle": "searsia_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_b02": {
+   "quelle": "searsia_c",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_b03": {
+   "quelle": "searsia_d",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_b04": {
+   "quelle": "searsia_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_b05": {
+   "quelle": "searsia_e",
+   "azimute": [
+    90,
+    180
+   ],
+   "grundtyp": "E"
+  },
+  "e_b06": {
+   "quelle": "searsia_e",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_b07": {
+   "quelle": "searsia_b",
+   "azimute": [
+    200,
+    290
+   ],
+   "grundtyp": "E"
+  },
+  "e_b11": {
+   "quelle": "searsia_d",
+   "azimute": [
+    180,
+    270
+   ],
+   "grundtyp": "E"
+  },
+  "e_b12": {
+   "quelle": "searsia_e",
+   "azimute": [
+    180,
+    270
+   ],
+   "grundtyp": "E"
+  },
+  "e_b13": {
+   "quelle": "searsia_c",
+   "azimute": [
+    120,
+    210
+   ],
+   "grundtyp": "E"
+  },
+  "e_pple": {
+   "quelle": "didelta_m",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_vlt": {
+   "quelle": "leipoldtia",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_slvr": {
+   "quelle": "rooibos_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_brgr": {
+   "quelle": "rooibos_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_tw1": {
+   "quelle": "didelta_s",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_tw2": {
+   "quelle": "didelta_s",
+   "azimute": [
+    120,
+    210
+   ],
+   "grundtyp": "E"
+  },
+  "e_tw3": {
+   "quelle": "didelta_s",
+   "azimute": [
+    240,
+    330
+   ],
+   "grundtyp": "E"
+  },
+  "e_yaka": {
+   "quelle": "koecher2",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E_baum"
+  },
+  "e_josh": {
+   "quelle": "koecher1",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E_baum"
+  },
+  "e_kakt": {
+   "quelle": "othonna_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E_baum"
+  },
+  "e_pr1": {
+   "quelle": "cheiri_c",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_pr2": {
+   "quelle": "cheiri_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_ranke1": {
+   "quelle": "shrub04a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "E"
+  },
+  "e_ranke2": {
+   "quelle": "zweige_a",
+   "azimute": [
+    90,
+    180
+   ],
+   "grundtyp": "E"
+  },
+  "b_bi1": {
+   "quelle": "birke_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "B"
+  },
+  "b_bi2": {
+   "quelle": "birke_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "B"
+  },
+  "b_bi3": {
+   "quelle": "birke_c",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "B"
+  },
+  "b_bi4": {
+   "quelle": "birke_a",
+   "azimute": [
+    180,
+    270
+   ],
+   "grundtyp": "B"
+  },
+  "b_bi5": {
+   "quelle": "birke_b",
+   "azimute": [
+    135,
+    225
+   ],
+   "grundtyp": "B"
+  },
+  "b_bi6": {
+   "quelle": "birke_c",
+   "azimute": [
+    200,
+    290
+   ],
+   "grundtyp": "B"
+  },
+  "b_bi7": {
+   "quelle": "birke_a",
+   "azimute": [
+    45,
+    135
+   ],
+   "grundtyp": "B"
+  },
+  "b_we1": {
+   "quelle": "weide_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "B_weide"
+  },
+  "b_we2": {
+   "quelle": "weide_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "B_weide"
+  },
+  "b_we3": {
+   "quelle": "weide_a",
+   "azimute": [
+    180,
+    270
+   ],
+   "grundtyp": "B_weide"
+  },
+  "f_1": {
+   "quelle": "bambus_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "F"
+  },
+  "f_2": {
+   "quelle": "bambus_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "F"
+  },
+  "f_5": {
+   "quelle": "bambus_a",
+   "azimute": [
+    180,
+    270
+   ],
+   "grundtyp": "F"
+  },
+  "d_1": {
+   "quelle": "palme_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "D"
+  },
+  "d_2": {
+   "quelle": "palme_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "D"
+  },
+  "a_ah1": {
+   "quelle": "ahorn_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_ah2": {
+   "quelle": "ahorn_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_ah3": {
+   "quelle": "ahorn_a",
+   "azimute": [
+    120,
+    210
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_ah4": {
+   "quelle": "ahorn_b",
+   "azimute": [
+    200,
+    290
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_ah6": {
+   "quelle": "ahorn_b",
+   "azimute": [
+    45,
+    135
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_ahr": {
+   "quelle": "ahorn_b",
+   "azimute": [
+    300,
+    30
+   ],
+   "grundtyp": "A_rinde"
+  },
+  "a_ei1": {
+   "quelle": "eiche",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_eiche"
+  },
+  "a_ei2": {
+   "quelle": "eiche",
+   "azimute": [
+    60,
+    150
+   ],
+   "grundtyp": "A_eiche"
+  },
+  "a_ei3": {
+   "quelle": "eiche",
+   "azimute": [
+    120,
+    210
+   ],
+   "grundtyp": "A_eiche"
+  },
+  "a_ei4": {
+   "quelle": "eiche",
+   "azimute": [
+    180,
+    270
+   ],
+   "grundtyp": "A_eiche"
+  },
+  "a_ei5": {
+   "quelle": "eiche",
+   "azimute": [
+    240,
+    330
+   ],
+   "grundtyp": "A_eiche"
+  },
+  "a_or": {
+   "quelle": "orange_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_bo1": {
+   "quelle": "bonsai_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_bo2": {
+   "quelle": "bonsai_a",
+   "azimute": [
+    135,
+    225
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_ki1": {
+   "quelle": "kirsche_a",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_ki2": {
+   "quelle": "kirsche_b",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_eigen"
+  },
+  "a_dw1s": {
+   "quelle": "island01",
+   "azimute": [
+    0,
+    90
+   ],
+   "grundtyp": "A_schnee"
+  }
+ },
+ "toene": {
+  "_text": "Herbsttöne: ganze Blätter aus den ambientCG-Sätzen, ausgewählt nach ihrem mittleren Farbton (Grad HSV) und Mindestsättigung; 'gruen' = Laub des Scans",
+  "gruen": null,
+  "rot": {
+   "saetze": [
+    "LeafSet027",
+    "LeafSet028",
+    "LeafSet008"
+   ],
+   "farbton": [
+    [
+     0,
+     28
+    ],
+    [
+     320,
+     360
+    ]
+   ],
+   "saettigung_min": 0.4
+  },
+  "orange": {
+   "saetze": [
+    "LeafSet008",
+    "LeafSet027",
+    "LeafSet028",
+    "LeafSet012"
+   ],
+   "farbton": [
+    [
+     22,
+     42
+    ]
+   ],
+   "saettigung_min": 0.3
+  },
+  "gelb": {
+   "saetze": [
+    "LeafSet007",
+    "LeafSet021",
+    "LeafSet027",
+    "LeafSet028"
+   ],
+   "farbton": [
+    [
+     42,
+     62
+    ]
+   ],
+   "saettigung_min": 0.3
+  },
+  "gold": {
+   "saetze": [
+    "LeafSet007",
+    "LeafSet021",
+    "LeafSet008",
+    "LeafSet027"
+   ],
+   "farbton": [
+    [
+     32,
+     50
+    ]
+   ],
+   "saettigung_min": 0.3
+  }
+ },
+ "varianten": {
+  "gruen": {
+   "sommer": [
+    "gruen"
+   ],
+   "herbst": [
+    "gruen"
+   ]
+  },
+  "rotorange": {
+   "sommer": [
+    "gruen"
+   ],
+   "herbst": [
+    "rot",
+    "orange"
+   ]
+  },
+  "gelb": {
+   "sommer": [
+    "gruen"
+   ],
+   "herbst": [
+    "gelb",
+    "gold"
+   ]
+  }
+ },
+ "grundtypen": {
+  "A": {
+   "_text": "Laubkrone breit: drei senkrechte Karten mit zwei Seitenbildern, zwei gefaltete Schichten aus der Kronenscheibe und eine aus der Aufsicht des oberen Kronendrittels (keine Kuppel)",
+   "form": "kugel",
+   "breite": 0.75,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.35,
+    0.62
+   ],
+   "krone_ab": 0.62,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   }
+  },
+  "C": {
+   "_text": "Nadelbaum: zwei gekreuzte Karten mit den Seitenbildern (zum Kegel gestaucht), acht gefaltete Schichten (unten aus der Kronenscheibe, oben aus der Aufsicht der oberen Krone), Stamm mit Rinde; Schnee aus der Normalen-Aufnahme",
+   "form": "kegel",
+   "breite": 1.0,
+   "azimute": [
+    0,
+    90
+   ],
+   "krone_ab": 0.5,
+   "scheibe": [
+    0.2,
+    0.5
+   ],
+   "kegel_ab": 0.3,
+   "kegel_spitze": 0.03,
+   "normalen": true,
+   "hell_ziel": 0.34,
+   "rinde_farbe": "rinde_nadel",
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.0,
+      0.38,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.38,
+      0.0,
+      0.76,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.76,
+      0.76,
+      1.0,
+      1.0
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.76,
+      0.52,
+      1.0,
+      0.76
+     ]
+    },
+    "rinde": {
+     "rinde": true,
+     "rect": [
+      0.76,
+      0.0,
+      1.0,
+      0.52
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b"
+    ],
+    "spiegel": [
+     false,
+     false
+    ],
+    "schichten_zahl": 8,
+    "schicht_von": 0.22,
+    "schicht_bis": 0.9,
+    "haengen": 0.3,
+    "normale_aussen": 0.45
+   },
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.22
+  },
+  "C_saeule": {
+   "_text": "Säule (Zypresse, Lebensbaum): wie C, aber schmal, Krone erst oben zur stumpfen Spitze; drei Karten, sechs Schichten",
+   "form": "kegel",
+   "breite": 0.6,
+   "azimute": [
+    0,
+    90
+   ],
+   "krone_ab": 0.45,
+   "scheibe": [
+    0.15,
+    0.45
+   ],
+   "kegel_ab": 0.65,
+   "kegel_spitze": 0.2,
+   "normalen": true,
+   "hell_ziel": 0.34,
+   "rinde_farbe": "rinde_nadel",
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.0,
+      0.38,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.38,
+      0.0,
+      0.76,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.76,
+      0.76,
+      1.0,
+      1.0
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.76,
+      0.52,
+      1.0,
+      0.76
+     ]
+    },
+    "rinde": {
+     "rinde": true,
+     "rect": [
+      0.76,
+      0.0,
+      1.0,
+      0.52
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten_zahl": 6,
+    "schicht_von": 0.15,
+    "schicht_bis": 0.9,
+    "haengen": 0.15,
+    "normale_aussen": 0.45,
+    "stamm": 0.0
+   },
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.14
+  },
+  "E": {
+   "_text": "Busch: drei gekreuzte Karten mit den Seitenbildern des Scans (abwechselnd gespiegelt), waagrechte Karte mit der Aufsicht obenauf; Schnee aus der Normalen-Aufnahme",
+   "form": "busch",
+   "azimute": [
+    0,
+    90
+   ],
+   "krone_ab": 0.0,
+   "scheibe": [
+    0.3,
+    0.7
+   ],
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "busch_karten": 3,
+    "busch_bilder": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "busch_deckel": "oben",
+    "busch_deckel_hoehe": 0.75,
+    "normale_aussen": 0.6
+   },
+   "breite": 1.25,
+   "breite_max": 1.2,
+   "hell_ziel": 0.36
+  },
+  "E_baum": {
+   "_text": "Wüstenbaum (Köcherbaum, Josua-Palmlilie, Yucca, Kaktus): Form wie Grundtyp A, Schnee aus der Normalen-Aufnahme",
+   "form": "kugel",
+   "breite": 1.0,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.35,
+    0.62
+   ],
+   "krone_ab": 0.62,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "hell_ziel": 0.36
+  },
+  "B": {
+   "_text": "Birke (eigener Generator baum_wachsen.py): Form wie Grundtyp A, schlank",
+   "form": "kugel",
+   "breite": 1.0,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.35,
+    0.62
+   ],
+   "krone_ab": 0.62,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.32
+  },
+  "B_weide": {
+   "_text": "Weide (eigener Generator): vier senkrechte Karten mit den Seitenbildern, eine Schicht aus der Kronenscheibe (die hängenden Blattkarten sind von oben nicht zu sehen)",
+   "form": "kugel",
+   "breite": 0.9,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.3,
+    0.6
+   ],
+   "krone_ab": 0.4,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a",
+     "seite_b"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true,
+     true
+    ],
+    "schichten": [
+     [
+      0.5,
+      "scheibe"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.5,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.6
+  },
+  "F": {
+   "_text": "Bambus (eigener Generator, Halme): Form wie Grundtyp A, schmal; Schnee aus der Normalen-Aufnahme",
+   "form": "kugel",
+   "breite": 1.0,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.45,
+    0.75
+   ],
+   "krone_ab": 0.5,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.35
+  },
+  "D": {
+   "_text": "Palme (Modell über W3DModelDraw in beiden Spielen): geneigter Stamm mit Rinde, acht gebogene Wedelstreifen mit dem Bild eines einzelnen, von oben gerenderten Wedels (eigener Generator)",
+   "form": "wedel",
+   "max_ecken": 130,
+   "hell_ziel": 0.36,
+   "wedel_m": 3.5,
+   "aufsicht_aufl": 0.5,
+   "bereiche": {
+    "wedel_a": {
+     "bild": "wedel_a",
+     "rect": [
+      0.0,
+      0.0,
+      0.375,
+      1.0
+     ]
+    },
+    "wedel_b": {
+     "bild": "wedel_b",
+     "rect": [
+      0.375,
+      0.0,
+      0.75,
+      1.0
+     ]
+    },
+    "rinde": {
+     "rinde": true,
+     "rect": [
+      0.75,
+      0.0,
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "wedel": 11,
+    "heben": 0.35,
+    "haengen": 0.9,
+    "stamm": 0.03,
+    "stamm_hoehe": 0.88,
+    "normale_aussen": 0.5
+   }
+  },
+  "A_eigen": {
+   "_text": "Laubbaum aus dem eigenen Generator (Ahorn, Orange, Bonsai, Kirschblüte): Form wie A, Schnee aus der Normalen-Aufnahme",
+   "form": "kugel",
+   "breite": 1.0,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.35,
+    0.62
+   ],
+   "krone_ab": 0.62,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.6
+  },
+  "A_eiche": {
+   "_text": "Eiche aus dem Jacaranda-Scan (breite Krone): Form wie A, Schnee aus der Normalen-Aufnahme",
+   "form": "kugel",
+   "breite": 0.75,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.35,
+    0.62
+   ],
+   "krone_ab": 0.62,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.6
+  },
+  "A_schnee": {
+   "_text": "Wie A mit Normalen-Aufnahme (Schneefassung eines A-Baums)",
+   "form": "kugel",
+   "breite": 0.75,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.35,
+    0.62
+   ],
+   "krone_ab": 0.62,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.5,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.5,
+      0.5,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.5,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.5,
+      0.0,
+      1.0,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5
+  },
+  "A_rinde": {
+   "_text": "Wie A_eigen mit Rindenbereich rechts (für den Ahornstumpf auf derselben Textur)",
+   "form": "kugel",
+   "breite": 1.0,
+   "azimute": [
+    0,
+    90
+   ],
+   "scheibe": [
+    0.35,
+    0.62
+   ],
+   "krone_ab": 0.62,
+   "bereiche": {
+    "seite_a": {
+     "bild": "seite_a",
+     "rect": [
+      0.0,
+      0.5,
+      0.45,
+      1.0
+     ]
+    },
+    "seite_b": {
+     "bild": "seite_b",
+     "rect": [
+      0.45,
+      0.5,
+      0.9,
+      1.0
+     ]
+    },
+    "rinde": {
+     "rinde": true,
+     "rect": [
+      0.9,
+      0.0,
+      1.0,
+      1.0
+     ]
+    },
+    "oben": {
+     "bild": "oben",
+     "rect": [
+      0.0,
+      0.0,
+      0.45,
+      0.5
+     ]
+    },
+    "scheibe": {
+     "bild": "scheibe",
+     "rect": [
+      0.45,
+      0.0,
+      0.9,
+      0.5
+     ]
+    }
+   },
+   "form_vorgaben": {
+    "karten": [
+     "seite_a",
+     "seite_b",
+     "seite_a"
+    ],
+    "spiegel": [
+     false,
+     false,
+     true
+    ],
+    "schichten": [
+     [
+      0.4,
+      "scheibe"
+     ],
+     [
+      0.58,
+      "scheibe"
+     ],
+     [
+      0.78,
+      "oben"
+     ]
+    ],
+    "kuppel_ecken": 0,
+    "haengen": 0.3,
+    "normale_aussen": 0.8
+   },
+   "normalen": true,
+   "aufsicht_aufl": 0.5,
+   "breite_max": 0.6
+  }
+ },
+ "farben": {
+  "_text": "Sommergrün je Kanal (sRGB 0..1), eigene Palette; mit 'anteil' < 1 behält der Scan einen Teil seiner Farbe",
+  "gruen_hell": {
+   "mittel": [
+    0.3,
+    0.38,
+    0.15
+   ],
+   "streuung": [
+    0.1,
+    0.12,
+    0.07
+   ]
+  },
+  "gruen_satt": {
+   "mittel": [
+    0.22,
+    0.32,
+    0.12
+   ],
+   "streuung": [
+    0.09,
+    0.11,
+    0.06
+   ]
+  },
+  "gruen_kuehl": {
+   "mittel": [
+    0.24,
+    0.33,
+    0.2
+   ],
+   "streuung": [
+    0.09,
+    0.11,
+    0.08
+   ]
+  },
+  "gruen_dunkel": {
+   "mittel": [
+    0.19,
+    0.27,
+    0.11
+   ],
+   "streuung": [
+    0.08,
+    0.1,
+    0.06
+   ]
+  },
+  "nadel_kiefer": {
+   "mittel": [
+    0.27,
+    0.36,
+    0.14
+   ],
+   "streuung": [
+    0.12,
+    0.14,
+    0.07
+   ]
+  },
+  "nadel_satt": {
+   "mittel": [
+    0.2,
+    0.3,
+    0.12
+   ],
+   "streuung": [
+    0.09,
+    0.11,
+    0.06
+   ]
+  },
+  "nadel_dunkel": {
+   "mittel": [
+    0.16,
+    0.25,
+    0.12
+   ],
+   "streuung": [
+    0.07,
+    0.09,
+    0.06
+   ]
+  },
+  "nadel_blau": {
+   "mittel": [
+    0.18,
+    0.27,
+    0.21
+   ],
+   "streuung": [
+    0.07,
+    0.09,
+    0.08
+   ]
+  },
+  "rinde_nadel": {
+   "mittel": [
+    0.42,
+    0.34,
+    0.27
+   ],
+   "streuung": [
+    0.1,
+    0.09,
+    0.08
+   ]
+  },
+  "trocken_braun": {
+   "mittel": [
+    0.46,
+    0.37,
+    0.25
+   ],
+   "streuung": [
+    0.1,
+    0.08,
+    0.06
+   ]
+  },
+  "trocken_oliv": {
+   "mittel": [
+    0.4,
+    0.38,
+    0.24
+   ],
+   "streuung": [
+    0.09,
+    0.08,
+    0.06
+   ]
+  },
+  "nadel_ea": {
+   "mittel": [
+    0.467,
+    0.49,
+    0.314
+   ],
+   "streuung": [
+    0.13,
+    0.13,
+    0.09
+   ]
+  }
+ },
+ "texturen": {
+  "PTDogwod01": {
+   "grundtyp": "A",
+   "basis": "i01a",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "gruen_hell",
+   "anteil": 0.6,
+   "modelle": {
+    "PTDogwod01": {
+     "hoehe_m": 5.0,
+     "_objekte": "TreeDogwood1, GenericTree, GenericOptTree, BurningEmber"
+    },
+    "PTDogwod02": {
+     "hoehe_m": 4.2,
+     "_objekte": "TreeDogwood2",
+     "form": {
+      "karten": [
+       "seite_b",
+       "seite_a",
+       "seite_b"
+      ],
+      "spiegel": [
+       false,
+       true,
+       true
+      ],
+      "drehung": 30
+     }
+    },
+    "PTDogwodHI1": {
+     "hoehe_m": 5.0,
+     "_objekte": "CINETreeDogwood1",
+     "form": {
+      "karten": [
+       "seite_a",
+       "seite_b",
+       "seite_a",
+       "seite_b"
+      ],
+      "spiegel": [
+       false,
+       false,
+       true,
+       true
+      ],
+      "drehung": 15
+     },
+     "ohne_b": true
+    },
+    "PTDogwodHI2": {
+     "hoehe_m": 4.2,
+     "_objekte": "CINETreeDogwood2",
+     "form": {
+      "karten": [
+       "seite_b",
+       "seite_a",
+       "seite_b",
+       "seite_a"
+      ],
+      "spiegel": [
+       false,
+       true,
+       true,
+       false
+      ],
+      "drehung": 40
+     },
+     "ohne_b": true
+    }
+   },
+   "b_fassung": true
+  },
+  "PTDogwod03": {
+   "grundtyp": "A",
+   "basis": "i02a",
+   "jahreszeit": "herbst",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTDogwod03": {
+     "hoehe_m": 6.0,
+     "breite": 0.75,
+     "_objekte": "TreeDogwood3"
+    },
+    "PTDogwod04": {
+     "hoehe_m": 5.5,
+     "breite": 0.75,
+     "_objekte": "TreeDogwood4",
+     "form": {
+      "karten": [
+       "seite_b",
+       "seite_a",
+       "seite_b"
+      ],
+      "spiegel": [
+       false,
+       true,
+       true
+      ],
+      "drehung": 25
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTDogwod04": {
+   "grundtyp": "A",
+   "basis": "i01b",
+   "jahreszeit": "herbst",
+   "ton": 1,
+   "farbe": "gruen_kuehl",
+   "anteil": 0.6,
+   "modelle": {
+    "PTDogwod05": {
+     "hoehe_m": 5.5,
+     "_objekte": "TreeDogwood5"
+    },
+    "PTDogwod06": {
+     "hoehe_m": 4.6,
+     "_objekte": "TreeDogwood6",
+     "form": {
+      "karten": [
+       "seite_b",
+       "seite_a",
+       "seite_b"
+      ],
+      "spiegel": [
+       true,
+       false,
+       true
+      ],
+      "drehung": 50
+     }
+    },
+    "PTBush16": {
+     "hoehe_m": 1.6,
+     "breite_m": 2.6,
+     "form_art": "busch",
+     "_objekte": "Bush16 (INI: PTDogWod04.tga)"
+    }
+   },
+   "b_fassung": true
+  },
+  "PTDogwod05": {
+   "grundtyp": "A",
+   "basis": "i02b",
+   "jahreszeit": "herbst",
+   "ton": 0,
+   "farbe": "gruen_dunkel",
+   "anteil": 0.6,
+   "modelle": {
+    "PTDogwod07": {
+     "hoehe_m": 6.5,
+     "_objekte": "TreeDogwood7",
+     "breite": 0.75
+    }
+   },
+   "b_fassung": true
+  },
+  "PTDogwod06": {
+   "grundtyp": "A",
+   "basis": "i01c",
+   "jahreszeit": "herbst",
+   "ton": 1,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTDogwod08": {
+     "hoehe_m": 5.0,
+     "_objekte": "TreeDogwood8",
+     "form": {
+      "karten": [
+       "seite_b",
+       "seite_a",
+       "seite_b"
+      ],
+      "spiegel": [
+       true,
+       true,
+       false
+      ],
+      "drehung": 70
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall1": {
+   "grundtyp": "A",
+   "basis": "i01a",
+   "jahreszeit": "herbst",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall1": {
+     "hoehe_m": 6.8,
+     "_objekte": "TreeOakFall1"
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall2": {
+   "grundtyp": "A",
+   "basis": "i02a",
+   "jahreszeit": "herbst",
+   "ton": 1,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall2": {
+     "hoehe_m": 6.0,
+     "breite": 0.75,
+     "_objekte": "TreeOakFall2"
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall3": {
+   "grundtyp": "A",
+   "basis": "i01b",
+   "jahreszeit": "herbst",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall3": {
+     "hoehe_m": 6.4,
+     "_objekte": "TreeOakFall3",
+     "form": {
+      "drehung": 30
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall4": {
+   "grundtyp": "A",
+   "basis": "i02b",
+   "jahreszeit": "herbst",
+   "ton": 1,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall4": {
+     "hoehe_m": 7.2,
+     "breite": 0.75,
+     "_objekte": "TreeOakFall4",
+     "form": {
+      "drehung": 60
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall5": {
+   "grundtyp": "A",
+   "basis": "i01c",
+   "jahreszeit": "herbst",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall5": {
+     "hoehe_m": 5.6,
+     "_objekte": "TreeOakFall5",
+     "form": {
+      "karten": [
+       "seite_b",
+       "seite_a",
+       "seite_b"
+      ],
+      "spiegel": [
+       false,
+       true,
+       true
+      ]
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall6": {
+   "grundtyp": "A",
+   "basis": "i02c",
+   "jahreszeit": "herbst",
+   "ton": 1,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall6": {
+     "hoehe_m": 6.8,
+     "breite": 0.75,
+     "_objekte": "TreeOakFall6",
+     "form": {
+      "drehung": 45
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall7": {
+   "grundtyp": "A",
+   "basis": "i01d",
+   "jahreszeit": "herbst",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall7": {
+     "hoehe_m": 6.4,
+     "_objekte": "TreeOakFall7",
+     "form": {
+      "karten": [
+       "seite_b",
+       "seite_a",
+       "seite_b"
+      ],
+      "spiegel": [
+       true,
+       false,
+       true
+      ],
+      "drehung": 15
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTOakFall8": {
+   "grundtyp": "A",
+   "basis": "i02d",
+   "jahreszeit": "herbst",
+   "ton": 1,
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "modelle": {
+    "PTOakFall8": {
+     "hoehe_m": 7.6,
+     "breite": 0.75,
+     "_objekte": "TreeOakFall8",
+     "form": {
+      "drehung": 75
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTPine01": {
+   "grundtyp": "C",
+   "basis": "c_fa1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTPine01": {
+     "hoehe_m": 7.08,
+     "_objekte": "TreePine",
+     "breite": 1.603
+    },
+    "PTPine01_hi": {
+     "hoehe_m": 7.18,
+     "_objekte": "TreePine2",
+     "form": {
+      "drehung": 65
+     },
+     "breite": 1.653
+    },
+    "PTStumpPine": {
+     "hoehe_m": 0.5,
+     "_objekte": "TreePineStump",
+     "breite_m": 0.7,
+     "form_art": "stumpf",
+     "ohne_b": true
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTPine01_s": {
+   "grundtyp": "C",
+   "basis": "c_fa1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTPine01_s": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreePineSnow"
+    },
+    "PTStumpOak": {
+     "hoehe_m": 0.5,
+     "_objekte": "TreeOakStump",
+     "breite_m": 0.7,
+     "form_art": "stumpf",
+     "ohne_b": true
+    }
+   },
+   "schnee": 0.45,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTPine02": {
+   "grundtyp": "C",
+   "basis": "c_ka1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTPine02": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreePine3",
+     "breite": 1.153
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTPine02_s": {
+   "grundtyp": "C",
+   "basis": "c_ka1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTPine02_s": {
+     "hoehe_m": 6.5,
+     "_objekte": "TreePine3snow"
+    },
+    "PTPine03": {
+     "hoehe_m": 6.0,
+     "_objekte": "TreePine4",
+     "form": {
+      "drehung": 70
+     }
+    }
+   },
+   "schnee": 0.45,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTPine03_s": {
+   "grundtyp": "C",
+   "basis": "c_kc1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTPine03_s": {
+     "hoehe_m": 6.0,
+     "_objekte": "TreePine4snow"
+    },
+    "PTPine03_s2": {
+     "hoehe_m": 6.0,
+     "_objekte": "TreePine4snow2",
+     "form": {
+      "drehung": 70
+     }
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTPine04": {
+   "grundtyp": "C",
+   "basis": "c_kb1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTPine04": {
+     "hoehe_m": 7.9,
+     "_objekte": "TreePine5",
+     "breite": 0.8
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTPine04_s2": {
+   "grundtyp": "C",
+   "basis": "c_kb1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTPine04_s2": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreePine5snow2"
+    },
+    "PTPine04_s": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreePine5snow",
+     "form": {
+      "drehung": 70
+     }
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTSpruce01": {
+   "grundtyp": "C",
+   "basis": "c_ta1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTSpruce01": {
+     "hoehe_m": 7.46,
+     "_objekte": "TreeSpruce",
+     "breite": 1.078
+    },
+    "PTSpruce01_hi": {
+     "hoehe_m": 7.31,
+     "_objekte": "TreeSpruce2",
+     "form": {
+      "drehung": 65
+     },
+     "breite": 1.019
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTSpruce01_s": {
+   "grundtyp": "C",
+   "basis": "c_ta1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTSpruce01_s": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeSpruceSnow"
+    }
+   },
+   "schnee": 0.45,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXPine03": {
+   "grundtyp": "C",
+   "basis": "c_tb1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXPine03": {
+     "hoehe_m": 4.4,
+     "_objekte": "TreeSpruce03",
+     "breite": 1.202
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXPine04": {
+   "grundtyp": "C",
+   "basis": "c_tc1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXPine04": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeSpruce04",
+     "breite": 0.925
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXPine05": {
+   "grundtyp": "C",
+   "basis": "c_tc3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXPine05": {
+     "hoehe_m": 9.0,
+     "_objekte": "TreeSpruce05"
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXPine06": {
+   "grundtyp": "C",
+   "basis": "c_tb1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXPine06": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeSpruce03Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXPine07": {
+   "grundtyp": "C",
+   "basis": "c_tc1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXPine07": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeSpruce04Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXPine08": {
+   "grundtyp": "C",
+   "basis": "c_tc3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXPine08": {
+     "hoehe_m": 9.0,
+     "_objekte": "TreeSpruce05Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFir01": {
+   "grundtyp": "C",
+   "basis": "c_fb1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR01": {
+     "hoehe_m": 4.0,
+     "_objekte": "TreeFir01, TreeFir01snow"
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR02": {
+   "grundtyp": "C",
+   "basis": "c_fa2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR02": {
+     "hoehe_m": 4.3,
+     "_objekte": "TreeFir02"
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR03": {
+   "grundtyp": "C",
+   "basis": "c_fc2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR03": {
+     "hoehe_m": 3.5,
+     "_objekte": "TreeFir03"
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR04": {
+   "grundtyp": "C",
+   "basis": "c_ta2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR04": {
+     "hoehe_m": 3.3,
+     "_objekte": "TreeFir04"
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR05": {
+   "grundtyp": "C",
+   "basis": "c_tb2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR05": {
+     "hoehe_m": 4.0,
+     "_objekte": "TreeFir05",
+     "breite": 1.114
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR06": {
+   "grundtyp": "C",
+   "basis": "c_fb2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR06": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeFir06Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR07": {
+   "grundtyp": "C",
+   "basis": "c_fa3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR07": {
+     "hoehe_m": 8.5,
+     "_objekte": "TreeFir07Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR08": {
+   "grundtyp": "C",
+   "basis": "c_tc2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR08": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeFir08Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR09": {
+   "grundtyp": "C",
+   "basis": "c_tb3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR09": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeFir09Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTXFIR10": {
+   "grundtyp": "C",
+   "basis": "c_ta3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTXFIR10": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeFir10Snow"
+    }
+   },
+   "schnee": 0.8,
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTFir01": {
+   "grundtyp": "C",
+   "basis": "c_fb3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTFir01": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeFir01B"
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTCypress01": {
+   "grundtyp": "C_saeule",
+   "basis": "c_saeule",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTCypress01": {
+     "hoehe_m": 5.5,
+     "_objekte": "ArborVitae01, TreeCypress01"
+    },
+    "PTCypress02": {
+     "hoehe_m": 4.5,
+     "_objekte": "ArborVitae02, TreeCypress02",
+     "form": {
+      "drehung": 50
+     }
+    }
+   },
+   "b_fassung": true,
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTStump": {
+   "grundtyp": "C",
+   "basis": "c_fa1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "nadel_ea",
+   "anteil": 0.85,
+   "modelle": {
+    "PTStumpSpr": {
+     "hoehe_m": 0.5,
+     "_objekte": "TreeSpruceStump",
+     "breite_m": 0.7,
+     "form_art": "stumpf"
+    }
+   },
+   "ziel_leuchtdichte": 0.46,
+   "ziel_saettigung": 0.35
+  },
+  "PTBush01": {
+   "grundtyp": "E",
+   "basis": "e_b01",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush01": {
+     "hoehe_m": 1.3,
+     "_objekte": "Bush01"
+    },
+    "PTBush08": {
+     "hoehe_m": 1.1,
+     "_objekte": "Bush08",
+     "form": {
+      "drehung": 40
+     }
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush02": {
+   "grundtyp": "E",
+   "basis": "e_b02",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush02": {
+     "hoehe_m": 1.2,
+     "_objekte": "Bush02"
+    },
+    "PTBush09": {
+     "hoehe_m": 1.0,
+     "_objekte": "Bush09",
+     "form": {
+      "drehung": 40
+     }
+    }
+   },
+   "farbe": "gruen_hell",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush03": {
+   "grundtyp": "E",
+   "basis": "e_b03",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush03": {
+     "hoehe_m": 1.6,
+     "_objekte": "Bush03"
+    }
+   },
+   "farbe": "gruen_dunkel",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush04": {
+   "grundtyp": "E",
+   "basis": "e_b04",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush04": {
+     "hoehe_m": 1.3,
+     "_objekte": "Bush04"
+    }
+   },
+   "farbe": "gruen_kuehl",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush05": {
+   "grundtyp": "E",
+   "basis": "e_b05",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush05": {
+     "hoehe_m": 0.9,
+     "_objekte": "Bush05"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush06": {
+   "grundtyp": "E",
+   "basis": "e_b06",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush06": {
+     "hoehe_m": 1.2,
+     "_objekte": "Bush06"
+    }
+   },
+   "farbe": "gruen_hell",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush07": {
+   "grundtyp": "E",
+   "basis": "e_b07",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush07": {
+     "hoehe_m": 0.9,
+     "_objekte": "Bush07",
+     "breite": 2.28
+    },
+    "PTBush10": {
+     "hoehe_m": 0.8,
+     "_objekte": "Bush10",
+     "form": {
+      "drehung": 40
+     },
+     "breite": 2.54
+    }
+   },
+   "farbe": "gruen_kuehl",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush11": {
+   "grundtyp": "E",
+   "basis": "e_b11",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush11": {
+     "hoehe_m": 1.1,
+     "_objekte": "Bush11",
+     "breite": 2.06
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.6,
+   "b_fassung": true
+  },
+  "PTBush12": {
+   "grundtyp": "E",
+   "basis": "e_b12",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush12": {
+     "hoehe_m": 1.2,
+     "_objekte": "Bush12Snow"
+    }
+   },
+   "farbe": "gruen_dunkel",
+   "anteil": 0.6,
+   "schnee": 0.6,
+   "b_fassung": true
+  },
+  "PTBush13": {
+   "grundtyp": "E",
+   "basis": "e_b13",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBush13": {
+     "hoehe_m": 1.3,
+     "_objekte": "Bush13Snow"
+    },
+    "PTBush14": {
+     "hoehe_m": 1.1,
+     "_objekte": "Bush14Snow",
+     "form": {
+      "drehung": 40
+     }
+    },
+    "PTBush15": {
+     "hoehe_m": 1.2,
+     "_objekte": "Bush15",
+     "form": {
+      "drehung": 70
+     }
+    }
+   },
+   "farbe": "gruen_dunkel",
+   "anteil": 0.6,
+   "schnee": 0.5,
+   "b_fassung": true
+  },
+  "PMDsrtPple": {
+   "grundtyp": "E",
+   "basis": "e_pple",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMDsrtPple": {
+     "hoehe_m": 1.2,
+     "_objekte": "DesertShrub01"
+    }
+   },
+   "farbe": "trocken_oliv",
+   "anteil": 0.5,
+   "saettigung": 1.0
+  },
+  "PMDsrtVlt": {
+   "grundtyp": "E",
+   "basis": "e_vlt",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMDsrtVlt": {
+     "hoehe_m": 0.6,
+     "_objekte": "DesertShrub02"
+    }
+   }
+  },
+  "PMDsrtSlvr": {
+   "grundtyp": "E",
+   "basis": "e_slvr",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMDsrtSlvr": {
+     "hoehe_m": 0.8,
+     "_objekte": "DesertShrub03"
+    }
+   }
+  },
+  "PMDsrtBrGr2": {
+   "grundtyp": "E",
+   "basis": "e_brgr",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMDsrtBrGr2": {
+     "hoehe_m": 0.8,
+     "_objekte": "DesertShrub04"
+    }
+   }
+  },
+  "PMTmbWeed01": {
+   "grundtyp": "E",
+   "basis": "e_tw1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMTmbWeed01": {
+     "hoehe_m": 0.8,
+     "_objekte": "DesertShrub05"
+    }
+   },
+   "farbe": "trocken_braun",
+   "anteil": 0.85
+  },
+  "PMTmbWeed02": {
+   "grundtyp": "E",
+   "basis": "e_tw2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMTmbWeed02": {
+     "hoehe_m": 0.9,
+     "_objekte": "DesertShrub06"
+    }
+   },
+   "farbe": "trocken_braun",
+   "anteil": 0.85
+  },
+  "PMTmbWeed03": {
+   "grundtyp": "E",
+   "basis": "e_tw3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMTmbWeed03": {
+     "hoehe_m": 0.7,
+     "_objekte": "DesertShrub07"
+    }
+   },
+   "farbe": "trocken_oliv",
+   "anteil": 0.85
+  },
+  "PMYaka": {
+   "grundtyp": "E_baum",
+   "basis": "e_yaka",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMYaka": {
+     "hoehe_m": 2.2,
+     "_objekte": "DesertShrub08"
+    }
+   }
+  },
+  "PMYakaSnw": {
+   "grundtyp": "E_baum",
+   "basis": "e_yaka",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMYakaSnw": {
+     "hoehe_m": 2.2,
+     "_objekte": "DesertShrub11"
+    }
+   },
+   "schnee": 0.5
+  },
+  "PMJoshua": {
+   "grundtyp": "E_baum",
+   "basis": "e_josh",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMJoshua": {
+     "hoehe_m": 4.5,
+     "_objekte": "DesertShrub09 (Modell, nicht Baum-Puffer)"
+    },
+    "PMJoshua_D": {
+     "hoehe_m": 4.5,
+     "_objekte": "DesertShrub09 beschädigt"
+    }
+   }
+  },
+  "PMCactus": {
+   "grundtyp": "E_baum",
+   "basis": "e_kakt",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMCactus": {
+     "hoehe_m": 2.0,
+     "_objekte": "DesertShrub10"
+    }
+   }
+  },
+  "PMPrklyPr": {
+   "grundtyp": "E",
+   "basis": "e_pr1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMPrklyPr": {
+     "hoehe_m": 0.9,
+     "_objekte": "DesertShrub12"
+    }
+   }
+  },
+  "PMPrklyPrs": {
+   "grundtyp": "E",
+   "basis": "e_pr2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMPrklyPrs": {
+     "hoehe_m": 0.7,
+     "_objekte": "DesertShrub13"
+    }
+   }
+  },
+  "PMVines01": {
+   "grundtyp": "E",
+   "basis": "e_ranke1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMVines01": {
+     "hoehe_m": 0.8,
+     "_objekte": "VinesGreen"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.6
+  },
+  "PMVines02": {
+   "grundtyp": "E",
+   "basis": "e_ranke2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PMVines02": {
+     "hoehe_m": 0.6,
+     "_objekte": "VinesBrown"
+    }
+   },
+   "farbe": "trocken_braun",
+   "anteil": 0.8
+  },
+  "PTXBirch01": {
+   "grundtyp": "B",
+   "basis": "b_bi1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBirch01": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeBirch01"
+    }
+   },
+   "farbe": "gruen_hell",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBirch02": {
+   "grundtyp": "B",
+   "basis": "b_bi2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBirch02": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeBirch02"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBirch03": {
+   "grundtyp": "B",
+   "basis": "b_bi3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBirch03": {
+     "hoehe_m": 8.5,
+     "_objekte": "TreeBirch03"
+    }
+   },
+   "farbe": "gruen_hell",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBirch04": {
+   "grundtyp": "B",
+   "basis": "b_bi4",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBirch04": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeBirch04"
+    }
+   },
+   "farbe": "gruen_kuehl",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBirch05": {
+   "grundtyp": "B",
+   "basis": "b_bi5",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBirch05": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeBirch05"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBirch06": {
+   "grundtyp": "B",
+   "basis": "b_bi6",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBirch06": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeBirch06"
+    }
+   },
+   "farbe": "gruen_kuehl",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBirch07": {
+   "grundtyp": "B",
+   "basis": "b_bi7",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBirch07": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeBirch07"
+    }
+   },
+   "farbe": "gruen_hell",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXWILOW01": {
+   "grundtyp": "B_weide",
+   "basis": "b_we1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXWILOW01": {
+     "hoehe_m": 6.5,
+     "_objekte": "TreeWillow01"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXWILOW02": {
+   "grundtyp": "B_weide",
+   "basis": "b_we2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXWILOW02": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeWillow02"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXWILOW03": {
+   "grundtyp": "B_weide",
+   "basis": "b_we3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXWILOW03": {
+     "hoehe_m": 6.0,
+     "_objekte": "TreeWillow03"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBAMB01": {
+   "grundtyp": "F",
+   "basis": "f_1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBAMB01": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeBamboo01"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBAMB02": {
+   "grundtyp": "F",
+   "basis": "f_2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBAMB02": {
+     "hoehe_m": 6.5,
+     "_objekte": "TreeBamboo02"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBAMB05": {
+   "grundtyp": "F",
+   "basis": "f_5",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBAMB05": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeBamboo03"
+    }
+   },
+   "farbe": "gruen_hell",
+   "anteil": 0.5,
+   "b_fassung": true
+  },
+  "PTXBAMB03": {
+   "grundtyp": "F",
+   "basis": "f_1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBAMB03": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeBamboo01Snow"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "schnee": 0.6,
+   "b_fassung": true
+  },
+  "PTXBAMB04": {
+   "grundtyp": "F",
+   "basis": "f_2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBAMB04": {
+     "hoehe_m": 6.5,
+     "_objekte": "TreeBamboo02Snow"
+    }
+   },
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "schnee": 0.6,
+   "b_fassung": true
+  },
+  "PTPalm01": {
+   "grundtyp": "D",
+   "basis": "d_1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "modelle": {
+    "PTPalm01": {
+     "hoehe_m": 9.0,
+     "_objekte": "TreePalm1, TreePalm03",
+     "form": {
+      "drehung": 0
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTPalm02": {
+   "grundtyp": "D",
+   "basis": "d_2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "modelle": {
+    "PTPalm02": {
+     "hoehe_m": 10.0,
+     "_objekte": "TreePalm2, TreePalm04",
+     "form": {
+      "drehung": 120,
+      "wedel": 12
+     }
+    }
+   },
+   "b_fassung": true
+  },
+  "PTPalm03": {
+   "grundtyp": "D",
+   "basis": "d_2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "modelle": {
+    "PTPalm03": {
+     "hoehe_m": 4.5,
+     "_objekte": "TreePalm2short",
+     "form": {
+      "drehung": 60,
+      "stamm_hoehe": 0.8,
+      "stamm": 0.05
+     },
+     "wedel_m": 2.6
+    }
+   },
+   "b_fassung": true
+  },
+  "PTPalm04": {
+   "grundtyp": "D",
+   "basis": "d_1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "modelle": {
+    "PTPalm04": {
+     "hoehe_m": 4.0,
+     "_objekte": "TreePalm1short",
+     "form": {
+      "drehung": 200,
+      "stamm_hoehe": 0.78,
+      "stamm": 0.05
+     },
+     "wedel_m": 2.8
+    }
+   },
+   "b_fassung": true
+  },
+  "PTMaple01": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ah1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTMaple01": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeMaple1"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5
+  },
+  "PTMaple02": {
+   "grundtyp": "A_rinde",
+   "basis": "a_ahr",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTMaple02": {
+     "hoehe_m": 6.5,
+     "_objekte": "TreeMaple2"
+    },
+    "PTStumpMpl": {
+     "hoehe_m": 0.5,
+     "_objekte": "TreeMapleStump",
+     "breite_m": 0.7,
+     "form_art": "stumpf",
+     "ohne_b": true
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5
+  },
+  "PTXMaple01": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ah2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXMaple01": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeMaple03"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_hell",
+   "anteil": 0.5
+  },
+  "PTXMaple02": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ah3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXMaple02": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeMaple04"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_kuehl",
+   "anteil": 0.5
+  },
+  "PTXMaple03": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ah2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXMaple03": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeMaple03Snow"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_hell",
+   "anteil": 0.5,
+   "schnee": 0.6
+  },
+  "PTXMaple04": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ah3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXMaple04": {
+     "hoehe_m": 7.0,
+     "_objekte": "TreeMaple04Snow"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_kuehl",
+   "anteil": 0.5,
+   "schnee": 0.6
+  },
+  "PTXMaple05": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ah4",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXMaple05": {
+     "hoehe_m": 6.5,
+     "_objekte": "TreeMaple05"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5
+  },
+  "PTXMaple06": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ah6",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXMaple06": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeMaple06"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_dunkel",
+   "anteil": 0.5
+  },
+  "PTOak01": {
+   "grundtyp": "A_eiche",
+   "basis": "a_ei1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTOak01": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeOak1"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5
+  },
+  "PTXOAK01": {
+   "grundtyp": "A_eiche",
+   "basis": "a_ei2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXOAK01": {
+     "hoehe_m": 8.5,
+     "_objekte": "TreeOak01"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_dunkel",
+   "anteil": 0.5
+  },
+  "PTXOAK02": {
+   "grundtyp": "A_eiche",
+   "basis": "a_ei3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXOAK02": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeOak02"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_kuehl",
+   "anteil": 0.5
+  },
+  "PTXOAK03": {
+   "grundtyp": "A_eiche",
+   "basis": "a_ei2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXOAK03": {
+     "hoehe_m": 8.5,
+     "_objekte": "TreeOak01Snow"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_dunkel",
+   "anteil": 0.5,
+   "schnee": 0.6
+  },
+  "PTXOAK04": {
+   "grundtyp": "A_eiche",
+   "basis": "a_ei3",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXOAK04": {
+     "hoehe_m": 7.5,
+     "_objekte": "TreeOak02Snow"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_kuehl",
+   "anteil": 0.5,
+   "schnee": 0.6
+  },
+  "PTXOAK05": {
+   "grundtyp": "A_eiche",
+   "basis": "a_ei4",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXOAK05": {
+     "hoehe_m": 8.0,
+     "_objekte": "TreeOak05"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5
+  },
+  "PTXOAK06": {
+   "grundtyp": "A_eiche",
+   "basis": "a_ei5",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXOAK06": {
+     "hoehe_m": 9.0,
+     "_objekte": "TreeOak06"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_hell",
+   "anteil": 0.5
+  },
+  "PTOrangeTr01": {
+   "grundtyp": "A_eigen",
+   "basis": "a_or",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTOrangeTr01": {
+     "hoehe_m": 4.5,
+     "_objekte": "TreeOrangeTree01"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_dunkel",
+   "anteil": 0.5
+  },
+  "PTXBON01": {
+   "grundtyp": "A_eigen",
+   "basis": "a_bo1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBON01": {
+     "hoehe_m": 3.0,
+     "_objekte": "TreeBonsai01"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5
+  },
+  "PTXBON02": {
+   "grundtyp": "A_eigen",
+   "basis": "a_bo2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBON02": {
+     "hoehe_m": 3.5,
+     "_objekte": "TreeBonsai02"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5
+  },
+  "PTXBON03": {
+   "grundtyp": "A_eigen",
+   "basis": "a_bo1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBON03": {
+     "hoehe_m": 3.0,
+     "_objekte": "TreeBonsai01Snow"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "schnee": 0.6
+  },
+  "PTXBON04": {
+   "grundtyp": "A_eigen",
+   "basis": "a_bo2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTXBON04": {
+     "hoehe_m": 3.5,
+     "_objekte": "TreeBonsai02Snow"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_satt",
+   "anteil": 0.5,
+   "schnee": 0.6
+  },
+  "PTBlossom01": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ki1",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBlossom01": {
+     "hoehe_m": 6.0,
+     "_objekte": "TreeCherryBlossom01"
+    }
+   },
+   "b_fassung": true
+  },
+  "PTBlossom02": {
+   "grundtyp": "A_eigen",
+   "basis": "a_ki2",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTBlossom02": {
+     "hoehe_m": 5.5,
+     "_objekte": "TreeCherryBlossom02"
+    }
+   },
+   "b_fassung": true
+  },
+  "PTDogwod01_s": {
+   "grundtyp": "A_schnee",
+   "basis": "a_dw1s",
+   "jahreszeit": "sommer",
+   "ton": 0,
+   "modelle": {
+    "PTDogwod01_S": {
+     "hoehe_m": 5.0,
+     "_objekte": "TreeDogwood1Snow"
+    }
+   },
+   "b_fassung": true,
+   "farbe": "gruen_hell",
+   "anteil": 0.5,
+   "schnee": 0.5
+  }
+ }
+}
