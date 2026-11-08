@@ -30,7 +30,8 @@ if (-not $portRevision) { $portRevision = "0" }
 
 New-Item -ItemType Directory -Force $Ziel | Out-Null
 $quellArchiv = Join-Path $Ziel "ffmpeg-$ref-source.tar.gz"
-Invoke-WebRequest -UseBasicParsing "https://github.com/FFmpeg/FFmpeg/archive/refs/tags/$ref.tar.gz" -OutFile $quellArchiv
+# Direkt von codeload.github.com: github.com/.../archive leitet nur dorthin weiter und antwortet Build-Rechnern zeitweise mit 504.
+Invoke-WebRequest -UseBasicParsing "https://codeload.github.com/FFmpeg/FFmpeg/tar.gz/refs/tags/$ref" -OutFile $quellArchiv
 "FFmpeg-Quelltext: $quellArchiv ($([int]((Get-Item $quellArchiv).Length / 1MB)) MB)"
 
 # Port aus dem vcpkg-Stand der Baseline: nur dieser eine Commit, flach geholt.
