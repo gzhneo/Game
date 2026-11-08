@@ -120,6 +120,8 @@ public:
 
 	/** project the 4 corners of this view into the world and return each point as a parameter,
 			the world points are at the requested Z */
+	/// Height of the ground plane the camera is positioned and constrained on.
+	virtual Real getGroundLevel( void ) const { return 0.0f; }
 	virtual void getScreenCornerWorldPointsAtZ( Coord3D *topLeft, Coord3D *topRight,
 																							Coord3D *bottomLeft, Coord3D *bottomRight,
 																							Real z );

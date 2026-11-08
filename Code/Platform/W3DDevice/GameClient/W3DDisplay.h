@@ -169,6 +169,8 @@ protected:
 	std::unique_ptr<Render2DClass> m_2DRender;								///< interface for common 2D functions
 	IRegion2D m_clipRegion;									///< the clipping region for images
 	Bool m_isClippedEnabled;	///<used by 2D drawing operations to define clip re
+	AsciiString m_screenShotLeaf;	///< file name of a requested screenshot; its message follows the captured frame
+	void showScreenShotMessage();
 	Real m_averageFPS;		///<average fps over the last 30 frames.
 #if defined(_DEBUG)
 	Int64 m_timerAtCumuFPSStart;

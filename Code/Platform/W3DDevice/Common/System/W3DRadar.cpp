@@ -177,12 +177,13 @@ void W3DRadar::reconstructViewBox( void )
 	ICoord2D radar[ 4 ];
 	Int i;
 
-	// get the 4 points of the view corners in the 3D world at the average Z height in the map
+	// get the 4 points of the view corners in the 3D world on the ground plane the camera uses for its
+	// map-edge limits, so the box reaches the map edge when the camera does
 	TheTacticalView->getScreenCornerWorldPointsAtZ( &world[ 0 ],
 																									&world[ 1 ],
 																									&world[ 2 ],
 																									&world[ 3 ],
-																									getTerrainAverageZ() );
+																									TheTacticalView->getGroundLevel() );
 
 	// convert each of the 4 points in the world to radar cell positions
 	for( i = 0; i < 4; i++ )
@@ -221,6 +222,7 @@ void W3DRadar::reconstructViewBox( void )
 	Coord3D pos;
 	TheTacticalView->getPosition( &pos );
 	m_viewZoom = TheTacticalView->getZoom();
+	m_viewGroundLevel = TheTacticalView->getGroundLevel();
 	m_reconstructViewBox = FALSE;
 
 }  // end reconstructViewBox
@@ -304,7 +306,7 @@ void W3DRadar::drawViewBox( Int pixelX, Int pixelY, Int width, Int height )
 
 	// convert top left of screen into world position
 	TheTacticalView->getOrigin( &ulScreen.x, &ulScreen.y );
-	TheTacticalView->screenToWorldAtZ( &ulScreen, &ulWorld, getTerrainAverageZ() );
+	TheTacticalView->screenToWorldAtZ( &ulScreen, &ulWorld, TheTacticalView->getGroundLevel() );
 
 	// convert world to radar coords
  	ulRadar.x = static_cast<Int>(ulWorld.x / (m_mapExtent.width() / static_cast<Real>(RADAR_CELL_WIDTH)));
@@ -843,6 +845,7 @@ W3DRadar::W3DRadar( void )
 	m_reconstructViewBox = TRUE;
 	m_viewAngle = 0.0f;
 	m_viewZoom = 0.0f;
+	m_viewGroundLevel = 0.0f;
 	for( Int i = 0; i < 4; i++ )
 	{
 
@@ -1482,6 +1485,8 @@ void W3DRadar::draw( Int pixelX, Int pixelY, Int width, Int height )
 	if( TheTacticalView->getZoom() != m_viewZoom )
 		m_reconstructViewBox = TRUE;
 	if( TheTacticalView->getAngle() != m_viewAngle )
+		m_reconstructViewBox = TRUE;
+	if( TheTacticalView->getGroundLevel() != m_viewGroundLevel )
 		m_reconstructViewBox = TRUE;
 
 	if( m_reconstructViewBox == TRUE )

@@ -753,8 +753,9 @@ void GameEngine::init( int argc, char *argv[] )
 		initSubsystem(::Engine::context().audio,"TheAudio", createAudioManager(), nullptr);
 		::Engine::context().logicAudio = adoptSubsystem(m_own.logicAudio, MSGNEW("GameEngineSubsystem") LogicAudio());	// logic audio facade, flush() in update()
 		::Engine::context().logicToClient = adoptSubsystem(m_own.logicToClient, MSGNEW("GameEngineSubsystem") LogicToClient());	// logic -> client calls, flush() in update()
+		// A missing music track only stays silent (the audio cache logs the missing file); no reason to quit.
 		if (!TheAudio->isMusicAlreadyLoaded())
-			setQuitting(TRUE);
+			DEBUG_LOG(("Music file of the last MusicTrack not found; the game runs without it\n"));
 
 	#ifdef DUMP_PERF_STATS///////////////////////////////////////////////////////////////////////////
 	GetPrecisionTimer(&endTime64);//////////////////////////////////////////////////////////////////
@@ -901,40 +902,6 @@ void GameEngine::init( int argc, char *argv[] )
 		// If this really needs to take place, please make sure that pressing cancel on the audio 
 		// load music dialog will still cause the game to quit.
 		// m_quitting = FALSE;
-
-		// for fingerprinting, we need to ensure the presence of these files
-
-
-#if !defined(_DEBUG)
-		// File names per game. Generals: generalsb.sec in gensec.big, generalsa.sec in music.big. Checked in
-		// release builds only.
-		const Bool zh = isGameEditionZeroHour();
-		const char *secB = zh ? "generalsbzh.sec" : "generalsb.sec";
-		const char *secBBig = zh ? "genseczh.big" : "gensec.big";
-		const char *secA = zh ? "generalsazh.sec" : "generalsa.sec";
-		const char *secABig = zh ? "musiczh.big" : "music.big";
-		AsciiString dirName;
-    dirName = TheArchiveFileSystem->getArchiveFilenameForFile(secB);
-
-    if (dirName.compareNoCase(secBBig) != 0)
-		{
-			DEBUG_LOG(("%s was not found in %s - it was in '%s'\n", secB, secBBig, dirName.str()));
-			m_quitting = TRUE;
-		}
-		
-		dirName = TheArchiveFileSystem->getArchiveFilenameForFile(secA);
-		const char *noPath = dirName.reverseFind('\\');
-		if (noPath) {
-			dirName = noPath + 1;
-		}
-
-		if (dirName.compareNoCase(secABig) != 0)
-		{
-			DEBUG_LOG(("%s was not found in %s - it was in '%s'\n", secA, secABig, dirName.str()));
-			m_quitting = TRUE;
-		}
-#endif
-
 
 		// initialize the MapCache
 		::Engine::context().mapCache = adoptSubsystem(m_own.mapCache, MSGNEW("GameEngineSubsystem") MapCache);

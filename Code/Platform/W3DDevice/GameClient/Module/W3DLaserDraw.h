@@ -98,6 +98,9 @@ protected:
 	TextureClass *m_texture;
 	Real m_textureAspectRatio;			///< aspect ratio of texture
 	Bool m_selfDirty;								// not saved
+	Vector3 *m_baseColor;						///< colour per line as set up from the module data
+	Bool m_superseded;							///< a newer laser of the same shooter/target pair is drawn instead (not saved)
+	Real m_stackBrightness;					///< brightness factor last applied to the line colours (not saved)
 
 };
 

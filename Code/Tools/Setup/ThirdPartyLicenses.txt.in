@@ -1,0 +1,29 @@
+Third-party components shipped with GZH Neo
+===========================================
+
+The games load these libraries as DLLs from their folders (Generals\, ZeroHour\). The licence texts are in this
+folder; GZH Neo itself is under the GNU GPL v3 with additional terms (LICENSE.md, NOTICE.md one folder up).
+
+FFmpeg - avcodec, avformat, avutil, swresample, swscale (video playback)
+  Licence: GNU Lesser General Public License 2.1 or later (ffmpeg.txt). Built without GPL-only and non-free parts
+  and without external libraries.
+  Source: @GZH_FFMPEG_SOURCE@
+  Built by the vcpkg port "ffmpeg" @GZH_FFMPEG_PORT@ (port files: @GZH_FFMPEG_RECIPE@, the git tree of ports/ffmpeg)
+  The corresponding source code is that FFmpeg release with the patches of that vcpkg port; it is offered for download
+  in the same place as this setup (ffmpeg-<version>-source.tar.gz, ffmpeg-vcpkg-port-<version>.zip). The DLLs are
+  linked dynamically and may be replaced by your own build of the same FFmpeg version.
+
+DirectXTex - texture loading (DirectXTex.dll)
+  Licence: MIT (directxtex.txt)
+
+zlib - data compression (z.dll)
+  Licence: zlib License (zlib.txt)
+
+DirectX Shader Compiler - shaders of the Vulkan renderer (dxcompiler.dll)
+  Licence: University of Illinois/NCSA Open Source License (LLVM Release License) and the licences of its parts
+  (directx-dxc.txt)
+
+Microsoft Visual C++ runtime - msvcp140*.dll, vcruntime140*.dll, concrt140.dll
+  Distributable code of Microsoft Visual Studio, redistributed under its terms.
+
+The setup program is made with Inno Setup (https://jrsoftware.org/isinfo.php).

@@ -136,8 +136,8 @@ float3 Pixel_Of(float3 V)
 {
 	const float w = V.z * e_projB.y + e_projB.w;
 	const float2 ndc = float2(V.x * e_projA.x + V.z * e_projA.z, V.y * e_projA.y + V.z * e_projA.w) / w;
-	const float2 size = e_rect.zw - e_rect.xy;
-	return float3(e_rect.x + (ndc.x * 0.5 + 0.5) * size.x, e_rect.y + (0.5 - ndc.y * 0.5) * size.y, w);
+	const float2 size = e_view.zw - e_view.xy;
+	return float3(e_view.x + (ndc.x * 0.5 + 0.5) * size.x, e_view.y + (0.5 - ndc.y * 0.5) * size.y, w);
 }
 
 // Contact shadow: march toward the sun through the depth copy; 0..1 occlusion.

@@ -23,7 +23,8 @@ Aufruf:
                                                            unter Vulkan, Lauf a jeder Fahrt gegen Lauf a der Referenz
                                                            (Standardtoleranz von compare_shots.py)
 
-Die Gefechtsfahrten entstehen mit tools/render/find_action.py. Rueckgabewert 1, wenn ein Lauf scheitert
+Die Fahrten laufen in der Detailstufe Sehr hoch mit eigenem Benutzerordner (--stufe), unabhaengig von den
+Einstellungen des Nutzers. Die Gefechtsfahrten entstehen mit tools/render/find_action.py. Rueckgabewert 1, wenn ein Lauf scheitert
 oder die Bildpruefung etwas findet; nicht pixelgleiche Bilder allein sind kein Fehler, sie stehen im Bericht.
 """
 import argparse
@@ -132,8 +133,15 @@ GRUPPEN["tess_breit"] += ["tess_steil", "fels_alpine", "fels_fortress"] + ["berg
     "wasser_fluss-z", "wasser_see-z", "wasser_insel", "wassertextur_fluss", "wassertextur_winter", "see-z"]
 
 
-# Known findings of inspect_shots.py: trees in front of black at the far edge
-ERWARTET = {"zoom": {"shot_000840.bmp", "shot_000900.bmp"}}
+# Known findings of inspect_shots.py: trees in front of black at the far edge; black beyond the map with a low camera;
+# the -file start of md_gla05 keeps the main menu over the map, its frame counts as a seam.
+ERWARTET = {"zoom": {"shot_000840.bmp", "shot_000900.bmp"},
+            "berge_winter": {"shot_000720.bmp"},
+            "humvee_frueh": {"shot_005200.bmp"},
+            "humvee_nah": {"shot_007400.bmp"},
+            "wasser_insel": {"shot_000420.bmp", "shot_000480.bmp"},
+            "strassen_abzieh_gla05": {"shot_000180.bmp", "shot_000300.bmp", "shot_001020.bmp", "shot_001080.bmp",
+                                      "shot_001140.bmp", "shot_001200.bmp", "shot_001380.bmp"}}
 
 
 def zaehle(text):
@@ -142,7 +150,8 @@ def zaehle(text):
     return len(zeilen), sum(1 for z in zeilen if "PSNR identisch" not in z)
 
 
-def fahre(name, ziel, out, parallel, bildpruefung, schalter=(), referenz=None, max_diff_ratio=None, aufloesung=None, msaa=None):
+def fahre(name, ziel, out, parallel, bildpruefung, schalter=(), referenz=None, max_diff_ratio=None, aufloesung=None, msaa=None,
+          stufe="VeryHigh"):
     exe, szene, pfad, every = ziel
     ordner = os.path.join(out, name)
     wait_free(parallel=parallel)
@@ -150,7 +159,7 @@ def fahre(name, ziel, out, parallel, bildpruefung, schalter=(), referenz=None, m
         "--path", os.path.join(WURZEL, "tests", "render", "paths", pfad + ".txt"), "--every", str(every),
         "--mehrfach", "--out", ordner, "--timeout", "1500"] + (
         ["--xres", aufloesung[0], "--yres", aufloesung[1]] if aufloesung else []) + [
-        "--msaa", str(msaa if msaa is not None else MSAA.get(name, 1)), "--extra", "-ignoreAsserts"] + list(schalter)
+        "--msaa", str(msaa if msaa is not None else MSAA.get(name, 1)), "--stufe", stufe, "--extra", "-ignoreAsserts"] + list(schalter)
     p = subprocess.run(cmd, cwd=WURZEL, capture_output=True, text=True, errors="replace")
     os.makedirs(ordner, exist_ok=True)
     with open(os.path.join(ordner, "twice.txt"), "w", encoding="utf-8") as f:
@@ -189,6 +198,9 @@ def main():
     ap.add_argument("--aufloesung", help="Bildgroesse BxH statt 1280x720, etwa 1920x1080 oder 3440x1440")
     ap.add_argument("--msaa", type=int, help="Kantenglaettung (Samples) fuer alle Fahrten; ohne Angabe 1, nur die Fahrten "
                     "*-msaa8 mit 8 (R-683)")
+    ap.add_argument("--stufe", default="VeryHigh", choices=("Low", "Medium", "High", "VeryHigh", "nutzer"),
+                    help="Detailstufe aller Fahrten mit eigenem Benutzerordner (Standard VeryHigh); nutzer = aus den "
+                    "Einstellungen des Nutzers")
     ap.add_argument("--parallel", type=int, default=3)
     ap.add_argument("--out", default=os.path.join(WURZEL, "render-out", "alle-fahrten"))
     ap.add_argument("--ohne-bildpruefung", action="store_true")
@@ -214,7 +226,7 @@ def main():
     if unbekannt:
         sys.exit("unbekannte Fahrten: " + ", ".join(unbekannt))
     with cf.ThreadPoolExecutor(a.parallel) as ex:
-        res = list(ex.map(lambda n: fahre(n, FAHRTEN[n], a.out, a.parallel, not a.ohne_bildpruefung, list(a.schalter) + a.schalter_text.split(), a.referenz, a.max_diff_ratio, aufloesung, a.msaa),
+        res = list(ex.map(lambda n: fahre(n, FAHRTEN[n], a.out, a.parallel, not a.ohne_bildpruefung, list(a.schalter) + a.schalter_text.split(), a.referenz, a.max_diff_ratio, aufloesung, a.msaa, a.stufe),
                           namen))
     bilder = sum(r[1] for r in res)
     ungleich = sum(r[2] for r in res)

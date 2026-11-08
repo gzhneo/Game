@@ -309,6 +309,22 @@ GUI:SelectAllAircraftDescription
 "Selects all Aircraft"
 END
 
+GUI:HeatEffects
+"Heat Effects"
+END
+
+TOOLTIP:HeatEffects
+"Toggle showing heat distortion effects. Turn off for improved performance"
+END
+
+TOOLTIP:DoubleClickAttackMove
+"Player units will move and then guard their destination area when action button is double clicked"
+END
+
+GUI:Retaliation
+"Toggle this button off to disable your units from retaliating against attacking enemies automatically"
+END
+
 GZH:NewAISuffix
 "(new AI)"
 END
@@ -430,7 +446,7 @@ GZH:OptionsTextureQuality
 END
 
 GZH:OptionsRenderScale
-"Render resolution"
+"Render scale"
 END
 
 GZH:OptionsRenderScaleFilter
@@ -638,7 +654,7 @@ GZH:OptionsEffectColorGrade
 END
 
 GZH:OptionsEffectSSAO
-"Ambient occlusion"
+"SSAO shading"
 END
 
 GZH:OptionsEffectBloom
@@ -686,7 +702,7 @@ GZH:OptionsEffectParticleLight
 END
 
 GZH:OptionsEffectParticleGround
-"Particles above ground"
+"Raised particles"
 END
 
 GZH:OptionsDetailChangedTitle
@@ -710,7 +726,7 @@ GZH:OptionsEffectShadowCascades
 END
 
 GZH:OptionsEffectAlphaCoverage
-"Foliage edges (MSAA)"
+"Leaf edges (MSAA)"
 END
 
 GZH:OptionsEffectMsaaDepth
@@ -722,7 +738,7 @@ GZH:OptionsEffectWithMsaa
 END
 
 GZH:OptionsEffectGTAO
-"Ambient occlusion GTAO"
+"GTAO shading"
 END
 
 GZH:OptionsEffectWaterSSR
@@ -734,7 +750,7 @@ GZH:OptionsEffectDeband
 END
 
 GZH:OptionsEffectTAA
-"Temporal anti-aliasing (TAA)"
+"Temporal AA (TAA)"
 END
 
 GZH:OptionsEffectHeat

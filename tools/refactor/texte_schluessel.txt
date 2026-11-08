@@ -408,3 +408,34 @@ Code/Platform/W3DDevice/GameClient/GUI/W3DMouse.cpp	%s ms=%u von=%d nach=%d modu
 Code/Platform/W3DDevice/GameClient/GUI/W3DMouse.cpp	SEKUNDE ms=%u bilder=%u setCursor=%u wechsel=%u neu_gesetzt=%u animbilder=%u modus=%d\n
 CMakeLists.txt	${CMAKE_SOURCE_DIR}/Code/Games/Generals
 CMakeLists.txt	${CMAKE_SOURCE_DIR}/Code/Games/ZeroHour
+Code/App/WinMain.cpp	(Steam, EA App, Origin oder CD). Installiere GZH Neo mit dem Setup, das sie einrichtet, oder kopiere sie mit 
+Code/App/WinMain.cpp	(Steam, EA App, Origin oder CD). \u201eSpieldaten einrichten\u201c kopiert sie in den Ordner von GZH Neo; deine 
+Code/App/WinMain.cpp	Die Spieldaten von %s fehlen.\n\nGZH Neo braucht die Daten deiner eigenen Installation von Generals und Zero Hour 
+Code/App/WinMain.cpp	Installation bleibt unver\u00e4ndert.\n\nJetzt einrichten?
+Code/Tools/Setup/SetupWindow.cpp	%s kopiert.
+Code/Tools/Setup/SetupWindow.cpp	(nicht gefunden \u2013 bitte Ordner w\u00e4hlen)
+Code/Tools/Setup/SetupWindow.cpp	Abbrechen
+Code/Tools/Setup/SetupWindow.cpp	Abgebrochen. Ein neuer Lauf setzt dort fort.
+Code/Tools/Setup/SetupWindow.cpp	Auf dem Ziellaufwerk ist zu wenig Platz frei.
+Code/Tools/Setup/SetupWindow.cpp	CD). Sie werden in den Ordner von GZH Neo kopiert; die Installation selbst bleibt unver\u00e4ndert.
+Code/Tools/Setup/SetupWindow.cpp	Die Spieldaten werden kopiert. Ausf\u00fchrliches Protokoll: %s
+Code/Tools/Setup/SetupWindow.cpp	Die gew\u00e4hlte Installation ist keine bekannte Fassung (erwartet: Generals 1.08, Zero Hour 1.04). Trotzdem einrichten?
+Code/Tools/Setup/SetupWindow.cpp	Einrichten
+Code/Tools/Setup/SetupWindow.cpp	Fehler: 
+Code/Tools/Setup/SetupWindow.cpp	Fertig: Generals und Zero Hour sind eingerichtet.
+Code/Tools/Setup/SetupWindow.cpp	GZH Neo \u2013 Spieldaten einrichten
+Code/Tools/Setup/SetupWindow.cpp	GZH Neo braucht die Spieldaten deiner eigenen Installation von Generals und Zero Hour (Steam, EA App, Origin oder 
+Code/Tools/Setup/SetupWindow.cpp	In diesem Ordner liegt keine Installation von %s.
+Code/Tools/Setup/SetupWindow.cpp	Installation von %s w\u00e4hlen
+Code/Tools/Setup/SetupWindow.cpp	Ordner w\u00e4hlen\u2026
+Code/Tools/Setup/SetupWindow.cpp	Schlie\u00dfen
+Code/Tools/Setup/SetupWindow.cpp	Schon eingerichtet. \u201eEinrichten\u201c gleicht die Daten erneut ab.
+Code/Tools/Setup/SetupWindow.cpp	Ziel:
+Code/Tools/Setup/SetupWindow.cpp	Zu kopieren: %s, frei auf dem Laufwerk: %s
+Code/Tools/Setup/SetupWindow.cpp	unbekannte Fassung
+Code/Tools/Setup/main.cpp	--erkennen
+Code/Tools/Setup/main.cpp	--kopieren
+Code/Tools/Setup/main.cpp	--kopieren needs --ziel <folder>\n
+Code/Tools/Setup/main.cpp	--quelle
+Code/Tools/Setup/main.cpp	--ziel
+Code/Tools/Setup/main.cpp	usage: GZHNeoEinrichtung [--ziel <folder>] | [--erkennen | --kopieren --ziel <folder>] [--quelle <folder>]... | --selftest\n

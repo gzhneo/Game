@@ -306,8 +306,9 @@ void W3DGadgetTextEntryDraw( GameWindow *window, WinInstanceData *instData )
 
 	width = size.x - (2 * startOffset);
 	start.x = origin.x + startOffset;  // offset a little bit into the entry
-	if( BitTest( window->winGetStatus(), WIN_STATUS_ONE_LINE ) )
-		start.y = size.y / 2 - fontHeight / 2;
+	// one line in the middle of the box: the fixed offset only fits the 800 x 600 box height
+	if( BitTest( window->winGetStatus(), WIN_STATUS_ONE_LINE ) || size.y < 2 * fontHeight )
+		start.y = origin.y + ( size.y - fontHeight ) / 2;
 	else
 		start.y = origin.y + startOffset;  // offset a little bit into the entry
 
@@ -460,8 +461,9 @@ void W3DGadgetTextEntryImageDraw( GameWindow *window, WinInstanceData *instData 
 
 	width = size.x - (2 * startOffset);
 	start.x = origin.x + startOffset;  // offset a little bit into the entry
-		if( BitTest( window->winGetStatus(), WIN_STATUS_ONE_LINE ) )
-		start.y = size.y / 2 - fontHeight / 2;
+	// one line in the middle of the box: the fixed offset only fits the 800 x 600 box height
+	if( BitTest( window->winGetStatus(), WIN_STATUS_ONE_LINE ) || size.y < 2 * fontHeight )
+		start.y = origin.y + ( size.y - fontHeight ) / 2;
 	else
 		start.y = origin.y + startOffset;  // offset a little bit into the entry
 

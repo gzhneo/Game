@@ -95,83 +95,9 @@
 #include "Lib/SafeString.h"
 #include <cstdarg>
 #include "formatinto.h"
+#include "Engine/UserDataFiles.h"
 
 // W3DDisplay: screenshots and assets -- writing images, dumping, preloading and purging assets
-
-//=============================================================================
-///Utility function to dump data into a .BMP file
-static void CreateBMPFile(LPTSTR pszFile, char *image, Int width, Int height)
-{ 
-     HANDLE hf;                 // file handle 
-    BITMAPFILEHEADER hdr;       // bitmap file-header 
-    PBITMAPINFOHEADER pbih;     // bitmap info-header 
-    LPBYTE lpBits;              // memory pointer 
-    DWORD dwTotal;              // total count of bytes 
-    DWORD cb;                   // incremental count of bytes 
-    BYTE *hp;                   // byte pointer 
-    DWORD dwTmp; 
-
-    PBITMAPINFO pbmi; 
-
-    pbmi = static_cast<PBITMAPINFO>(LocalAlloc(LPTR,sizeof(BITMAPINFOHEADER)));
-    pbmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER); 
-    pbmi->bmiHeader.biWidth = width; 
-    pbmi->bmiHeader.biHeight = height; 
-    pbmi->bmiHeader.biPlanes = 1; 
-    pbmi->bmiHeader.biBitCount = 24;
-    pbmi->bmiHeader.biCompression = BI_RGB;
-    pbmi->bmiHeader.biSizeImage = (pbmi->bmiHeader.biWidth + 7) /8 * pbmi->bmiHeader.biHeight * 24;
-    pbmi->bmiHeader.biClrImportant = 0; 
-
-
-    pbih = reinterpret_cast<PBITMAPINFOHEADER>(pbmi); 
-    lpBits = reinterpret_cast<LPBYTE>(image);
-
-    // Create the .BMP file. 
-    hf = CreateFile(pszFile, 
-                   GENERIC_READ | GENERIC_WRITE, 
-                   static_cast<DWORD>(0), 
-                    nullptr, 
-                   CREATE_ALWAYS, 
-                   FILE_ATTRIBUTE_NORMAL, 
-                   static_cast<HANDLE>(nullptr)); 
-    if (hf == INVALID_HANDLE_VALUE) 
-		return;
-    hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M" 
-    // Compute the size of the entire file. 
-    hdr.bfSize = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + 
-                 pbih->biSize + pbih->biClrUsed 
-                 * sizeof(RGBQUAD) + pbih->biSizeImage); 
-    hdr.bfReserved1 = 0; 
-    hdr.bfReserved2 = 0; 
-
-    // Compute the offset to the array of color indices. 
-    hdr.bfOffBits = static_cast<DWORD>(sizeof(BITMAPFILEHEADER)) + 
-                    pbih->biSize + pbih->biClrUsed 
-                    * sizeof (RGBQUAD); 
-
-    // Copy the BITMAPFILEHEADER into the .BMP file. 
-    if (!WriteFile(hf, reinterpret_cast<LPVOID>(&hdr), sizeof(BITMAPFILEHEADER), 
-        static_cast<LPDWORD>(&dwTmp),  nullptr)) 
-		return;
-
-    // Copy the BITMAPINFOHEADER and RGBQUAD array into the file. 
-    if (!WriteFile(hf, reinterpret_cast<LPVOID>(pbih), sizeof(BITMAPINFOHEADER) + pbih->biClrUsed * sizeof (RGBQUAD),static_cast<LPDWORD>(&dwTmp), nullptr)) 
-		return;
-
-    // Copy the array of color indices into the .BMP file. 
-    dwTotal = cb = pbih->biSizeImage; 
-    hp = lpBits; 
-    if (!WriteFile(hf, reinterpret_cast<LPSTR>(hp), static_cast<int>(cb), static_cast<LPDWORD>(&dwTmp),nullptr)) 
-		return;
-
-    // Close the .BMP file. 
-     if (!CloseHandle(hf))
-		 return;
-
-    // Free memory. 
-	LocalFree( reinterpret_cast<HLOCAL>(pbmi));
-}
 
 // Write the measured GPU times of the render effects as one line to the runner log (GPUEFFEKTE), what the
 // device built behind the scenes (VULKANPIPELINES) and shaders that did not compile (SHADERFEHLER). Lines without
@@ -215,118 +141,27 @@ void W3DDisplay::takeScreenShot(void)
 
 	Bool done = false;
 	while (!done) {
-#ifdef CAPTURE_TO_TARGA
-		WWFormat::Into(leafname, "{}{:03d}.tga", "sshot", frame_number++);
-#else
 		WWFormat::Into(leafname, "{}{:03d}.bmp", "sshot", frame_number++);
-#endif
 		safe_strcpy(pathname, TheGlobalData->getPath_UserData().str());
 		safe_strcat(pathname, leafname);
-		if (_access( pathname, 0 ) == -1)
+		if (!::Engine::UserDataFiles::exists(::Engine::pathFromNarrow(pathname)))
 			done = true;
 	}
 
-	// Lock front buffer and copy
+	// Saved at the next present from the finished frame (3D scene, post-processing, 2D UI). Read now, in the
+	// middle of the frame, the scene target has no UI yet.
+	RenderDevice::Request_Back_Buffer_Capture(pathname);
+	m_screenShotLeaf = leafname;
+}
 
-	WW3DSurfaceHandle fb;
-	fb=RenderDevice::_Get_Front_Buffer();
-	WW3DSurfaceDesc desc;
-	RenderDevice::Get_Surface_Desc(fb, &desc);	// review fix: handle, not COM
-
-	// The copy has the display size, independent of where and how large the window is.
-	RECT bounds;
-	bounds.left = 0;
-	bounds.top = 0;
-	bounds.right = static_cast<LONG>(desc.Width);
-	bounds.bottom = static_cast<LONG>(desc.Height);
- 
-	WW3DLockedRect lrect;
-
-	Device_ErrorCode(RenderDevice::Lock_Surface(fb, &lrect, &bounds, WW3D_LOCK_READONLY));
-
-	unsigned int x,y,index,index2,width,height;
-
-	width=bounds.right-bounds.left;
-	height=bounds.bottom-bounds.top;
-
-	char *image=NEW char[3*width*height];
-#ifdef CAPTURE_TO_TARGA
-	//bytes are mixed in targa files, not rgb order.
-	for (y=0; y<height; y++)
-	{
-		for (x=0; x<width; x++)
-		{
-			// index for image
-			index=3*(x+y*width);
-			// index for fb
-			index2=y*lrect.Pitch+4*x;
-
-			image[index]=*((char *) lrect.pBits + index2+2);
-			image[index+1]=*((char *) lrect.pBits + index2+1);
-			image[index+2]=*((char *) lrect.pBits + index2+0);
-		}
-	}
-
-	RenderDevice::Release_Resource(fb);
-
-	Targa targ;
-	memset(&targ.Header,0,sizeof(targ.Header));
-	targ.Header.Width=width;
-	targ.Header.Height=height;
-	targ.Header.PixelDepth=24;
-	targ.Header.ImageType=TGA_TRUECOLOR;
-	targ.SetImage(image);
-	targ.YFlip();
-
-	targ.Save(pathname,TGAF_IMAGE,false);
-#else	//capturing to bmp file
-	//bmp is same byte order
-	for (y=0; y<height; y++)
-	{
-		for (x=0; x<width; x++)
-		{
-			// index for image
-			index=3*(x+y*width);
-			// index for fb
-			index2=y*lrect.Pitch+4*x;
-
-			image[index]=*(static_cast<char *>(lrect.pBits) + index2+0);
-			image[index+1]=*(static_cast<char *>(lrect.pBits) + index2+1);
-			image[index+2]=*(static_cast<char *>(lrect.pBits) + index2+2);
-		}
-	}
-
-	RenderDevice::Release_Resource(fb);
-
-	//Flip the image
-	char *ptr,*ptr1;
-	char  v,v1;
-
-	for (y = 0; y < (height >> 1); y++)
-	{
-		/* Compute address of lines to exchange. */
-		ptr = (image + ((width * y) * 3));
-		ptr1 = (image + ((width * (height - 1)) * 3));
-		ptr1 -= ((width * y) * 3);
-
-		/* Exchange all the pixels on this scan line. */
-		for (x = 0; x < (width * 3); x++)
-			{
-			v = *ptr;
-			v1 = *ptr1;
-			*ptr = v1;
-			*ptr1 = v;
-			ptr++;
-			ptr1++;
-			}
-	}
-	CreateBMPFile(pathname, image, width, height);
-#endif
-
-	delete [] image;
-
+// After the captured frame, so the message itself is not on the screenshot.
+void W3DDisplay::showScreenShotMessage()
+{
+	if (m_screenShotLeaf.isEmpty() || TheInGameUI == nullptr)
+		return;
 	UnicodeString ufileName;
-	ufileName.translate(leafname);
+	ufileName.translate(m_screenShotLeaf);
+	m_screenShotLeaf.clear();
 	TheInGameUI->message(TheGameText->fetch("GUI:ScreenCapture"), ufileName.str());
 }
 

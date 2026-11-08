@@ -1,7 +1,7 @@
 # Building and setting up
 
 How to build both games, set up the game data and start them: Generals (`GZHNeo.exe`) and Zero Hour (`GZHNeoZH.exe`),
-64 bit (x64) only, with the current MSVC Build Tools. Written for version 2.0-alpha-1.
+64 bit (x64) only, with the current MSVC Build Tools. Written for version 2.0-alpha-2.
 
 **To just play,** use the Release build (`cmake --build --preset x64-release`); Debug builds are slower and stop at
 assertions meant for development.
@@ -165,6 +165,31 @@ switching to the 3D view) and `Shaders\`. The engine reads the game data from th
 `%LOCALAPPDATA%\GZH Neo\MapEditor\engine.log`. The self-test with `--data <data folder>` starts the engine and saves
 the 3D view. Without EA data, `python tools/mapeditor/testdaten.py <folder>` creates a small data set for smoke tests.
 
+## Player package
+
+`cmake --install <build folder> --config Release --prefix <folder>` collects what players need, without EA's game data:
+`Generals\` and `ZeroHour\` with the game, its DLLs and the VC++ runtime, `Shaders\` and `ProjectData\`;
+`GZHNeoEinrichtung.exe` and the licence files at the top. `-DGZH_INSTALL_FREE_CONTENT=OFF` leaves out the free content
+(`ProjectData\Inhalt`, about 500 MB per game); the game then uses EA's content only, as with `-freeContent ea`.
+
+Started without arguments, `GZHNeoEinrichtung.exe` opens a window (German or English after the Windows display
+language) that sets up the game data for the package it belongs to: pick the installations, check the free space,
+copy with progress and cancel; the detailed log goes to `GZHNeoEinrichtung.log` next to it.
+`GZHNeoEinrichtung.exe --erkennen` lists the installations of Generals and Zero Hour it finds (Steam, EA app, Origin,
+retail discs; `--quelle <folder>` to look in a folder of your choice). `GZHNeoEinrichtung.exe --kopieren --ziel <folder>`
+copies their data into `<folder>\Generals` and `<folder>\ZeroHour`, next to the games of the package, and applies the
+data fixes; the installation is only read. Only EA's archives and EA's folders below `Data` are copied, so files of
+mods in the installation stay out. For development builds `tools/assets/setup_assets.py` remains the reference.
+
+With [Inno Setup 6](https://jrsoftware.org/isinfo.php) installed, `cmake --build <build folder> --config Release --target
+GZHNeoSetup` builds the setup `<build folder>\installer\GZHNeo-<version>-Setup.exe` from that folder: per-user installation
+without administrator rights, Start menu entries, uninstaller; at the end it opens the setup window above.
+Uninstalling removes the program folder including the copied game data; `Documents\GZH Neo` stays.
+
+The workflow `.github/workflows/release.yml` does the same on GitHub Actions: on a tag `v<version>` (or by hand) it builds both
+setups, runs the tests that need no game data and creates a draft release with the setups, checksums and the FFmpeg source code
+(`tools/release/ffmpeg_quelle.ps1`). The draft is published by hand.
+
 ## Game data
 
 This repository contains only source code, **no game data** (`.big` archives, INI data, `.w3d` models, videos, audio).
@@ -207,7 +232,7 @@ The script can be repeated at any time (it only copies what is missing or change
 
 | Content | Source | Note |
 |---|---|---|
-| 16 `.big` archives | EA installation | real copy, about 1.2 GB; **without** `PatchData.big`/`PatchWindow.big` (see "Asset version mismatch") |
+| 15 `.big` archives | EA installation | real copy, about 1.2 GB; **without** `PatchData.big`, `PatchWindow.big` and `PatchINI.big` (see "Asset version mismatch") |
 | `Generals.dat`, `Install_Final.bmp`, `00000000.016`, `00000000.256` | EA installation | small files the game expects next to the executable |
 | `Data\` (cursors, movies, scripts, water plane, language folders) | EA installation | about 70 MB |
 | `Data\INI\...` | generated | the project's data fixes, extracted from the archives and patched |
@@ -231,13 +256,13 @@ python tools/assets/setup_assets.py --game zh --source "<Zero Hour installation>
 |---|---|
 | ZH `.big` archives of the main folder | without `PatchData.big`, `PatchWindow.big` and `PatchINI.big` (see "Asset version mismatch"); `PatchZH.big` (fixed Avenger models) stays |
 | `Generals.dat`, `Install_Final.bmp`, `00000000.*`, `00000001.*`, `langdata.dat` | the Zero Hour versions (they differ from the Generals ones); `langdata.dat` is the word filter |
-| `Data\` (cursors, `INI\INIZH.big`, movies, scripts, water plane, language folders) | about 300 MB; `Data\INI\INIZH.big` (patch 1.04) and `INIZH.big` in the main folder are different files, both are needed |
+| `Data\` (cursors, movies, scripts, water plane, language folders) | about 300 MB; **without** `Data\INI\INIZH.big`, an outdated second copy that the game deletes at start (EA's patch 1.01, `GameEngine::init`); the valid one is `INIZH.big` in the main folder |
 | `ZH_Generals\*.big` | the Generals base archives that Zero Hour loads in addition (as in the EA app layout) |
 | `FIXES.md` | no fixes so far |
 
 **Load order** (`Win32BIGFileSystem::init`): first all `*.big` in the executable's folder are loaded **recursively**,
-sorted without regard to case; for duplicate files the archive loaded first wins. So `Data\INI\INIZH.big` comes before
-`INIZH.big`, and `ZH_Generals\...` after all ZH archives. The Generals base archives come from `-baseGame <folder>` if
+sorted without regard to case; for duplicate files the archive loaded first wins. So `ZH_Generals\...` comes after all
+ZH archives. The Generals base archives come from `-baseGame <folder>` if
 given, otherwise from `ZH_Generals` next to the executable. A Zero Hour build without an asset folder therefore needs
 `-baseGame` or the folder `ZH_Generals`.
 
@@ -354,11 +379,11 @@ the asset folder. So far:
 
 ### Asset version mismatch
 
-`PatchData.big`/`PatchWindow.big` come from the digital versions (Origin/EA app, Steam). The retail discs never had
-them, and the source code does not know them either. They replace `MainMenu.wnd` with a version that has an extra
-single-player menu entry (`MISSING: 'GUI:CustomMission'`), which neither game's code knows. In Zero Hour `PatchINI.big`
-(window transitions for the same entry) belongs to them as well. They would load before `WindowZH.big` or `INIZH.big`
-and cover the real menus, so `setup_assets.py` leaves them out and warns if one of them is already in the target.
+`PatchData.big`, `PatchWindow.big` and `PatchINI.big` come from the digital versions (Origin/EA app, Steam). The retail
+discs never had them, and the source code does not know them either. They add an extra single-player menu entry
+(`MISSING: 'GUI:CustomMission'`): `PatchWindow.big` replaces `MainMenu.wnd`, `PatchData.big` brings its texts,
+`PatchINI.big` its window transitions. `PatchWindow.big` would load before `Window.big` or `WindowZH.big` and cover the
+real menus, so `setup_assets.py` leaves all three out and removes them if an earlier copy left one in the target.
 
 ## First start
 
@@ -372,8 +397,9 @@ The user folder (settings, saved games, replays, maps, mods) is `Documents\GZH N
 `Documents\GZH Neo\Zero Hour`, or the folder given with `-benutzerdaten`. It is separate from EA's folder of the
 original game (`Documents\Command and Conquer Generals [Zero Hour ]Data`), whose saved games and replays do not work
 with GZH Neo; only on the very first start, without `Settings.ini`, the game takes over the settings of EA's
-`Options.ini` (read only). Saved games, replays, maps and mods are not copied. After a crash or a hang (watchdog) there is a group of files under `Crashes\<timestamp>\` in it:
-minidump, `Info.txt`, the log ring buffer and the replay of the running game.
+`Options.ini` (read only). Saved games, replays, maps and mods are not copied. After a crash or a hang (watchdog) there is a group of files under
+`Crashes\<timestamp>\` in the program folder, next to the executable: minidump, `Info.txt`, the log ring buffer and the
+replay of the running game.
 
 ### Running on another computer
 

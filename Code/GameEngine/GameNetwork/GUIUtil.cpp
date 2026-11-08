@@ -374,9 +374,14 @@ static UnicodeString formatGraceEntry( UnsignedShort minutes )
   return text;
 }
 
+static const UnsignedShort graceChoices[] = { 0, 5, 10 };
+
 GameWindow *CreateGraceComboBox(GameWindow *model, const char *decoratedName)
 {
-  GameWindow *box = GadgetComboBoxCreateNear( model, decoratedName );
+  UnicodeString entries[ sizeof( graceChoices ) / sizeof( graceChoices[0] ) ];
+  for ( size_t i = 0; i < sizeof( graceChoices ) / sizeof( graceChoices[0] ); ++i )
+    entries[i] = formatGraceEntry( graceChoices[i] );
+  GameWindow *box = GadgetComboBoxCreateNear( model, decoratedName, entries, static_cast<Int>( sizeof( graceChoices ) / sizeof( graceChoices[0] ) ) );
   DEBUG_ASSERTCRASH( box || model == nullptr, ("No room for the start protection choice next to %s", decoratedName) );
   return box;
 }
@@ -386,12 +391,11 @@ void PopulateGraceComboBox(GameWindow *comboBox, UnsignedShort minutes)
   if ( comboBox == nullptr )
     return;
   GadgetComboBoxReset( comboBox );
-  static const UnsignedShort choices[] = { 0, 5, 10 };
   const Color color = comboBox->winGetEnabled() ? comboBox->winGetEnabledTextColor() : comboBox->winGetDisabledTextColor();
-  for ( size_t i = 0; i < sizeof( choices ) / sizeof( choices[0] ); ++i )
+  for ( size_t i = 0; i < sizeof( graceChoices ) / sizeof( graceChoices[0] ); ++i )
   {
-    const Int index = GadgetComboBoxAddEntry( comboBox, formatGraceEntry( choices[i] ), color );
-    GadgetComboBoxSetItemData( comboBox, index, reinterpret_cast<void *>(static_cast<uintptr_t>(choices[i])) );
+    const Int index = GadgetComboBoxAddEntry( comboBox, formatGraceEntry( graceChoices[i] ), color );
+    GadgetComboBoxSetItemData( comboBox, index, reinterpret_cast<void *>(static_cast<uintptr_t>(graceChoices[i])) );
   }
   SelectGraceComboBox( comboBox, minutes );
   GadgetComboBoxWidenToFit( comboBox );
@@ -440,10 +444,18 @@ static UnicodeString formatMaxZoomEntry( UnsignedShort percent )
   return text;
 }
 
-GameWindow *CreateMaxZoomComboBox(GameWindow *model, const char *decoratedName)
+static const UnsignedShort maxZoomChoices[] = { 100, 105, 110, 115, 120, 125 };
+
+// next to model, else next to fallback
+GameWindow *CreateMaxZoomComboBox(GameWindow *model, GameWindow *fallback, const char *decoratedName)
 {
-  GameWindow *box = GadgetComboBoxCreateNear( model, decoratedName );
-  DEBUG_ASSERTCRASH( box || model == nullptr, ("No room for the zoom-out choice next to %s", decoratedName) );
+  UnicodeString entries[ sizeof( maxZoomChoices ) / sizeof( maxZoomChoices[0] ) ];
+  for ( size_t i = 0; i < sizeof( maxZoomChoices ) / sizeof( maxZoomChoices[0] ); ++i )
+    entries[i] = formatMaxZoomEntry( maxZoomChoices[i] );
+  const Int count = static_cast<Int>( sizeof( maxZoomChoices ) / sizeof( maxZoomChoices[0] ) );
+  GameWindow *box = GadgetComboBoxCreateNear( model, decoratedName, entries, count );
+  if ( box == nullptr && fallback != nullptr )
+    box = GadgetComboBoxCreateNear( fallback, decoratedName, entries, count );
   return box;
 }
 
@@ -452,12 +464,11 @@ void PopulateMaxZoomComboBox(GameWindow *comboBox, UnsignedShort percent)
   if ( comboBox == nullptr )
     return;
   GadgetComboBoxReset( comboBox );
-  static const UnsignedShort choices[] = { 100, 105, 110, 115, 120, 125 };
   const Color color = comboBox->winGetEnabled() ? comboBox->winGetEnabledTextColor() : comboBox->winGetDisabledTextColor();
-  for ( size_t i = 0; i < sizeof( choices ) / sizeof( choices[0] ); ++i )
+  for ( size_t i = 0; i < sizeof( maxZoomChoices ) / sizeof( maxZoomChoices[0] ); ++i )
   {
-    const Int index = GadgetComboBoxAddEntry( comboBox, formatMaxZoomEntry( choices[i] ), color );
-    GadgetComboBoxSetItemData( comboBox, index, reinterpret_cast<void *>(static_cast<uintptr_t>(choices[i])) );
+    const Int index = GadgetComboBoxAddEntry( comboBox, formatMaxZoomEntry( maxZoomChoices[i] ), color );
+    GadgetComboBoxSetItemData( comboBox, index, reinterpret_cast<void *>(static_cast<uintptr_t>(maxZoomChoices[i])) );
   }
   SelectMaxZoomComboBox( comboBox, percent );
   GadgetComboBoxWidenToFit( comboBox );

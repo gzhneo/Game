@@ -49,6 +49,8 @@
 //   log <text>                write a line to the log
 //   meta <name>               trigger a meta command like a hotkey; name as in CommandMap.ini
 //                             (e.g. DEMO_LOD_DECREASE, DEMO_TOGGLE_METRICS)
+//   foto                      screenshot (sshotNNN.bmp in the user folder); unlike meta TAKE_SCREENSHOT also
+//                             while the quit menu pauses a game and swallows meta commands
 //   testhilfe <name> [target] trigger a test helper like the -testhilfenAblauf script (names there,
 //                             target = player index, none = local player); needs -testhilfen
 //   markierung <x> <y>        place a beacon of the local player at the world position, like the beacon
@@ -925,6 +927,14 @@ Bool executeCommand( const ScriptCommand &b )
 	}
 
 	// Hotkeys, test helpers and exit during the load screen, for the leak check
+	if( cmd == "foto" )
+	{
+		if( TheDisplay != nullptr )
+			TheDisplay->takeScreenShot();
+		logLine( "OK line %d foto", b.line );
+		return TRUE;
+	}
+
 	if( cmd == "meta" )
 	{
 		const GameMessage::Type typ = MetaMap::findMetaTypeByName( arg1.c_str() );

@@ -196,8 +196,10 @@ inline GameWindow *GadgetComboBoxGetEditBox( GameWindow *g )
 // EXTERNALS //////////////////////////////////////////////////////////////////
 
 // A new combo box with the look of the model, at the first free place below it in the model's column
-// (else further left in the same rows); nullptr if the parent has no room.
-extern GameWindow *GadgetComboBoxCreateNear( GameWindow *model, const char *decoratedName );
+// (else further left in the same rows); nullptr if the parent has no room. With entries the box gets at
+// least the width they need in the model's font, so a place too narrow for them is skipped.
+extern GameWindow *GadgetComboBoxCreateNear( GameWindow *model, const char *decoratedName,
+	const UnicodeString *entries = nullptr, Int entryCount = 0 );
 // Shrinks the font until the longest entry fits into the edit box (not below 70 percent of the size).
 extern void GadgetComboBoxFitText( GameWindow *comboBox );
 /// Widens the box into free room beside it (right, then left) until its entries fit in its font.

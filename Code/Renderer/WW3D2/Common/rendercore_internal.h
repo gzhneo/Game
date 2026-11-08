@@ -413,6 +413,7 @@ struct RenderCore::Impl
 	unsigned                    taa_width, taa_height;
 	unsigned                    taa_index;			///< history written this frame
 	unsigned                    taa_frame;			///< fx_frame + 1 of the last resolve (once per frame)
+	unsigned                    taa_phase_base;		///< fx_frame of the first frame of the history (jitter phase 0)
 	int                         taa_rect[4];		///< view rectangle of the history
 	WW3DMatrixRaw               taa_prev_view_proj;	///< view times projection (without jitter) of the history
 	WW3DMatrixRaw               taa_projection;		///< jittered projection of this frame

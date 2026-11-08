@@ -91,6 +91,13 @@ public:
 
 	Real getWidthScale() const { return m_currentWidthScalar; }
 
+	/// A weapon that fires a new laser faster than the old ones expire (ECM disabler stream) stacks several beams
+	/// between the same shooter and target. Only the newest of such a pair is drawn; the others report TRUE here.
+	Bool isSupersededInPair() const;
+	/// Smoothed number of live lasers between this laser's shooter and target (1 if it is not part of a pair):
+	/// the brightness the drawn beam stands for.
+	Real getPairBrightness() const;
+
 	virtual void clientUpdate() override;
 
 protected:
@@ -116,6 +123,8 @@ protected:
 	UnsignedInt m_decayStartFrame;
 	UnsignedInt m_decayFinishFrame;
 	AsciiString m_parentBoneName;
+	DrawableID m_pairParentID;		///< shooter and target registered for the pair (not saved)
+	DrawableID m_pairTargetID;
 };
 
 

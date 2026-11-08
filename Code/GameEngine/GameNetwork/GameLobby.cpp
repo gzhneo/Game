@@ -49,6 +49,7 @@
 #include "GameNetwork/networkutil.h"
 #include "GameNetwork/PortMapper.h"
 #include "Lib/SafeString.h"
+#include "Engine/UserDataFiles.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -1156,7 +1157,7 @@ void GameLobby::writeRouterLog( void )
 	}
 	AsciiString path;
 	path.format("%sRouterLog.txt", TheGlobalData->getPath_UserData().str());
-	FILE *fp = fopen(path.str(), "w");
+	FILE *fp = ::Engine::openNarrowFile(path.str(), "w");
 	if (fp == nullptr)
 		return;
 	for (const std::string &line : ThePortMapper().log())
@@ -1238,7 +1239,8 @@ void GameLobby::showInternetAddress( Bool withIPv6 )
 				joinWith.format(L"%hs#%hs", address.c_str(), code);
 		}
 	}
-	if (!joinWith.isEmpty() && ClipboardSetText(joinWith))
+	// unattended tests leave the user's clipboard alone
+	if (!joinWith.isEmpty() && TheGlobalData->m_testScriptFile.isEmpty() && ClipboardSetText(joinWith))
 	{
 		UnicodeString text;
 		text.formatUnchecked(TheGameText->fetch("GZH:LanJoinCopied").str(), joinWith.str());

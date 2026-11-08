@@ -204,6 +204,7 @@ public:
 	void drawName(Int x, Int y, Color color, Color dropColor);
 	void drawTime(Int x, Int y, Color color, Color dropColor);
 	Real getHeight() const;
+	Int getNameWidth() { return m_nameDisplayString ? m_nameDisplayString->getWidth() : 0; }
 
 // saved & public
 	AsciiString									m_powerName;

@@ -37,6 +37,7 @@
 #include "Common/crc.h"
 #include "Common/Snapshot.h"
 #include "winsock2.h" // for htonl
+#include "Engine/UserDataFiles.h"
 
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
@@ -235,7 +236,7 @@ void XferDeepCRC::open( AsciiString identifier )
 	Xfer::open( identifier );
 
 	// open the file
-	m_fileFP = fopen( identifier.str(), "w+b" );
+	m_fileFP = ::Engine::openNarrowFile( identifier.str(), "w+b" );
 	if( m_fileFP == nullptr )
 	{
 		

@@ -52,6 +52,8 @@ Hinweise:
     Randscrollen der Shell-Map-Kamera ausloesen (beides im Bild). Waehrend des Laufs die Maus nicht
     ueber das Fenster bewegen.
   - Frames zaehlen Client-Frames (auch im Menue); mit -fixedTimeStep ist das ein Logik-Tick pro Bild.
+  - Jeder Lauf hat einen eigenen Benutzerordner (<out>/_benutzer) und eine feste Detailstufe (--stufe, Standard
+    VeryHigh); Einstellungen des Nutzers fliessen nicht ein. --stufe nutzer startet wie frueher mit seinen Einstellungen.
 """
 import argparse
 import os
@@ -200,9 +202,23 @@ def run_game(a, out, fixed, frames, quit_after):
                 cmd += ["-shotAfter", str(f)]
     if getattr(a, "mehrfach", False):
         cmd += ["-mehrfach"]
-    # TODO 67 (2026-09-26): -d3d11 ausdruecklich, damit ein alter Eintrag "RenderBackend = D3D9" in der Options.ini
-    # keine Meldung ausloest. Teil 2 (2026-09-26): D3D9 ist entfernt, --backend entfaellt.
     extra = list(a.extra or [])
+    extra_lower = [e.lower() for e in extra]
+    # Eigener Benutzerordner und feste Detailstufe: sonst kaemen Stufe, Effektliste und weitere Optionen aus der
+    # Settings.ini des Nutzers, und die Bilder hingen vom Rechner ab. Die fast leere Settings.ini verhindert, dass der
+    # erste Start die Options.ini des Originalspiels uebernimmt.
+    if a.stufe != "nutzer":
+        if "-benutzerdaten" not in extra_lower:
+            benutzer = os.path.join(out, "_benutzer")
+            if os.path.isdir(benutzer):
+                shutil.rmtree(benutzer)
+            os.makedirs(benutzer)
+            with open(os.path.join(benutzer, "Settings.ini"), "w", encoding="utf-8", newline="\r\n") as f:
+                f.write("[General]\n")
+            cmd += ["-benutzerdaten", benutzer + os.sep, "-einstellungenNurLesen"]
+        if "-staticlod" not in extra_lower:
+            cmd += ["-staticLOD", a.stufe]
+    # -d3d11 ausdruecklich, damit ein alter Eintrag "RenderBackend = D3D9" in der Options.ini keine Meldung ausloest.
     if not any(e.lower() in ("-d3d9", "-d3d11", "-vulkan") for e in extra):
         cmd += ["-d3d11"]
     cmd += extra
@@ -334,6 +350,9 @@ def main():
     # and with multisampling the depth effects took another path.
     common.add_argument("--msaa", type=int, default=1, help="Kantenglaettung, Samples (-msaa), Standard 1 = aus; "
                         "unabhaengig von der Settings.ini des Nutzers")
+    common.add_argument("--stufe", default="VeryHigh", choices=("Low", "Medium", "High", "VeryHigh", "nutzer"),
+                        help="Detailstufe (-staticLOD) mit eigenem Benutzerordner unter --out, Standard VeryHigh; "
+                             "nutzer = Stufe und Einstellungen aus dem Benutzerordner des Nutzers wie frueher")
     common.add_argument("--xres", type=int, default=1280)
     common.add_argument("--yres", type=int, default=720)
     common.add_argument("--timeout", type=int, default=600, help="Sekunden pro Lauf")

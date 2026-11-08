@@ -535,6 +535,22 @@ void W3DView::buildCameraTransform( Matrix3D *transform )
 
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
+/// Lowest terrain height along a straight map edge, sampled once per height map cell.
+static Real lowestHeightAlongEdge( Real x0, Real y0, Real x1, Real y1 )
+{
+	const Real length = sqrt( sqr( x1 - x0 ) + sqr( y1 - y0 ) );
+	const Int steps = static_cast<Int>( maxf( 1.0f, length / MAP_XY_FACTOR ) );
+	Real lowest = TheTerrainLogic->getGroundHeight( x0, y0 );
+	for (Int i = 1; i <= steps; ++i)
+	{
+		const Real t = static_cast<Real>( i ) / static_cast<Real>( steps );
+		const Real h = TheTerrainLogic->getGroundHeight( x0 + t * ( x1 - x0 ), y0 + t * ( y1 - y0 ) );
+		if (h < lowest)
+			lowest = h;
+	}
+	return lowest;
+}
+
 void W3DView::calcCameraConstraints()
 {
 //	const Matrix3D& cameraTransform = m_3DCamera->Get_Transform();
@@ -577,19 +593,30 @@ void W3DView::calcCameraConstraints()
 		center.y = Vector3::Find_Y_At_Z(maxEdgeZ, rayStart, rayEnd);
 		center.z = maxEdgeZ;
 
+		// The near screen edge is measured per map edge on that edge's lowest ground, but never above the camera's
+		// ground level: where the terrain along an edge lies lower, the view only reaches it from closer in.
 		screen.y = static_cast<Int>(m_originY+ 0.95f*getHeight());
  		getPickRay(&screen,&rayStart,&rayEnd);
- 		bottom.x = Vector3::Find_X_At_Z(maxEdgeZ, rayStart, rayEnd);
-		bottom.y = Vector3::Find_Y_At_Z(maxEdgeZ, rayStart, rayEnd);
-		bottom.z = maxEdgeZ;
-		center.x -= bottom.x;
-		center.y -= bottom.y;
-
-		Real offset = center.length();
+		const Real edgeZ[4] =
+		{
+			lowestHeightAlongEdge( mapRegion.lo.x, mapRegion.lo.y, mapRegion.lo.x, mapRegion.hi.y ),
+			lowestHeightAlongEdge( mapRegion.hi.x, mapRegion.lo.y, mapRegion.hi.x, mapRegion.hi.y ),
+			lowestHeightAlongEdge( mapRegion.lo.x, mapRegion.lo.y, mapRegion.hi.x, mapRegion.lo.y ),
+			lowestHeightAlongEdge( mapRegion.lo.x, mapRegion.hi.y, mapRegion.hi.x, mapRegion.hi.y ),
+		};
+		Real edgeOffset[4];
+		for (Int i = 0; i < 4; ++i)
+		{
+			const Real z = minf( edgeZ[i], maxEdgeZ );
+			bottom.x = Vector3::Find_X_At_Z(z, rayStart, rayEnd);
+			bottom.y = Vector3::Find_Y_At_Z(z, rayStart, rayEnd);
+			edgeOffset[i] = sqrt( sqr( center.x - bottom.x ) + sqr( center.y - bottom.y ) );
+		}
 
 		// Widescreen: with Hor+ the view reaches further left/right than at 4:3, so add the extra
-		// extent (bottom edge: 95% of the width versus where a 4:3 view would end). It is 0 at 4:3
-		// and is distributed onto the world axes according to the camera yaw.
+		// extent (bottom edge: 95% of the width versus where a 4:3 view would end). It is 0 at 4:3.
+		// Taken per world axis from the two ground points, so it follows the screen's horizontal
+		// direction for any yaw.
 		Real extraX = 0.0f, extraY = 0.0f;
 		const Real horPlus = TheDisplay ? TheDisplay->getHorPlusFactor() : 1.0f;
 		if (horPlus > 1.0f)
@@ -607,21 +634,21 @@ void W3DView::calcCameraConstraints()
 			refEdge.x = Vector3::Find_X_At_Z(maxEdgeZ, rayStart, rayEnd);
 			refEdge.y = Vector3::Find_Y_At_Z(maxEdgeZ, rayStart, rayEnd);
 
-			const Real excess = sqrt( sqr(edge.x - refEdge.x) + sqr(edge.y - refEdge.y) );
-			extraX = excess * fabs( cos( getAngle() ) );
-			extraY = excess * fabs( sin( getAngle() ) );
+			extraX = fabs( edge.x - refEdge.x );
+			extraY = fabs( edge.y - refEdge.y );
 		}
 
 		if (TheGlobalData->m_debugAI) {
-			offset = -1000; // push out the constraints so we can look at staging areas.
+			for (Int i = 0; i < 4; ++i)
+				edgeOffset[i] = -1000; // push out the constraints so we can look at staging areas.
 			extraX = extraY = 0.0f;
 		}
 
-		m_cameraConstraint.lo.x = mapRegion.lo.x + offset + extraX;
-		m_cameraConstraint.hi.x = mapRegion.hi.x - offset - extraX;
+		m_cameraConstraint.lo.x = mapRegion.lo.x + edgeOffset[0] + extraX;
+		m_cameraConstraint.hi.x = mapRegion.hi.x - edgeOffset[1] - extraX;
 		// this looks inverted, but is correct
-		m_cameraConstraint.lo.y = mapRegion.lo.y + offset + extraY;
-		m_cameraConstraint.hi.y = mapRegion.hi.y - offset - extraY;
+		m_cameraConstraint.lo.y = mapRegion.lo.y + edgeOffset[2] + extraY;
+		m_cameraConstraint.hi.y = mapRegion.hi.y - edgeOffset[3] - extraY;
 		// Zoomed out beyond the normal height, the view can be wider than a small map: keep the camera centred
 		// instead of letting the inverted limits pin it to one side.
 		if (getZoomOutFactor() > 1.0f)
@@ -632,6 +659,7 @@ void W3DView::calcCameraConstraints()
 				m_cameraConstraint.lo.y = m_cameraConstraint.hi.y = 0.5f * (mapRegion.lo.y + mapRegion.hi.y);
 		}
 		m_cameraConstraintValid = true;
+		m_cameraConstraintAngle = getAngle();
 	}
 }
 
@@ -690,7 +718,8 @@ void W3DView::setCameraTransform( void )
 	if (TheGlobalData->m_useCameraConstraints)
 #endif
 	{
-		if (!m_cameraConstraintValid)
+		// Rotating changes which world axis the widescreen margin lies on, so a new yaw needs new constraints.
+		if (!m_cameraConstraintValid || m_cameraConstraintAngle != getAngle())
 		{
 			buildCameraTransform(&cameraTransform);
 			m_3DCamera->Set_Transform( cameraTransform );
@@ -763,6 +792,7 @@ void W3DView::init( void )
 	m_2DCamera->Set_Clip_Planes( 0.995f, 2.0f );
 
 	m_cameraConstraintValid = false;
+	m_cameraConstraintAngle = 0.0f;
 
 	m_scrollAmountCutoff = TheGlobalData->m_scrollAmountCutoff;
 

@@ -56,22 +56,6 @@ WINESERVER=$(command -v wineserver || echo /usr/lib/wine/wineserver64)
 command -v Xvfb >/dev/null || { echo "Xvfb fehlt (Paket xvfb)"; exit 2; }
 [ -n "$LOG" ] || LOG="$DATA/wine.log"
 
-# Release-Baue pruefen beim Start, ob je eine .sec-Datei in zwei Archiven liegt (Fingerabdruck, GameEngine::init);
-# ohne sie endet das Spiel sofort mit Rueckgabewert 0. Fehlende Archive werden mit je einer Dummy-Datei angelegt.
-python3 - "$DATA" "$EXE" <<'PYEOF'
-import os, struct, sys
-d, exe = sys.argv[1:3]
-zh = exe != 'GZHNeo.exe'
-for big, sec in ([('genseczh.big', 'generalsbzh.sec'), ('musiczh.big', 'generalsazh.sec')] if zh
-                 else [('gensec.big', 'generalsb.sec'), ('music.big', 'generalsa.sec')]):
-    p = os.path.join(d, big)
-    if os.path.exists(p):
-        continue
-    name = sec.encode() + b'\0'
-    body = 16 + 8 + len(name)
-    open(p, 'wb').write(b'BIGF' + struct.pack('>III', body + 1, 1, body) + struct.pack('>II', body, 1) + name + b'x')
-PYEOF
-
 # Exe und Projektdaten neben die Spieldaten (Verknuepfungen; vorhandene Dateien bleiben unangetastet). Eine
 # Verknuepfung auf einen anderen Bau (anderes CNC_WINE_DIR, kopierter Datenordner) wird neu gesetzt, sonst liefe
 # still die alte Exe. Ein echter Ordner ProjectData im Datenordner (etwa generate.py --winter) bleibt; was ihm fehlt,

@@ -1122,6 +1122,8 @@ namespace
 		UnsignedInt ticks = 0;
 		struct ModuleTime { double ms = 0.0; double maxMs = 0.0; unsigned long long calls = 0; };
 		std::unordered_map<NameKeyType, ModuleTime> modules;
+		// One entry per module type seen so far; a named function so leak reports can tell this table apart.
+		ModuleTime &moduleTime( NameKeyType module ) { return modules[ module ]; }
 		// the slowest single update call
 		double slowestMs = 0.0;
 		UnsignedInt slowestFrame = 0;
@@ -1429,7 +1431,7 @@ void GameLogic::update( void )
 					const PhaseClock::time_point start = PhaseClock::now();
 					sleepLen = u->update();
 					const double ms = elapsedMs( start );
-					PhaseStatistics::ModuleTime &t = s_phaseStats->modules[ u->getModuleNameKey() ];
+					PhaseStatistics::ModuleTime &t = s_phaseStats->moduleTime( u->getModuleNameKey() );
 					t.ms += ms;
 					++t.calls;
 					if( ms > t.maxMs )

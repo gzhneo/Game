@@ -24,7 +24,8 @@ to show which game it is based on.
 
 ## Changes since EA's release
 
-This notice belongs to GZH Neo 2.0-alpha-1, the first public version. Modifications since 2026, in broad terms:
+This notice belongs to GZH Neo 2.0-alpha-2 (the first public version was 2.0-alpha-1). Modifications since 2026, in broad
+terms:
 
 - Builds with a current MSVC toolchain as conforming C++20 (`/std:c++20 /permissive-`); 64-bit (x64)
   only.
@@ -49,8 +50,10 @@ This notice belongs to GZH Neo 2.0-alpha-1, the first public version. Modificati
   game data ([ASSET_CREDITS.md](ASSET_CREDITS.md)).
 - New map editor and GUI editor (Qt 6) instead of WorldBuilder, ParticleEditor and GUIEdit; the
   translation tool Babylon without Excel.
-- Program names `GZHNeo.exe` and `GZHNeoZH.exe`, window titles and version 2.0-alpha-1 mark the
+- Program names `GZHNeo.exe` and `GZHNeoZH.exe`, window titles and version 2.0-alpha-2 mark the
   program as GZH Neo, not as EA's original game.
+- A Windows setup (Inno Setup) with a setup program that finds the player's installation of Generals and
+  Zero Hour (Steam, EA app, Origin, disc) and copies the game data, reading the installation only.
 - Engine building blocks: central clock, thread-safe log, job system, logic access guard, crash
   reports with minidump, hang watchdog.
 - A new, selectable computer AI next to the classic one; developer test helpers.
@@ -60,7 +63,8 @@ This notice belongs to GZH Neo 2.0-alpha-1, the first public version. Modificati
 ## Third-party components
 
 These libraries are fetched at build time through vcpkg (see `vcpkg.json`) and shipped as DLLs next
-to the executables. They are not part of this repository.
+to the executables. They are not part of this repository. The Windows setup puts their licence texts and an overview
+(with the exact FFmpeg version and the vcpkg recipe it was built from) into its folder `Licenses`.
 
 | Component | Use | License |
 |---|---|---|
@@ -87,6 +91,11 @@ ambient occlusion (Jimenez et al. 2016).
 The following system components are used from the Windows SDK and Windows itself and are not
 redistributed: Direct3D 11, DXGI, `d3dcompiler_47`, XAudio2, DbgHelp. The legacy Debug Window tool uses
 MFC from Visual Studio.
+
+The Windows setup ships the Microsoft Visual C++ runtime (`msvcp140*.dll`, `vcruntime140*.dll`, `concrt140.dll`) next
+to the games as distributable code of Microsoft Visual Studio, under its terms; the setup program
+`GZHNeoEinrichtung.exe` links it statically. The setup itself is made with
+[Inno Setup](https://jrsoftware.org/isinfo.php).
 
 Non-EA art assets (models, textures) and their licenses and attributions are listed in
 [ASSET_CREDITS.md](ASSET_CREDITS.md).

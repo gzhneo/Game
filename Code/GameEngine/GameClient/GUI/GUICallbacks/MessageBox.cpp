@@ -184,7 +184,7 @@ void centerButtons( GameWindow *messageBox, GameWindow *title )
 		if( button != nullptr && !button->winIsHidden() )
 			buttons[count++] = button;
 	}
-	if( count < 2 )
+	if( count == 0 )
 		return;
 	// left to right as the file placed them
 	for( Int i = 1; i < count; ++i )
@@ -245,7 +245,8 @@ void MessageBoxFitText(GameWindow *messageBox)
 	text->winGetSize( &textW, &textH );
 	DisplayString *measure = TheDisplayStringManager->newDisplayString();
 	measure->setFont( text->winGetFont() );
-	measure->setWordWrap( textW );
+	// the width W3DGadgetStaticTextDraw wraps at, so the drawn lines are the measured ones
+	measure->setWordWrap( textW - 10 );
 	measure->setText( GadgetStaticTextGetText( text ) );
 	Int needW, needH;
 	measure->getSize( &needW, &needH );

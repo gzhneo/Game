@@ -454,26 +454,21 @@ static Bool parseTooltip( char *token, WinInstanceData *instData,
 static Bool s_lastScreenRectFullSpan = FALSE;
 static IRegion2D s_lastScreenRectCentered = { { 0, 0 }, { 0, 0 } };
 
-/// Full-span windows that stay centered anyway: decorative frames whose ornaments would be
-/// distorted when stretched (the 3D shell map fills the sides anyway).
-static const char *s_fullSpanExceptions[] =
+/// Full-span windows that stay centered anyway: those showing the menu frame image (its ornaments would be
+/// distorted when stretched; the 3D shell map fills the sides). The score screen keeps the full display and
+/// draws its frame centered itself.
+static Bool isFullSpanException( const WinInstanceData &instData )
 {
-	"MainMenu.wnd:MainMenuRuler",
-	nullptr
-};
-
-static Bool isFullSpanException( const AsciiString &windowName )
-{
-	for( Int i = 0; s_fullSpanExceptions[i]; ++i )
-		if( windowName.compareNoCase( s_fullSpanExceptions[i] ) == 0 )
-			return TRUE;
-	return FALSE;
+	if( instData.m_decoratedNameString.compareNoCase( "ScoreScreen.wnd:ParentScoreScreen" ) == 0 )
+		return FALSE;
+	const Image *image = instData.m_enabledDrawData[ 0 ].image;
+	return image != nullptr && image->getName().compareNoCase( "MainMenuRuler" ) == 0;
 }
 
 /// Applies the centered geometry (relative to the parent) to an exception window.
-static void applyFullSpanException( const AsciiString &windowName, Int *x, Int *y, Int *width, Int *height )
+static void applyFullSpanException( const WinInstanceData &instData, Int *x, Int *y, Int *width, Int *height )
 {
-	if( !s_lastScreenRectFullSpan || !isFullSpanException( windowName ) )
+	if( !s_lastScreenRectFullSpan || !isFullSpanException( instData ) )
 		return;
 
 	IRegion2D region = s_lastScreenRectCentered;
@@ -554,8 +549,8 @@ static Bool parseScreenRect( char *token, char *buffer,
 	// Windows that span the whole layout (backgrounds of load and score screens, dialog dimming,
 	// invisible containers) are stretched to the full display instead of centered; otherwise black
 	// bars remain left and right, or the dimming covers only the middle. Child windows compute their
-	// position in screen coordinates and stay centered. parseWindow() can fall back to the centered
-	// variant by window name (decorative frames, see s_fullSpanExceptions).
+	// position in screen coordinates and stay centered. parseWindow() falls back to the centered
+	// variant for the menu frame image (see isFullSpanException).
 	s_lastScreenRectFullSpan = ( layoutRegion.lo.x <= 0 && layoutRegion.lo.y <= 0 &&
 															 layoutRegion.hi.x >= createRes.x && layoutRegion.hi.y >= createRes.y );
 	s_lastScreenRectCentered = screenRegion;
@@ -2455,7 +2450,7 @@ static GameWindow *parseWindow( File *inFile, char *buffer )
 					instData.m_font = TheHeaderTemplateManager->getFontFromTemplate(instData.m_headerTemplateName);
 
 				// Create a window using the current description
-				applyFullSpanException( instData.m_decoratedNameString, &x, &y, &width, &height );
+				applyFullSpanException( instData, &x, &y, &width, &height );
 				if( window == nullptr )
 					window = createWindow( type, instData.m_id, instData.getStatus(), x, y,
 																 width, height, &instData, data, 
@@ -2469,7 +2464,7 @@ static GameWindow *parseWindow( File *inFile, char *buffer )
 			{
 
 				// Create a window using the current description
-				applyFullSpanException( instData.m_decoratedNameString, &x, &y, &width, &height );
+				applyFullSpanException( instData, &x, &y, &width, &height );
 				window = createWindow( type, instData.m_id, instData.getStatus(), x, y,
 															 width, height, &instData, data,
 															 systemFunc, inputFunc, tooltipFunc, drawFunc );

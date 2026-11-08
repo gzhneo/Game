@@ -14,6 +14,8 @@
 //      (German2.big), Zero Hour in <language>ZH.big (GermanZH.big) -- the same values EA's
 //      installer wrote to the registry,
 //   3. "english".
+// A language from the user folder counts only if its data is there (archive or loose string file);
+// otherwise the archive names decide, so switching between game versions does not abort the start.
 // The version is fixed: the last official patches (Generals 1.08, Zero Hour 1.04), the same
 // numbers their installers wrote as "Version".
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,6 +155,21 @@ Bool fromArchiveNames( char *language, size_t size )
 	return foundAny;
 }
 
+// Data of the language next to the exe: <language>.big, <language>ZH.big or its loose string file
+// (the folder alone does not count, it may hold only a CommandMap.ini).
+Bool languagePresent( const char *language )
+{
+	const char *const patterns[] = { "%s.big", "%szh.big", "Data\\%s\\generals.csf", "Data\\%s\\generals.str" };
+	for ( const char *pattern : patterns )
+	{
+		char path[ MAX_PATH ];
+		snprintf( path, sizeof( path ), pattern, language, language );	// the loose-file patterns name it twice
+		if ( GetFileAttributesA( path ) != INVALID_FILE_ATTRIBUTES )
+			return TRUE;
+	}
+	return FALSE;
+}
+
 }	// namespace
 
 AsciiString GetGameLanguage( void )
@@ -170,7 +187,17 @@ AsciiString GetGameLanguage( void )
 	Bool fromOptions = fromSettingsIni( language, sizeof( language ), &haveSettings );
 	if ( !fromOptions && !haveSettings )
 		fromOptions = fromOptionsIni( language, sizeof( language ) );
-	if ( !fromOptions )
+	if ( fromOptions && !languagePresent( language ) )
+	{
+		char present[ 64 ];
+		if ( fromArchiveNames( present, sizeof( present ) ) )
+		{
+			DEBUG_LOG(( "GetGameLanguage: no data for %s, using %s\n", language, present ));
+			copyString( language, sizeof( language ), present );
+			fromOptions = FALSE;
+		}
+	}
+	else if ( !fromOptions )
 		fromArchiveNames( language, sizeof( language ) );
 	if ( TheGlobalData != nullptr )
 	{

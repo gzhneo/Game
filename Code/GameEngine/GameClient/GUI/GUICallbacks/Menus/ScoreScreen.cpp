@@ -157,6 +157,25 @@ void hideWindows( Int pos );
 void ScoreScreenEnableControls(Bool enable);
 void setObserverWindows( Player *player, Int i );
 void displayChallengewinLoss( Image *imageGeneral, AsciiString strGeneral );
+
+// The background artwork (score frame, challenge win/loss screen) is drawn in the centered 4:3 layout area with
+// black sides instead of stretched across a wide display; its child windows are laid out there too.
+static void drawScoreScreenBackground( GameWindow *window, WinInstanceData * )
+{
+	Int x = 0, y = 0, width = 0, height = 0;
+	window->winGetScreenPosition( &x, &y );
+	window->winGetSize( &width, &height );
+	TheDisplay->drawFillRect( x, y, width, height, GameMakeColor( 0, 0, 0, 255 ) );
+
+	const Image *image = window->winGetEnabledImage( 0 );
+	if( image == nullptr || !BitTest( window->winGetStatus(), WIN_STATUS_IMAGE ) )
+		return;
+	Real scaleX = 1.0f, scaleY = 1.0f;
+	Int offsetX = 0, offsetY = 0;
+	TheDisplay->getUILayoutTransform( 800, 600, &scaleX, &scaleY, &offsetX, &offsetY );
+	TheDisplay->drawImage( image, offsetX, offsetY,
+												 offsetX + static_cast<Int>( 800.0f * scaleX ), offsetY + static_cast<Int>( 600.0f * scaleY ) );
+}
 enum {
 	SCORESCREEN_SINGLEPLAYER = 0,
 	SCORESCREEN_SKIRMISH,
@@ -271,6 +290,8 @@ void ScoreScreenInit( WindowLayout *layout, void *userData )
 	backdropID = TheNameKeyGenerator->nameToKey( AsciiString( "ScoreScreen.wnd:MainBackdrop" ) );
 
 	parent = TheWindowManager->winGetWindowFromId( nullptr, parentID );
+	if( parent && TheDisplay->isUILayoutPillarboxed() )
+		parent->winSetDrawFunc( drawScoreScreenBackground );
 	buttonOk = TheWindowManager->winGetWindowFromId( parent, buttonOkID );
 	textEntryChat = TheWindowManager->winGetWindowFromId( parent, textEntryChatID );
 	buttonEmote = TheWindowManager->winGetWindowFromId( parent,buttonEmoteID  );

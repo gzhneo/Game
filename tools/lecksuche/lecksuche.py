@@ -102,7 +102,7 @@ SZENEN = [
           "skirmish_gla.txt"),
     Szene("skirmish_generaele", "(ZH) Skirmish je General (9 Partien, Sieg), Wachstum ueber die letzten acht",
           "skirmish_generaele.txt", spiele=("zh",), frist=5400),
-    Szene("skirmish_wachstum", "vier Skirmish-Partien mit festen Fraktionen, Netto-Wachstum je Partie (zweite bis vierte)",
+    Szene("skirmish_wachstum", "vier Skirmish-Partien mit festen Fraktionen, Netto-Wachstum je Partie (dritte und vierte)",
           "skirmish_wachstum.txt", frist=3600),
     Szene("skirmish_neueki", "Skirmish gegen die neue KI (Brutal, neue KI), speichern/laden, drei Partien mit "
           "Wachstum je Partie", "skirmish_neueki.txt", frist=5400),
@@ -127,7 +127,7 @@ SZENEN = [
           "kampagne_china.txt", frist=5400),
     Szene("kampagne_gla", "Kampagne GLA: drei Missionen hintereinander (zwei Missionswechsel)",
           "kampagne_gla.txt", frist=5400),
-    Szene("kampagne_wachstum", "Kampagne USA 1 dreimal ueber das Spielmenue verlassen, Wachstum je Mission",
+    Szene("kampagne_wachstum", "Kampagne USA 1 viermal ueber das Spielmenue verlassen, Wachstum je Mission (dritte und vierte)",
           "kampagne_wachstum.txt", frist=3600),
     Szene("challenge", "(ZH) Generals-Herausforderung: erster General, zwei Gegner nacheinander",
           "challenge.txt", spiele=("zh",), frist=3600),
@@ -491,7 +491,8 @@ def fuehre_aus(lauf, w):
     if not lauf.szene.runner:
         warte_frei(a.warteschlange)
     env = dict(os.environ, GENERALS_CRT_LEAKFILE=crt_log)
-    cmd = [exe] + FENSTER + lauf.args + ["-ignoreAsserts", "-crcLog", runner_log] + a.extra
+    ton = [] if a.mit_ton else ["-noaudio"]
+    cmd = [exe] + FENSTER + ton + lauf.args + ["-ignoreAsserts", "-crcLog", runner_log] + a.extra
     if a.benutzerdaten:
         # je Spiel ein Unterordner, damit Spielstaende und Replays der beiden Spiele getrennt bleiben
         cmd += ["-benutzerdaten", os.path.join(a.benutzerdaten, "ZeroHour" if lauf.spiel == "zh" else "Generals")]
@@ -552,6 +553,14 @@ ZWISCHENSPEICHER = [
     ("Upgrade-Masken je Modul (UpgradeMuxData)", ("UpgradeMuxData::getUpgradeActivationMasks",)),
     # std::deque gibt Bloecke beim Leeren nicht frei, sondern nimmt sie wieder; waechst nur mit der Hoechstlaenge
     ("Warteschlange Sichtaufhebung (std::deque-Bloecke)", ("PartitionManager::queueUndoShroudReveal",)),
+    ("Warteschlange des Job-Systems (waechst nur mit der Hoechstlaenge)", ("JobSystem::Impl::push",)),
+    ("Ressourcen der Gelaende-Tessellation (beim ersten Gebrauch angelegt)", ("RenderCore::Tt_Ensure_Resources",
+                                                                           "RenderCore::Tt_Query_Begin")),
+    ("Einstellungsdokument im Speicher (Settings::Document)", ("Settings::Document::set",)),
+    ("Nachschlagetabelle der Drawables (waechst mit der hoechsten Kennung)", ("GameClient::addDrawableToLookupTable",)),
+    ("Laufzeitstatistik je Modulart (nur mit -crcLog)", ("PhaseStatistics::moduleTime",)),
+    ("Klippentabelle in Kartengroesse (je Karte neu angelegt)", ("BaseHeightMapRenderObjClass::updateViewImpassableAreas",)),
+    ("Generalsfaehigkeiten je Spieler (geleert je Partie, Kapazitaet bis zur groessten Zahl)", ("Player::addScience",)),
 ]
 
 
@@ -697,6 +706,8 @@ def main():
     ap.add_argument("--szenen", help="Komma-Liste; Standard alle (siehe --liste)")
     ap.add_argument("--auswahl", choices=sorted(AUSWAHL), help="vordefinierte Szenenauswahl (abnahme)")
     ap.add_argument("--ohne-fenster", action="store_true", help="nur -runner-Szenen (keine Warteschlange)")
+    ap.add_argument("--mit-ton", action="store_true",
+                    help="mit Ton starten (prueft auch die Tonpfade auf Lecks); Standard ohne Ton (-noaudio)")
     ap.add_argument("--nur-fenster", action="store_true", help="nur Fensterszenen")
     ap.add_argument("--parallel", type=int, default=1,
                     help="so viele Runner-Laeufe gleichzeitig (Fensterlaeufe laufen daneben nacheinander)")

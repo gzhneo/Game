@@ -1182,8 +1182,10 @@ void RenderCore::Sh_Apply()
 
 	GpuContext* c = M->context;
 	c->PSSetConstantBuffers(RENDER_SLOT_CB_SHADOW_APPLY, 1, &M->sh_cb_apply);
+	// Without the near cascade its slot gets the main map: the shader does not read it then (weight 0), but Vulkan checks
+	// that a comparison sampler only meets depth formats, and an empty slot would get the colour placeholder.
 	GpuShaderResourceView* maps[4] = { M->sh_srv, split ? M->sh_ter_srv : nullptr, split ? M->sh_ter_depth_srv : nullptr,
-									   cascade ? M->sh_near_srv : nullptr };
+									   cascade ? M->sh_near_srv : M->sh_srv };
 	c->PSSetShaderResources(2, 4, maps);
 	c->PSSetSamplers(1, 1, &M->sh_cmp);
 	Fx_Full_Screen_Pass(M->scene_rtv, M->viewport, M->sh_mask_ps, nullptr, M->fx_depth_handle->srv, M->fx_blend_mul);

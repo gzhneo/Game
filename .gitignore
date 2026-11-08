@@ -21,6 +21,8 @@
 /build-x64-d3d11-only/
 /build-x64-vulkan-only/
 /build-x64-editor/
+# Laufordner mit den englischen Asset-Kopien (Exe-Kopie, Junctions und Hardlinks auf die Assets)
+/build-x64-lauf-en/
 CMakeUserPresets.json
 
 # Build-/Debug-Protokolle, die während der Modernisierung anfallen

@@ -31,6 +31,9 @@
 // INCLUDES ///////////////////////////////////////////////////////////////////////////////////////
 #include "PreRTS.h"	// This must go first in EVERY cpp file int the GameEngine
 
+#include <map>
+#include <utility>
+
 #include "Common/Player.h"
 #include "Common/PlayerList.h"
 #include "Common/Xfer.h"
@@ -70,10 +73,56 @@ LaserUpdateModuleData::LaserUpdateModuleData()
 	p.add(dataFieldParse);
 }
 
+// Live lasers per shooter/target pair: the newest laser drawable and the count. Client-side drawing state only.
+namespace
+{
+	struct LaserPair
+	{
+		DrawableID newest = INVALID_DRAWABLE_ID;
+		LaserUpdate *newestUpdate = nullptr;
+		Int count = 0;
+		Real brightness = 1.0f;
+	};
+	using LaserPairKey = std::pair<DrawableID, DrawableID>;
+	using LaserPairMap = std::map<LaserPairKey, LaserPair>;
+
+	// Allocated while lasers live and freed with the last one, so no memory is held at shutdown.
+	LaserPairMap *s_laserPairs = nullptr;
+
+	LaserPair *findLaserPair( DrawableID parent, DrawableID target )
+	{
+		if( !s_laserPairs )
+			return nullptr;
+		auto it = s_laserPairs->find( LaserPairKey( parent, target ) );
+		return it != s_laserPairs->end() ? &it->second : nullptr;
+	}
+
+	LaserPair &addLaserPair( DrawableID parent, DrawableID target )
+	{
+		if( !s_laserPairs )
+			s_laserPairs = new LaserPairMap;
+		return ( *s_laserPairs )[ LaserPairKey( parent, target ) ];
+	}
+
+	void removeLaserPair( DrawableID parent, DrawableID target )
+	{
+		if( !s_laserPairs )
+			return;
+		s_laserPairs->erase( LaserPairKey( parent, target ) );
+		if( s_laserPairs->empty() )
+		{
+			delete s_laserPairs;
+			s_laserPairs = nullptr;
+		}
+	}
+}
+
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 LaserUpdate::LaserUpdate( Thing *thing, const ModuleData* moduleData ) : ClientUpdateModule( thing, moduleData )
 {
+	m_pairParentID = INVALID_DRAWABLE_ID;
+	m_pairTargetID = INVALID_DRAWABLE_ID;
 	//Added By Sadullah Nader
 	//Initialization missing and needed
 	m_dirty = FALSE;
@@ -98,6 +147,16 @@ LaserUpdate::LaserUpdate( Thing *thing, const ModuleData* moduleData ) : ClientU
 //-------------------------------------------------------------------------------------------------
 LaserUpdate::~LaserUpdate( void )
 {
+	if( m_pairParentID != INVALID_DRAWABLE_ID )
+	{
+		if( LaserPair *pair = findLaserPair( m_pairParentID, m_pairTargetID ) )
+		{
+			if( pair->newestUpdate == this )
+				pair->newestUpdate = nullptr;
+			if( --pair->count <= 0 )
+				removeLaserPair( m_pairParentID, m_pairTargetID );
+		}
+	}
 
 	if( m_particleSystemID )
 		TheParticleSystemManager->destroyParticleSystemByID( m_particleSystemID );
@@ -194,12 +253,47 @@ void LaserUpdate::updateEndPos()
 }
 
 //-------------------------------------------------------------------------------------------------
+Bool LaserUpdate::isSupersededInPair() const
+{
+	if( m_pairParentID == INVALID_DRAWABLE_ID )
+		return FALSE;
+	const LaserPair *pair = findLaserPair( m_pairParentID, m_pairTargetID );
+	return pair && pair->newest != getDrawable()->getID();
+}
+
+//-------------------------------------------------------------------------------------------------
+Real LaserUpdate::getPairBrightness() const
+{
+	if( m_pairParentID == INVALID_DRAWABLE_ID )
+		return 1.0f;
+	const LaserPair *pair = findLaserPair( m_pairParentID, m_pairTargetID );
+	return pair ? pair->brightness : 1.0f;
+}
+
+//-------------------------------------------------------------------------------------------------
 /** The update callback. */
 //-------------------------------------------------------------------------------------------------
 void LaserUpdate::clientUpdate( void )
 {
 	updateStartPos();
 	updateEndPos();
+
+	// A superseded laser of a stacked stream drops its muzzle and target flares; the newest one keeps them and
+	// follows the number of live lasers of the pair slowly.
+	if( m_pairParentID != INVALID_DRAWABLE_ID && !isSupersededInPair() )
+	{
+		if( LaserPair *pair = findLaserPair( m_pairParentID, m_pairTargetID ) )
+			pair->brightness += ( static_cast<Real>( pair->count ) - pair->brightness ) * 0.1f;
+	}
+	else if( isSupersededInPair() )
+	{
+		if( m_particleSystemID )
+			TheParticleSystemManager->destroyParticleSystemByID( m_particleSystemID );
+		if( m_targetParticleSystemID )
+			TheParticleSystemManager->destroyParticleSystemByID( m_targetParticleSystemID );
+		m_particleSystemID = INVALID_PARTICLE_SYSTEM_ID;
+		m_targetParticleSystemID = INVALID_PARTICLE_SYSTEM_ID;
+	}
 
 	if( m_decaying )
 	{
@@ -310,6 +404,24 @@ void LaserUpdate::initLaser( const Object *parent, const Object *target, const C
 		return;
 	}
 
+	// Weapons pass the target position as well, so m_targetID stays unset; the pair uses the target's drawable.
+	const DrawableID pairTargetID = ( target && target->getDrawable() ) ? target->getDrawable()->getID() : INVALID_DRAWABLE_ID;
+
+	// A stacked stream continues the flares of the pair's newest laser instead of starting new ones, so they
+	// (and the light they cast) do not restart with every shot.
+	if( m_parentID != INVALID_DRAWABLE_ID && pairTargetID != INVALID_DRAWABLE_ID && !m_particleSystemID && !m_targetParticleSystemID )
+	{
+		const LaserPair *pair = findLaserPair( m_parentID, pairTargetID );
+		if( pair && pair->newestUpdate && pair->newestUpdate != this )
+		{
+			LaserUpdate *previous = pair->newestUpdate;
+			m_particleSystemID = previous->m_particleSystemID;
+			m_targetParticleSystemID = previous->m_targetParticleSystemID;
+			previous->m_particleSystemID = INVALID_PARTICLE_SYSTEM_ID;
+			previous->m_targetParticleSystemID = INVALID_PARTICLE_SYSTEM_ID;
+		}
+	}
+
 	// Create special particle systems
 	//PLEASE NOTE You cannot check an ID for NULL.  This should be a check against INVALID_PARTICLE_SYSTEM_ID.  Can't change it on the last day without a bug though.
 	if( !m_particleSystemID )
@@ -390,6 +502,16 @@ void LaserUpdate::initLaser( const Object *parent, const Object *target, const C
 	if( draw )
 	{
 		draw->setPosition( &posToUse );
+	}
+
+	if( draw && m_parentID != INVALID_DRAWABLE_ID && pairTargetID != INVALID_DRAWABLE_ID && m_pairParentID == INVALID_DRAWABLE_ID )
+	{
+		m_pairParentID = m_parentID;
+		m_pairTargetID = pairTargetID;
+		LaserPair &pair = addLaserPair( m_pairParentID, m_pairTargetID );
+		pair.newest = draw->getID();
+		pair.newestUpdate = this;
+		++pair.count;
 	}
 
 	m_dirty = true;

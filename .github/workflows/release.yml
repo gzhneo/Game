@@ -1,0 +1,148 @@
+# Copyright (C) 2026 GZH Neo
+# Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
+# (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
+#
+# Builds the Windows setup (with and without the free content) and puts it into a draft release together with
+# the FFmpeg source code (LGPL) and checksums. Nothing is published automatically: the draft is checked and then
+# published by hand on GitHub.
+#
+# Start: push a tag v<version> (for example v2.0-alpha-2, matching VERSION_TEXT in Code/App/BuildVersion.h; the
+# older form without "v", 2.0-alpha-1, is accepted as well), or "Run workflow" on the Actions page (the tag is then
+# v<VERSION_TEXT> on the chosen commit). The release text is .github/release-notes.md; .github/changes/<version>.md,
+# if present, becomes its section What's new.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+      - "[0-9]*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  setup:
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 240
+    env:
+      VCPKG_BINARY_CACHE: ${{ github.workspace }}\..\vcpkg-binary-cache
+      OUT: ${{ github.workspace }}\..\release-out
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version and tag
+        id: version
+        shell: pwsh
+        run: |
+          $line = Select-String -Path Code/App/BuildVersion.h -Pattern '^#define VERSION_TEXT "([^"]+)"'
+          if (-not $line) { throw "VERSION_TEXT not found in Code/App/BuildVersion.h" }
+          $version = $line.Matches[0].Groups[1].Value
+          $tag = "v$version"
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $tag = "${{ github.ref_name }}"
+            if ($tag -ne "v$version" -and $tag -ne $version) {
+              throw "Tag $tag does not match VERSION_TEXT $version (expected v$version)"
+            }
+          }
+          $pre = if ($version -match "alpha|beta|rc") { "true" } else { "false" }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "prerelease=$pre" >> $env:GITHUB_OUTPUT
+          "Version $version, tag $tag, prerelease $pre"
+
+      # vcpkg of the runner image (a git clone, needed for builtin-baseline); built packages are cached between runs.
+      - name: vcpkg
+        shell: pwsh
+        run: |
+          "VCPKG_ROOT=$env:VCPKG_INSTALLATION_ROOT" >> $env:GITHUB_ENV
+          New-Item -ItemType Directory -Force $env:VCPKG_BINARY_CACHE | Out-Null
+          "VCPKG_BINARY_SOURCES=clear;files,$env:VCPKG_BINARY_CACHE,readwrite" >> $env:GITHUB_ENV
+
+      - name: Restore vcpkg cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.VCPKG_BINARY_CACHE }}
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+          restore-keys: vcpkg-${{ runner.os }}-
+
+      - name: Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          "${env:ProgramFiles(x86)}\Inno Setup 6" >> $env:GITHUB_PATH
+
+      - name: Configure
+        shell: pwsh
+        run: cmake --preset x64-debug "-DGENERALS_ASSETS_DIR=" "-DGENERALSZH_ASSETS_DIR="
+
+      - name: Save vcpkg cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.VCPKG_BINARY_CACHE }}
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+
+      - name: Build
+        shell: pwsh
+        run: cmake --build --preset x64-release -- /m /nologo /v:minimal
+
+      # Tests without EA's game data (the replays need it and run on the developer machine).
+      - name: Tests
+        shell: pwsh
+        run: ctest --test-dir build-x64 -C Release -LE assets --output-on-failure
+
+      - name: Setup with free content
+        shell: pwsh
+        run: cmake --build build-x64 --config Release --target GZHNeoSetup
+
+      - name: Setup without free content
+        shell: pwsh
+        run: |
+          cmake --preset x64-debug "-DGENERALS_ASSETS_DIR=" "-DGENERALSZH_ASSETS_DIR=" -DGZH_INSTALL_FREE_CONTENT=OFF
+          cmake --build build-x64 --config Release --target GZHNeoSetup
+
+      - name: FFmpeg source and checksums
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force $env:OUT | Out-Null
+          Copy-Item build-x64\installer\*.exe $env:OUT
+          tools\release\ffmpeg_quelle.ps1 -Ziel $env:OUT
+          Push-Location $env:OUT
+          Get-ChildItem -File | Where-Object Name -ne "SHA256SUMS.txt" | Sort-Object Name | ForEach-Object {
+            "$((Get-FileHash $_.Name -Algorithm SHA256).Hash.ToLower())  $($_.Name)"
+          } | Set-Content -Encoding ascii SHA256SUMS.txt
+          Get-Content SHA256SUMS.txt
+          Pop-Location
+          Get-ChildItem $env:OUT | Select-Object Name, @{n = "MB"; e = { [math]::Round($_.Length / 1MB, 1) } } | Format-Table | Out-String
+
+      - name: Draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ steps.version.outputs.tag }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+        run: |
+          $changes = ""
+          if (Test-Path ".github/changes/$env:VERSION.md") { $changes = "## What's new`n`n" + (Get-Content ".github/changes/$env:VERSION.md" -Raw).Trim() + "`n`n" }
+          $notes = (Get-Content .github/release-notes.md -Raw).Replace("{CHANGES}", $changes).Replace("{VERSION}", $env:VERSION).Replace("{COMMIT}", "${{ github.sha }}")
+          $notesFile = Join-Path $env:OUT "..\release-notes.md"
+          Set-Content -Encoding utf8 $notesFile $notes
+          $files = Get-ChildItem $env:OUT -File | ForEach-Object FullName
+          gh release view $env:TAG *> $null
+          if ($LASTEXITCODE -eq 0) {
+            # The release exists (run repeated): replace the files, keep the text and the state.
+            gh release upload $env:TAG @files --clobber
+          } else {
+            $ghArgs = @($env:TAG) + $files + @("--draft", "--title", "GZH Neo $env:VERSION", "--notes-file", $notesFile, "--target", "${{ github.sha }}")
+            if ($env:PRERELEASE -eq "true") { $ghArgs += "--prerelease" }
+            gh release create @ghArgs
+          }
+          if ($LASTEXITCODE -ne 0) { throw "gh release failed" }

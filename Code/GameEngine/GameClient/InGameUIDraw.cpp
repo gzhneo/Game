@@ -159,6 +159,33 @@ void InGameUI::postDraw( void )
 		Int startY = static_cast<Int>(m_superweaponPosition.y * TheDisplay->getHeight());
 		
 		Int bottomMargin = static_cast<Int>( static_cast<Real>(TheTacticalView->getHeight()) * 0.82f ); 
+
+		// The margin keeps the list off the control bar. On a wide screen the bar is centred and narrower than
+		// the screen; when the whole list (names are right-aligned to startX) lies beside it, it may run down
+		// to the bottom.
+		{
+			GameWindow *bar = TheWindowManager ? TheWindowManager->winGetWindowFromId( nullptr, NAMEKEY( "ControlBar.wnd:ControlBarParent" ) ) : nullptr;
+			Int widestName = 0;
+			Int lineHeight = 0;
+			for (Int i=0; i<MAX_PLAYER_COUNT; ++i)
+				for (SuperweaponMap::iterator mapIt = m_superweapons[i].begin(); mapIt != m_superweapons[i].end(); ++mapIt)
+					for (SuperweaponList::iterator listIt = mapIt->second.begin(); listIt != mapIt->second.end(); ++listIt)
+						if (*listIt)
+						{
+							{ const Int w = (*listIt)->getNameWidth(); if (w > widestName) widestName = w; }
+							{ const Int h = static_cast<Int>( (*listIt)->getHeight() ); if (h > lineHeight) lineHeight = h; }
+						}
+			Int barX = 0, barY = 0, barWidth = 0, barHeight = 0;
+			if (bar)
+			{
+				bar->winGetScreenPosition( &barX, &barY );
+				bar->winGetSize( &barWidth, &barHeight );
+			}
+			const Bool besideBar = bar == nullptr || bar->winIsHidden() || startX - widestName >= barX + barWidth;
+			const Int screenBottom = static_cast<Int>( TheDisplay->getHeight() ) - lineHeight;
+			if (besideBar && screenBottom > bottomMargin)
+				bottomMargin = screenBottom;
+		}
 			
 
 

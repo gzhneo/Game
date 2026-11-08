@@ -386,6 +386,20 @@ void W3DGameWinDefaultDraw( GameWindow *window, WinInstanceData *instData )
 		window->winGetScreenPosition( &pos.x, &pos.y );
 		window->winGetSize( &size2.x, &size2.y );
 
+		// A background video on a window stretched to the whole display (load screens) is shown in the
+		// centered 4:3 layout area, where the window's children are, instead of stretched across a wide display.
+		if( pos.x == 0 && pos.y == 0 && size2.x == static_cast<Int>( TheDisplay->getWidth() ) &&
+				size2.y == static_cast<Int>( TheDisplay->getHeight() ) && TheDisplay->isUILayoutPillarboxed() )
+		{
+			Real scaleX = 1.0f, scaleY = 1.0f;
+			Int offsetX = 0, offsetY = 0;
+			TheDisplay->getUILayoutTransform( 800, 600, &scaleX, &scaleY, &offsetX, &offsetY );
+			pos.x = offsetX;
+			pos.y = offsetY;
+			size2.x = static_cast<Int>( 800.0f * scaleX );
+			size2.y = static_cast<Int>( 600.0f * scaleY );
+		}
+
 		TheDisplay->drawVideoBuffer( instData->m_videoBuffer, pos.x, pos.y, pos.x + size2.x, pos.y + size2.y );
 	}
 

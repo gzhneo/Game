@@ -77,6 +77,7 @@ static const time_t s_fileSavePopupDuration = 1000;
 extern void PopulateReplayFileListbox(GameWindow *listbox);
 extern void ScoreScreenEnableControls(Bool enable);
 extern UnicodeString GetReplayFilenameFromListbox(GameWindow *listbox, Int index);
+extern AsciiString ReplayNarrowName(const UnicodeString &name);
 extern std::string LastReplayFileName;
 
 //-------------------------------------------------------------------------------------------------
@@ -249,7 +250,7 @@ static void saveReplay( UnicodeString filename )
 	}
 	else
 	{
-		translated.translate(filename);
+		translated = ReplayNarrowName(filename);
 	}
 
 	AsciiString fullPath = TheRecorder->getReplayDir();

@@ -121,6 +121,7 @@ protected:
 	//
 	Bool m_reconstructViewBox;										///< true when we need to reconstruct the box
 	Real m_viewAngle;															///< camera angle used for the view box we have
+	Real m_viewGroundLevel;												///< camera ground level used for the view box we have
 	Real m_viewZoom;															///< camera zoom used for the view box we have	
 	ICoord2D m_viewBox[ 4 ];											///< radar cell points for the 4 corners of view box
 

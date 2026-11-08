@@ -81,14 +81,17 @@ namespace
 		}
 	}
 
+	// Always DirectXTex's own CPU filters, never WIC: WIC needs COM on the calling thread and shares one factory
+	// between all threads, and the game initialises COM only in passing (XAudio2) while textures are also
+	// converted on worker threads.
 	DirectX::TEX_FILTER_FLAGS To_Filter_Flags(TexUtil::Filter filter)
 	{
 		switch (filter) {
 			case TexUtil::FILTER_NONE:
-			case TexUtil::FILTER_POINT:		return DirectX::TEX_FILTER_POINT;
-			case TexUtil::FILTER_TRIANGLE:	return DirectX::TEX_FILTER_TRIANGLE;
+			case TexUtil::FILTER_POINT:		return DirectX::TEX_FILTER_POINT | DirectX::TEX_FILTER_FORCE_NON_WIC;
+			case TexUtil::FILTER_TRIANGLE:	return DirectX::TEX_FILTER_TRIANGLE | DirectX::TEX_FILTER_FORCE_NON_WIC;
 			case TexUtil::FILTER_BOX:
-			default:							return DirectX::TEX_FILTER_BOX;
+			default:							return DirectX::TEX_FILTER_BOX | DirectX::TEX_FILTER_FORCE_NON_WIC;
 		}
 	}
 
@@ -170,7 +173,8 @@ namespace
 			if (DirectX::IsCompressed(dst_format)) {
 				hr = DirectX::Compress(*work, dst_format, DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, scratch[2]);
 			} else {
-				hr = DirectX::Convert(*work, dst_format, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, scratch[2]);
+				hr = DirectX::Convert(*work, dst_format, DirectX::TEX_FILTER_DEFAULT | DirectX::TEX_FILTER_FORCE_NON_WIC,
+				                      DirectX::TEX_THRESHOLD_DEFAULT, scratch[2]);
 			}
 			if (FAILED(hr)) return hr;
 			work = scratch[2].GetImage(0, 0, 0);
@@ -291,6 +295,11 @@ HRESULT TexUtil::Generate_Mip_Levels(WW3DTextureHandle texture, Filter filter)
 
 	DirectX::ScratchImage chain;
 	hr = DirectX::GenerateMipMaps(*base.GetImage(0, 0, 0), To_Filter_Flags(filter) | DirectX::TEX_FILTER_SEPARATE_ALPHA, levels, chain);
+	if (FAILED(hr) && filter == FILTER_BOX) {
+		// The CPU box filter needs power-of-two sizes; other sizes take the linear filter.
+		hr = DirectX::GenerateMipMaps(*base.GetImage(0, 0, 0),
+			DirectX::TEX_FILTER_LINEAR | DirectX::TEX_FILTER_FORCE_NON_WIC | DirectX::TEX_FILTER_SEPARATE_ALPHA, levels, chain);
+	}
 	if (FAILED(hr)) {
 		WWDEBUG_SAY(("TexUtil::Generate_Mip_Levels: GenerateMipMaps error 0x%08X\n", (unsigned)hr));
 		return hr;
@@ -306,7 +315,8 @@ HRESULT TexUtil::Generate_Mip_Levels(WW3DTextureHandle texture, Filter filter)
 			if (DirectX::IsCompressed(fmt)) {
 				hr = DirectX::Compress(*mip, fmt, DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, conv);
 			} else {
-				hr = DirectX::Convert(*mip, fmt, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT, conv);
+				hr = DirectX::Convert(*mip, fmt, DirectX::TEX_FILTER_DEFAULT | DirectX::TEX_FILTER_FORCE_NON_WIC, DirectX::TEX_THRESHOLD_DEFAULT,
+				                      conv);
 			}
 			if (FAILED(hr)) return hr;
 			mip = conv.GetImage(0, 0, 0);

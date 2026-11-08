@@ -134,6 +134,28 @@ add_custom_command(TARGET ${GAME_EXE_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different "${SHARED_DATA_DIR}/BaeumeFrei" "$<TARGET_FILE_DIR:${GAME_EXE_NAME}>/ProjectData/Inhalt/BaeumeFrei"
 )
 
+# Install (root CMakeLists.txt): <prefix>/Generals or <prefix>/ZeroHour with everything the game needs next to
+# the exe except EA's game data.
+string(REPLACE " " "" GAME_INSTALL_DIR "${GAME_EDITION_NAME}")
+install(TARGETS ${GAME_EXE_NAME} RUNTIME DESTINATION ${GAME_INSTALL_DIR})
+# The DLLs next to the built exe (FFmpeg, ZLib, DirectXTex from vcpkg, dxcompiler.dll). Collected at install time
+# with a flat glob: install(DIRECTORY) would walk into the Data and ZH_Generals junctions.
+install(CODE "
+	file(GLOB _gzh_dlls \"$<TARGET_FILE_DIR:${GAME_EXE_NAME}>/*.dll\")
+	if(NOT _gzh_dlls)
+		message(FATAL_ERROR \"no DLLs next to ${GAME_EXE_NAME} -- build the configuration first\")
+	endif()
+	file(INSTALL \${_gzh_dlls} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${GAME_INSTALL_DIR}\")
+")
+install(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION ${GAME_INSTALL_DIR})
+install(DIRECTORY "${SHARED_DATA_DIR}/Shaders" DESTINATION ${GAME_INSTALL_DIR})
+install(DIRECTORY "${SHARED_DATA_DIR}/INI" "${SHARED_DATA_DIR}/Text" "${SHARED_DATA_DIR}/Network" "${SHARED_DATA_DIR}/Textures"
+	DESTINATION ${GAME_INSTALL_DIR}/ProjectData)
+if(GZH_INSTALL_FREE_CONTENT)
+	install(DIRECTORY "${SHARED_DATA_DIR}/FreierBoden" "${SHARED_DATA_DIR}/FreieStrassen" "${SHARED_DATA_DIR}/BaeumeFrei"
+		DESTINATION ${GAME_INSTALL_DIR}/ProjectData/Inhalt)
+endif()
+
 # Game assets: after each build cmake/LinkAssets.cmake links missing .big archives, extra files,
 # Data and (Zero Hour only) ZH_Generals from GAME_ASSETS_DIR into the exe folder (cache variable
 # GENERALS_ASSETS_DIR or GENERALSZH_ASSETS_DIR). Without a folder the step is left out and the exe

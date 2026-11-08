@@ -1002,6 +1002,62 @@ static void startAgain( void )
 	::LocalFree(args);
 }
 
+// Without EA's game data the engine fails deep in its initialisation with a generic error message. A package from
+// the setup has no data until its setup program (GZHNeoEinrichtung.exe, one folder up) has copied it, so say that
+// and offer to run it. Data counts as present with any .big archive next to the exe or with loose files in Data\INI
+// (test data). No dialog in automated runs (-runner, -mehrfach). Returns true if the start has to stop.
+static bool reportMissingGameData( bool automated )
+{
+	WIN32_FIND_DATAA found;
+	const HANDLE search = ::FindFirstFileA( "*.big", &found );
+	if( search != INVALID_HANDLE_VALUE )
+	{
+		::FindClose( search );
+		return false;
+	}
+	const DWORD attributes = ::GetFileAttributesA( "Data\\INI" );
+	if( attributes != INVALID_FILE_ATTRIBUTES && ( attributes & FILE_ATTRIBUTE_DIRECTORY ) != 0 )
+		return false;
+	if( automated )
+		return true;
+
+	wchar_t setupPath[MAX_PATH * 4] = {};
+	const DWORD length = ::GetModuleFileNameW( nullptr, setupPath, MAX_PATH * 4 );
+	std::wstring setup( setupPath, length < MAX_PATH * 4 ? length : 0 );
+	for( int level = 0; level < 2 && !setup.empty(); ++level )
+		setup.erase( setup.find_last_of( L"\\/" ) == std::wstring::npos ? 0 : setup.find_last_of( L"\\/" ) );
+	const std::wstring setupFolder = setup;
+	setup += L"\\GZHNeoEinrichtung.exe";
+	const bool canSetUp = !setupFolder.empty() && ::GetFileAttributesW( setup.c_str() ) != INVALID_FILE_ATTRIBUTES;
+
+	const bool german = PRIMARYLANGID( ::GetUserDefaultUILanguage() ) == LANG_GERMAN;
+	const wchar_t *game = isGameEditionZeroHour() ? L"Zero Hour" : L"Generals";
+	const wchar_t *text;
+	if( german )
+		text = canSetUp
+			? L"Die Spieldaten von %s fehlen.\n\nGZH Neo braucht die Daten deiner eigenen Installation von Generals und Zero Hour "
+			  L"(Steam, EA App, Origin oder CD). \u201eSpieldaten einrichten\u201c kopiert sie in den Ordner von GZH Neo; deine "
+			  L"Installation bleibt unver\u00e4ndert.\n\nJetzt einrichten?"
+			: L"Die Spieldaten von %s fehlen.\n\nGZH Neo braucht die Daten deiner eigenen Installation von Generals und Zero Hour "
+			  L"(Steam, EA App, Origin oder CD). Installiere GZH Neo mit dem Setup, das sie einrichtet, oder kopiere sie mit "
+			  L"tools/assets/setup_assets.py neben das Programm.";
+	else
+		text = canSetUp
+			? L"The game data of %s is missing.\n\nGZH Neo needs the data of your own installation of Generals and Zero Hour "
+			  L"(Steam, EA app, Origin or disc). \u201cSet up game data\u201d copies it into the folder of GZH Neo; your "
+			  L"installation stays unchanged.\n\nSet it up now?"
+			: L"The game data of %s is missing.\n\nGZH Neo needs the data of your own installation of Generals and Zero Hour "
+			  L"(Steam, EA app, Origin or disc). Install GZH Neo with the setup, which sets it up, or copy it next to the "
+			  L"program with tools/assets/setup_assets.py.";
+	wchar_t message[1024];
+	_snwprintf_s( message, _TRUNCATE, text, game );
+	const wchar_t *title = isGameEditionZeroHour() ? L"GZH Neo \u2013 Zero Hour" : L"GZH Neo \u2013 Generals";
+	const int answer = ::MessageBoxW( nullptr, message, title, ( canSetUp ? MB_YESNO : MB_OK ) | MB_ICONINFORMATION );
+	if( canSetUp && answer == IDYES )
+		::ShellExecuteW( nullptr, L"open", setup.c_str(), nullptr, setupFolder.c_str(), SW_SHOWNORMAL );
+	return true;
+}
+
 Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                       LPSTR lpCmdLine, Int nCmdShow )
 {
@@ -1141,6 +1197,9 @@ Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			DEBUG_LOG(("\n--- END OF DX STACK DUMP\n"));
 			return 0;
 		}
+
+		if( reportMissingGameData( isRunnerInstance || isMultiInstance ) )
+			return 1;
 
 		#ifdef _DEBUG
 			// Turn on Memory heap tracking

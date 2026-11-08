@@ -387,6 +387,7 @@ if ($Schnell -or -not $bauOk) {
 	$saetze = @(
 		@($ExeG, "tests\replays\x64"), @($ExeZ, "tests\replays\zh\x64"),
 		@($ExeGR, "tests\replays\x64"), @($ExeZR, "tests\replays\zh\x64"),
+		@($ExeG, "tests\replays\neueki\x64"), @($ExeZ, "tests\replays\neueki\zh\x64"),
 		@($ExeGR, "tests\replays\neueki\x64"), @($ExeZR, "tests\replays\neueki\zh\x64"),
 		@($ExeG, "tests\replays\testhilfen\x64"), @($ExeZ, "tests\replays\testhilfen\zh\x64")
 	)

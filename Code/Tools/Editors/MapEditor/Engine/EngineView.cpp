@@ -235,6 +235,9 @@ void applyGraphics()
 	Real terrainDetail = defaults.terrainDetail;
 	Real terrainRock = defaults.terrainRock;
 	GlobalData::parseRenderEffects(s_display.effects, &flags, &sharpen, &msaa, 0, &shadowMapSize, &shadowTerrain, &terrainDetail, &terrainRock);
+	// No TAA: the editor draws on demand, so the history would gather over unrelated redraws and the jitter would move
+	// every picture of an unchanged map.
+	flags &= ~static_cast<UnsignedInt>(RENDER_EFFECT_TAA);
 	TheWritableGlobalData->m_renderEffects = flags;
 	TheWritableGlobalData->m_renderEffectSharpen = sharpen;
 	TheWritableGlobalData->m_renderEffectShadowMapSize = shadowMapSize;

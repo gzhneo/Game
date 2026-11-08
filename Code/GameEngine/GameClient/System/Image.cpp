@@ -42,6 +42,7 @@
 #include "Common/GlobalData.h"
 #include "GameClient/Image.h"
 #include "Common/NameKeyGenerator.h"
+#include "Engine/UserDataFiles.h"
 
 // PRIVATE DATA ///////////////////////////////////////////////////////////////////////////////////
 const FieldParse Image::m_imageFieldParseTable[] = 
@@ -235,14 +236,12 @@ void ImageCollection::load( Int textureSize )
 	char buffer[ _MAX_PATH ];
 	INI ini;
 	// first load in the user created mapped image files if we have them.
-	WIN32_FIND_DATA findData;
 	AsciiString userDataPath;	
 	if(TheGlobalData)
 	{
-		userDataPath.format("%sINI\\MappedImages\\*.ini",TheGlobalData->getPath_UserData().str());
-		if(FindFirstFile(userDataPath.str(), &findData) !=INVALID_HANDLE_VALUE)
+		userDataPath.format("%sINI\\MappedImages",TheGlobalData->getPath_UserData().str());
+		if(!::Engine::UserDataFiles::list(::Engine::pathFromNarrow(userDataPath.str()), "*.ini").empty())
 		{
-			userDataPath.format("%sINI\\MappedImages",TheGlobalData->getPath_UserData().str());
 			ini.loadDirectory(userDataPath, TRUE, INILoadType::INI_LOAD_OVERWRITE, nullptr );
 		}
 	}

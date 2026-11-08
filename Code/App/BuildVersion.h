@@ -8,10 +8,10 @@
 // number on every build; that tooling is not part of the source release.
 #define VERSION_MAJOR 2
 #define VERSION_MINOR 0
-// Pre-release suffix after major.minor ("2.0-alpha-1"); empty for a final release.
-#define VERSION_SUFFIX "alpha-1"
+// Pre-release suffix after major.minor ("2.0-alpha-2"); empty for a final release.
+#define VERSION_SUFFIX "alpha-2"
 // The same version as text for the version resource of RTS.RC (the resource compiler cannot join strings).
-#define VERSION_TEXT "2.0-alpha-1"
+#define VERSION_TEXT "2.0-alpha-2"
 #define VERSION_BUILDNUM 0
 #ifndef RC_INVOKED	// RTS.RC includes this header; the resource compiler knows no C++
 constexpr auto VERSION_LOCALBUILDNUM = 0;

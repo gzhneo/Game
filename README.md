@@ -20,9 +20,10 @@ Hour, for example from *The Ultimate Collection* on the
 [EA app](https://www.ea.com/en-gb/games/command-and-conquer/command-and-conquer-the-ultimate-collection/buy/pc) or
 [Steam](https://store.steampowered.com/bundle/39394/Command__Conquer_The_Ultimate_Collection/).
 
-## Status: 2.0-alpha-1
+## Status: 2.0-alpha-2
 
-This is the first public version of GZH Neo, **2.0-alpha-1**. The "2" marks the step from EA's last patches, Generals
+This is the second public version of GZH Neo, **2.0-alpha-2**, after 2.0-alpha-1 (November 2026, source code
+only). The "2" marks the step from EA's last patches, Generals
 1.08 and Zero Hour 1.04. *Alpha* means: both games build, run and are playable — skirmish, campaign and network games —
 but not everything is finished. Both games and all automated tests have passed on several different computers, but not
 yet on the wide range of hardware that players have. Expect rough edges and please
@@ -30,7 +31,8 @@ report them (see "Reporting problems" below).
 
 The programs are `GZHNeo.exe` (Generals) and `GZHNeoZH.exe` (Zero Hour); the version is shown at the bottom left of the
 main menu and on the info page of the options menu (page *Game*, *Info ...*). This version is published as **source
-code only**; you build the programs yourself.
+code** and as a **Windows setup** on the releases page, which installs both games and copies the game data from your own
+installation (see "Quick start"). You can also build the programs or the setup yourself.
 
 This repository, [github.com/gzhneo/Game](https://github.com/gzhneo/Game), holds the game itself. Further projects
 around it, such as mods, may follow as repositories of their own under [github.com/gzhneo](https://github.com/gzhneo).
@@ -100,11 +102,34 @@ around it, such as mods, may follow as repositories of their own under [github.c
 | Memory | 4 GB | The game itself needs less than 1 GB. |
 | Graphics | **Direct3D 11** (feature level 11.0); optionally Vulkan 1.3 | Reference: Intel HD Graphics 4600. Any graphics card of the last ten years will do, integrated ones too. |
 | Display | 800x600 and up | 4:3, 16:10, 16:9, 21:9 and 32:9. |
-| Disk | about 1.5 GB | Copy of the game data plus programs; HD/UHD textures need about 7 to 10 GB more per game. |
-| Runtime | Microsoft Visual C++ v14 Redistributable (x64), at least the version of the build tools used | Already installed on every computer with Visual Studio or its Build Tools. Other computers need it once; see [BUILD.md](BUILD.md), "Running on another computer". FFmpeg, DirectXTex and zlib come as DLLs next to the program. |
+| Disk | about 3 to 4 GB | Copy of the game data (2.7 GB) plus programs (0.1 GB, with the free textures 1.1 GB); HD/UHD textures need about 7 to 10 GB more per game. |
+| Runtime | Microsoft Visual C++ v14 runtime (x64) | The setup brings it along next to the games. Self-built programs need the Redistributable, at least the version of the build tools used; it is already installed on every computer with Visual Studio or its Build Tools, see [BUILD.md](BUILD.md), "Running on another computer". FFmpeg, DirectXTex and zlib come as DLLs next to the program. |
 | Game data | your own copy of Generals and/or Zero Hour | EA app or Steam (*The Ultimate Collection*). German is tested, English by spot checks, other languages are untested. |
 
 ## Quick start
+
+### With the setup
+
+`GZHNeo-<version>-Setup.exe` installs GZH Neo for the current user, without administrator rights, to
+`%LOCALAPPDATA%\Programs\GZH Neo`. If the releases page offers it, download it; otherwise build it from the source
+(below, then `cmake --build build-x64 --config Release --target GZHNeoSetup` with [Inno Setup 6](https://jrsoftware.org/isinfo.php)
+installed; details in [BUILD.md](BUILD.md), "Player package").
+
+Releases are built by GitHub Actions from the tagged commit (`.github/workflows/release.yml`). Besides the two setups each
+release carries `SHA256SUMS.txt` to check the downloads and the source code of the FFmpeg DLLs in the setup with the
+vcpkg port that built them (FFmpeg is LGPL 2.1).
+
+1. **Run the setup.** At the end it opens *Set up game data*: it finds your installation of Generals and Zero Hour
+   (Steam, EA app, Origin or disc), lets you pick another folder, and copies the game data (about 2.7 GB) into the
+   program folder. Your installation is only read, never changed. You can repeat this at any time from the Start menu
+   (*GZH Neo*, *Set up game data*).
+2. **Start** *GZH Neo - Generals* or *GZH Neo - Zero Hour* from the Start menu.
+
+The setup comes in two sizes: about 550 MB with the free ground, road and tree textures, and about 50 MB without them
+(`-NoFreeContent`; the games then use EA's textures only). Uninstalling removes the program folder including the copied
+game data; settings and saved games in `Documents\GZH Neo` stay.
+
+### Building from source
 
 1. **Install the build tools:** Visual Studio 2026 Build Tools with "Desktop development with C++", the Windows SDK,
    CMake and vcpkg (all part of the Build Tools), and Python 3.
@@ -138,11 +163,14 @@ Details, the start-up switches and the texture tiers: [BUILD.md](BUILD.md).
   the 2003 compiler, so network games, replays and saved games only work between identical GZH Neo builds.
 - **HD/UHD textures are not shipped;** every player generates them from their own installation
   (`tools/assets/build_texture_tiers.py`).
-- **Source only:** there are no ready-made programs; you build them yourself.
+- **The setup is new:** it has been tested on the developer's computer with the EA app, Steam and the English discs as
+  source, not yet on a fresh computer. It is not code-signed, so Windows SmartScreen warns when you start it the
+  first time ("More info", "Run anyway").
 - **Only 64-bit Windows** with a processor that supports AVX2.
 - **Languages:** German is tested, English by spot checks, other languages are untested.
 - **Testing is still thin in places:** the campaigns and saving and loading have not yet been played through completely
-  for every faction, and the game data has so far only been set up from the EA app version, not yet from Steam.
+  for every faction. The game data has been set up from the German EA app and Steam versions and from the English
+  discs; the English EA app and Steam versions are untested.
 - Rocks, trees and other nature objects are only partly replaced by free models; where none exists yet, EA's model is
   used.
 
@@ -151,8 +179,8 @@ Details, the start-up switches and the texture tiers: [BUILD.md](BUILD.md).
 Please report bugs as an issue at [github.com/gzhneo/Game](https://github.com/gzhneo/Game/issues). Helpful are the version
 (main menu, bottom left), which game, the detail level and renderer (Direct3D 11 or Vulkan), your graphics card and what
 you did before the problem. After a crash or a hang the game writes a minidump, the log and the replay of the running game
-to `Crashes\<timestamp>\` in your user folder (`Documents\GZH Neo\Generals` or `Documents\GZH Neo\Zero Hour`); please
-attach them. Replays and saved games only work with the same build, so name the commit you built from.
+to `Crashes\<timestamp>\` in the program folder (next to `GZHNeo.exe` or `GZHNeoZH.exe`); please attach them. Replays
+and saved games only work with the same build, so name the commit you built from.
 
 ## Plans
 
@@ -162,7 +190,6 @@ Ideas for later versions, in no fixed order and without a promise:
 - **Better computer opponent:** further work on the new AI next to the classic one.
 - **Better graphics on discrete graphics cards:** use more of what Direct3D 11 and Vulkan offer on the high and very high
   detail levels; the low level stays the minimum option.
-- **Installer for Windows:** a standalone installer, so that nobody has to build the game from source.
 - **Internet play:** more testing of direct connections and the relay on real networks, and community rendezvous servers.
 - **More languages:** support for further languages is planned.
 - **Performance:** further optimisations, also for weaker computers.
@@ -172,7 +199,7 @@ Ideas for later versions, in no fixed order and without a promise:
 Fetched automatically through vcpkg (`vcpkg.json`), no manual installation: FFmpeg, DirectXTex, zlib, and for the
 Vulkan renderer Vulkan-Headers, volk, Vulkan Memory Allocator and the DirectX Shader Compiler; Qt 6 for the map editor.
 Monocypher is included in the source tree. Direct3D 11, DXGI and XAudio2 come with Windows and the Windows SDK. Licences
-of all components: [NOTICE.md](NOTICE.md).
+of all components: [NOTICE.md](NOTICE.md); the setup puts the licence texts of the DLLs it ships into `Licenses\`.
 
 None of the SDKs that EA's original build asked for (DirectX 8 SDK, STLport, Bink, Miles Sound System, GameSpy SDK,
 SafeDisc API, NVASM, BYTEmark, 3ds Max SDK, LZH-Light) is needed.

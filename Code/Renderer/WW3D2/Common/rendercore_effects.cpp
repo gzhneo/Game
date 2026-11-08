@@ -865,6 +865,7 @@ void RenderCore::Fx_Copy_Depth()
 	Fx_Set_Float4(cb.depthRange, M->viewport.MinZ, M->viewport.MaxZ, (range > 1e-6f) ? 1.0f / range : 1.0f, 0.0f);
 	Fx_Set_Float4(cb.rect, (float)M->viewport.X, (float)M->viewport.Y,
 				  (float)(M->viewport.X + M->viewport.Width), (float)(M->viewport.Y + M->viewport.Height));
+	cb.view = cb.rect;
 	Fx_Set_Float4(cb.source, 1.0f / (float)M->scene_width, 1.0f / (float)M->scene_height, (float)M->scene_width, (float)M->scene_height);
 	M->fx_cb_dirty = true;
 }

@@ -198,6 +198,17 @@ set(GENERALSMD_SPIEL_DIR "${CMAKE_SOURCE_DIR}/Code/Games/ZeroHour")
 # Off by default to keep the game build lean. Defined before the games because both read it.
 option(BUILD_TOOLS "Build the tools (Code/Tools) for both games" OFF)
 
+# Install layout for the player setup: cmake --install <build> --config Release --prefix <folder> gives
+# Generals/ and ZeroHour/, each with the game, its DLLs, Shaders and ProjectData (Code/App/CMakeLists.txt), and
+# the licence files at the top. EA's game data is not part of it. The VC++ runtime is installed next to each
+# executable (app-local), so the setup needs no administrator rights for a redistributable.
+set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
+include(InstallRequiredSystemLibraries)
+install(FILES LICENSE.md NOTICE.md ASSET_CREDITS.md README.md DESTINATION .)
+# Free content (ground, roads, trees; about 500 MB per game) in the install. Without it the package is small and
+# the game uses EA's content only, as with -freeContent ea.
+option(GZH_INSTALL_FREE_CONTENT "Install the free content packages (ProjectData/Inhalt)" ON)
+
 # --- Shared libraries ---------------------------------------------------------------------------
 # Code/Libraries: WWDebug, WWLib, WWMath, WWSaveLoad, WW3D2, Compression (ZLib via vcpkg plus EA's
 # BTree/Huff/RefPack codecs) and Core (Lib/BaseType.h, Lib/trig.h). One target per
@@ -295,6 +306,11 @@ add_subdirectory("${SHARED_TOOLS_DIR}/Server/Rendezvous" Code/Tools/Rendezvous)
 
 # File system comparison tool (-dateiIndexAusgeben): engine building blocks only, built once.
 add_subdirectory("${SHARED_TOOLS_DIR}/Diagnostics/VfsDump" Code/Tools/VfsDump)
+
+# Setup program of the player package: finds the installed games and copies their data. Windows only.
+if(WIN32)
+	add_subdirectory("${SHARED_TOOLS_DIR}/Setup" Code/Tools/Setup)
+endif()
 
 # --- The games ----------------------------------------------------------------------------------
 # Each game has a CMakeLists.txt in <Game>/Spiel that only sets parameters (target suffix, exe name,

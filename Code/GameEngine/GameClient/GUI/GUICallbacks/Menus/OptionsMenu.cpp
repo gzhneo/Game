@@ -804,6 +804,7 @@ static void DestroyOptionsLayout() {
 	TheShell->destroyOptionsLayout();
 	OptionsLayout = nullptr;
 	MainMenuShowAfterOptions();
+	QuitMenuShowAfterOptions();
 }
 
 static void showAdvancedOptions()

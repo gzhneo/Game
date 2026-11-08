@@ -88,13 +88,26 @@ def copy_file(src, dst, log):
     return True
 
 
-def copy_tree(src, dst, log):
+def remove_excluded(path, log):
+    """Entfernt eine ausgeschlossene Datei, die eine fruehere Kopie im Ziel hinterlassen hat.
+    Im Ziel liegen eigene Kopien bzw. Hardlinks; os.remove loest nur diesen Namen."""
+    if os.path.isfile(path):
+        os.remove(path)
+        log(f"entfernt (ausgeschlossen): {path}")
+
+
+def copy_tree(src, dst, log, exclude=frozenset()):
+    """exclude: relative Pfade unterhalb von src, klein geschrieben, mit "/" getrennt."""
     n = 0
     for root, _dirs, files in os.walk(src):
         rel = os.path.relpath(root, src)
         for name in files:
             s = os.path.join(root, name)
             d = os.path.join(dst, rel, name) if rel != "." else os.path.join(dst, name)
+            relname = name if rel == "." else rel.replace(os.sep, "/") + "/" + name
+            if relname.lower() in exclude:
+                remove_excluded(d, log)
+                continue
             if copy_file(s, d, lambda _m: None):
                 n += 1
     log(f"{os.path.basename(src)}-Ordner: {n} Dateien kopiert/aktualisiert")
@@ -103,6 +116,10 @@ def copy_tree(src, dst, log):
 def copy_bigs(src, dst, exclude, log):
     bigs = sorted(n for n in os.listdir(src) if n.lower().endswith(".big") and n.lower() not in exclude)
     copied = sum(copy_file(os.path.join(src, n), os.path.join(dst, n), log) for n in bigs)
+    if os.path.isdir(dst):
+        for n in sorted(os.listdir(dst)):
+            if n.lower() in exclude:
+                remove_excluded(os.path.join(dst, n), log)
     log(f"Archive in {dst}: {len(bigs)} geprueft, {copied} kopiert")
 
 
@@ -142,14 +159,19 @@ GENERALS_FIXES = [
 
 
 # --- Profile -------------------------------------------------------------------------------------
-# big_exclude: PatchData.big/PatchWindow.big sind Generals-Patches aus einer spaeteren EA-Version
-# als dieser GPL-Quellstand (MainMenu.wnd mit "ButtonCustomMission", den weder Generals- noch
-# ZH-Code kennt; siehe BUILD.md). In der Zero-Hour-Installation liegen dieselben Archive im
-# Hauptordner und wuerden dort alphabetisch vor WindowZH.big geladen, also ZH-Menues ueberdecken.
+# big_exclude: PatchData.big, PatchWindow.big und PatchINI.big gibt es nur in den digitalen Fassungen
+# (EA App, Steam). Sie gehoeren zum Menuepunkt "ButtonCustomMission", den der GPL-Quellstand weder in
+# Generals noch in Zero Hour kennt (siehe BUILD.md): PatchWindow.big ersetzt MainMenu.wnd und
+# MapSelectMenu.wnd, PatchData.big bringt die Texte, PatchINI.big eine WindowTransitions.ini mit den
+# Uebergaengen. PatchWindow.big wuerde alphabetisch vor Window.big bzw. WindowZH.big geladen und die
+# Menues ueberdecken; PatchINI.big verliert gegen INI.big bzw. INIZH.big und bleibt der Einheit halber
+# ebenfalls draussen. Liegen sie von einer frueheren Kopie im Ziel, werden sie entfernt.
+# data_exclude: Dateien unter Data\, die nicht kopiert werden (relativ, klein, "/" getrennt).
 PROFILES = {
     "generals": dict(
         marker="INI.big",
-        big_exclude={"patchdata.big", "patchwindow.big"},
+        big_exclude={"patchdata.big", "patchwindow.big", "patchini.big"},
+        data_exclude=frozenset(),
         # Kleine Dateien neben den Archiven, die das Spiel im Exe-Ordner erwartet.
         extra_files=["Generals.dat", "Install_Final.bmp", "00000000.016", "00000000.256"],
         base_subdir=None,
@@ -157,10 +179,10 @@ PROFILES = {
     ),
     "zh": dict(
         marker="INIZH.big",
-        # E-N.1: in Zero Hour zusaetzlich PatchINI.big -- WindowTransitions.ini mit den Uebergaengen
-        # fuer "ButtonCustomMission" (gehoert zum selben Menuepunkt wie PatchWindow.big) und wuerde
-        # alphabetisch vor INIZH.big geladen.
         big_exclude={"patchdata.big", "patchwindow.big", "patchini.big"},
+        # Ein veraltetes zweites INIZH.big, das das Spiel beim Start loescht (GameEngine::init, EAs
+        # Patch 1.01). Ueber die Data-Junction wuerde es sonst aus dem Asset-Ordner geloescht.
+        data_exclude=frozenset({"ini/inizh.big"}),
         # langdata.dat: Wortfilter (LanguageFilter.h)
         extra_files=["Generals.dat", "Install_Final.bmp", "00000000.016", "00000000.256",
                      "00000001.016", "00000001.256", "langdata.dat"],
@@ -386,7 +408,7 @@ def main():
             continue
         copied += copy_file(s, os.path.join(dst, name), log)
     log(f"Zusatzdateien: {len(prof['extra_files'])} geprueft, {copied} kopiert")
-    copy_tree(os.path.join(src, DATA_DIR), os.path.join(dst, DATA_DIR), log)
+    copy_tree(os.path.join(src, DATA_DIR), os.path.join(dst, DATA_DIR), log, prof["data_exclude"])
     if prof["base_subdir"]:
         base_src = os.path.join(src, prof["base_subdir"])
         if not os.path.isdir(base_src):

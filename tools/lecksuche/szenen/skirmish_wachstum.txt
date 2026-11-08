@@ -1,7 +1,8 @@
 # Vier Skirmish-Partien hintereinander (USA gegen eine leichte KI mit China, feste Fraktionen, Sieg per
-# Strg+W, Punkteanzeige, zurueck ins Skirmish-Menue). Nach den ersten Partien sind Modelle, Animationen und
-# Namen einmal geladen (Zwischenspeicher, die bis zum Programmende bleiben); was danach je Partie liegen
-# bleibt, waechst: Merkpunkt im Skirmish-Menue, Bericht nach der naechsten Partie wieder dort.
+# Strg+W, Punkteanzeige, zurueck ins Skirmish-Menue). Die ersten beiden Partien fuellen die Zwischenspeicher
+# (Modelle, Animationen, Namen; in der zweiten waechst noch einmalig etwas nach, etwa die bevorzugte Karte aus
+# den Einstellungen und die Generalsfaehigkeiten der KI); Merkpunkt danach im Skirmish-Menue, Wachstum nach der
+# dritten und vierten Partie wieder dort: was dann noch bleibt, bleibt je Partie liegen.
 hauptmenue
 klickFalls MainMenu.wnd:ButtonSinglePlayer
 klick MainMenu.wnd:ButtonSkirmish
@@ -19,7 +20,6 @@ keinePartie
 klick ScoreScreen.wnd:ButtonOk
 fenster SkirmishGameOptionsMenu.wnd:ButtonStart
 warte 60
-merke
 # Partie 2
 klick SkirmishGameOptionsMenu.wnd:ButtonStart
 partie
@@ -29,7 +29,6 @@ keinePartie
 klick ScoreScreen.wnd:ButtonOk
 fenster SkirmishGameOptionsMenu.wnd:ButtonStart
 warte 60
-wachstum partie2
 merke
 # Partie 3
 klick SkirmishGameOptionsMenu.wnd:ButtonStart

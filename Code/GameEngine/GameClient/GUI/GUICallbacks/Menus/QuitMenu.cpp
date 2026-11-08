@@ -107,7 +107,18 @@ static void initGadgetsNoSaveQuit( void )
 
 }
 
+// The options open over the quit menu; its buttons would show through the semi-transparent pages. The layout
+// goes while the options are open (QuitMenuShowAfterOptions brings it back).
+static WindowLayout *hiddenForOptions = nullptr;
+
 // PUBLIC FUNCTIONS ///////////////////////////////////////////////////////////////////////////////
+
+void QuitMenuShowAfterOptions( void )
+{
+	if( hiddenForOptions && hiddenForOptions == quitMenuLayout )
+		hiddenForOptions->hide( FALSE );
+	hiddenForOptions = nullptr;
+}
 
 void destroyQuitMenu()
 {
@@ -126,6 +137,7 @@ void destroyQuitMenu()
 	}
 	noSaveLoadQuitMenuLayout = nullptr;
 	quitMenuLayout = nullptr;
+	hiddenForOptions = nullptr;
 	isVisible = FALSE;
 }
 
@@ -501,6 +513,11 @@ WindowMsgHandledType QuitMenuSystem( GameWindow *window, UnsignedInt msg,
 			}  // end else if
 			else if( buttonOptions == controlID )
 			{
+				if( quitMenuLayout )
+				{
+					quitMenuLayout->hide( TRUE );
+					hiddenForOptions = quitMenuLayout;
+				}
 				WindowLayout *optLayout = TheShell->getOptionsLayout(TRUE);
 				DEBUG_ASSERTCRASH(optLayout != nullptr, ("options menu layout is NULL"));
 				optLayout->runInit();

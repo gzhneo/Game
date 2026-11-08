@@ -120,6 +120,7 @@ struct FFPEffectsCB
 	FFPFloat4	glow;			///< x = bloom strength, y = band-pass weight, z = heat amplitude (pixels), w = heat phase
 	FFPFloat4	haze;			///< x = strength, y = start distance, z = 1/(end - start), w = 1: float scene target
 	FFPFloat4	tone;			///< tone curve: x = knee, y = exposure
+	FFPFloat4	view;			///< 3D viewport of the depth copy: x0, y0, x1, y1 in pixels
 };
 
 /// cbDynLights (b8) from Data/Shaders/sm4/post.ps.hlsl (DO_LIGHTS): point lights in view space.
@@ -270,7 +271,7 @@ static_assert(sizeof(FFPObjectCB) == 4 * 64 + 8 * 16 + 4 * 16
 									 + FFP_MAX_STAGES * 64 + 16, "cbObjectlayout differs from common.hlsli");
 static_assert((sizeof(FFPFrameCB)  % 16) == 0, "cbFrame must be 16-byte aligned");
 static_assert((sizeof(FFPObjectCB) % 16) == 0, "cbObject must be 16-byte aligned");
-static_assert(sizeof(FFPEffectsCB) == 15 * 16, "cbEffectslayout differs from effects.hlsli");
+static_assert(sizeof(FFPEffectsCB) == 16 * 16, "cbEffectslayout differs from effects.hlsli");
 static_assert(sizeof(FFPDynLightsCB) == (1 + 2 * FFP_DYN_LIGHTS) * 16, "cbDynLights differs from post.ps.hlsl");
 static_assert(sizeof(FFPShadowDrawCB) == 2 * 64 + (2 + FFP_SHADOW_SWAY) * 16, "cbShadowDraw differs from shadow.hlsli");
 static_assert(sizeof(FFPShadowApplyCB) == 64 + 12 * 16, "cbShadowApply differs from shadowmask.ps.hlsl");

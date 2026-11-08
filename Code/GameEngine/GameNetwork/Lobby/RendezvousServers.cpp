@@ -13,6 +13,7 @@
 #include "Engine/NetAddressBook.h"
 #include "GameNetwork/Lobby/LobbyTiming.h"
 #include "GameNetwork/networkutil.h"
+#include "Engine/UserDataFiles.h"
 
 #include <cstdio>
 
@@ -26,7 +27,7 @@ namespace
 	std::string readFile( const AsciiString &path )
 	{
 		std::string text;
-		FILE *fp = fopen(path.str(), "rb");
+		FILE *fp = ::Engine::openNarrowFile(path.str(), "rb");
 		if (fp == nullptr)
 			return text;
 		char buffer[4096];
@@ -69,7 +70,7 @@ namespace
 {
 	Bool writeFile( const AsciiString &path, const std::string &text )
 	{
-		FILE *fp = fopen(path.str(), "wb");
+		FILE *fp = ::Engine::openNarrowFile(path.str(), "wb");
 		if (fp == nullptr)
 			return FALSE;
 		const Bool ok = fwrite(text.data(), 1, text.size(), fp) == text.size();

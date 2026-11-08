@@ -85,6 +85,18 @@ static Bool callDelete = FALSE;
 void deleteReplayFlag( void ) { callDelete = TRUE;}
 void copyReplayFlag( void ) { callCopy = TRUE;}
 
+// Replay file names as the player types and sees them (UnicodeString) and as the engine keeps them
+// (narrow: ANSI code page if it holds the name, else UTF-8), so names outside Latin-1 survive.
+AsciiString ReplayNarrowName(const UnicodeString &name)
+{
+	return AsciiString(::Engine::narrowFromPath(std::filesystem::path(name.str())).c_str());
+}
+
+UnicodeString ReplayDisplayName(const AsciiString &narrow)
+{
+	return UnicodeString(::Engine::pathFromNarrow(narrow.str()).wstring().c_str());
+}
+
 UnicodeString GetReplayFilenameFromListbox(GameWindow *listbox, Int index)
 {
 	UnicodeString fname = GadgetListBoxGetText(listbox, index);
@@ -158,7 +170,7 @@ void PopulateReplayFileListbox(GameWindow *listbox)
 				// columns are: name, date, version, map, extra
 
 				// name
-				header.replayName.translate(asciistr);
+				header.replayName = ReplayDisplayName(asciistr);
 				for (Int tmp=0; tmp < TheRecorder->getReplayExtention().getLength(); ++tmp)
 					header.replayName.removeLastChar();
 
@@ -429,7 +441,7 @@ void reallyLoadReplay(void)
 	filename = GetReplayFilenameFromListbox(listboxReplayFiles, selected);
 
 	AsciiString asciiFilename;
-	asciiFilename.translate(filename);
+	asciiFilename = ReplayNarrowName(filename);
 
 	TheRecorder->playbackFile(asciiFilename);
 
@@ -492,7 +504,7 @@ WindowMsgHandledType ReplayMenuSystem( GameWindow *window, UnsignedInt msg,
 						filename = GetReplayFilenameFromListbox(listboxReplayFiles, rowSelected);
 
 						AsciiString asciiFilename;
-						asciiFilename.translate(filename);
+						asciiFilename = ReplayNarrowName(filename);
 						TheRecorder->playbackFile(asciiFilename);
 
 						if(parentReplayMenu != nullptr)
@@ -526,7 +538,7 @@ WindowMsgHandledType ReplayMenuSystem( GameWindow *window, UnsignedInt msg,
 					filename = GetReplayFilenameFromListbox(listboxReplayFiles, selected);
 
 					AsciiString asciiFilename;
-					asciiFilename.translate(filename);
+					asciiFilename = ReplayNarrowName(filename);
 					if (TheRecorder->analyzeReplay(asciiFilename))
 					{
 						do
@@ -553,7 +565,7 @@ WindowMsgHandledType ReplayMenuSystem( GameWindow *window, UnsignedInt msg,
 					filename = GetReplayFilenameFromListbox(listboxReplayFiles, selected);
 
 					AsciiString asciiFilename;
-					asciiFilename.translate(filename);
+					asciiFilename = ReplayNarrowName(filename);
 
 					AsciiString replayMods;
 					const AsciiString &loadedMods = TheArchiveFileSystem ? TheArchiveFileSystem->getModTag() : AsciiString::TheEmptyString;
@@ -632,7 +644,7 @@ void deleteReplay( void )
 	}
 	AsciiString filename, translate;
 	filename = TheRecorder->getReplayDir();
-	translate.translate(GetReplayFilenameFromListbox(listboxReplayFiles, selected));
+	translate = ReplayNarrowName(GetReplayFilenameFromListbox(listboxReplayFiles, selected));
 	filename.concat(translate);
 	if(::DeleteFileW(::Engine::pathFromNarrow(filename.str()).c_str()) == 0)
 	{
@@ -661,7 +673,7 @@ void copyReplay( void )
 	}
 	AsciiString filename, translate;
 	filename = TheRecorder->getReplayDir();
-	translate.translate(GetReplayFilenameFromListbox(listboxReplayFiles, selected));
+	translate = ReplayNarrowName(GetReplayFilenameFromListbox(listboxReplayFiles, selected));
 	filename.concat(translate);
 	
 	wchar_t desktop[MAX_PATH] = {};

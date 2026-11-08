@@ -205,6 +205,7 @@ public:
 
   virtual WorldToScreenReturn worldToScreenTriReturn( const Coord3D *w, ICoord2D *s ) override;	///< Transform world coordinate "w" into screen coordinate "s"
 	virtual void screenToWorld( const ICoord2D *s, Coord3D *w ) override;	///< Transform screen coordinate "s" into world coordinate "w"
+	virtual Real getGroundLevel( void ) const override { return m_groundLevel; }
 	virtual void screenToTerrain( const ICoord2D *screen, Coord3D *world ) override;  ///< transform screen coord to a point on the 3D terrain
 	virtual Bool getDrawRegion( Region3D *region ) override { getAxisAlignedViewRegion( *region ); return TRUE; }
 	virtual void screenToWorldAtZ( const ICoord2D *s, Coord3D *w, Real z ) override;  ///< transform screen point to world point at the specified world Z value
@@ -292,6 +293,7 @@ private:
 	
 	Region2D m_cameraConstraint;										///< m_pos should be constrained to be within this area
 	Bool m_cameraConstraintValid;										///< if f, recalc cam constraints
+	Real m_cameraConstraintAngle;										///< yaw the constraints were computed for (the widescreen margin depends on it)
 
 	void setCameraTransform( void );								///< set the transform matrix of m_3DCamera, based on m_pos & m_angle
 	void buildCameraTransform( Matrix3D *transform ) ;			///< calculate (but do not set) the transform matrix of m_3DCamera, based on m_pos & m_angle

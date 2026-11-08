@@ -291,6 +291,11 @@ void SegmentedLineClass::Set_UV_Offset_Rate(const Vector2 &rate)
 	LineRenderer.Set_UV_Offset_Rate(rate);
 }
 
+void SegmentedLineClass::Set_Current_UV_Offset(const Vector2 &offset)
+{
+	LineRenderer.Set_Current_UV_Offset(offset);
+}
+
 void SegmentedLineClass::Set_Merge_Intersections(int onoff)
 {
 	LineRenderer.Set_Merge_Intersections(onoff);

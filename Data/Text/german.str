@@ -308,6 +308,22 @@ GUI:SelectAllAircraftDescription
 "Alle Flugzeuge werden ausgewählt."
 END
 
+GUI:HeatEffects
+"Hitzeeffekte"
+END
+
+TOOLTIP:HeatEffects
+"Schalte Hitzeeffekte ein oder aus. Deaktiviere sie, wenn du die Leistung des Spiels verbessern möchtest."
+END
+
+TOOLTIP:DoubleClickAttackMove
+"Nach einem Doppelklick auf das Symbol rücken die Einheiten vor und überwachen das Zielgebiet."
+END
+
+GUI:Retaliation
+"Wenn du diesen Punkt deaktivierst, verteidigen sich angegriffene Einheiten nicht mehr automatisch."
+END
+
 GZH:NewAISuffix
 "(neue KI)"
 END
@@ -713,7 +729,7 @@ GZH:OptionsEffectAlphaCoverage
 END
 
 GZH:OptionsEffectMsaaDepth
-"Tiefeneffekte (MSAA)"
+"Tiefeneffekte"
 END
 
 GZH:OptionsEffectWithMsaa
@@ -721,11 +737,11 @@ GZH:OptionsEffectWithMsaa
 END
 
 GZH:OptionsEffectGTAO
-"Umgebungsverdeckung GTAO"
+"GTAO-Schatten"
 END
 
 GZH:OptionsEffectWaterSSR
-"Spiegelungen im Wasser"
+"Wasserreflexe"
 END
 
 GZH:OptionsEffectDeband
@@ -733,7 +749,7 @@ GZH:OptionsEffectDeband
 END
 
 GZH:OptionsEffectTAA
-"Zeitliche Kantenglättung (TAA)"
+"TAA-Kantenglättung"
 END
 
 GZH:OptionsEffectHeat

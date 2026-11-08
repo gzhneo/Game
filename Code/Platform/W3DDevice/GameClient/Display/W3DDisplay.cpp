@@ -1492,7 +1492,32 @@ static void collectDynamicLights( RTS3DScene *scene )
 		}
 	}
 
-	// Additive billboard particle systems: one light per system at the weighted center of its particles.
+	// Additive billboard particle systems: one light per system at the weighted center of its particles. The light
+	// follows each system smoothly, equally fast up and down so its mean brightness stays: flares that emit
+	// short-lived particles every frame would otherwise switch it on and off at the logic rate.
+	struct SmoothedLight
+	{
+		ParticleSystemID id;
+		Coord3D center;
+		Real radius, r, g, b, score, level;
+		UnsignedInt pass;
+	};
+	// Fixed table (no heap memory held at shutdown); systems beyond it get an unsmoothed light.
+	constexpr Int maxSmoothed = 256;
+	static SmoothedLight s_smoothed[ maxSmoothed ];
+	static Int s_smoothedCount = 0;
+	static UnsignedInt s_lastMs = 0;
+	static UnsignedInt s_pass = 0;
+	const UnsignedInt nowMs = GameEngine_RenderTimeMs();
+	const Real dtMs = ( s_lastMs != 0 && nowMs > s_lastMs ) ? static_cast<Real>( MIN( nowMs - s_lastMs, 250u ) ) : 0.0f;
+	s_lastMs = nowMs;
+	++s_pass;
+	const Real follow = 1.0f - expf( -dtMs / 120.0f );
+	auto emit = [&]( const SmoothedLight &s )
+	{
+		if( s.level >= 0.02f )
+			add( s.center, s.radius, s.r * s.level, s.g * s.level, s.b * s.level, s.level * s.score * s.radius * s.radius );
+	};
 	if( TheParticleSystemManager )
 	{
 		ParticleSystemManager::ParticleSystemList &systems = TheParticleSystemManager->getAllParticleSystems();
@@ -1524,19 +1549,64 @@ static void collectDynamicLights( RTS3DScene *scene )
 				r += w * color->red;  g += w * color->green;  b += w * color->blue;
 				center.x += w * pos->x;  center.y += w * pos->y;  center.z += w * pos->z;
 			}
-			if( weight < 0.1f )
+			SmoothedLight now = {};
+			Real target = 0.0f;
+			if( weight >= 0.1f )
+			{
+				const Real inv = 1.0f / weight;
+				r *= inv;  g *= inv;  b *= inv;
+				const Real peak = MAX( r, MAX( g, b ) );
+				// Dark additive particles do not emit light.
+				target = peak < 0.2f ? 0.0f : 1.0f;
+				if( target > 0.0f )
+				{
+					now.center.x = center.x * inv;  now.center.y = center.y * inv;  now.center.z = center.z * inv;
+					now.radius = MIN( MAX( size * inv * 4.0f, 50.0f ), 220.0f );
+					const Real intensity = 0.25f * MIN( weight, 4.0f ) / peak;
+					now.r = r * intensity;  now.g = g * intensity;  now.b = b * intensity;
+					now.score = intensity * peak;
+				}
+			}
+			const ParticleSystemID id = sys->getSystemID();
+			SmoothedLight *found = nullptr;
+			for( Int i = 0; i < s_smoothedCount; ++i )
+				if( s_smoothed[ i ].id == id )
+				{
+					found = &s_smoothed[ i ];
+					break;
+				}
+			if( !found )
+			{
+				if( target <= 0.0f )
+					continue;
+				now.id = id;
+				now.level = target;
+				now.pass = s_pass;
+				if( s_smoothedCount < maxSmoothed )
+					s_smoothed[ s_smoothedCount++ ] = now;
+				emit( now );
 				continue;
-			const Real inv = 1.0f / weight;
-			r *= inv;  g *= inv;  b *= inv;
-			const Real peak = MAX( r, MAX( g, b ) );
-			if( peak < 0.2f )
-				continue;						// dark additive particles do not emit light
-			center.x *= inv;  center.y *= inv;  center.z *= inv;
-			const Real radius = MIN( MAX( size * inv * 4.0f, 50.0f ), 220.0f );
-			const Real intensity = 0.25f * MIN( weight, 4.0f ) / peak;
-			add( center, radius, r * intensity, g * intensity, b * intensity, intensity * peak * radius * radius );
+			}
+			SmoothedLight &s = *found;
+			s.pass = s_pass;
+			if( target > 0.0f )
+			{
+				s.center = now.center;
+				s.r = now.r;  s.g = now.g;  s.b = now.b;
+				s.score = now.score;
+				s.radius += ( now.radius - s.radius ) * follow;
+			}
+			s.level += ( target - s.level ) * follow;
+			emit( s );
 		}
 	}
+	// Systems that are gone or have no particles left give up their light at once; an afterglow of the many
+	// short-lived systems of fires and explosions would brighten them.
+	Int kept = 0;
+	for( Int i = 0; i < s_smoothedCount; ++i )
+		if( s_smoothed[ i ].pass == s_pass )
+			s_smoothed[ kept++ ] = s_smoothed[ i ];
+	s_smoothedCount = kept;
 
 	RenderDevice::Set_Dynamic_Lights( lights, static_cast<unsigned>( count ) );
 }
@@ -2067,6 +2137,7 @@ AGAIN:
 				// render is all done!
 				RenderDevice::Gpu_Pass_End(RENDER_GPU_PASS_UI);
 				WW3D::End_Render();	
+				showScreenShotMessage();
 				if (!renderOnly && TheGlobalData->m_logDrawStats > 0)
 					logDrawStatistics();
 				if (!renderOnly && TheGlobalData->m_logCamera && TheGameLogic->isInGame())

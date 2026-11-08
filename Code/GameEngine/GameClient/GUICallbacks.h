@@ -264,6 +264,7 @@ extern WindowMsgHandledType DisconnectControlInput( GameWindow *window, Unsigned
 extern void destroyQuitMenu();
 extern void ToggleQuitMenu( void );
 extern void HideQuitMenu( void );
+extern void QuitMenuShowAfterOptions( void );	///< brings back the quit menu the options covered (no-op otherwise)
 extern WindowMsgHandledType QuitMenuSystem( GameWindow *window, UnsignedInt msg, WindowMsgData mData1, WindowMsgData mData2 );
 
 // Message of the Day -----------------------------------------------------------------------------

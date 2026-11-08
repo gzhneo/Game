@@ -157,8 +157,7 @@ const Setting EFFECTS_IMAGE[] = {
 	combo( "Effects.SoftShadows", "GZH:OptionsEffectSoftShadows", EFFECT_LEVEL ),
 	combo( "Effects.ContactShadows", "GZH:OptionsEffectContactShadows", EFFECT_ON ),
 	combo( "Effects.ShadowCascades", "GZH:OptionsEffectShadowCascades", EFFECT_ON ),
-	combo( "Effects.SoftParticles", "GZH:OptionsEffectSoftParticles", EFFECT_ON ),
-	combo( "Effects.AlphaCoverage", "GZH:OptionsEffectAlphaCoverage", EFFECT_ON ) };
+	combo( "Effects.SoftParticles", "GZH:OptionsEffectSoftParticles", EFFECT_ON ) };
 const Setting EFFECTS_WORLD[] = {
 	combo( "Effects.TerrainDetail", "GZH:OptionsEffectTerrainDetail", EFFECT_LEVEL ),
 	combo( "Effects.TerrainRock", "GZH:OptionsEffectTerrainRock", EFFECT_ON ),
@@ -170,6 +169,7 @@ const Setting EFFECTS_WORLD[] = {
 	combo( "Effects.Heat", "GZH:OptionsEffectHeat", EFFECT_LEVEL ),
 	combo( "Effects.Haze", "GZH:OptionsEffectHaze", EFFECT_ON ),
 	combo( "Effects.MsaaDepth", "GZH:OptionsEffectMsaaDepth", EFFECT_MSAA_DEPTH ),
+	combo( "Effects.AlphaCoverage", "GZH:OptionsEffectAlphaCoverage", EFFECT_ON ),
 	combo( "Effects.WaterSSR", "GZH:OptionsEffectWaterSSR", EFFECT_ON ),
 	combo( "Effects.Deband", "GZH:OptionsEffectDeband", EFFECT_ON ) };
 

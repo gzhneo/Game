@@ -1,0 +1,11 @@
+﻿GZH Neo – eine modernisierte Fassung von Command & Conquer Generals und Zero Hour
+
+GZH Neo beruht auf dem Quelltext, den Electronic Arts unter der GNU GPL v3 veröffentlicht hat. Es ist ein unabhängiges Hobbyprojekt und kein Produkt von Electronic Arts; EA steht nicht dahinter und unterstützt es nicht. „Command & Conquer“ und „Generals“ sind Marken von Electronic Arts Inc. und werden hier nur genannt, um zu sagen, zu welchem Spiel dieses Programm gehört.
+
+Du brauchst deine eigene Spielkopie. Dieses Paket enthält keine Spieldaten von EA (Modelle, Texturen, Töne, Karten, Videos). Am Ende der Installation sucht GZH Neo deine Installation von Generals und Zero Hour (Steam, EA App, Origin oder CD) und kopiert deren Daten in den eigenen Ordner. Deine Installation wird dabei nur gelesen, nie verändert.
+
+Dies ist eine Alpha-Version: Beide Spiele laufen und sind spielbar, aber noch nicht alles ist fertig. Netzspiele, Wiederholungen und Spielstände gehen nur zwischen gleichen Ständen von GZH Neo, nicht mit dem Originalspiel.
+
+Einstellungen und Spielstände liegen unter Dokumente\GZH Neo und bleiben bei der Deinstallation erhalten.
+
+Lizenz: GNU General Public License v3 mit Zusatzbedingungen; der volle Text steht in LICENSE.md und NOTICE.md im Programmordner. Das Programm wird ohne jede Gewährleistung bereitgestellt.

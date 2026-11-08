@@ -794,11 +794,29 @@ void InitLanGameGadgets( void )
 		comboBoxGrace = CreateGraceComboBox( model, "LanGameOptionsMenu.wnd:ComboBoxGracePeriod" );
 	}
 
-	// The host's zoom-out limit for every player, not in the layouts either: next to the start protection.
+	// The host's zoom-out limit for every player, not in the layouts either: next to the start protection,
+	// else next to the starting cash (Zero Hour). Generals has no starting cash row, the chat gives up a row
+	// at its top first; it is the nearest free room above the start protection.
 	comboBoxMaxZoomID = TheNameKeyGenerator->nameToKey( AsciiString( "LanGameOptionsMenu.wnd:ComboBoxMaxZoom" ) );
 	comboBoxMaxZoom = TheWindowManager->winGetWindowFromId( parentLanGameOptions, comboBoxMaxZoomID );
 	if (comboBoxMaxZoom == nullptr && comboBoxGrace != nullptr)
-		comboBoxMaxZoom = CreateMaxZoomComboBox( comboBoxGrace, "LanGameOptionsMenu.wnd:ComboBoxMaxZoom" );
+	{
+		if (comboBoxStartingCash == nullptr && listboxChatWindowLanGame != nullptr)
+		{
+			Int chatX, chatY, chatW, chatH, boxW, boxH;
+			listboxChatWindowLanGame->winGetPosition( &chatX, &chatY );
+			listboxChatWindowLanGame->winGetSize( &chatW, &chatH );
+			comboBoxGrace->winGetSize( &boxW, &boxH );
+			const Int row = boxH + 8;
+			if (chatH > 3 * row)
+			{
+				listboxChatWindowLanGame->winSetPosition( chatX, chatY + row );
+				listboxChatWindowLanGame->winSetSize( chatW, chatH - row );
+			}
+		}
+		comboBoxMaxZoom = CreateMaxZoomComboBox( comboBoxGrace, comboBoxStartingCash, "LanGameOptionsMenu.wnd:ComboBoxMaxZoom" );
+		DEBUG_ASSERTCRASH( comboBoxMaxZoom, ("No room for the zoom-out choice") );
+	}
 
 	// Filled after both exist: filling widens a box into free room, and the zoom box has to have its place by then.
 	PopulateGraceComboBox( comboBoxGrace, TheLobby->GetMyGame()->getGraceMinutes() );

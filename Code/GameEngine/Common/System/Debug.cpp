@@ -61,6 +61,7 @@
 #include "GameClient/Keyboard.h"
 #include "GameClient/Mouse.h"
 #include "Lib/SafeString.h"
+#include "Engine/UserDataFiles.h"
 #if defined(DEBUG_STACKTRACE) || defined(IG_DEBUG_STACKTRACE)
 	#include "Common/StackDump.h"
 #endif
@@ -169,13 +170,20 @@ inline HWND getThreadHWND()
 
 // ----------------------------------------------------------------------------
 
+// Narrow text (ANSI code page or UTF-8, as the paths in Engine/UserDataFiles.h) shown as UTF-16, so a
+// path in a user folder outside the code page stays readable.
+static int narrowMessageBox( HWND owner, const char *text, const char *caption, UINT type )
+{
+	return ::MessageBoxW(owner, ::Engine::pathFromNarrow(text).c_str(), ::Engine::pathFromNarrow(caption).c_str(), type);
+}
+
 int MessageBoxWrapper( LPCSTR lpText, LPCSTR lpCaption, UINT uType )
 {
 	HWND threadHWND = getThreadHWND();
 	if (!threadHWND)
 		return (uType & MB_ABORTRETRYIGNORE)?IDIGNORE:IDYES;
 
-	return ::MessageBox(threadHWND, lpText, lpCaption, uType);
+	return narrowMessageBox(threadHWND, lpText, lpCaption, uType);
 }
 
 // ----------------------------------------------------------------------------
@@ -720,10 +728,14 @@ void ReleaseCrash(const char *reason)
 	safe_strcpy(curbuf, TheGlobalData->getPath_UserData().str());
 	safe_strcat(curbuf, RELEASECRASH_FILE_NAME);
 
- 	remove(prevbuf);
-	rename(curbuf, prevbuf);
+	{
+		// narrow paths: the user folder may be outside the ANSI code page (UTF-8)
+		std::error_code ignored;
+		std::filesystem::remove(::Engine::pathFromNarrow(prevbuf), ignored);
+		std::filesystem::rename(::Engine::pathFromNarrow(curbuf), ::Engine::pathFromNarrow(prevbuf), ignored);
+	}
 
-	theReleaseCrashLogFile = fopen(curbuf, "w");
+	theReleaseCrashLogFile = ::Engine::openNarrowFile(curbuf, "w");
 	if (theReleaseCrashLogFile)
 	{
 		fprintf(theReleaseCrashLogFile, "Release Crash at %s; Reason %s\n", getCurrentTimeString(), reason);
@@ -748,7 +760,7 @@ void ReleaseCrash(const char *reason)
 	/* static */ char buff[8192]; // not so static so we can be threadsafe
 	WWFormat::Into(buff, 8192, "Sorry, a serious error occurred. ({})", reason);
 	buff[8191] = 0;
-	::MessageBox(nullptr, buff, "Technical Difficulties...", MB_OK|MB_SYSTEMMODAL|MB_ICONERROR);
+	narrowMessageBox(nullptr, buff, "Technical Difficulties...", MB_OK|MB_SYSTEMMODAL|MB_ICONERROR);
 #else
 // crash error messaged changed 3/6/03 BGC
 //	::MessageBox(NULL, "Sorry, a serious error occurred.", "Technical Difficulties...", MB_OK|MB_TASKMODAL|MB_ICONERROR);
@@ -817,10 +829,14 @@ void ReleaseCrashLocalized(const AsciiString& p, const AsciiString& m)
 	safe_strcpy(curbuf, TheGlobalData->getPath_UserData().str());
 	safe_strcat(curbuf, RELEASECRASH_FILE_NAME);
 
- 	remove(prevbuf);
-	rename(curbuf, prevbuf);
+	{
+		// narrow paths: the user folder may be outside the ANSI code page (UTF-8)
+		std::error_code ignored;
+		std::filesystem::remove(::Engine::pathFromNarrow(prevbuf), ignored);
+		std::filesystem::rename(::Engine::pathFromNarrow(curbuf), ::Engine::pathFromNarrow(prevbuf), ignored);
+	}
 
-	theReleaseCrashLogFile = fopen(curbuf, "w");
+	theReleaseCrashLogFile = ::Engine::openNarrowFile(curbuf, "w");
 	if (theReleaseCrashLogFile)
 	{
 		// mesg is a UnicodeString, "%s" expects char*.

@@ -15,7 +15,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 TEXTE = os.path.join(ROOT, 'Data', 'Text')
 # Texte, die EAs Fensterdateien (.wnd) nennen statt des Codes: für Generals ergänzt, weil es Zero Hours Fenster
 # übernimmt (OptionsMenu.wnd aus WindowZH.big, tools/assets/setup_assets.py).
-IN_FENSTERN = {'GUI:DoubleClickAttackMove', 'GUI:RetaliationTitle'}
+IN_FENSTERN = {'GUI:DoubleClickAttackMove', 'GUI:RetaliationTitle', 'GUI:HeatEffects', 'TOOLTIP:HeatEffects',
+               'TOOLTIP:DoubleClickAttackMove', 'GUI:Retaliation'}
 # Texte, die EAs Tastenbelegung (CommandMap.ini) nennt: Generals uebernimmt die Belegung von Zero Hour
 # (tools/assets/setup_assets.py); die englische hat SELECT_ALL_AIRCRAFT, dessen Text nur in Zero Hour steht.
 IN_TASTENBELEGUNG = {'GUI:SelectAllAircraft', 'GUI:SelectAllAircraftDescription'}

@@ -93,8 +93,8 @@ float4 main(float4 pos : SV_Position) : SV_Target
 	const float4 clip = mul(float4(P, 1.0), t_reproj);
 	if (clip.w <= 1e-4) return float4(c, 1.0);
 	const float2 ndc = clip.xy / clip.w;
-	const float2 size = e_rect.zw - e_rect.xy;
-	const float2 prev = e_rect.xy + float2(ndc.x * 0.5 + 0.5, 0.5 - ndc.y * 0.5) * size;
+	const float2 size = e_view.zw - e_view.xy;
+	const float2 prev = e_view.xy + float2(ndc.x * 0.5 + 0.5, 0.5 - ndc.y * 0.5) * size;
 	if (any(prev < e_rect.xy) || any(prev > e_rect.zw)) return float4(c, 1.0);
 
 	// Clip the history toward the mean until it lies inside mean +- sigma.

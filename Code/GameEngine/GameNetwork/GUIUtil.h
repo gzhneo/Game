@@ -51,7 +51,7 @@ UnsignedShort GetGraceComboBoxMinutes(GameWindow *comboBox);
 
 // Zoom-out limit the host sets for every player (100 to 125 percent of the normal height; item data =
 // percent). Created like the start protection choice.
-GameWindow *CreateMaxZoomComboBox(GameWindow *model, const char *decoratedName);
+GameWindow *CreateMaxZoomComboBox(GameWindow *model, GameWindow *fallback, const char *decoratedName);
 void PopulateMaxZoomComboBox(GameWindow *comboBox, UnsignedShort percent);
 void SelectMaxZoomComboBox(GameWindow *comboBox, UnsignedShort percent);
 UnsignedShort GetMaxZoomComboBoxPercent(GameWindow *comboBox);

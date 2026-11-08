@@ -30,6 +30,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // INCLUDES ///////////////////////////////////////////////////////////////////////////////////////
+#include <math.h>
 #include <stdlib.h>
 
 #include "Common/Thing.h"
@@ -51,6 +52,7 @@
 #include "WW3D2/Effects/segline.h"
 #include "WWMath/vector3.h"
 #include "WW3D2/System/assetmgr.h"
+#include "WW3D2/System/ww3d.h"
 
 
 // PUBLIC FUNCTIONS ///////////////////////////////////////////////////////////////////////////////
@@ -111,6 +113,9 @@ void W3DLaserDrawModuleData::buildFieldParse(MultiIniFieldParse& p)
 W3DLaserDraw::W3DLaserDraw( Thing *thing, const ModuleData* moduleData ) : 
 	DrawModule( thing, moduleData ),
 	m_line3D(nullptr),
+	m_baseColor(nullptr),
+	m_superseded(FALSE),
+	m_stackBrightness(1.0f),
 	m_texture(nullptr),
 	m_textureAspectRatio(1.0f),
 	m_selfDirty(TRUE)
@@ -150,6 +155,7 @@ W3DLaserDraw::W3DLaserDraw( Thing *thing, const ModuleData* moduleData ) :
 
 	//Allocate an array of lines equal to the number of beams * segments
 	m_line3D = NEW SegmentedLineClass *[ data->m_numBeams * data->m_segments ];
+	m_baseColor = NEW Vector3[ data->m_numBeams * data->m_segments ];
 
 	for( int segment = 0; static_cast<UnsignedInt>(segment) < data->m_segments; segment++ )
 	{
@@ -193,13 +199,9 @@ W3DLaserDraw::W3DLaserDraw( Thing *thing, const ModuleData* moduleData ) :
 				line->Set_Shader( ShaderClass::_PresetAdditiveShader );	//pick the alpha blending mode you want - see shader.h for others.
 				line->Set_Width( width );
 				line->Set_Color( Vector3( red, green, blue ) );
-				// Slow visible scrolling (a few UV units per second) is kept; the ECM stream asks for 35, which strobes at
-				// common frame rates. Very large rates are a deliberate blur and stay.
-				Real scrollRate = data->m_scrollRate;
-				const Real maxVisibleScroll = 10.0f;
-				if( fabsf( scrollRate ) > maxVisibleScroll && fabsf( scrollRate ) < 100.0f )
-					scrollRate = scrollRate < 0.0f ? -maxVisibleScroll : maxVisibleScroll;
-				line->Set_UV_Offset_Rate( Vector2(0.0f, scrollRate) );	//amount to scroll texture per second
+				m_baseColor[ index ] = Vector3( red, green, blue );
+				// The texture scroll is set in doDrawModule from the render clock.
+				line->Set_UV_Offset_Rate( Vector2(0.0f, 0.0f) );
 				if( m_texture )
 				{
 					line->Set_Texture_Mapping_Mode(SegLineRendererClass::TILED_TEXTURE_MAP);	//this tiles the texture across the line
@@ -221,6 +223,18 @@ W3DLaserDraw::W3DLaserDraw( Thing *thing, const ModuleData* moduleData ) :
 }
 
 //-------------------------------------------------------------------------------------------------
+// Slow visible scrolling (a few UV units per second) is kept; the ECM stream asks for 35, which strobes at
+// common frame rates. Very large rates are a deliberate blur and stay.
+//-------------------------------------------------------------------------------------------------
+static Real visibleScrollRate( Real scrollRate )
+{
+	const Real maxVisibleScroll = 5.0f;
+	if( fabsf( scrollRate ) > maxVisibleScroll && fabsf( scrollRate ) < 100.0f )
+		return scrollRate < 0.0f ? -maxVisibleScroll : maxVisibleScroll;
+	return scrollRate;
+}
+
+//-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
 W3DLaserDraw::~W3DLaserDraw( void )
 {
@@ -238,6 +252,7 @@ W3DLaserDraw::~W3DLaserDraw( void )
 	}  // end for i
 
 	delete [] m_line3D;
+	delete [] m_baseColor;
 	// the texture from Get_Texture() is ref-counted and must be released here
 	REF_PTR_RELEASE(m_texture);
 }
@@ -265,6 +280,38 @@ void W3DLaserDraw::doDrawModule(const Matrix3D* transformMtx)
 	{
 		DEBUG_ASSERTCRASH( 0, ("W3DLaserDraw::doDrawModule() expects its owner drawable %s to have a ClientUpdate = LaserUpdate module.", draw->getTemplate()->getName().str() ));
 		return;
+	}
+
+	// Stacked stream (a new laser before the old ones expire): only the newest is drawn, as bright as the smoothed
+	// stack, so the beam no longer flickers with the changing number of overlapping additive beams.
+	const Bool superseded = update->isSupersededInPair();
+	if( superseded != m_superseded )
+	{
+		m_superseded = superseded;
+		m_selfDirty = true;
+	}
+	if( !m_superseded )
+	{
+		const Real brightness = update->getPairBrightness();
+		if( fabsf( brightness - m_stackBrightness ) > 0.001f )
+		{
+			m_stackBrightness = brightness;
+			for( UnsignedInt i = 0; i < data->m_numBeams * data->m_segments; ++i )
+				if( m_line3D[ i ] )
+					m_line3D[ i ]->Set_Color( m_baseColor[ i ] * m_stackBrightness );
+		}
+	}
+
+	// The scroll phase comes from the render clock, so a stream that replaces the previous one of a stacked pair
+	// continues its texture instead of restarting it with every shot.
+	const Real scrollRate = visibleScrollRate( data->m_scrollRate );
+	if( !m_superseded && scrollRate != 0.0f )
+	{
+		double phase = static_cast<double>( WW3D::Get_Sync_Time() ) * 0.001 * scrollRate;
+		phase -= floor( phase );
+		for( UnsignedInt i = 0; i < data->m_numBeams * data->m_segments; ++i )
+			if( m_line3D[ i ] )
+				m_line3D[ i ]->Set_Current_UV_Offset( Vector2( 0.0f, static_cast<float>( phase ) ) );
 	}
 
 	//If the update has moved the laser, it requires a reset of the laser.
@@ -417,7 +464,7 @@ void W3DLaserDraw::doDrawModule(const Matrix3D* transformMtx)
 					m_line3D[ index ]->Set_Texture_Tile_Factor( tileFactor );	//number of times to tile texture across each segment
 				}
 
-				m_line3D[ index ]->Set_Width( width );
+				m_line3D[ index ]->Set_Width( m_superseded ? 0.0f : width );
 				m_line3D[ index ]->Set_Points( 2, &laserPoints[0] );
 			}
 		}

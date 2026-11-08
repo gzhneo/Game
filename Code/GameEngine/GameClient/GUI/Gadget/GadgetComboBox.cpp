@@ -53,6 +53,7 @@
 #include "Common/AudioEventRTS.h"
 #include "Common/GameAudio.h"
 #include "Common/Debug.h"
+#include "GameClient/Display.h"
 #include "GameClient/DisplayStringManager.h"
 #include "GameClient/GameFont.h"
 #include "GameClient/GameWindow.h"
@@ -1235,7 +1236,8 @@ void GadgetComboBoxWidenToFit( GameWindow *comboBox )
 }
 
 // ------------------------------------------------------------------------------------------------
-GameWindow *GadgetComboBoxCreateNear( GameWindow *model, const char *decoratedName )
+GameWindow *GadgetComboBoxCreateNear( GameWindow *model, const char *decoratedName, const UnicodeString *entries,
+	Int entryCount )
 {
 	if( model == nullptr || model->winGetParent() == nullptr || !BitTest( model->winGetStyle(), GWS_COMBO_BOX ) )
 		return nullptr;
@@ -1249,14 +1251,46 @@ GameWindow *GadgetComboBoxCreateNear( GameWindow *model, const char *decoratedNa
 	model->winGetSize( &width, &height );
 	parent->winGetSize( &parentW, &parentH );
 
-	// the list opens below the box, so keep a small margin around it. Search order: below and to the
-	// left of the model, below and to the right, the model's row to the right, then above; the first
-	// free place wins, so a layout with room below the model always gets the same place.
+	// as wide as the entries need (same margin as GadgetComboBoxWidenToFit), at most the parent's width
+	GameWindow *modelEdit = GadgetComboBoxGetEditBox( model );
+	if( entries != nullptr && entryCount > 0 && modelEdit != nullptr && model->winGetFont() != nullptr
+			&& TheDisplayStringManager != nullptr )
+	{
+		DisplayString *measure = TheDisplayStringManager->newDisplayString();
+		measure->setFont( model->winGetFont() );
+		Int widest = 0;
+		for( Int i = 0; i < entryCount; ++i )
+		{
+			measure->setText( entries[i] );
+			Int w = 0, h = 0;
+			measure->getSize( &w, &h );
+			if( w > widest )
+				widest = w;
+		}
+		TheDisplayStringManager->freeDisplayString( measure );
+		Int editWidth, editHeight;
+		modelEdit->winGetSize( &editWidth, &editHeight );
+		const Int needed = ( width - editWidth ) + ( widest + 2 ) * 12 / 11 + 1;
+		if( needed > width )
+			width = needed < parentW - 2 * 3 ? needed : parentW - 2 * 3;
+	}
+
+	// the list opens below the box, so keep a small margin around it and room on the screen below it.
+	// Search order: below and to the left of the model, below and to the right, the model's row to the
+	// right, then above; the first free place wins, so a layout with room below the model always gets
+	// the same place.
 	const Int gap = 3;
+	const Int shown = entryCount > 0 && entryCount < modelData->maxDisplay ? entryCount : modelData->maxDisplay;
+	GameFont *font = model->winGetFont();
+	const Int listHeight = font != nullptr ? TheWindowManager->winFontHeight( font ) * shown + shown * 2 + 4 : 0;
+	Int parentScreenX, parentScreenY;
+	parent->winGetScreenPosition( &parentScreenX, &parentScreenY );
+	const Int screenHeight = TheDisplay != nullptr ? static_cast<Int>( TheDisplay->getHeight() ) : 0;
 	Int x = -1, y = -1;
 	auto tryAt = [&]( Int cx, Int cy )
 	{
-		if( x < 0 && isFreeNear( parent, model, cx - gap, cy - gap, width + 2 * gap, height + 2 * gap ) )
+		if( x < 0 && ( screenHeight == 0 || parentScreenY + cy + height + listHeight <= screenHeight )
+				&& isFreeNear( parent, model, cx - gap, cy - gap, width + 2 * gap, height + 2 * gap ) )
 		{
 			x = cx;
 			y = cy;

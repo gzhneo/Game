@@ -70,12 +70,6 @@ Läufe verschiedener Agenten: eigenes Präfix und eigenen Datenordner nehmen, di
 zeigt sonst auf den zuerst gestarteten Bau). Fehlt der Datenordner, endet das Skript mit 2 und nennt den
 Generator.
 
-**Release-Bau und Fingerabdruck:** Release-Baue (`!_DEBUG`) prüfen in `GameEngine::init`, dass
-`generalsbzh.sec` in `genseczh.big` und `generalsazh.sec` in `musiczh.big` liegen (Generals: `generalsb.sec`
-in `gensec.big`, `generalsa.sec` in `music.big`); fehlen sie, endet das Spiel gleich nach dem Start mit
-Rückgabewert 0 und ohne Bild. `run_game.sh` legt fehlende Archive mit je einer Dummy-Datei im Datenordner an.
-Debug-Baue prüfen das nicht.
-
 **Generals mit dem Zero-Hour-Datensatz:** `GZHNeo.exe` startet mit demselben Datenordner und läuft ein Skirmish
 (`-skirmish TestSkirmish -skirmishAI 2`) im Debug-Bau bis `-maxFrames`; Unterschiede beim Start sind nur
 Spielname, Benutzerordner (`GZH Neo/Generals`), die Archivnamen des

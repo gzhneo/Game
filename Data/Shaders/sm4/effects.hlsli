@@ -36,6 +36,8 @@ cbuffer cbEffects : register(SLOT_CB_EFFECTS)
 	float4	e_glow;			///< x = bloom strength, y = band-pass weight, z = heat amplitude (pixels), w = heat phase (0..2 pi)
 	float4	e_haze;			///< x = strength, y = start distance (world), z = 1/(end - start), w = 1: float scene target
 	float4	e_tone;			///< tone curve (sceneconvert TONEMAP): x = knee, y = exposure
+	float4	e_view;			///< 3D viewport of the depth copy in pixels: x0, y0, x1, y1; the view rectangle (e_rect) of the
+							///< post-processing may be smaller (the part above the command bar)
 };
 
 // Output of a pass that writes the scene or the post-processing target; rounded to 8 bits with a wider scene
@@ -57,15 +59,16 @@ float Depth_To_W(float d_buffer, float4 range, float4 pB)
 	return z * pB.y + pB.w;
 }
 
-// Pixel position (center, in the scene target) and depth buffer value -> camera space position.
+// Pixel position (center, in the scene target) and depth buffer value -> camera space position. The pixel maps to the
+// projection over the 3D viewport of the depth copy (e_view), not over the view rectangle.
 float3 View_Position(float2 pixel, float d_buffer)
 {
 	const float d = (d_buffer - e_depthRange.x) * e_depthRange.z;
 	const float z = (e_projB.z - d * e_projB.w) / (d * e_projB.y - e_projB.x);
 	const float w = z * e_projB.y + e_projB.w;
-	const float2 size = e_rect.zw - e_rect.xy;
-	const float2 ndc = float2((pixel.x - e_rect.x) / size.x * 2.0 - 1.0,
-							  1.0 - (pixel.y - e_rect.y) / size.y * 2.0);
+	const float2 size = e_view.zw - e_view.xy;
+	const float2 ndc = float2((pixel.x - e_view.x) / size.x * 2.0 - 1.0,
+							  1.0 - (pixel.y - e_view.y) / size.y * 2.0);
 	return float3((ndc.x * w - z * e_projA.z) / e_projA.x,
 				  (ndc.y * w - z * e_projA.w) / e_projA.y,
 				  z);

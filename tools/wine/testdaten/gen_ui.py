@@ -218,7 +218,7 @@ End
 '''
 
 
-# The engine ends the start when no music track file exists (AudioManager::isMusicAlreadyLoaded).
+# One music track, so the music path (AudioManager::isMusicAlreadyLoaded, music playback) has a file.
 MUSIC_FILE = 'Data/Audio/Tracks/testtrack.wav'
 
 

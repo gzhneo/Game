@@ -1252,6 +1252,20 @@ unsigned __int64 RenderCore::Get_Free_Texture_RAM()
 	return M->output ? M->output->Get_Free_Video_Memory() : 0;
 }
 
+// A narrow path is UTF-8 when it is valid UTF-8 with a byte above 127 (a user folder outside the ANSI code
+// page), otherwise in the ANSI code page.
+static FILE* Open_Narrow_For_Write(const char* path)
+{
+	bool high = false;
+	for (const char* c = path; *c; ++c) high |= static_cast<unsigned char>(*c) > 127;
+	if (high) {
+		wchar_t wide[MAX_PATH];
+		if (::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, path, -1, wide, MAX_PATH) > 0)
+			return _wfopen(wide, L"wb");
+	}
+	return fopen(path, "wb");
+}
+
 bool RenderCore::Save_Back_Buffer_BMP(const char* path)
 {
 	WW3DSurfaceHandle surface = nullptr;
@@ -1260,7 +1274,7 @@ bool RenderCore::Save_Back_Buffer_BMP(const char* path)
 	WW3DLockedRect locked;
 	bool ok = false;
 	if (SUCCEEDED(Lock_Surface(surface, &locked, nullptr, WW3D_LOCK_READONLY))) {
-		FILE* file = fopen(path, "wb");
+		FILE* file = Open_Narrow_For_Write(path);
 		if (file) {
 			// 24 bit BMP, rows bottom to top, padded to 4 bytes.
 			const unsigned row_size   = ((M->width * 3 + 3) / 4) * 4;

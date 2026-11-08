@@ -83,6 +83,11 @@ void RenderCore::Taa_Scene_Begin()
 	// Jitter only when the resolve can run: without a readable depth (multisampling with the depth effects off) the
 	// frames would shake without being blended.
 	M->taa_in_scene = Taa_Wanted() && !M->current_render_target && Fx_Depth_Readable();
+	// A history older than the previous frame (a loading screen or menu in between) is dropped. The jitter sequence
+	// starts with the history, not with the program: how many frames were drawn before depends on the time, and the
+	// result of a frame depends on its phase.
+	if (M->taa_frame != M->fx_frame && M->taa_frame != M->fx_frame + 1) M->taa_valid = false;
+	if (!M->taa_valid) M->taa_phase_base = M->fx_frame;
 	M->taa_jittered = M->taa_in_scene;
 	M->frame_cb_dirty = true;
 	M->object_cb_dirty = true;
@@ -111,7 +116,7 @@ const WW3DMatrixRaw& RenderCore::Taa_Jitter_Projection()
 	const WW3DMatrixRaw& p = M->transforms[WW3D_TS_PROJECTION];
 	if (!M->taa_in_scene || M->current_render_target || M->viewport.Width == 0 || M->viewport.Height == 0) return p;
 	float px, py;
-	Taa_Jitter_Pixels(M->fx_frame, &px, &py);
+	Taa_Jitter_Pixels(M->fx_frame - M->taa_phase_base, &px, &py);
 	const float jx = px * 2.0f / static_cast<float>(M->viewport.Width);
 	const float jy = -py * 2.0f / static_cast<float>(M->viewport.Height);
 	M->taa_projection = p;
@@ -196,17 +201,18 @@ void RenderCore::Fx_Run_TAA(int x0, int y0, int x1, int y1)
 	const bool history = M->taa_valid && rect_same && Taa_Affine_Inverse(M->fx_view, inv_view);
 	if (history) Mat_Multiply(inv_view, M->taa_prev_view_proj, cb.reproj);
 	float px, py;
-	Taa_Jitter_Pixels(M->fx_frame, &px, &py);
+	Taa_Jitter_Pixels(M->fx_frame - M->taa_phase_base, &px, &py);
 	Fx_Set_Float4(cb.params, TAA_NEW_WEIGHT, history ? 1.0f : 0.0f, px, py);
 	Upload_Constant_Buffer(M->context, M->taa_cb, &cb, sizeof(cb));
 
 	FFPEffectsCB& ecb = M->fx_cb_data;
 	const float out_mode = (M->scene_format == GPU_FORMAT_B8G8R8A8_UNORM) ? 0.0f :
 		((M->scene_format == GPU_FORMAT_R11G11B10_FLOAT) ? 2.0f : 1.0f);
-	if (ecb.haze.w != out_mode || M->fx_cb_dirty) {
-		ecb.haze.w = out_mode;
-		Fx_Upload_Constants();
-	}
+	// The size of the history: with HDR the bloom levels are drawn before this pass and leave the size of their last
+	// level here, which the history read (Catmull-Rom) would otherwise use.
+	Fx_Set_Float4(ecb.source, 1.0f / (float)M->scene_width, 1.0f / (float)M->scene_height, (float)M->scene_width, (float)M->scene_height);
+	ecb.haze.w = out_mode;
+	Fx_Upload_Constants();
 
 	GpuContext* c = M->context;
 	const unsigned cur = M->taa_index, prev = cur ^ 1u;
