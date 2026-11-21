@@ -5,7 +5,7 @@
 */
 
 // VfsDump -- resolves every archived path of a game folder with the new file system core
-// (Engine::Vfs) and prints it in the format of the game switch -dateiIndexAusgeben:
+// (Engine::Vfs) and prints it in the format of the game switch -dumpFileIndex:
 //
 //     <path, lower case, '/'>\t<archive the path comes from>
 //

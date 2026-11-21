@@ -51,6 +51,80 @@ import time
 WINDOW_ARGS = ["-win", "-xres", "800", "-yres", "600"]
 BUSY_NAMES = ("gzhneo.exe", "gzhneozh.exe")
 
+# The runner log uses English names (AISTAT, player, units, ...). The evaluation below still works with the older names
+# of the lines and fields, so every line is translated back on reading (the rest of the tool keeps its names).
+LOG_KEYS = {
+    "AIATTACK": "KIANGRIFF", "AIBUDGET": "KIHAUSHALT", "AIBUILD": "KIBAU", "AICOUNTER": "KIKONTER",
+    "AIDEFENCE": "KIVERTEIDIGUNG", "AIECONOMY": "KIWIRTSCHAFT", "AIENEMYMODEL": "KIGEGNERMODELL",
+    "AIFOCUS": "KIFOKUS", "AIFORECAST": "KIPROGNOSE", "AIHELP": "KIHILFE", "AILOSS": "KIVERLUST",
+    "AIMARK": "KIMARKIERUNG", "AIMICRO": "KIGEFECHT", "AIOFF": "KIOHNE", "AIOPENING": "KIEROEFFNUNG",
+    "AIORDER": "KIAUFTRAG", "AIPERSONALITY": "KIPERSOENLICHKEIT", "AIPLAN": "KIPLAN", "AIPOWER": "KISTROM",
+    "AIRAID": "KIUEBERFALL", "AIRETREAT": "KIRUECKZUG", "AISCOUT": "KIAUFKLAERUNG", "AISTAT": "KISTAT",
+    "AISUPERGUARD": "KISUPERWACHE", "AISUPERWEAPON": "KISUPERWAFFE", "AITARGET": "KIZIEL", "AITIMING": "KIZEIT",
+    "AIVICTORY": "KISIEG",
+}
+LOG_WORDS = {
+    "accepted": "angenommen", "aggressive": "aggressiv", "air": "luft", "air_value": "luftwert",
+    "alliance": "buendnis", "ally": "verbuendeter", "ally_gone": "verbuendeter_weg", "ally_value": "verbuendet_wert",
+    "alone": "allein", "anti_air": "luftabwehr", "army": "armee", "army_value": "armeewert", "attack": "angriff",
+    "attack_end": "angriff_ende", "balance": "bilanz", "base": "basis", "base_left": "basis_rest",
+    "base_ratio": "basis_verhaeltnis", "base_winner": "basis_sieger", "before": "vorher", "blocked": "sperre",
+    "build": "bau", "building": "gebaeude", "buildings": "gebaeude", "built_b": "gebaut_g", "built_u": "gebaut_e",
+    "candidates": "kandidaten", "captured": "eingenommen", "centres": "zentren", "checksum": "pruefsumme",
+    "choice": "wahl", "class": "klasse", "coming": "komme", "compute_max": "rechnen_max", "compute_us": "rechnen_us",
+    "consumption": "verbrauch", "cost": "kosten", "count": "anzahl", "counter": "konter", "damaged": "beschaedigt",
+    "declined": "abgelehnt", "defeated": "besiegt", "defence": "abwehr", "defence_lost": "abwehr_verloren",
+    "destroyed_b": "zerstoert_g", "destroyed_u": "zerstoert_e", "detector": "detektor", "dissolved": "aufgeloest",
+    "done": "fertig", "duration": "dauer", "empty": "leer", "end": "ende", "enemies": "feinde", "enemy": "gegner",
+    "enemy_base": "feindbasis", "enemy_buildings": "feind_gebaeude", "enemy_defeated": "gegner_besiegt",
+    "enemy_health": "feind_leben", "enemy_remembered": "feind_erinnert", "enemy_seen": "feind_gesehen",
+    "enemy_value": "feind_wert", "expansion": "ausbau", "expired": "abgelaufen", "field": "feld",
+    "field_left": "feld_rest", "field_ratio": "feld_verhaeltnis", "field_winner": "feld_sieger", "focus": "fokus",
+    "forecast": "prognose", "free": "frei", "from": "von", "from_building": "von_gebaeude",
+    "from_player": "von_spieler", "from_template": "von_vorlage", "gather": "sammeln", "gather_rate": "sammelrate",
+    "gather_timeout": "sammeln_zeit", "growth": "wachstum", "guards": "wachen", "hackers": "hacker",
+    "harvester": "sammler", "harvesters": "sammler", "have": "bestand", "hedgehog": "igel", "help": "hilfe",
+    "help_end": "hilfe_ende", "home": "heim", "hopeless": "aussichtslos", "idle": "leerlauf", "income": "einnahmen",
+    "income_buildings": "einnahmebauten", "input": "eingabe", "invest": "investieren", "kind": "art",
+    "launch": "los", "lead": "vorlauf", "lost": "verloren", "lost_b": "verloren_g", "lost_u": "verloren_e",
+    "mark": "markierung", "minutes_left": "restzeit_min", "money": "geld", "money_factor": "geldfaktor",
+    "moved": "verlegt", "need": "bedarf", "no_enemy": "kein_gegner", "no_partner": "kein_partner",
+    "no_target": "kein_ziel", "none": "keiner", "objects": "objekte", "order_cancelled": "auftrag_abgebrochen",
+    "own": "eigene", "own_base": "eigene_basis", "partner_target": "partnerziel", "parts": "teile",
+    "path_threat": "weg_bedrohung", "pincer": "zange", "place": "platz", "plans": "plaene", "player": "spieler",
+    "points": "punkte", "pos": "ort", "power": "strom", "power_plants": "kraftwerke", "pressure": "druck",
+    "priority_open": "vorrang_offen", "production": "erzeugung", "rank": "rang", "rated": "bewertet",
+    "ratio": "verhaeltnis", "reached": "erreicht", "reason": "grund", "regrow_from": "erst_ab",
+    "reinforcement": "verstaerkung", "rejected": "verworfen", "remaining": "verbleibend", "removed": "entfernt",
+    "repelled": "abgewehrt", "replaced": "ersetzt", "reserve": "vorrat", "resupply": "nachschub",
+    "retreat": "rueckzug", "rich": "reich", "riders": "fahrer", "rush": "ansturm", "scarce": "knapp",
+    "scout": "spaeher", "sent": "geschickt", "set_failed": "setzen_fehlgeschlagen", "sets": "setzt", "side": "seite",
+    "site_ratio": "ort_verhaeltnis", "site_winner": "ort_sieger", "situation": "lage",
+    "snapshot_max": "schnappschuss_max", "snapshot_us": "schnappschuss_us", "spacing": "abstand",
+    "special_power": "macht", "spending": "ausgaben", "spread": "verteilt", "spread_out": "verteilen",
+    "squad": "trupp", "start_money": "startkapital", "stealth": "tarnung", "stealthed": "getarnt", "stuck": "steckt",
+    "superweapon": "superwaffe", "supplies": "lager", "switch": "wechsel", "target": "ziel",
+    "target_end": "ziel_ende", "target_gone": "ziel_weg", "target_id": "ziel_id", "target_ratio": "ziel_verhaeltnis",
+    "target_winner": "ziel_sieger", "tech": "technik", "tech_end": "technik_ende", "tech_upgrade": "technik_upgrade",
+    "technician": "techniker", "template": "vorlage", "threads": "worker", "threat": "bedrohung",
+    "threat_max": "bedrohung_max", "time": "zeit", "too_weak": "zu_schwach", "turtle": "einigeln",
+    "underpowered_s": "unterversorgt_s", "unit": "einheit", "unit_gone": "einheit_weg",
+    "unit_production": "produktion", "units": "einheiten", "until": "bis", "usable": "einsetzbar", "value": "wert",
+    "wait": "warten", "wait_max": "warten_max", "wait_us": "warten_us", "winner": "sieger",
+    "with_ally": "mit_verbuendetem", "workers": "arbeiter", "yield_elite": "ertrag_elite",
+}
+LOG_WORD = re.compile(r"(?<![A-Za-z0-9_])[a-z][a-z_]*(?![A-Za-z0-9_])")
+
+
+def legacy(line):
+    """An AI line of the runner log with the older names of the line key and of the fields and values."""
+    head, _, rest = line.partition(" ")
+    if head not in LOG_KEYS:
+        return line
+    return LOG_KEYS[head] + " " + LOG_WORD.sub(lambda m: LOG_WORDS.get(m.group(0), m.group(0)), rest)
+
+
+AIGATE = re.compile(r"^AIGATE (\d+) player (\d+) .* idle_s (\d+) gather_s (\d+) attack_s (\d+)")
 KISTAT = re.compile(r"^KISTAT (\d+) (.*)$")
 KISIEG = re.compile(r"^KISIEG (\d+) ende (\d+) team (-?\d+) sieger\(spieler/platz/art\)(.*)$")
 KIHILFE = re.compile(r"^KIHILFE (\d+) spieler (\d+) (\S+)(.*)$")
@@ -160,7 +234,18 @@ def parse_log(path):
     by_frame = {}	# Frame -> Zeilen (fuer "gleicher Gegner im Buendnis")
     with open(path, "r", encoding="ascii", errors="replace") as f:
         for raw in f:
-            line = raw.strip()
+            line = legacy(raw.strip())
+            if line.startswith("AIGATE "):
+                g = AIGATE.match(line)
+                if g and int(g.group(1)) >= 20 * 1800:	# time per phase of the command layer after minute 20
+                    acc = res.setdefault("zeit_phasen_spaet", {"idle": 0, "gather": 0, "attack": 0})
+                    acc["idle"] += int(g.group(3))
+                    acc["gather"] += int(g.group(4))
+                    acc["attack"] += int(g.group(5))
+                continue
+            if line.startswith("AITAKEOVER "):
+                res["uebernahmen"] = res.get("uebernahmen", 0) + 1
+                continue
             m = KISTAT.match(line)
             if m:
                 frame = int(m.group(1))
@@ -186,7 +271,7 @@ def parse_log(path):
                 continue
             m = KIOHNE.match(line)
             if m:
-                res["ohne"] = int(m.group(3))  # -aiOhne: switched-off parts (bit mask, negative = unknown name)
+                res["ohne"] = int(m.group(3))  # -aiOff: switched-off parts (bit mask, negative = unknown name)
                 continue
             m = KIFABRIK.match(line)
             if m:
@@ -398,6 +483,7 @@ def summarize_match(res):
                                eingenommen=sum(1 for x in res.get("wirtschaft", [])
                                                if x["was"] == "technik_ende" and x["rest"].startswith("eingenommen"))),
             "planer": planner_times(res),
+            "zeit_phasen_spaet": res.get("zeit_phasen_spaet"), "uebernahmen": res.get("uebernahmen", 0),
             "einnahmen_25_30": res.get("einnahmen_25_30"),
             "einnahmen_ab_30": res.get("einnahmen_ab_30"),
             "gleich": res.get("gleich", {}),
@@ -634,7 +720,7 @@ def cmd_verlauf(a):
         rows = []
         with open(path, "r", encoding="ascii", errors="replace") as f:
             for raw in f:
-                m = KISTAT.match(raw.strip())
+                m = KISTAT.match(legacy(raw.strip()))
                 if m:
                     d = parse_kv(m.group(2))
                     d["frame"] = int(m.group(1))
@@ -684,7 +770,7 @@ def match_series(path, kills=None):
     series = {}
     with open(path, "r", encoding="ascii", errors="replace") as f:
         for raw in f:
-            line = raw.strip()
+            line = legacy(raw.strip())
             m = KISTAT.match(line)
             if m:
                 d = parse_kv(m.group(2))
@@ -961,7 +1047,7 @@ def cmd_planvergleich(a):
     """Die KIPLAN-Zeilen zweier Laeufe derselben Partie muessen gleich sein (Planer deterministisch)."""
     def plans(path):
         with open(path, "r", encoding="ascii", errors="replace") as f:
-            return [l.strip() for l in f if l.startswith("KIPLAN ")]
+            return [legacy(l.strip()) for l in f if l.startswith("AIPLAN ")]
     x, y = plans(a.a), plans(a.b)
     n = min(len(x), len(y))
     for i in range(n):

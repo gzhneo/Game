@@ -476,6 +476,10 @@ void ParachuteContain::onRemoving( Object *rider )
 	rider->clearDisabled( DISABLED_HELD );
 	rider->clearStatus( MAKE_OBJECT_STATUS_MASK( OBJECT_STATUS_PARACHUTING ) );
 
+	// Everything is being torn down: no landing logic, and the rider must not be killed.
+	if (TheGameLogic->isDestroyingAllObjects())
+		return;
+
 	// mark parachute as "no-collisions"... it is just ephemeral at this point,
 	// and having the chute collide with the soldier (and both bounce apart) is
 	// just dumb-lookin'...

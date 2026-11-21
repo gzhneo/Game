@@ -43,4 +43,9 @@ const GpuLayerInfo*		Gpu_Layer(unsigned index);
 /// Layer by name (case-insensitive), nullptr if not built in.
 const GpuLayerInfo*		Gpu_Find_Layer(const char* name);
 
+/// The graphics card the player chose ("VVVV:DDDD name", see gpuadapter.h); empty: automatic. Set before the device
+/// is created; the outputs of both layers read it when they pick an adapter.
+void					Gpu_Set_Preferred_Adapter(const char* choice);
+const char*				Gpu_Preferred_Adapter();
+
 #endif // GPULAYERS_H

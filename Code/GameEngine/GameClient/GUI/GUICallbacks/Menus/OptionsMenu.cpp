@@ -404,11 +404,6 @@ static void setDefaults( void )
 		GadgetSliderSetPosition( sliderTextureResolution, 2-txtFact);
 
 		//-------------------------------------------------------------------------------------------------
- 		// 3D Shadows checkbox
-		//
-		GadgetCheckBoxSetChecked( check3DShadows, TheGlobalData->m_useShadowVolumes);
-
-		//-------------------------------------------------------------------------------------------------
  		// 2D Shadows checkbox
 		//
 		GadgetCheckBoxSetChecked( check2DShadows, TheGlobalData->m_useShadowDecals);
@@ -522,9 +517,6 @@ static void saveOptions( void )
 					TheGameClient->adjustLOD(val-TheGlobalData->m_textureReductionFactor);	//apply the new setting
 				}
 		}
-
-		TheWritableGlobalData->m_useShadowVolumes = GadgetCheckBoxIsChecked( check3DShadows );
-		stageFlag( "Detail.UseShadowVolumes", TheWritableGlobalData->m_useShadowVolumes );
 
 		TheWritableGlobalData->m_useShadowDecals = GadgetCheckBoxIsChecked( check2DShadows );
 		stageFlag( "Detail.UseShadowDecals", TheWritableGlobalData->m_useShadowDecals );
@@ -833,7 +825,6 @@ static void showDetailLevel( Int index )
 	const Bool wasIgnoring = ignoreSelected;
 	ignoreSelected = TRUE;
 	GadgetSliderSetPosition( sliderTextureResolution, 2 - TheGameLODManager->getRecommendedTextureReduction() );
-	GadgetCheckBoxSetChecked( check3DShadows, info.m_useShadowVolumes );
 	GadgetCheckBoxSetChecked( check2DShadows, info.m_useShadowDecals );
 	GadgetCheckBoxSetChecked( checkCloudShadows, info.m_useCloudMap );
 	GadgetCheckBoxSetChecked( checkGroundLighting, info.m_useLightMap );
@@ -1006,6 +997,8 @@ void OptionsMenuInit( WindowLayout *layout, void *userData )
 
 	check3DShadowsID = TheNameKeyGenerator->nameToKey( AsciiString( "OptionsMenu.wnd:Check3DShadows" ) );
 	check3DShadows   = TheWindowManager->winGetWindowFromId( nullptr, check3DShadowsID);
+	if (check3DShadows)
+		check3DShadows->winHide( TRUE );	// shadow volumes are gone; the window comes from the unmodified game data
 
 	check2DShadowsID = TheNameKeyGenerator->nameToKey( AsciiString( "OptionsMenu.wnd:Check2DShadows" ) );
 	check2DShadows   = TheWindowManager->winGetWindowFromId( nullptr, check2DShadowsID);
@@ -1201,8 +1194,6 @@ void OptionsMenuInit( WindowLayout *layout, void *userData )
 	Int txtFact=TheGameLODManager->getCurrentTextureReduction();
 
 	GadgetSliderSetPosition( sliderTextureResolution, 2-txtFact);
-
-	GadgetCheckBoxSetChecked( check3DShadows, TheGlobalData->m_useShadowVolumes);
 
 	GadgetCheckBoxSetChecked( check2DShadows, TheGlobalData->m_useShadowDecals);
 

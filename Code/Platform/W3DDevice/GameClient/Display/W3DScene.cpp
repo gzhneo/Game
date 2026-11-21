@@ -1281,7 +1281,7 @@ void renderStenciledPlayerColor( UnsignedInt color, UnsignedInt stencilRef, Bool
 		{	// Read from the wrapper's render state shadow; every Set_Render_State updates it.
 			oldColorWriteEnable = RenderDevice::Get_Render_State(WW3D_RS_COLORWRITEENABLE);
 			// 0x12345678 in the shadow means "never set": use the default, otherwise color writes
-			// would stay off after the stencil pass (same guard as in W3DVolumetricShadow.cpp).
+			// would stay off after the stencil pass.
 			if (oldColorWriteEnable == 0x12345678)
 				oldColorWriteEnable = WW3D_COLORWRITEENABLE_RED|WW3D_COLORWRITEENABLE_GREEN|
 				                      WW3D_COLORWRITEENABLE_BLUE|WW3D_COLORWRITEENABLE_ALPHA;
@@ -1488,14 +1488,6 @@ void RTS3DScene::flushOccludedObjectsIntoStencil(RenderInfoClass & rinfo)
 		}
 
 		TheW3DShadowManager->setStencilShadowMask(usedPlayerColorBits);
-		if (numVisiblePlayerColors >= 8 && TheGlobalData->m_useShadowVolumes)
-		{	//for cases where we have 8 or more visible players, we're only left with 3 bits to store
-			//stencil shadows.  That's probably not enough since it will only allow 7 overlapping shadows.
-			//So we clear the stencil buffer, leaving only the MSB set on any occluded player pixels so that
-			//shadow code knows not to overwrite these pixels.
-			renderStenciledPlayerColor(0,0, TRUE);
-			TheW3DShadowManager->setStencilShadowMask(0x80808080);	//msb indicates occluded player pixels so ignore it when filling screen with shadow
-		}
 
 		RenderDevice::Set_Render_State(WW3D_RS_STENCILENABLE, FALSE );
 	}

@@ -1,4 +1,4 @@
-# E-8.4: Fuzzing-Ziele.
+# Fuzzing targets.
 #
 # Standardmaessig AUS. Mit -DENABLE_FUZZERS=ON entstehen die Ziele; unter MSVC zusaetzlich mit
 # /fsanitize=fuzzer (libFuzzer) und /fsanitize=address, sonst als normale Programme, die ihre
@@ -28,7 +28,7 @@ endif()
 
 # Ein kurzer Lauf ueber die Saatdateien gehoert in jeden ctest-Durchlauf: er prueft, dass die
 # Ziele ueberhaupt bauen und dass die bekannten Eingaben sauber durchlaufen (Regression zu den
-# Funden aus E-8.4).
+# frueheren Funden).
 file(GLOB FUZZ_COMPRESSION_SEEDS "${CMAKE_CURRENT_SOURCE_DIR}/seeds/compression/*.bin")
 if(FUZZ_COMPRESSION_SEEDS AND NOT MSVC)
 	add_test(NAME FuzzCompressionSeeds COMMAND FuzzCompression ${FUZZ_COMPRESSION_SEEDS})

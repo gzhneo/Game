@@ -1,4 +1,4 @@
-# TODO 87: schwarze Teile mit Tessellation an Steilhaengen nachstellen (Alpine Assault, Orte aus fels_alpine.txt).
+# schwarze Teile mit Tessellation an Steilhaengen nachstellen (Alpine Assault, Orte aus fels_alpine.txt).
 # Je Ort langsam von der Standardansicht auf nah (0,35 und 0,2) und von der Standardneigung auf flach (15), damit der
 # Uebergang von "Kamera ueber dem Gelaende" zu "Auge oder Nahebene im Gelaende" in vielen Bildern liegt (-logCamera
 # meldet je Bild den Abstand). Ein Bild alle 30 Logik-Frames.

@@ -114,6 +114,36 @@ const Setting WATER_QUALITY_SETTING = combo( "Detail.WaterQuality", "GZH:Options
 const Setting ANISOTROPY_SETTING = combo( "Detail.TerrainAnisotropy", "GZH:OptionsTerrainAnisotropy", ANISOTROPY );
 const Setting VSYNC_SETTING = check( "Display.VSync", "GZH:OptionsVSync" );
 const Setting RENDER_BACKEND_SETTING = check( "Display.RenderBackend", "GZH:OptionsVulkan", "vulkan", "d3d11" );
+// The graphics cards of the renderer: "automatic" and one entry per card, the stored choice being "VVVV:DDDD name". Built when
+// the menu is built; nullptr if there is only one card.
+const Setting *graphicsCardSetting()
+{
+	enum { MAX_CARDS = 8 };
+	static Choice choices[1 + MAX_CARDS];
+	// plain arrays: these statics outlive the memory pools, whose leak report would count any heap block they own
+	static char values[MAX_CARDS][320];
+	static char names[MAX_CARDS][128];
+	static Setting setting;
+	if( TheDisplay == nullptr || TheDisplay->getGraphicsCardCount() < 2 )
+		return nullptr;
+	Int count = 0;
+	choices[count++] = Choice{ "GZH:OptionsAuto", "", 0 };
+	for( Int i = 0; i < TheDisplay->getGraphicsCardCount() && count < 1 + MAX_CARDS; ++i )
+	{
+		AsciiString value, name;
+		if( !TheDisplay->getGraphicsCard( i, &value, &name ) )
+			continue;
+		strncpy( values[count - 1], value.str(), sizeof( values[0] ) - 1 );
+		values[count - 1][sizeof( values[0] ) - 1] = 0;
+		strncpy( names[count - 1], name.str(), sizeof( names[0] ) - 1 );
+		names[count - 1][sizeof( names[0] ) - 1] = 0;
+		choices[count] = Choice{ names[count - 1], values[count - 1], 0 };
+		++count;
+	}
+	setting = Setting{ "Display.Adapter", Kind::Combo, "GZH:OptionsAdapter", choices, count, nullptr, nullptr };
+	return &setting;
+}
+
 const Setting FREE_CONTENT_SETTING = check( "Detail.FreeContent", "GZH:OptionsFreeContent", "free", "ea" );
 const Setting WATER_TEXTURE_SETTING = check( "Detail.WaterTexture", "GZH:OptionsWaterTexture", "free", "ea" );
 const Setting EDGE_SCROLL_SETTING = check( "Controls.EdgeScrollInWindow", "GZH:OptionsEdgeScrollInWindow" );
@@ -950,6 +980,9 @@ Bool build( GameWindow *menuParent )
 			takeOut( findWindow( menuParent, "OptionsMenu.wnd:SliderGamma" ), frame ) );
 		addCheck( layout, screen, VSYNC_SETTING );
 		addRowCombo( layout, screen, FPS_LIMIT_SETTING, DISPLAY_LABEL_SHARE );
+		// Only with a choice: one graphics card has nothing to choose.
+		if( const Setting *adapter = graphicsCardSetting() )
+			addRowCombo( layout, screen, *adapter, DISPLAY_LABEL_SHARE );
 
 		screen.y += layout.gap;
 		addHeader( layout, screen, "GZH:OptionsHeaderQuality", "OptionsMenu.wnd:HeaderQuality" );

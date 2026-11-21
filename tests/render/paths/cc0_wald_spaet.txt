@@ -1,4 +1,4 @@
-# TODO 56 (CC0-Naturobjekte): Wälder zwischen den Basen spät im Replay
+# CC0-Naturobjekte: Wälder zwischen den Basen spät im Replay
 # e0zh-tournament-lake-3ai-seed2 -- dort fahren Panzer durch den Wald, umgefallene Kiefern (W3DTreeBuffer, Umfallen
 # nur bei Brechstufe > 1). Mit --every 300 ein Bild je Halt.
 # frame   x      y      zoom       drehung   neigung

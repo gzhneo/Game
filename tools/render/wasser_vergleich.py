@@ -207,7 +207,7 @@ body.nebeneinander .neben { display:block; } body.nebeneinander .bild img { widt
 .gifs { display:flex; gap:10px; flex-wrap:wrap; } .gifs img { max-width:100%; } .gifs figure { margin:0; max-width:460px; } .gifs figcaption { font-size:12px; color:var(--mut); }
 .hilfe { position:sticky; top:0; background:var(--bg); padding:6px 0; border-bottom:1px solid var(--line); z-index:5; font-size:13px; }
 </style></head><body>
-<h1>Wasser (TODO 61): EA, Fassung 1, Fassung 2, Runde 3</h1>
+<h1>Wasser: EA, Fassung 1, Fassung 2, Runde 3</h1>
 <div class="hilfe"><b>Leertaste</b>: alle Bilder alt/neu umschalten &middot; <b>L</b>: Lupe aus/2x/4x (Maus ueber dem Bild)
 &middot; <b>N</b>: nebeneinander (links neu, rechts alt) &middot; Knoepfe je Bild</div>
 <p>Aufnahmen 1920x1080, Debug x64, Direct3D 11, <code>-fixedTimeStep</code>, Texturstufe SD, Detailstufe Hoch

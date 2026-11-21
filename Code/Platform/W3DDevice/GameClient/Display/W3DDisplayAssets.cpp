@@ -99,8 +99,8 @@
 
 // W3DDisplay: screenshots and assets -- writing images, dumping, preloading and purging assets
 
-// Write the measured GPU times of the render effects as one line to the runner log (GPUEFFEKTE), what the
-// device built behind the scenes (VULKANPIPELINES) and shaders that did not compile (SHADERFEHLER). Lines without
+// Write the measured GPU times of the render effects as one line to the runner log (GPUEFFECTS), what the
+// device built behind the scenes (VULKANPIPELINES) and shaders that did not compile (SHADERFAILURE). Lines without
 // content are left out.
 void W3DDisplay::writeRenderStatistics(void)
 {

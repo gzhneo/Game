@@ -1,4 +1,4 @@
-# Fuzzing (E-8.4)
+# Fuzzing
 
 Ziele in diesem Ordner prüfen Parser, die **Dateien von außen** lesen: Archive, Replays,
 Spielstände, Karten. Genau dort liegt der Code von 1995 bis 2003, der seinen Eingaben vertraut.
@@ -9,13 +9,13 @@ Spielstände, Karten. Genau dort liegt der Code von 1995 bis 2003, der seinen Ei
 |---|---|---|
 | `FuzzCompression.cpp` | `CompressionManager::decompressData` (EA RefPack, BTree, Huffman, ZLib) | fertig, alle Funde behoben (siehe unten) |
 | `FuzzW3DChunks.cpp` | `ChunkLoadClass` (WWLib), Grundlage aller W3D-Modelle, -Animationen, -Hierarchien | fertig 2026-09-27, Funde behoben |
-| `FuzzWavParser.cpp` | `ParseWavAndDecode` (PCM, IMA ADPCM) | fertig 2026-09-27, Funde behoben (R-297) |
-| `engine/` (INI) | `INI::load` mit geladener Spiellogik, wie eine `map.ini` sie erreicht (MinGW, Wine) | fertig 2026-09-29, Funde R-319, R-330 bis R-332 behoben, siehe `engine/README.md` |
+| `FuzzWavParser.cpp` | `ParseWavAndDecode` (PCM, IMA ADPCM) | fertig 2026-09-27, Funde behoben |
+| `engine/` (INI) | `INI::load` mit geladener Spiellogik, wie eine `map.ini` sie erreicht (MinGW, Wine) | fertig 2026-09-29, Funde behoben, siehe `engine/README.md` |
 | `FuzzMapReader.cpp` | Kartenmodell des neuen Editors (`Code/Tools/Editors/MapEditor/Model`): Chunk-Container, Wörterbücher, alle Kartenabschnitte; prüft zusätzlich, dass Geschriebenes beim zweiten Schreiben gleich bleibt | fertig 2026-09-27; erster Fund (Namenstabelle mit doppelter ID) behoben |
 | `FuzzBabylon.cpp` | Leser des Übersetzungswerkzeugs Babylon: `main.db` (mit Schreib-Lese-Stabilität), Tabellen `.xlsx`/`.ods`/`.csv`, `Generals.str`, `.csf` als Quelle | fertig 2026-10-10, ohne Fund |
 | `engine/` (Karten, Replays, Spielstände, LAN-Lobby, Netzspiel) | `.map` (`DataChunk`), Replays, Spielstände (`XferLoad`), Lobby- und Spielpakete mit geladener Spiellogik | fertig 2026-09-29 bis 2026-10-01, siehe `engine/README.md` |
 | `FuzzBigArchive.cpp`, `FuzzZipArchive.cpp`, `FuzzTextFiles.cpp`, `FuzzTarga.cpp`, `FuzzSession.cpp` | `.big`-Index, ZIP-Mods, Stringtabellen, TGA, Sitzungsnachrichten | fertig, siehe unten |
-| `engine/W3DFuzz.cpp` | W3D-Lader im Spiel (Netze, Hierarchien, Animationen, HLOD, Aggregate, Kästen, ...), DDS-Leser (`DDSFileClass`) | fertig 2026-10-06, Funde R-590 bis R-599 und R-570 bis R-581 behoben |
+| `engine/W3DFuzz.cpp` | W3D-Lader im Spiel (Netze, Hierarchien, Animationen, HLOD, Aggregate, Kästen, ...), DDS-Leser (`DDSFileClass`) | fertig 2026-10-06, Funde behoben |
 
 ## Nachtlauf
 
@@ -38,14 +38,14 @@ je Ziel auf. Die Quellen kommen aus dem Spiegel der Syntaxprüfung (Schreibweise
 XAudio2-Manager (nur `WaveFormatInfo`) für den WAV-Parser. Saatdateien unter `seeds/`; für W3D liegt
 dort `ShatterPlanes0.w3d` aus `WW3D2/RequiredAssets` und selbst erzeugte Chunks.
 
-Funde aus dem ersten Linux-Lauf (2026-09-27): `ChunkLoadClass` las beschädigte Dateien endlos (R-296),
-der WAV-Parser las Chunkgrößen fehlausgerichtet (R-297), der Huffman-Dekoder hatte drei Stellen mit
-undefiniertem Verhalten (R-299). Beim Durchsehen des DDS-Lesers (nicht nativ baubar) kam R-298 dazu.
+Funde aus dem ersten Linux-Lauf (2026-09-27): `ChunkLoadClass` las beschädigte Dateien endlos,
+der WAV-Parser las Chunkgrößen fehlausgerichtet, der Huffman-Dekoder hatte drei Stellen mit
+undefiniertem Verhalten. Beim Durchsehen des DDS-Lesers (nicht nativ baubar) kam ein weiterer Fund dazu.
 
-`FuzzBigArchive.cpp` prüft das Verzeichnis von `.big`-Archiven (`Engine::readBigArchiveDirectory`, R-312); die
+`FuzzBigArchive.cpp` prüft das Verzeichnis von `.big`-Archiven (`Engine::readBigArchiveDirectory`); die
 Eingabe wird in Stücken wechselnder Größe gelesen, wie sie ein Dateilesen liefern kann, und jeder angenommene
 Eintrag muss in der Eingabe liegen. Saat unter `seeds/big/`. Die echten Archive prüft unter Windows
-`tools/abnahme/bigpruefung.py` mit denselben Regeln (Schritt „BIG-Archive“ im Prüfskript).
+`tools/abnahme/big_check.py` mit denselben Regeln (Schritt „BIG-Archive“ im Prüfskript).
 
 `FuzzZipArchive.cpp` prüft den ZIP-Leser für Mods (`Engine::readZipArchiveDirectory`, `Engine::extractZipEntry`): Ende-Datensatz,
 Zentralverzeichnis, lokale Köpfe und Deflate-Ströme kommen aus der Eingabe; jeder angenommene Eintrag wird entpackt und muss
@@ -56,13 +56,13 @@ die angekündigte Größe haben. Saat unter `seeds/zip/` (gespeichert, Deflate m
 Tabelle wird in eine kleine Datenbank importiert. Saat unter `seeds/babylon/` (je eine Datei jedes Formats, mit
 `BabylonTool` erzeugt). Vor der Aufnahme: 30.000 zufällig verfälschte Dateien unter ASan/UBSan und 120 s libFuzzer (191.874 Läufe) ohne Befund (2026-10-10).
 
-`FuzzTextFiles.cpp` schickt jede Eingabedurch beide Stringtabellen-Leser (`Engine::readCsf`, `Engine::readStr`, R-313) und
+`FuzzTextFiles.cpp` schickt jede Eingabedurch beide Stringtabellen-Leser (`Engine::readCsf`, `Engine::readStr`) und
 prüft die Längengrenzen jedes Eintrags. Saat unter `seeds/text/` (eine kleine `.csf`, eine `map.str`).
 
-`FuzzTarga.cpp` lädt jede Eingabe durch den TGA-Leser (`WWLib/TARGA.CPP`, R-316), einmal wie `TextureLoader` (Palette
+`FuzzTarga.cpp` lädt jede Eingabe durch den TGA-Leser (`WWLib/TARGA.CPP`), einmal wie `TextureLoader` (Palette
 von 256 Einträgen, Bild vom Leser) und einmal mit beidem vom Leser; die Dateien liefert eine Speicher-`FileFactory`,
 `linux/shim/targa_native.h` ersetzt die Windows-Teile von `ffactory.h`. Nur unter Linux (kein CMake-Ziel: das Ziel definiert
-`_TheFileFactory` selbst). Saat unter `seeds/tga/`, darunter der RLE-Überlauf aus R-316.
+`_TheFileFactory` selbst). Saat unter `seeds/tga/`, darunter der RLE-Überlauf.
 
 ## Zwei Betriebsarten
 
@@ -118,4 +118,4 @@ seit 2026-10-06 die W3D-Modelle und DDS-Texturen (`engine/README.md`).
 
 `tools/fuzz/netpacket/run.sh [Iterationen] [--write-golden]` baut `NetPacketTests.exe` mit MinGW (Spiegel und Bibliotheken von `tools/linuxtests/run.sh`) und führt es unter Wine aus: Rundlauf aller 27 Befehlstypen (schreiben, lesen, erneut schreiben) gegen `golden.txt` -- das Leitungsformat darf sich nicht versehentlich ändern -- und Fuzzing von `NetPacket::ConstructNetCommandMsgFromRawData` und `getCommandList`. Jede Eingabe liegt direkt vor einer mit `VirtualAlloc` gesperrten Seite, ein Lesen hinter dem Paket fällt als Seitenfehler auf; dazu `-fsanitize=bounds` im Trap-Modus (MinGW hat keine ASan-Laufzeit). Stubs für Engine-Singletons in `net_stubs.cpp`. Im Prüfgang mit 50 000 (schnell) bzw. 500 000 Eingaben (`--full`). `--write-golden` nur nach einer gewollten Formatänderung.
 
-**Differenztest** (`NetPacketDiff.cpp`, `NETPACKET_DIFF=<Folgen>`, Standard 2 000, im Prüfgang 2 000 bzw. 20 000 mit `--full`): `run.sh` holt `NetPacket.h/.cpp` aus dem Referenzstand `REF_COMMIT` (Serialisierung vor der tabellengesteuerten Neufassung, EA-Code mit den Korrekturen R-306, R-308, R-309), benennt die Klassen textuell in `RefNetPacket` um und linkt beide Fassungen in dasselbe Programm. Zufällige Befehlsfolgen aller Typen (fortlaufende und springende IDs, Frames, Spieler, Relays) werden mit beiden geschrieben -- Rückgabe von `addCommand`, Paketbytes und Befehlszahl müssen gleich sein --, große Befehle mit beiden in Wrapper-Pakete geteilt, und die Pakete (unverändert und verfälscht) mit beiden gelesen (`getCommandList`, `ConstructNetCommandMsgFromRawData`); die gelesenen Befehle werden über den Referenz-Schreiber verglichen. Die Wrapper-IDs kommen aus einem globalen 16-Bit-Zähler, der Test dreht ihn für die Referenz einmal herum. Beim Teilen bleiben RunAheadMetrics, LoadComplete, TimeOutStart und Wrapper außen vor: die Referenz rechnete deren Größe falsch (R-311), geteilt werden sie im Spiel nie. Der Test fand R-308 und R-309 und sichert die tabellengesteuerte Neufassung ab (3,7 Mio. Befehle, drei Seeds, ohne Unterschied); `--seed <n>` wählt andere Folgen. Braucht die volle Git-Historie.
+**Differenztest** (`NetPacketDiff.cpp`, `NETPACKET_DIFF=<Folgen>`, Standard 2 000, im Prüfgang 2 000 bzw. 20 000 mit `--full`): `run.sh` holt `NetPacket.h/.cpp` aus dem Referenzstand `REF_COMMIT` (Serialisierung vor der tabellengesteuerten Neufassung, EA-Code mit den Korrekturen), benennt die Klassen textuell in `RefNetPacket` um und linkt beide Fassungen in dasselbe Programm. Zufällige Befehlsfolgen aller Typen (fortlaufende und springende IDs, Frames, Spieler, Relays) werden mit beiden geschrieben -- Rückgabe von `addCommand`, Paketbytes und Befehlszahl müssen gleich sein --, große Befehle mit beiden in Wrapper-Pakete geteilt, und die Pakete (unverändert und verfälscht) mit beiden gelesen (`getCommandList`, `ConstructNetCommandMsgFromRawData`); die gelesenen Befehle werden über den Referenz-Schreiber verglichen. Die Wrapper-IDs kommen aus einem globalen 16-Bit-Zähler, der Test dreht ihn für die Referenz einmal herum. Beim Teilen bleiben RunAheadMetrics, LoadComplete, TimeOutStart und Wrapper außen vor: die Referenz rechnete deren Größe falsch, geteilt werden sie im Spiel nie. Der Test fand zwei Fehler und sichert die tabellengesteuerte Neufassung ab (3,7 Mio. Befehle, drei Seeds, ohne Unterschied); `--seed <n>` wählt andere Folgen. Braucht die volle Git-Historie.

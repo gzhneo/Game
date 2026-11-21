@@ -1,4 +1,4 @@
-# Quer ueber die ganze Karte in Bahnen, wie ein Spieler scrollt -- Gelaende-Nachschub (TODO 31).
+# Quer ueber die ganze Karte in Bahnen, wie ein Spieler scrollt -- Gelaende-Nachschub.
 # Karte beliebig. Spalten: frame x y zoom drehung neigung
 0       0.10  0.10  standard  0  standard
 300     0.90  0.10  standard  0  standard

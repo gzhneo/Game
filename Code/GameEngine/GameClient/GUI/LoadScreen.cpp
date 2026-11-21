@@ -536,9 +536,13 @@ void SinglePlayerLoadScreen::init( GameInfo *game )
 	const Bool generalsBriefing = isGameEditionGenerals();
 
 
+	// At least 1: a movie with fewer than FRAME_FUDGE_ADD frames would divide by zero below.
 	Int progressUpdateCount = m_videoStream->frameCount() / FRAME_FUDGE_ADD;
+	if (progressUpdateCount < 1)
+		progressUpdateCount = 1;
 	Int shiftedPercent = -FRAME_FUDGE_ADD + 1;
-	while (m_videoStream->frameIndex() < m_videoStream->frameCount() - 1 )
+	// hasPlayedToEnd(): a movie with fewer frames than announced would otherwise never satisfy the index test.
+	while (m_videoStream->frameIndex() < m_videoStream->frameCount() - 1 && !m_videoStream->hasPlayedToEnd())
 	{
 		TheGameEngine->serviceWindowsOS();
 
@@ -1031,8 +1035,10 @@ void ChallengeLoadScreen::init( GameInfo *game )
 	m_wndVideoManager->init();
 
 	Int progressUpdateCount = m_videoStream->frameCount() / FRAME_FUDGE_ADD;
+	if (progressUpdateCount < 1)
+		progressUpdateCount = 1;
 	Int shiftedPercent = -FRAME_FUDGE_ADD + 1;
-	while (m_videoStream->frameIndex() < m_videoStream->frameCount() - 1 )
+	while (m_videoStream->frameIndex() < m_videoStream->frameCount() - 1 && !m_videoStream->hasPlayedToEnd())
 	{
 		TheGameEngine->serviceWindowsOS();
 

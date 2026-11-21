@@ -82,7 +82,7 @@ must let UDP 8090 through (for example `ufw allow 8090/udp`).
 ## 5. Telling the players
 
 - **Players** add the server to `<user folder>\Rendezvous.txt` (one line `host[:port]`) or start the game with
-  `-treffpunkt host[:port]`. Invite codes name their server themselves (`K7Q2-DP941QG2@host`).
+  `-rendezvous host[:port]`. Invite codes name their server themselves (`K7Q2-DP941QG2@host`).
 - **Shipped with a build:** servers listed in `Data/Network/Rendezvous.txt` go into every build made from that
   source.
 - **Peers:** with `peer = other.server` a server names the other one to its players; the games remember servers found

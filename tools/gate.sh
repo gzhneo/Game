@@ -226,6 +226,15 @@ else
 fi
 
 # ------------------------------------------------------------------------------------------------
+step "Keine Verweise auf TODO-, Fehler- oder Plannummern in den veroeffentlichten Dateien"
+if python3 "$HERE/refactor/nummern_im_text.py" > "$WORK/nummern.txt" 2>&1; then
+	ok "$(tail -1 "$WORK/nummern.txt")"
+else
+	bad "Verweise auf Nummern -- $WORK/nummern.txt"
+	head -10 "$WORK/nummern.txt"
+fi
+
+# ------------------------------------------------------------------------------------------------
 step "Debug-Ausgabe nach Bedingung in Klammern (MSVC C4390 im Release-Bau)"
 # Im Release-Bau sind WWDEBUG_SAY/DEBUG_LOG leer: "if (x) WWDEBUG_SAY((...));" wird zur leeren Anweisung, MSVC
 # meldet C4390 und bricht mit /WX ab; clang meldet das bei Makros nicht. StateMachine.cpp: die Stellen stehen in
@@ -409,8 +418,7 @@ fi
 if [ "$FULL" = "1" ]; then
 	step "Shader übersetzen (glslangValidator)"
 	shader_fails=0
-	# Seit 2026-09-23 ein gemeinsamer Datenordner fuer beide Spiele (Data/). Seit TODO 67 Teil 2
-	# (2026-09-26) nur noch Shader Model 4 (sm4/); die D3D9-Quellen daneben sind entfernt.
+	# Ein gemeinsamer Datenordner fuer beide Spiele (Data/), nur Shader Model 4 (sm4/).
 	for f in "$ROOT"/Data/Shaders/sm4/*.hlsl; do
 		[ -e "$f" ] || continue
 		case "$f" in *.vs.hlsl) stage=vert ;; *.ps.hlsl) stage=frag ;; *) continue ;; esac
@@ -516,7 +524,7 @@ if [ "$FULL" = "1" ]; then
 	step "MapEditorTests als Windows-Programm (MinGW, Wine)"
 	if "$HERE/mapeditor/linux_build.sh" --mingw "$WORK/mapeditor-mingw" > "$WORK/mapeditor-mingw.log" 2>&1 \
 	   && (cd "$WORK/mapeditor-mingw" && WINEPREFIX="$WORK/mapeditor-mingw/wineprefix" WINEDEBUG=-all \
-	       "$(command -v wine64 || echo /usr/lib/wine/wine64)" MapEditorTests.exe > run.txt 2>&1); then
+	       env -u TMPDIR "$(command -v wine64 || echo /usr/lib/wine/wine64)" MapEditorTests.exe > run.txt 2>&1); then
 		ok "$(tail -1 "$WORK/mapeditor-mingw/run.txt")"
 	else
 		bad "MinGW -- $WORK/mapeditor-mingw.log, $WORK/mapeditor-mingw/run.txt"
@@ -525,7 +533,7 @@ if [ "$FULL" = "1" ]; then
 	step "GuiEditorTests als Windows-Programm (MinGW, Wine)"
 	if "$HERE/guieditor/linux_build.sh" --mingw "$WORK/guieditor-mingw" > "$WORK/guieditor-mingw.log" 2>&1 \
 	   && (cd "$WORK/guieditor-mingw" && WINEPREFIX="$WORK/guieditor-mingw/wineprefix" WINEDEBUG=-all \
-	       "$(command -v wine64 || echo /usr/lib/wine/wine64)" GuiEditorTests.exe wnd > run.txt 2>&1); then
+	       env -u TMPDIR "$(command -v wine64 || echo /usr/lib/wine/wine64)" GuiEditorTests.exe wnd > run.txt 2>&1); then
 		ok "$(tail -1 "$WORK/guieditor-mingw/run.txt")"
 	else
 		bad "MinGW -- $WORK/guieditor-mingw.log, $WORK/guieditor-mingw/run.txt"
@@ -534,7 +542,7 @@ if [ "$FULL" = "1" ]; then
 	step "BabylonTests als Windows-Programm (MinGW, Wine)"
 	if "$HERE/babylon/linux_build.sh" --mingw "$WORK/babylon-mingw" > "$WORK/babylon-mingw.log" 2>&1 \
 	   && (cd "$WORK/babylon-mingw" && WINEPREFIX="$WORK/babylon-mingw/wineprefix" WINEDEBUG=-all \
-	       "$(command -v wine64 || echo /usr/lib/wine/wine64)" BabylonTests.exe > run.txt 2>&1); then
+	       env -u TMPDIR "$(command -v wine64 || echo /usr/lib/wine/wine64)" BabylonTests.exe > run.txt 2>&1); then
 		ok "$(tail -1 "$WORK/babylon-mingw/run.txt")"
 	else
 		bad "MinGW -- $WORK/babylon-mingw.log, $WORK/babylon-mingw/run.txt"
@@ -583,8 +591,8 @@ fi
 WINE_DIR="${CNC_WINE_DIR:-${TMPDIR:-/tmp}/cnc-wine}"
 if [ "$FULL" = "1" ]; then
 	step "Menueablauf: Spiel unter Wine, Testablauf durch Hauptmenue, LAN- und Skirmish-Menue"
-	# Testablaeufe und -echteEingabeAus ignorieren die echte Maus; das Hauptmenue muss trotzdem erscheinen
-	# (tools/wine/menuetest.sh, unter Windows tools/abnahme/menue_test.py). Der Bau ist inkrementell.
+	# Testablaeufe und -noRealInput ignorieren die echte Maus; das Hauptmenue muss trotzdem erscheinen
+	# (tools/wine/menuetest.sh, unter Windows tools/abnahme/menu_test.py). Der Bau ist inkrementell.
 	if ! CNC_WINE_DIR="$WINE_DIR" timeout 3600 "$ROOT/tools/wine/build_game.sh" > "$WORK/spiel-bau.txt" 2>&1; then
 		bad "Bau -- $WORK/spiel-bau.txt"
 		tail -12 "$WORK/spiel-bau.txt"

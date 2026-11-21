@@ -2824,18 +2824,18 @@ void debugMemoryReportGrowth( const char *label )
 		qsort(deltas, deltaCount, sizeof(GrowthDelta), growthDeltaCompare);
 
 	// gesamt: net grown blocks, their bytes, groups; plus live blocks/bytes before and now
-	DEBUG_LOG(("WACHSTUM,%s,gesamt,%d,%d,%d,%d,%d,%d,%d\n", label, deltaBlocks, deltaBytes, deltaCount,
+	DEBUG_LOG(("GROWTH,%s,total,%d,%d,%d,%d,%d,%d,%d\n", label, deltaBlocks, deltaBytes, deltaCount,
 		theMarkBlocks, theMarkBytes, blocks, bytes));
 	for (Int d = 0; d < deltaCount; ++d)
 	{
 		const GrowthGroup *g = deltas[d].group;
-		DEBUG_LOG(("WACHSTUM,%s,gruppe,%d,%d,%s,%s\n", label, deltas[d].count, deltas[d].bytes, g->owner, g->tag));
+		DEBUG_LOG(("GROWTH,%s,group,%d,%d,%s,%s\n", label, deltas[d].count, deltas[d].bytes, g->owner, g->tag));
 	#ifdef MEMORYPOOL_SINGLEBLOCK_GETS_STACKTRACE
 		if (d < MAX_GROUPS_WITH_STACK)
 			::doStackDump(const_cast<void **>(g->stack), min(MEMORYPOOL_STACKTRACE_SIZE, theStackTraceDepth));
 	#endif
 	}
-	DEBUG_LOG(("WACHSTUM,%s,ende\n", label));
+	DEBUG_LOG(("GROWTH,%s,end\n", label));
 
 	if (deltas)
 		::sysFree(deltas);

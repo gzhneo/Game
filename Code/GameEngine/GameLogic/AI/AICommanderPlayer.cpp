@@ -33,6 +33,7 @@
 #include "GameLogic/AI.h"
 #include "GameLogic/AIPathfind.h"
 #include "GameLogic/AICombatModel.h"
+#include "GameLogic/AIEconomy.h"
 #include "GameLogic/AICommanderPlayer.h"
 #include "GameLogic/Damage.h"
 #include "GameLogic/GameLogic.h"
@@ -65,6 +66,19 @@ namespace
 	constexpr Real MAX_HELP_DISTANCE					= 2400.0f;	///< units farther away would arrive too late
 	constexpr Real OWN_BASE_MARGIN						= 400.0f;		///< own base: build list radius plus this margin
 	constexpr Real MIN_THREAT									= 600.0f;		///< below this it is harassment, not an emergency
+	constexpr Real POST_RADIUS								= 300.0f;		///< a unit this close to its post counts as being there
+	constexpr UnsignedInt POST_INTERVAL				= 30 * LOGICFRAMES_PER_SECOND;
+	constexpr Int  POST_MAX_FRONT							= 3;
+	constexpr Real THREAT_CLUSTER_RADIUS			= 600.0f;		///< enemies closer than this belong to one group
+	constexpr Real THREAT_MAX_REACH						= 600.0f;		///< a long-range enemy counts from this far at most
+	constexpr Int  THREAT_MAX_CLUSTERS				= 3;
+	constexpr Real EVADE_RADIUS								= 500.0f;		///< workers this close to a threat group fall back
+	constexpr Real MICRO_KITE_MARGIN					= 60.0f;		///< a spot to step back to must stay this far outside the reach of other enemies
+	constexpr Int  TAKEOVER_MAX_UNITS					= 60;				///< no more script teams are taken over from this many own units on
+	enum AttackGate { GATE_COOLDOWN, GATE_ASSIST, GATE_GRACE, GATE_THREAT, GATE_NO_ENEMY, GATE_NO_TARGET, GATE_SQUAD_RATIO, GATE_SQUAD_SHARES, GATE_SMALL_FORCE, GATE_REGROW, GATE_STARTED, GATE_COUNT };
+	constexpr UnsignedInt RELEASE_IDLE				= 60 * LOGICFRAMES_PER_SECOND;	///< a script unit idle at home this long goes to the command layer
+	constexpr Real HANDLED_RATIO							= 1.5f;			///< the home defenders count as winning from this strength ratio
+	constexpr Real HELD_LOG_THREAT						= 1500.0f;	///< threats below this should not halt the leadership (log)
 	constexpr Real HELP_FACTOR								= 1.5f;			///< send 1.5 times the threat ...
 	constexpr Real MIN_SEND_FACTOR						= 0.6f;			///< ... but at least 60 %, otherwise nothing
 	constexpr Real RESERVE_FRACTION						= 0.3f;			///< 30 % of the own army always stays home
@@ -97,14 +111,21 @@ namespace
 	constexpr Real STAGE_MARGIN								= 250.0f;		///< staging point: this far beyond the edge of the build list
 	constexpr Real GATHER_RADIUS							= 450.0f;		///< arrived at the staging point
 	constexpr Real GATHER_READY_FRACTION			= 0.7f;			///< share (by value) that must have arrived
+	constexpr Real GATHER_MIN_FRACTION				= 0.5f;			///< after GATHER_MAX the force sets out with at least this share arrived
+	constexpr UnsignedInt GATHER_HARD_MAX			= 120 * LOGICFRAMES_PER_SECOND;	///< the force sets out after this whatever has arrived
+	constexpr Real STAGE_SAFE_MARGIN					= 300.0f;		///< the staging point stays this far outside the reach of known armed buildings
 	constexpr UnsignedInt GATHER_MAX					= 40 * LOGICFRAMES_PER_SECOND;	///< longest gathering without an ally
 	constexpr UnsignedInt GATHER_SYNC_MAX			= 75 * LOGICFRAMES_PER_SECOND;	///< longest wait for the ally
 	constexpr UnsignedInt JOIN_WINDOW					= 40 * LOGICFRAMES_PER_SECOND;	///< ally set out this recently: join it
 	constexpr Real HUNT_RADIUS								= 700.0f;		///< this close to the target: hunt instead of attack-move
+	constexpr Real TIMEOUT_GOOD_RATIO					= 1.2f;			///< the attack clock does not end an attack forecast at this ratio or better
 	constexpr Real RETREAT_FRACTION						= 0.35f;		///< below this share of the start value ...
 	constexpr Real RETREAT_ODDS								= 1.2f;			///< ... and outnumbered this much on site: retreat
 	constexpr Real LOCAL_RADIUS								= 700.0f;		///< radius for the situation at the attack site
 	// Planner forecasts (strength ratio = own / enemy under the square law).
+	constexpr Real SQUAD_GOAL_RATIO						= 1.3f;			///< a composed squad stops growing at this forecast ratio
+	constexpr Real SQUAD_OBJECTIVE_RADIUS			= 800.0f;		///< defenders around the target that count for the forecast
+	constexpr UnsignedInt SQUAD_WANT_TIME			= 120 * LOGICFRAMES_PER_SECOND;	///< a missing role stays a want this long
 	constexpr Real LAUNCH_MIN_RATIO						= 0.8f;			///< alone, set out only if the target's defenders are not stronger than this
 	constexpr Real RETREAT_FORECAST_RATIO			= 0.7f;			///< retreat when the fight on site is forecast this badly ...
 	constexpr Int  RETREAT_FORECAST_PLANS			= 2;				///< ... in this many plans in a row ...
@@ -136,6 +157,10 @@ namespace
 	constexpr UnsignedInt RAID_MAX						= 180 * LOGICFRAMES_PER_SECOND;	///< longest raid
 	constexpr UnsignedInt RAID_TARGET_HOLD		= 15 * LOGICFRAMES_PER_SECOND;	///< keep a raid target at least this long
 	constexpr Real RAID_RETREAT_HEALTH				= 0.5f;			///< fall back below this share of the transport's health
+	constexpr Real RAID_RESTART_HEALTH				= 0.7f;			///< a squad leaves again only with the transport above this share
+	constexpr UnsignedInt RAID_REPAIR_MAX			= 60 * LOGICFRAMES_PER_SECOND;	///< wait this long for the repair, then the squad breaks up
+	constexpr UnsignedInt RAID_REPAIR_PROBE		= 15 * LOGICFRAMES_PER_SECOND;	///< without a repair depot the transport must have gained health by then
+	constexpr Int RAID_REPAIR_GAIN						= 20;				///< per mille of the maximum health
 	constexpr Int  RAID_KEEP_MONEY						= 500;			///< the squad must leave this much money
 	constexpr Int  RAID_MIN_SLOTS							= 3;				///< transports with fewer slots are no raid vehicles
 	constexpr Int  RAID_MAX_RIDERS						= 5;
@@ -476,7 +501,7 @@ namespace
 		return ai != nullptr && ai->getHackInternetAIInterface() != nullptr;
 	}
 
-	/// Part of the new AI switched off with -aiOhne.
+	/// Part of the new AI switched off with -aiOff.
 	Bool partOff( UnsignedInt part )
 	{
 		return (TheGlobalData->m_aiPartsOff & part) != 0;
@@ -608,6 +633,32 @@ AICommanderPlayer::AICommanderPlayer( Player *p ) : AISkirmishPlayer( p ),
 	m_nextEconomyReportFrame( 0 ),
 	m_economyOrders( 0 ),
 	m_economyNeed( 0 ),
+	m_powerPlant( nullptr ),
+	m_powerPlantFrame( 0 ),
+	m_underpoweredFrames( 0 ),
+	m_lastPowerSampleFrame( 0 ),
+	m_nextPowerLogFrame( 0 ),
+	m_nextPowerBlockLogFrame( 0 ),
+	m_nextMixLogFrame( 0 ),
+	m_nextPostFrame( 0 ),
+	m_scriptLogPass( 0 ),
+	m_squadWant( 0 ),
+	m_squadFail( GATE_SQUAD_SHARES ),
+	m_gateCount(),
+	m_phaseFrames(),
+	m_lastPhaseSample( 0 ),
+	m_gateValue( 0.0f ),
+	m_gateNeeded( 0.0f ),
+	m_gateUnits( 0 ),
+	m_gateNeededUnits( 0 ),
+	m_nextGateLogFrame( 0 ),
+	m_squadWantFrame( 0 ),
+	m_nextSquadLogFrame( 0 ),
+	m_nextThreatLogFrame( 0 ),
+	m_threatCacheFrame( 0xFFFFFFFFu ),
+	m_threatCache( FALSE ),
+	m_heldFrames( 0 ),
+	m_lastThreatSampleFrame( 0 ),
 	m_captureUnit( INVALID_ID ),
 	m_captureTarget( INVALID_ID ),
 	m_captureFrame( 0 ),
@@ -635,6 +686,8 @@ AICommanderPlayer::AICommanderPlayer( Player *p ) : AISkirmishPlayer( p ),
 	m_raidCooldownFrame( 0 ),
 	m_raidTargetFrame( 0 ),
 	m_raidRidersWanted( 0 ),
+	m_raidRepairHealth( 0 ),
+	m_raidRepairSince( 0 ),
 	m_raids( 0 )
 {
 	m_loggedGuardCount = 0;
@@ -675,7 +728,7 @@ AICommanderPlayer::AICommanderPlayer( Player *p ) : AISkirmishPlayer( p ),
 	if (TheGlobalData->m_aiPartsOff != 0)
 	{
 		char line[96];
-		WWFormat::Into(line, "KIOHNE {:d} spieler {:d} teile {:d}", TheGameLogic->getFrame(), p->getPlayerIndex(), static_cast<Int>( TheGlobalData->m_aiPartsOff ));	// negative: an unknown name
+		WWFormat::Into(line, "AIOFF {:d} player {:d} parts {:d}", TheGameLogic->getFrame(), p->getPlayerIndex(), static_cast<Int>( TheGlobalData->m_aiPartsOff ));	// negative: an unknown name
 		GameEngine_RunnerLog( line );
 	}
 }
@@ -713,7 +766,10 @@ void AICommanderPlayer::update( void )
 			for (size_t i = 0; i < m_raiders.size(); ++i)
 				raid.push_back( static_cast<UnsignedInt>( m_raiders[i] ) );
 		}
-		m_planner.setInputs( candidates, enemy ? enemy->getPlayerIndex() : -1, mission, raid );
+		std::vector<AIPlanObject> memory;
+		if (!partOff( AI_PART_MEMORY_MIX ))
+			collectRememberedUnits( &memory );
+		m_planner.setInputs( candidates, enemy ? enemy->getPlayerIndex() : -1, mission, raid, memory );
 	}
 	m_planner.update( m_player );
 	updateMicro();
@@ -725,22 +781,28 @@ void AICommanderPlayer::update( void )
 		if (!m_openingLogged)
 		{
 			m_openingLogged = TRUE;
-			static const char *const names[] = { "knapp", "standard", "reich" };
+			static const char *const names[] = { "scarce", "standard", "rich" };
 			char line[160];
-			WWFormat::Into(line, "KIEROEFFNUNG {:d} spieler {:d} startkapital {:d} klasse {} geldfaktor {:.2f}", now, m_player->getPlayerIndex(),
+			WWFormat::Into(line, "AIOPENING {:d} player {:d} start_money {:d} class {} money_factor {:.2f}", now, m_player->getPlayerIndex(),
 				startingCash(), names[static_cast<Int>( cashClass() )], cashScale());
 			GameEngine_RunnerLog( line );
 			if (m_personality != AI_PERSONALITY_STANDARD)
 			{
-				static const char *const characters[AI_PERSONALITY_COUNT] = { "standard", "aggressiv", "techniker", "igel" };
-				WWFormat::Into(line, "KIPERSOENLICHKEIT {:d} spieler {:d} art {}", now, m_player->getPlayerIndex(), characters[m_personality]);
+				static const char *const characters[AI_PERSONALITY_COUNT] = { "standard", "aggressive", "technician", "hedgehog" };
+				WWFormat::Into(line, "AIPERSONALITY {:d} player {:d} kind {}", now, m_player->getPlayerIndex(), characters[m_personality]);
 				GameEngine_RunnerLog( line );
 			}
 		}
+		logPower();
+		logMix();
+		logThreat();
+		logGate();
 		updateMemory();
 		updateEnemyModel();
 		updateDetector();
+		updateEnergy();
 		updateDefences();
+		updatePosts();
 		getAiEnemy();			// choose the enemy at a fixed rate even without a script query
 		updateScouting();
 		updateSuperweaponGuard();
@@ -769,32 +831,89 @@ void AICommanderPlayer::defendOwnBase( void )
 	// them, so they fight when it falls.
 	if (partOff( AI_PART_DEFENCE ) || !m_baseCenterSet || graceLeft() > GRACE_LAUNCH_LEAD)
 		return;
-	Coord3D hotspot;
-	const Real threat = enemyStrengthNear( m_player, &m_baseCenter, m_baseRadius + OWN_BASE_MARGIN, &hotspot );
+	std::vector<BaseThreat> threats;
+	collectBaseThreats( &threats );
+	std::vector<ThreatCluster> clusters;
+	clusterThreats( threats, &clusters );
+	Real threat = 0.0f;
+	for (size_t c = 0; c < clusters.size(); ++c)
+		threat += clusters[c].value;
 	if (threat < MIN_THREAT)
 		return;
+	if (baseUnderThreat())
+		evadeWorkers( clusters );
 	const Real homeRadius = m_baseRadius + HOME_RADIUS_MARGIN;
-	AIGroup *group = nullptr;
-	Int units = 0;
-	Real value = 0.0f;
+	struct Defender
+	{
+		Object *obj;
+		Real value;
+	};
+	std::vector<Defender> defenders;
 	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
 	{
 		if (obj->getControllingPlayer() != m_player || !isMobileCombatUnit( obj ) || isOnMission( obj->getID() ) || isRaider( obj->getID() ))
 			continue;
-		if (!isHelperCandidate( obj ) || !obj->getAIUpdateInterface()->isIdle())
+		if (!isHelperCandidate( obj ) || !isAvailable( obj ))
 			continue;
 		if (distSqr2D( obj->getPosition(), &m_baseCenter ) > homeRadius * homeRadius)
 			continue;
-		addToGroup( &group, obj );
-		++units;
-		value += unitValue( obj );
+		Defender d;
+		d.obj = obj;
+		d.value = unitValue( obj );
+		defenders.push_back( d );
 	}
-	if (group == nullptr)
+	if (defenders.empty())
 		return;
-	group->groupAttackMoveToPosition( &hotspot, NO_MAX_SHOTS_LIMIT, CMD_FROM_AI );
-	char line[192];
-	WWFormat::Into(line, "KIVERTEIDIGUNG {:d} spieler {:d} bedrohung {:.0f} einheiten {:d} wert {:.0f} ort {:.0f} {:.0f}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), threat, units, value, hotspot.x, hotspot.y);
-	GameEngine_RunnerLog( line );
+	// Each threat group gets the nearest defenders until they are worth HELP_FACTOR times the group (the biggest group
+	// first); what is left goes to the biggest group.
+	std::vector<AIGroup *> groups( clusters.size(), nullptr );
+	std::vector<Int> units( clusters.size(), 0 );
+	std::vector<Real> values( clusters.size(), 0.0f );
+	std::vector<Bool> taken( defenders.size(), FALSE );
+	for (size_t c = 0; c < clusters.size(); ++c)
+	{
+		while (values[c] < clusters[c].value * HELP_FACTOR)
+		{
+			Int best = -1;
+			Real bestDist = 0.0f;
+			for (size_t i = 0; i < defenders.size(); ++i)
+			{
+				if (taken[i])
+					continue;
+				const Real d = distSqr2D( defenders[i].obj->getPosition(), &clusters[c].centre );
+				if (best < 0 || d < bestDist)
+				{
+					best = static_cast<Int>( i );
+					bestDist = d;
+				}
+			}
+			if (best < 0)
+				break;
+			taken[static_cast<size_t>( best )] = TRUE;
+			unpost( defenders[static_cast<size_t>( best )].obj->getID() );
+			addToGroup( &groups[c], defenders[static_cast<size_t>( best )].obj );
+			++units[c];
+			values[c] += defenders[static_cast<size_t>( best )].value;
+		}
+	}
+	for (size_t i = 0; i < defenders.size(); ++i)
+	{
+		if (taken[i])
+			continue;
+		unpost( defenders[i].obj->getID() );
+		addToGroup( &groups[0], defenders[i].obj );
+		++units[0];
+		values[0] += defenders[i].value;
+	}
+	for (size_t c = 0; c < clusters.size(); ++c)
+	{
+		if (groups[c] == nullptr)
+			continue;
+		groups[c]->groupAttackMoveToPosition( &clusters[c].centre, NO_MAX_SHOTS_LIMIT, CMD_FROM_AI );
+		char line[192];
+		WWFormat::Into(line, "AIDEFENCE {:d} player {:d} threat {:.0f} units {:d} value {:.0f} pos {:.0f} {:.0f}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), clusters[c].value, units[c], values[c], clusters[c].centre.x, clusters[c].centre.y);
+		GameEngine_RunnerLog( line );
+	}
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -809,6 +928,104 @@ Bool AICommanderPlayer::isSeenNow( const Coord3D *pos ) const
 // Enemy buildings and combat units in sight are remembered with position and time. A building is
 // forgotten once its place is in sight and it is not there any more (destroyed, sold, captured); a unit
 // when its last position is in sight without it, or after UNIT_MEMORY.
+// The classic AI's script teams: a freshly built team of ground combat units would be set to its wave by its scripts (no forecast,
+// no gathering, no fight control). The units go to the default team instead, not recruitable, and join the missions of the
+// command layer; the empty team is activated as usual and removed. Teams with workers, transports, aircraft, perimeter
+// defence or singletons stay as they are; so do all teams while the AI has a big army anyway.
+// Teams the scripts keep: perimeter defence, singletons, and teams with their own task (capturing tech buildings, base
+// alarm, hijackers, base expansion, fire bases), recognised by their names.
+Bool AICommanderPlayer::isOwnTaskTeam( Team *team ) const
+{
+	const TeamTemplateInfo *info = team->getPrototype()->getTemplateInfo();
+	if (info->m_isPerimeterDefense || team->getPrototype()->getIsSingleton())
+		return TRUE;
+	static const char *const OWN_TASK[] = { "capture", "alert", "hijack", "expander", "fire base", "firebase", "defen", "harvest", "supply", "dozer", "tech" };
+	AsciiString lowerName = team->getPrototype()->getName();
+	lowerName.toLower();
+	for (size_t i = 0; i < sizeof( OWN_TASK ) / sizeof( OWN_TASK[0] ); ++i)
+	{
+		if (strstr( lowerName.str(), OWN_TASK[i] ) != nullptr)
+			return TRUE;
+	}
+	return FALSE;
+}
+
+void AICommanderPlayer::takeOverTeam( Team *team )
+{
+	if (partOff( AI_PART_TAKEOVER ) || getAIDifficulty() == DIFFICULTY_EASY || !m_baseCenterSet || team == nullptr || m_player->getDefaultTeam() == nullptr)
+		return;
+	if (isOwnTaskTeam( team ))
+		return;
+	Real value = 0.0f;
+	Int units = 0;
+	for (DLINK_ITERATOR<Object> iter = team->iterate_TeamMemberList(); !iter.done(); iter.advance())
+	{
+		Object *obj = iter.cur();
+		if (obj == nullptr || obj->isEffectivelyDead() || !isMobileCombatUnit( obj ) || obj->isKindOf( KINDOF_AIRCRAFT ) || obj->isKindOf( KINDOF_TRANSPORT )
+			|| obj->isKindOf( KINDOF_DOZER ) || obj->isKindOf( KINDOF_HARVESTER ) || obj->getAIUpdateInterface() == nullptr)
+			return;
+		// A unit inside a container (parachute, transport, bunker) or a unit that holds others keeps the team it has:
+		// a team change would redeploy or orphan the occupants.
+		if (obj->isContained() || obj->getContain() != nullptr)
+			return;
+		value += unitValue( obj );
+		++units;
+	}
+	if (units == 0)
+		return;
+	Int own = 0;
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->getControllingPlayer() == m_player && isMobileCombatUnit( obj ) && obj->getTeam() == m_player->getDefaultTeam())
+			++own;
+	}
+	if (own + units > TAKEOVER_MAX_UNITS)
+		return;
+	for (DLINK_ITERATOR<Object> iter = team->iterate_TeamMemberList(); !iter.done(); iter.advance())
+	{
+		if (iter.cur()->getAIUpdateInterface())
+			iter.cur()->getAIUpdateInterface()->setIsRecruitable( FALSE );
+	}
+	char line[192];
+	WWFormat::Into(line, "AITAKEOVER {:d} player {:d} team {} units {:d} value {:.0f}", TheGameLogic->getFrame(), m_player->getPlayerIndex(),
+		team->getPrototype()->getName().str(), units, value);
+	GameEngine_RunnerLog( line );
+	team->transferUnitsTo( m_player->getDefaultTeam() );
+}
+
+// Enemy units that are out of sight, as planner objects: the health counts with the weight of the age (half after 90 s,
+// gone after UNIT_MEMORY). An enemy mix of seen units only would flip with every unit that leaves the view.
+void AICommanderPlayer::collectRememberedUnits( std::vector<AIPlanObject> *out ) const
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	for (size_t i = 0; i < m_known.size(); ++i)
+	{
+		const KnownObject &k = m_known[i];
+		if (k.structure || k.tmpl.isEmpty() || k.frame >= now)
+			continue;
+		const Int weight = AIEconomy::memoryWeight( now - k.frame, 90 * LOGICFRAMES_PER_SECOND, UNIT_MEMORY );
+		if (weight <= 0)
+			continue;
+		const ThingTemplate *t = TheThingFactory->findTemplate( k.tmpl );
+		if (t == nullptr)
+			continue;
+		AIPlanObject o;
+		o.id = static_cast<UnsignedInt>( k.id );
+		o.owner = k.owner;
+		o.relation = AI_PLAN_ENEMY;
+		o.flags = AIPlanObject::REMEMBERED | AIPlanObject::CAN_ATTACK;
+		if (t->isKindOf( KINDOF_INFANTRY ))	o.flags |= AIPlanObject::INFANTRY;
+		if (t->isKindOf( KINDOF_VEHICLE ))	o.flags |= AIPlanObject::VEHICLE;
+		if (t->isKindOf( KINDOF_AIRCRAFT ))	o.flags |= AIPlanObject::AIRCRAFT;
+		o.cost = t->friend_getBuildCost();
+		o.x = static_cast<Int>( k.pos.x );
+		o.y = static_cast<Int>( k.pos.y );
+		o.profile = m_planner.profileOf( t );
+		o.health = std::max( 1, k.health * weight / 1000 );
+		out->push_back( o );
+	}
+}
+
 void AICommanderPlayer::updateMemory( void )
 {
 	const UnsignedInt now = TheGameLogic->getFrame();
@@ -843,6 +1060,11 @@ void AICommanderPlayer::updateMemory( void )
 		k->frame = now;
 		k->value = unitValue( obj );
 		k->structure = structure;
+		k->tmpl = obj->getTemplate()->getName();
+		k->health = 1000;
+		const BodyModuleInterface *body = obj->getBodyModule();
+		if (body && body->getMaxHealth() > 0.0f)
+			k->health = static_cast<Int>( body->getHealth() * 1000.0f / body->getMaxHealth() );
 	}
 	// drop the forgotten entries in place (order kept, no allocation per pass)
 	size_t kept = 0;
@@ -938,7 +1160,7 @@ void AICommanderPlayer::updateScouting( void )
 		{
 			scout->getAIUpdateInterface()->aiMoveToPosition( &m_baseCenter, CMD_FROM_AI );
 			char line[160];
-			WWFormat::Into(line, "KIAUFKLAERUNG {:d} spieler {:d} fertig einheit {}", now, m_player->getPlayerIndex(), scout->getTemplate()->getName().str());
+			WWFormat::Into(line, "AISCOUT {:d} player {:d} done unit {}", now, m_player->getPlayerIndex(), scout->getTemplate()->getName().str());
 			GameEngine_RunnerLog( line );
 		}
 		m_scout = INVALID_ID;
@@ -953,7 +1175,7 @@ void AICommanderPlayer::updateScouting( void )
 		Int atHome = 0;
 		for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
 		{
-			if (!isHelperCandidate( obj ) || !obj->getAIUpdateInterface()->isIdle() || isSuperweaponGuard( obj->getID() ))
+			if (!isHelperCandidate( obj ) || !isAvailable( obj ) || isSuperweaponGuard( obj->getID() ))
 				continue;
 			if (distSqr2D( obj->getPosition(), &m_baseCenter ) > homeRadius * homeRadius)
 				continue;
@@ -978,7 +1200,7 @@ void AICommanderPlayer::updateScouting( void )
 	m_scoutFrame = now;
 	scout->getAIUpdateInterface()->aiMoveToPosition( &m_scoutTarget, CMD_FROM_AI );
 	char line[192];
-	WWFormat::Into(line, "KIAUFKLAERUNG {:d} spieler {:d} spaeher {} ziel {:.0f} {:.0f}", now, m_player->getPlayerIndex(), scout->getTemplate()->getName().str(), target.x, target.y);
+	WWFormat::Into(line, "AISCOUT {:d} player {:d} scout {} target {:.0f} {:.0f}", now, m_player->getPlayerIndex(), scout->getTemplate()->getName().str(), target.x, target.y);
 	GameEngine_RunnerLog( line );
 }
 
@@ -1026,7 +1248,7 @@ void AICommanderPlayer::updateEnemyModel( void )
 		return;
 	m_loggedModel = model;
 	char line[224];
-	WWFormat::Into(line, "KIGEGNERMODELL {:d} spieler {:d} ansturm {:d} einigeln {:d} luft {:d} tarnung {:d} armee {:.0f} luftwert {:.0f} abwehr {:.0f} getarnt {:.0f}", now,
+	WWFormat::Into(line, "AIENEMYMODEL {:d} player {:d} rush {:d} turtle {:d} air {:d} stealth {:d} army {:.0f} air_value {:.0f} defence {:.0f} stealthed {:.0f}", now,
 		m_player->getPlayerIndex(), m_modelRush ? 1 : 0, m_modelTurtle ? 1 : 0, m_modelAir ? 1 : 0, m_modelStealth ? 1 : 0, unitValueSum, airValue,
 		armedStructures, stealthValue);
 	GameEngine_RunnerLog( line );
@@ -1109,7 +1331,7 @@ void AICommanderPlayer::updateDefences( void )
 			++i;
 			continue;
 		}
-		WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} {} ort {:.0f} {:.0f}", now, m_player->getPlayerIndex(), "abwehr_verloren", site.pos.x, site.pos.y);
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} {} pos {:.0f} {:.0f}", now, m_player->getPlayerIndex(), "defence_lost", site.pos.x, site.pos.y);
 		GameEngine_RunnerLog( line );
 		m_defenceSites.erase( m_defenceSites.begin() + static_cast<std::ptrdiff_t>( i ) );
 	}
@@ -1127,8 +1349,8 @@ void AICommanderPlayer::updateDefences( void )
 	{
 		++m_economyOrders;
 		m_defenceSites.push_back( site );
-		WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} bau {} bestand {:d} ziel {:d} vorrat {:.0f} grund {}", TheGameLogic->getFrame(),
-			m_player->getPlayerIndex(), t->getName().str(), have, TURTLE_DEFENCES, 0.0f, "abwehr");
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} build {} have {:d} target {:d} reserve {:.0f} reason {}", TheGameLogic->getFrame(),
+			m_player->getPlayerIndex(), t->getName().str(), have, TURTLE_DEFENCES, 0.0f, "defence");
 		GameEngine_RunnerLog( line );
 	}
 }
@@ -1177,7 +1399,7 @@ void AICommanderPlayer::updateOwnOrders( void )
 		}
 		entry->setNumRebuilds( 0 );
 		char line[224];
-		WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} auftrag_abgebrochen {} ort {:.0f} {:.0f}", now, m_player->getPlayerIndex(), order.name.str(), order.pos.x, order.pos.y);
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} order_cancelled {} pos {:.0f} {:.0f}", now, m_player->getPlayerIndex(), order.name.str(), order.pos.x, order.pos.y);
 		GameEngine_RunnerLog( line );
 		m_ownOrders.erase( m_ownOrders.begin() + static_cast<std::ptrdiff_t>( i ) );
 	}
@@ -1241,16 +1463,16 @@ Bool AICommanderPlayer::findAttackObjective( const Player *enemy, const Coord3D 
 
 void AICommanderPlayer::placeOwnBeacon( const Coord3D &pos, Int kind, UnsignedInt until )
 {
-	static const char *const names[] = { "angriff", "hilfe", "rueckzug", "komme" };
+	static const char *const names[] = { "attack", "help", "retreat", "coming" };
 	static const char *const captions[] = { "GZH:AIBeaconAttack", "GZH:AIBeaconHelp", "GZH:AIBeaconRetreat", "GZH:AIBeaconComing" };
 	if (m_ownBeacon != INVALID_ID)
-		removeOwnBeacon( "ersetzt" );
+		removeOwnBeacon( "replaced" );
 	Coord3D where = pos;
 	Object *beacon = TheGameLogic->placeBeacon( m_player, &where, nullptr );
 	char line[192];
 	if (beacon == nullptr)
 	{
-		WWFormat::Into(line, "KIMARKIERUNG {:d} spieler {:d} setzen_fehlgeschlagen {}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), names[kind]);
+		WWFormat::Into(line, "AIMARK {:d} player {:d} set_failed {}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), names[kind]);
 		GameEngine_RunnerLog( line );
 		return;
 	}
@@ -1259,7 +1481,7 @@ void AICommanderPlayer::placeOwnBeacon( const Coord3D &pos, Int kind, UnsignedIn
 	m_ownBeaconUntil = until;
 	if (beacon->getDrawable() && TheGameText)
 		beacon->getDrawable()->setCaptionText( TheGameText->fetch( captions[kind] ) );
-	WWFormat::Into(line, "KIMARKIERUNG {:d} spieler {:d} setzt {} ort {:.0f} {:.0f}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), names[kind], where.x, where.y);
+	WWFormat::Into(line, "AIMARK {:d} player {:d} sets {} pos {:.0f} {:.0f}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), names[kind], where.x, where.y);
 	GameEngine_RunnerLog( line );
 }
 
@@ -1270,7 +1492,7 @@ void AICommanderPlayer::removeOwnBeacon( const char *reason )
 		TheGameLogic->destroyObject( beacon );
 	m_ownBeacon = INVALID_ID;
 	char line[160];
-	WWFormat::Into(line, "KIMARKIERUNG {:d} spieler {:d} entfernt {}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), reason);
+	WWFormat::Into(line, "AIMARK {:d} player {:d} removed {}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), reason);
 	GameEngine_RunnerLog( line );
 }
 
@@ -1309,26 +1531,26 @@ void AICommanderPlayer::updatePartner( void )
 		}
 		if (help)
 		{
-			const char *result = "angenommen";
+			const char *result = "accepted";
 			if (m_assistAlly == ally->getPlayerIndex())
 			{
 				m_assistPos = pos;
 				m_assistAnchor = pos;
-				result = "verlegt";
+				result = "moved";
 				if (m_ownBeacon != INVALID_ID && m_ownBeaconKind == OWN_BEACON_COMING)
 					placeOwnBeacon( pos, OWN_BEACON_COMING );
 			}
-			else if (m_assistAlly >= 0 || ownBaseThreat() >= MIN_THREAT)
-				result = "abgelehnt";
+			else if (m_assistAlly >= 0 || baseUnderThreat())
+				result = "declined";
 			else
 			{
 				Coord3D centroid;
 				const Real threat = std::max( enemyStrengthNear( ally, &pos, HOTSPOT_RADIUS, &centroid ), MIN_THREAT );
 				startAssist( ally->getPlayerIndex(), pos, pos, threat );
 				if (m_assistAlly != ally->getPlayerIndex())
-					result = "zu_schwach";	// not enough idle units to send
+					result = "too_weak";	// not enough idle units to send
 			}
-			WWFormat::Into(line, "KIMARKIERUNG {:d} spieler {:d} von {:d} art hilfe ort {:.0f} {:.0f} {}", now, m_player->getPlayerIndex(), ally->getPlayerIndex(), pos.x, pos.y, result);
+			WWFormat::Into(line, "AIMARK {:d} player {:d} from {:d} kind help pos {:.0f} {:.0f} {}", now, m_player->getPlayerIndex(), ally->getPlayerIndex(), pos.x, pos.y, result);
 			GameEngine_RunnerLog( line );
 		}
 		else
@@ -1369,12 +1591,12 @@ void AICommanderPlayer::updatePartner( void )
 			m_markFrame = now;
 			m_markEnemy = enemy;
 			if (enemy >= 0)
-				setEnemy( ThePlayerList->getNthPlayer( enemy ), "markierung", 0.0f );
+				setEnemy( ThePlayerList->getNthPlayer( enemy ), "mark", 0.0f );
 			if (m_attackPhase == CommanderAttackPhase::ATTACK)
 				m_objectiveID = INVALID_ID;	// the attack turns to the mark in its next pass
 			if (m_ownBeacon != INVALID_ID && m_ownBeaconKind == OWN_BEACON_ATTACK)
-				removeOwnBeacon( "partnerziel" );
-			WWFormat::Into(line, "KIMARKIERUNG {:d} spieler {:d} von {:d} art angriff ort {:.0f} {:.0f} gegner {:d}", now, m_player->getPlayerIndex(), ally->getPlayerIndex(), pos.x, pos.y, enemy);
+				removeOwnBeacon( "partner_target" );
+			WWFormat::Into(line, "AIMARK {:d} player {:d} from {:d} kind attack pos {:.0f} {:.0f} enemy {:d}", now, m_player->getPlayerIndex(), ally->getPlayerIndex(), pos.x, pos.y, enemy);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -1389,20 +1611,20 @@ void AICommanderPlayer::updatePartner( void )
 		Player *attackEnemy = (m_attackPhase == CommanderAttackPhase::ATTACK) ? ThePlayerList->getNthPlayer( m_attackEnemy ) : nullptr;
 		Coord3D centroid;
 		if (beacon == nullptr || beacon->isDestroyed())
-			reason = "entfernt";
+			reason = "removed";
 		else if (now - m_markFrame > MARK_TIME)
-			reason = "zeit";
+			reason = "time";
 		else if (m_markEnemy >= 0 && !isValidEnemy( ThePlayerList->getNthPlayer( m_markEnemy ) ))
-			reason = "gegner_besiegt";
+			reason = "enemy_defeated";
 		else if (attackEnemy && !findMarkObjective( attackEnemy, &target, &targetId )
 			&& forceCentroid( m_attackers, &centroid, nullptr, 0.0f, nullptr ) > 0.0f && distSqr2D( &centroid, &m_markPos ) <= MARK_REACHED * MARK_REACHED)
-			reason = "erreicht";
+			reason = "reached";
 		if (reason)
 		{
 			m_markFrame = 0;
 			m_markBeacon = INVALID_ID;
 			m_markEnemy = -1;
-			WWFormat::Into(line, "KIMARKIERUNG {:d} spieler {:d} ziel_ende {}", now, m_player->getPlayerIndex(), reason);
+			WWFormat::Into(line, "AIMARK {:d} player {:d} target_end {}", now, m_player->getPlayerIndex(), reason);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -1418,19 +1640,19 @@ void AICommanderPlayer::updatePartner( void )
 		placeOwnBeacon( centroid, OWN_BEACON_HELP );
 	}
 	else if (m_ownBeacon != INVALID_ID && m_ownBeaconUntil != 0 && now >= m_ownBeaconUntil)
-		removeOwnBeacon( "abgelaufen" );
+		removeOwnBeacon( "expired" );
 	else if (m_ownBeacon != INVALID_ID && m_ownBeaconKind == OWN_BEACON_COMING && m_assistAlly < 0)
-		removeOwnBeacon( "hilfe_ende" );
+		removeOwnBeacon( "help_end" );
 	else if (m_ownBeacon != INVALID_ID && m_ownBeaconKind == OWN_BEACON_HELP && threat < MIN_THREAT * 0.5f)
-		removeOwnBeacon( "abgewehrt" );
+		removeOwnBeacon( "repelled" );
 	else if (m_ownBeacon != INVALID_ID && !partner)
-		removeOwnBeacon( "kein_partner" );
+		removeOwnBeacon( "no_partner" );
 }
 
 // Stealthed enemies known: one detecting building near the base.
 void AICommanderPlayer::updateDetector( void )
 {
-	if (!m_modelStealth || ownBaseThreat() >= MIN_THREAT || growthBuildPending())
+	if (!m_modelStealth || baseUnderThreat() || growthBuildPending())
 		return;
 	const ThingTemplate *t = findConstructableDetector();
 	if (t == nullptr || countOwnOrPlanned( t ) > 0 || freeMoney() < t->calcCostToBuild( m_player ))
@@ -1439,8 +1661,8 @@ void AICommanderPlayer::updateDetector( void )
 	{
 		++m_economyOrders;
 		char line[224];
-		WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} bau {} bestand {:d} ziel {:d} vorrat {:.0f} grund {}", TheGameLogic->getFrame(),
-			m_player->getPlayerIndex(), t->getName().str(), 0, 1, 0.0f, "detektor");
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} build {} have {:d} target {:d} reserve {:.0f} reason {}", TheGameLogic->getFrame(),
+			m_player->getPlayerIndex(), t->getName().str(), 0, 1, 0.0f, "detector");
 		GameEngine_RunnerLog( line );
 	}
 }
@@ -1516,7 +1738,7 @@ void AICommanderPlayer::updateSuperweaponGuard( void )
 		return;
 	m_loggedGuardCount = static_cast<Int>( m_superweaponGuards.size() );
 	char line[192];
-	WWFormat::Into(line, "KISUPERWACHE {:d} spieler {:d} superwaffe {} wachen {:d} geschickt {:d} wert {:.0f}", TheGameLogic->getFrame(),
+	WWFormat::Into(line, "AISUPERGUARD {:d} player {:d} superweapon {} guards {:d} sent {:d} value {:.0f}", TheGameLogic->getFrame(),
 		m_player->getPlayerIndex(), weapon->getTemplate()->getName().str(), static_cast<Int>( m_superweaponGuards.size() ), sent, value);
 	GameEngine_RunnerLog( line );
 }
@@ -1573,12 +1795,222 @@ Real AICommanderPlayer::enemyStrengthNear( const Player *victim, const Coord3D *
 	return sum;
 }
 
+// Forecast of the units and armed buildings at home against the enemies in the base (combat table, no ranges).
+Bool AICommanderPlayer::homeDefendersWin( void ) const
+{
+	const AICombat::Table &table = m_planner.getCombatTable();
+	std::vector<AICombat::Group> own, enemy;
+	auto add = [&]( std::vector<AICombat::Group> *force, const Object *obj )
+	{
+		const Int profile = m_planner.profileOf( obj->getTemplate() );
+		const BodyModuleInterface *body = obj->getBodyModule();
+		if (profile < 0 || body == nullptr)
+			return;
+		const float health = static_cast<float>( body->getHealth() );
+		for (size_t i = 0; i < force->size(); ++i)
+		{
+			if ((*force)[i].profile == profile)
+			{
+				(*force)[i].health += health;
+				return;
+			}
+		}
+		AICombat::Group g;
+		g.profile = profile;
+		g.health = health;
+		force->push_back( g );
+	};
+	const Real baseRadius = m_baseRadius + OWN_BASE_MARGIN;
+	const Real homeRadius = m_baseRadius + HOME_RADIUS_MARGIN;
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->isEffectivelyDead())
+			continue;
+		Player *owner = obj->getControllingPlayer();
+		if (owner == nullptr)
+			continue;
+		if (owner == m_player)
+		{
+			if (isMobileCombatUnit( obj ))
+			{
+				if (!isOnMission( obj->getID() ) && !isRaider( obj->getID() ) && distSqr2D( obj->getPosition(), &m_baseCenter ) <= homeRadius * homeRadius)
+					add( &own, obj );
+			}
+			else if (obj->isKindOf( KINDOF_STRUCTURE ) && obj->isAbleToAttack() && distSqr2D( obj->getPosition(), &m_baseCenter ) <= baseRadius * baseRadius)
+				add( &own, obj );
+		}
+	}
+	std::vector<BaseThreat> threats;
+	collectBaseThreats( &threats );
+	for (size_t i = 0; i < threats.size(); ++i)
+		add( &enemy, threats[i].obj );
+	if (enemy.empty())
+		return TRUE;
+	if (own.empty())
+		return FALSE;
+	const AICombat::Outcome outcome = AICombat::predict( table, own, enemy );
+	return outcome.winner == 0 && outcome.strengthRatio >= HANDLED_RATIO;
+}
+
+// Gate for growth, help, factories and the like: enemies worth the minimum threat in the base, unless the defenders at
+// home win anyway (then the defence handles it and the economy goes on). Cached per frame.
+Bool AICommanderPlayer::baseUnderThreat( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	if (m_threatCacheFrame == now)
+		return m_threatCache;
+	m_threatCacheFrame = now;
+	m_threatCache = ownBaseThreat() >= MIN_THREAT;
+	if (m_threatCache && !partOff( AI_PART_THREAT ) && homeDefendersWin())
+		m_threatCache = FALSE;
+	return m_threatCache;
+}
+
 Real AICommanderPlayer::ownBaseThreat( void ) const
 {
 	// enemies cannot do harm during the start protection
 	if (!m_baseCenterSet || TheGameLogic->isGracePeriod())
 		return 0.0f;
-	return enemyStrengthNear( m_player, &m_baseCenter, m_baseRadius + OWN_BASE_MARGIN, nullptr );
+	std::vector<BaseThreat> threats;
+	collectBaseThreats( &threats );
+	Real sum = 0.0f;
+	for (size_t i = 0; i < threats.size(); ++i)
+		sum += threats[i].value;
+	return sum;
+}
+
+// Visible enemies that threaten the base: armed units within OWN_BASE_MARGIN of its edge, or within their weapon reach
+// (up to THREAT_MAX_REACH) when that is farther, and armed buildings inside it. Value = combat value, buildings their cost.
+void AICommanderPlayer::collectBaseThreats( std::vector<BaseThreat> *out ) const
+{
+	out->clear();
+	if (!m_baseCenterSet)
+		return;
+	const AICombat::Table &table = m_planner.getCombatTable();
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->isEffectivelyDead())
+			continue;
+		Player *owner = obj->getControllingPlayer();
+		if (owner == nullptr || owner == m_player || owner->getDefaultTeam() == nullptr
+			|| m_player->getRelationship( owner->getDefaultTeam() ) != ENEMIES)
+			continue;
+		const Bool structure = obj->isKindOf( KINDOF_STRUCTURE ) && !obj->isKindOf( KINDOF_MINE );
+		if (!structure && !isMobileCombatUnit( obj ))
+			continue;
+		if (!isVisibleToAI( obj ) || !isSeenNow( obj->getPosition() ))
+			continue;
+		Real reach = OWN_BASE_MARGIN;
+		const Int profile = m_planner.profileOf( obj->getTemplate() );
+		if (structure)
+		{
+			if (profile < 0 || table.profiles[static_cast<size_t>( profile )].range <= 0.0f)
+				continue;	// an unarmed building does no harm
+			reach = 0.0f;
+		}
+		else if (!partOff( AI_PART_THREAT ) && profile >= 0)
+			reach = std::max( reach, std::min( THREAT_MAX_REACH, static_cast<Real>( table.profiles[static_cast<size_t>( profile )].range ) ) );
+		const Real limit = m_baseRadius + reach;
+		if (distSqr2D( obj->getPosition(), &m_baseCenter ) > limit * limit)
+			continue;
+		BaseThreat t;
+		t.obj = obj;
+		t.pos = *obj->getPosition();
+		t.value = structure ? static_cast<Real>( obj->getTemplate()->friend_getBuildCost() ) : unitValue( obj );
+		out->push_back( t );
+	}
+}
+
+// Threats grouped by place: each enemy joins the first group within THREAT_CLUSTER_RADIUS of its centre, else starts one;
+// the biggest THREAT_MAX_CLUSTERS groups by value are kept (the others are merged into the nearest).
+void AICommanderPlayer::clusterThreats( const std::vector<BaseThreat> &threats, std::vector<ThreatCluster> *out ) const
+{
+	out->clear();
+	for (size_t i = 0; i < threats.size(); ++i)
+	{
+		ThreatCluster *home = nullptr;
+		for (size_t c = 0; c < out->size() && home == nullptr; ++c)
+		{
+			if (distSqr2D( &threats[i].pos, &(*out)[c].centre ) <= THREAT_CLUSTER_RADIUS * THREAT_CLUSTER_RADIUS)
+				home = &(*out)[c];
+		}
+		if (home == nullptr)
+		{
+			ThreatCluster c;
+			c.centre = threats[i].pos;
+			c.value = 0.0f;
+			out->push_back( c );
+			home = &out->back();
+		}
+		home->members.push_back( i );
+		home->value += threats[i].value;
+		Real x = 0.0f, y = 0.0f, w = 0.0f;
+		for (size_t m = 0; m < home->members.size(); ++m)
+		{
+			const BaseThreat &t = threats[home->members[m]];
+			x += t.pos.x * t.value;
+			y += t.pos.y * t.value;
+			w += t.value;
+		}
+		if (w > 0.0f)
+		{
+			home->centre.x = x / w;
+			home->centre.y = y / w;
+		}
+	}
+	std::stable_sort( out->begin(), out->end(), []( const ThreatCluster &a, const ThreatCluster &b ) { return a.value > b.value; } );
+	while (static_cast<Int>( out->size() ) > THREAT_MAX_CLUSTERS)
+	{
+		ThreatCluster last = out->back();
+		out->pop_back();
+		size_t nearest = 0;
+		Real best = 0.0f;
+		for (size_t c = 0; c < out->size(); ++c)
+		{
+			const Real d = distSqr2D( &last.centre, &(*out)[c].centre );
+			if (c == 0 || d < best)
+			{
+				best = d;
+				nearest = c;
+			}
+		}
+		(*out)[nearest].value += last.value;
+		for (size_t m = 0; m < last.members.size(); ++m)
+			(*out)[nearest].members.push_back( last.members[m] );
+	}
+}
+
+// Harvesters and dozers near a threat group fall back to the base centre; they go back to work on their own once it is quiet.
+void AICommanderPlayer::evadeWorkers( const std::vector<ThreatCluster> &clusters )
+{
+	if (partOff( AI_PART_EVADE ) || clusters.empty())
+		return;
+	AIGroup *group = nullptr;
+	Int moved = 0;
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->getControllingPlayer() != m_player || obj->isEffectivelyDead() || obj->isContained() || obj->getAIUpdateInterface() == nullptr)
+			continue;
+		if (!obj->isKindOf( KINDOF_DOZER ) && !obj->isKindOf( KINDOF_HARVESTER ))
+			continue;
+		if (distSqr2D( obj->getPosition(), &m_baseCenter ) <= 0.25f * m_baseRadius * m_baseRadius)
+			continue;
+		Bool closeBy = FALSE;
+		for (size_t c = 0; c < clusters.size() && !closeBy; ++c)
+			closeBy = distSqr2D( obj->getPosition(), &clusters[c].centre ) <= EVADE_RADIUS * EVADE_RADIUS;
+		if (!closeBy)
+			continue;
+		addToGroup( &group, obj );
+		++moved;
+	}
+	if (group)
+		group->groupMoveToPosition( &m_baseCenter, FALSE, CMD_FROM_AI );
+	if (moved > 0)
+	{
+		char line[160];
+		WWFormat::Into(line, "AIEVADE {:d} player {:d} workers {:d}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), moved);
+		GameEngine_RunnerLog( line );
+	}
 }
 
 // Ally emergency: buildings, harvesters or dozers recently damaged by enemies, with attackers worth
@@ -1716,7 +2148,7 @@ Int AICommanderPlayer::sendHelpers( const Coord3D &hotspot, Real needed, Real mi
 		c.obj = obj;
 		c.value = v;
 		c.distSqr = d;
-		c.idle = obj->getAIUpdateInterface()->isIdle();
+		c.idle = isAvailable( obj );
 		candidates.push_back( c );
 	}
 	Real sendable = army * (1.0f - reserveFraction()) - onMission;
@@ -1790,10 +2222,14 @@ void AICommanderPlayer::releaseUnits( std::vector<ObjectID> *list )
 		TheAI->destroyGroup( group );	// no units left: do not leave an empty group behind
 	else if (group)
 	{
-		if (m_baseCenterSet)
+		// With posts the units stay where the mission ended and updatePosts sends them to their post.
+		if (m_baseCenterSet && partOff( AI_PART_POSTS ))
 			group->groupAttackMoveToPosition( &m_baseCenter, NO_MAX_SHOTS_LIMIT, CMD_FROM_AI );
 		else
+		{
 			group->groupIdle( CMD_FROM_AI );
+			m_nextPostFrame = 0;
+		}
 	}
 	list->clear();
 }
@@ -1807,7 +2243,7 @@ void AICommanderPlayer::startAssist( Int allyIndex, const Coord3D &hotspot, cons
 	char line[320];
 	if (n == 0)
 	{
-		WWFormat::Into(line, "KIHILFE {:d} spieler {:d} verworfen verbuendeter {:d} bedrohung {:.0f} {}", now, m_player->getPlayerIndex(), allyIndex, threat, why.str());
+		WWFormat::Into(line, "AIHELP {:d} player {:d} rejected ally {:d} threat {:.0f} {}", now, m_player->getPlayerIndex(), allyIndex, threat, why.str());
 		GameEngine_RunnerLog( line );
 		m_assistCooldownFrame = now + static_cast<UnsignedInt>(static_cast<Real>(COOLDOWN) * paceFor( getAIDifficulty(), m_personality ).cooldownScale);
 		return;
@@ -1820,7 +2256,7 @@ void AICommanderPlayer::startAssist( Int allyIndex, const Coord3D &hotspot, cons
 	m_lastReinforceFrame = now;
 	m_assistLastThreatFrame = now;
 	++m_assistMissions;
-	WWFormat::Into(line, "KIHILFE {:d} spieler {:d} start verbuendeter {:d} bedrohung {:.0f} einheiten {:d} wert {:.0f} ort {:.0f} {:.0f} {}", now, m_player->getPlayerIndex(), allyIndex, threat, n, sent, hotspot.x, hotspot.y, why.str());
+	WWFormat::Into(line, "AIHELP {:d} player {:d} start ally {:d} threat {:.0f} units {:d} value {:.0f} pos {:.0f} {:.0f} {}", now, m_player->getPlayerIndex(), allyIndex, threat, n, sent, hotspot.x, hotspot.y, why.str());
 	GameEngine_RunnerLog( line );
 	// tell a human ally that help is on its way; asking for help ourselves goes first
 	Player *ally = ThePlayerList->getNthPlayer( allyIndex );
@@ -1833,7 +2269,7 @@ void AICommanderPlayer::endAssist( const char *reason )
 	pruneHelpers();
 	UnsignedInt now = TheGameLogic->getFrame();
 	char line[192];
-	WWFormat::Into(line, "KIHILFE {:d} spieler {:d} ende {} dauer {:d} verbleibend {:d}", now, m_player->getPlayerIndex(), reason, (now - m_assistStartFrame) / LOGICFRAMES_PER_SECOND, static_cast<Int>(m_helpers.size()));
+	WWFormat::Into(line, "AIHELP {:d} player {:d} end {} duration {:d} remaining {:d}", now, m_player->getPlayerIndex(), reason, (now - m_assistStartFrame) / LOGICFRAMES_PER_SECOND, static_cast<Int>(m_helpers.size()));
 	GameEngine_RunnerLog( line );
 
 	releaseUnits( &m_helpers );
@@ -1848,23 +2284,23 @@ void AICommanderPlayer::continueAssist( void )
 	pruneHelpers();
 	if (m_helpers.empty())
 	{
-		endAssist( "verloren" );
+		endAssist( "lost" );
 		return;
 	}
 	Player *ally = ThePlayerList->getNthPlayer( m_assistAlly );
 	if (!isHelpableAlly( ally ))
 	{
-		endAssist( "verbuendeter_weg" );
+		endAssist( "ally_gone" );
 		return;
 	}
-	if (ownBaseThreat() >= MIN_THREAT)
+	if (baseUnderThreat())
 	{
-		endAssist( "eigene_basis" );
+		endAssist( "own_base" );
 		return;
 	}
 	if (now - m_assistStartFrame > MISSION_TIMEOUT)
 	{
-		endAssist( "zeit" );
+		endAssist( "time" );
 		return;
 	}
 
@@ -1888,7 +2324,7 @@ void AICommanderPlayer::continueAssist( void )
 	if (threat < MIN_THREAT * 0.5f)
 	{
 		if (now - m_assistLastThreatFrame > THREAT_CLEAR)
-			endAssist( "abgewehrt" );
+			endAssist( "repelled" );
 		return;
 	}
 	m_assistLastThreatFrame = now;
@@ -1913,7 +2349,7 @@ void AICommanderPlayer::continueAssist( void )
 	sendHelpers( m_assistPos, 0.0f, 0.0f, &sentValue, nullptr, &available, TRUE );
 	if (threat > HOPELESS_FACTOR * (helpersValue + available))
 	{
-		endAssist( "aussichtslos" );
+		endAssist( "hopeless" );
 		return;
 	}
 	Real deficit = threat * HELP_FACTOR - helpersValue;
@@ -1924,7 +2360,7 @@ void AICommanderPlayer::continueAssist( void )
 		{
 			m_lastReinforceFrame = now;
 			char line[192];
-			WWFormat::Into(line, "KIHILFE {:d} spieler {:d} verstaerkung einheiten {:d} wert {:.0f} bedrohung {:.0f}", now, m_player->getPlayerIndex(), n, sentValue, threat);
+			WWFormat::Into(line, "AIHELP {:d} player {:d} reinforcement units {:d} value {:.0f} threat {:.0f}", now, m_player->getPlayerIndex(), n, sentValue, threat);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -1948,7 +2384,7 @@ void AICommanderPlayer::updateAllyAssist( void )
 	if (!findAllyEmergency( &allyIndex, &hotspot, &anchor, &threat ))
 		return;
 	// Own defence first: with an enemy at the own base everything stays home.
-	if (ownBaseThreat() >= MIN_THREAT)
+	if (baseUnderThreat())
 		return;
 	startAssist( allyIndex, hotspot, anchor, threat );
 }
@@ -2006,7 +2442,7 @@ void AICommanderPlayer::setEnemy( Player *enemy, const char *reason, Real score 
 	if (enemy == m_currentEnemy)
 		return;
 	char line[192];
-	WWFormat::Into(line, "KIFOKUS {:d} spieler {:d} gegner {:d} vorher {:d} grund {} kosten {:.0f}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), enemy ? enemy->getPlayerIndex() : -1, m_currentEnemy ? m_currentEnemy->getPlayerIndex() : -1, reason, score);
+	WWFormat::Into(line, "AIFOCUS {:d} player {:d} enemy {:d} before {:d} reason {} cost {:.0f}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), enemy ? enemy->getPlayerIndex() : -1, m_currentEnemy ? m_currentEnemy->getPlayerIndex() : -1, reason, score);
 	GameEngine_RunnerLog( line );
 	m_currentEnemy = enemy;
 	m_enemyChosenFrame = TheGameLogic->getFrame();
@@ -2026,7 +2462,7 @@ void AICommanderPlayer::chooseCommonEnemy( void )
 	// A human partner's mark on an enemy decides.
 	if (m_markFrame != 0 && m_markEnemy >= 0 && isValidEnemy( ThePlayerList->getNthPlayer( m_markEnemy ) ))
 	{
-		setEnemy( ThePlayerList->getNthPlayer( m_markEnemy ), "markierung", 0.0f );
+		setEnemy( ThePlayerList->getNthPlayer( m_markEnemy ), "mark", 0.0f );
 		return;
 	}
 	AICommanderPlayer *leader = allianceLeader();
@@ -2035,7 +2471,7 @@ void AICommanderPlayer::chooseCommonEnemy( void )
 		Player *e = leader->peekAiEnemy();
 		if (isValidEnemy( e ))
 		{
-			setEnemy( e, "buendnis", 0.0f );
+			setEnemy( e, "alliance", 0.0f );
 			return;
 		}
 	}
@@ -2179,7 +2615,7 @@ void AICommanderPlayer::chooseCommonEnemy( void )
 	Player *bestPlayer = ThePlayerList->getNthPlayer( best );
 	if (!currentValid || !isValidEnemy( m_currentEnemy ))
 	{
-		setEnemy( bestPlayer, "wahl", bestCost );
+		setEnemy( bestPlayer, "choice", bestCost );
 		return;
 	}
 	if (bestPlayer == m_currentEnemy)
@@ -2187,7 +2623,7 @@ void AICommanderPlayer::chooseCommonEnemy( void )
 	UnsignedInt now = TheGameLogic->getFrame();
 	Bool holdOver = now - m_enemyChosenFrame >= ENEMY_HOLD;
 	if (bestCost < currentCost - SWITCH_MARGIN && (holdOver || pic[best].pressure >= URGENT_PRESSURE))
-		setEnemy( bestPlayer, pic[best].pressure >= URGENT_PRESSURE ? "druck" : "wechsel", bestCost );
+		setEnemy( bestPlayer, pic[best].pressure >= URGENT_PRESSURE ? "pressure" : "switch", bestCost );
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -2215,9 +2651,12 @@ Int AICommanderPlayer::collectIdleForce( std::vector<Object *> *chosen, Real bud
 			onMission += v;
 			continue;
 		}
-		if (!isHelperCandidate( obj ) || !obj->getAIUpdateInterface()->isIdle() || isSuperweaponGuard( obj->getID() ))
+		if (!isHelperCandidate( obj ) || !isAvailable( obj ) || isSuperweaponGuard( obj->getID() ))
 			continue;
-		if (m_baseCenterSet && distSqr2D( obj->getPosition(), &m_baseCenter ) > homeRadiusSqr)
+		// a unit standing guard at its post is available wherever the post is (outlying supply centres lie beyond the home radius)
+		if (m_baseCenterSet && distSqr2D( obj->getPosition(), &m_baseCenter ) > homeRadiusSqr && !isPosted( obj->getID() ))
+			continue;
+		if (!m_squadHome.empty() && std::find( m_squadHome.begin(), m_squadHome.end(), obj->getID() ) != m_squadHome.end())
 			continue;
 		idle.push_back( obj );	// object list: fixed order
 	}
@@ -2318,17 +2757,195 @@ Bool AICommanderPlayer::findObjective( const Player *enemy, const Coord3D &from,
 	return FALSE;
 }
 
+// The attack squad for its target. Defenders: what is known of the enemy around the target (units with the weight of the
+// age, armed buildings). Units under half health and slow ones stay home; the squad grows by effect against the
+// defenders until the forecast reaches SQUAD_GOAL_RATIO, with front, air cover and siege shares. Without known
+// defenders the forecast is the share of the available value that is sent (goal reached at 65 %).
+Bool AICommanderPlayer::composeAttackSquad( std::vector<Object *> *chosen, const Coord3D &objective, Bool invited, Real *value )
+{
+	const AICombat::Table &table = m_planner.getCombatTable();
+	const UnsignedInt now = TheGameLogic->getFrame();
+	std::vector<AICombat::Group> defenders;
+	Bool covered = FALSE;
+	auto addGroup = []( std::vector<AICombat::Group> *force, Int profile, float health )
+	{
+		for (size_t i = 0; i < force->size(); ++i)
+		{
+			if ((*force)[i].profile == profile)
+			{
+				(*force)[i].health += health;
+				return;
+			}
+		}
+		AICombat::Group g;
+		g.profile = profile;
+		g.health = health;
+		force->push_back( g );
+	};
+	for (size_t i = 0; i < m_known.size(); ++i)
+	{
+		const KnownObject &k = m_known[i];
+		if (k.tmpl.isEmpty() || distSqr2D( &k.pos, &objective ) > SQUAD_OBJECTIVE_RADIUS * SQUAD_OBJECTIVE_RADIUS)
+			continue;
+		const Player *owner = ThePlayerList->getNthPlayer( k.owner );
+		if (owner == nullptr || owner->getDefaultTeam() == nullptr || m_player->getRelationship( owner->getDefaultTeam() ) != ENEMIES)
+			continue;
+		const ThingTemplate *t = TheThingFactory->findTemplate( k.tmpl );
+		const Int profile = m_planner.profileOf( t );
+		if (profile < 0)
+			continue;
+		const AICombat::Profile &pr = table.profiles[static_cast<size_t>( profile )];
+		Int weight = 1000;
+		if (k.structure)
+		{
+			if (pr.range <= 0.0f)
+				continue;	// an unarmed building defends nothing
+			covered = TRUE;
+		}
+		else if (k.frame != now)
+			weight = AIEconomy::memoryWeight( now - k.frame, 90 * LOGICFRAMES_PER_SECOND, UNIT_MEMORY );
+		if (weight > 0)
+			addGroup( &defenders, profile, pr.maxHealth * static_cast<float>( k.health ) / 1000.0f * static_cast<float>( weight ) / 1000.0f );
+	}
+
+	std::vector<AISquad::Unit> units;
+	float available = 0.0f;
+	for (size_t i = 0; i < chosen->size(); ++i)
+	{
+		Object *obj = (*chosen)[i];
+		AISquad::Unit u;
+		u.roles = unitRoles( obj->getTemplate() );
+		u.value = static_cast<float>( unitValue( obj ) );
+		const BodyModuleInterface *body = obj->getBodyModule();
+		u.health = (body && body->getMaxHealth() > 0.0f) ? body->getHealth() / body->getMaxHealth() : 1.0f;
+		u.speed = obj->getAIUpdateInterface() ? obj->getAIUpdateInterface()->getCurLocomotorSpeed() : 0.0f;
+		const Int profile = m_planner.profileOf( obj->getTemplate() );
+		u.effect = (defenders.empty() || profile < 0) ? u.value : static_cast<float>( AICombat::counterScore( table, profile, defenders ) ) * u.value;
+		available += u.value;
+		units.push_back( u );
+	}
+	AISquad::Request req;
+	req.wantAirCover = m_enemyAirShare > 0.1f;
+	req.targetCovered = covered;
+	req.maxUnits = std::max( 0, MAX_ATTACKERS - static_cast<Int>( m_attackers.size() ) );
+	req.goalRatio = SQUAD_GOAL_RATIO;
+	req.minRatio = invited ? 0.0f : LAUNCH_MIN_RATIO;
+	std::function<float( const std::vector<int> & )> ratioOf = [&]( const std::vector<int> &picked )
+	{
+		float sum = 0.0f;
+		std::vector<AICombat::Group> own;
+		for (int i : picked)
+		{
+			sum += units[static_cast<size_t>( i )].value;
+			const Int profile = m_planner.profileOf( (*chosen)[static_cast<size_t>( i )]->getTemplate() );
+			if (profile >= 0)
+				addGroup( &own, profile, table.profiles[static_cast<size_t>( profile )].maxHealth * units[static_cast<size_t>( i )].health );
+		}
+		if (defenders.empty())
+			return available > 0.0f ? 2.0f * sum / available : 0.0f;
+		return static_cast<float>( AICombat::predict( table, own, defenders ).strengthRatio );
+	};
+	const AISquad::Result result = AISquad::composeSquad( units, req, ratioOf );
+
+	// What stays home during this gather: the damaged and the slow.
+	m_squadHome.clear();
+	for (size_t i = 0; i < units.size(); ++i)
+	{
+		if (units[i].health < req.minHealth)
+			m_squadHome.push_back( (*chosen)[i]->getID() );
+	}
+	for (size_t i = 0; i < result.secondWave.size(); ++i)
+		m_squadHome.push_back( (*chosen)[static_cast<size_t>( result.secondWave[i] )]->getID() );
+
+	if (now >= m_nextSquadLogFrame || result.ok)
+	{
+		m_nextSquadLogFrame = now + 30 * LOGICFRAMES_PER_SECOND;
+		float shareValue[AIRoles::SHARE_ROLES] = { 0, 0, 0, 0, 0 };
+		for (size_t i = 0; i < result.picked.size(); ++i)
+		{
+			const AISquad::Unit &u = units[static_cast<size_t>( result.picked[i] )];
+			for (int k = 0; k < AIRoles::SHARE_ROLES; ++k)
+			{
+				if (u.roles & AIRoles::ROLE_BIT[k])
+					shareValue[k] += u.value;
+			}
+		}
+		const float shareBase = std::max( 1.0f, static_cast<float>( result.value ) );
+		char line[320];
+		WWFormat::Into(line, "AISQUAD {:d} player {:d} picked {:d} of {:d} value {:.0f} ratio {:.2f} min_ratio {:.2f} invited {:d} covered {:d} defenders {:d} second_wave {:d} front {:d} anti_air {:d} siege {:d} ok {:d} missing {:d}", now,
+			m_player->getPlayerIndex(), static_cast<Int>( result.picked.size() ), static_cast<Int>( units.size() ), result.value, result.ratio, req.minRatio, invited ? 1 : 0,
+			covered ? 1 : 0, static_cast<Int>( defenders.size() ), static_cast<Int>( result.secondWave.size() ),
+			static_cast<Int>( 1000.0f * shareValue[0] / shareBase ), static_cast<Int>( 1000.0f * shareValue[3] / shareBase ), static_cast<Int>( 1000.0f * shareValue[4] / shareBase ),
+			result.ok ? 1 : 0, static_cast<Int>( result.missing ));
+		GameEngine_RunnerLog( line );
+	}
+	if (!result.ok)
+	{
+		m_squadFail = (result.ratio < req.minRatio) ? GATE_SQUAD_RATIO : GATE_SQUAD_SHARES;
+		if (result.missing != 0)
+		{
+			m_squadWant = result.missing;
+			m_squadWantFrame = now;
+		}
+		m_squadHome.clear();
+		return FALSE;
+	}
+	m_squadWant = 0;
+	std::vector<Object *> picked;
+	Real pickedValue = 0.0f;
+	for (size_t i = 0; i < result.picked.size(); ++i)
+	{
+		picked.push_back( (*chosen)[static_cast<size_t>( result.picked[i] )] );
+		pickedValue += units[static_cast<size_t>( result.picked[i] )].value;
+	}
+	chosen->swap( picked );
+	*value = pickedValue;
+	return TRUE;
+}
+
+Bool AICommanderPlayer::attackGate( Int reason )
+{
+	if (reason >= 0 && reason < static_cast<Int>( sizeof( m_gateCount ) / sizeof( m_gateCount[0] ) ))
+		++m_gateCount[reason];
+	return FALSE;
+}
+
+// One line a minute: how often each condition kept an attack from starting since the last line.
+void AICommanderPlayer::logGate( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	if (m_lastPhaseSample != 0)
+	{
+		const Int phase = (m_attackPhase == CommanderAttackPhase::ATTACK) ? 2 : ((m_attackPhase == CommanderAttackPhase::GATHER) ? 1 : 0);
+		m_phaseFrames[phase] += now - m_lastPhaseSample;
+	}
+	m_lastPhaseSample = now;
+	if (now < m_nextGateLogFrame)
+		return;
+	m_nextGateLogFrame = now + 60 * LOGICFRAMES_PER_SECOND;
+	char line[320];
+	WWFormat::Into(line, "AIGATE {:d} player {:d} cooldown {:d} assist {:d} grace {:d} threat {:d} no_enemy {:d} no_target {:d} squad_ratio {:d} squad_shares {:d} small_force {:d} regrow {:d} started {:d} force {:.0f}/{:.0f} units {:d}/{:d} idle_s {:d} gather_s {:d} attack_s {:d}",
+		now, m_player->getPlayerIndex(), m_gateCount[GATE_COOLDOWN], m_gateCount[GATE_ASSIST], m_gateCount[GATE_GRACE], m_gateCount[GATE_THREAT],
+		m_gateCount[GATE_NO_ENEMY], m_gateCount[GATE_NO_TARGET], m_gateCount[GATE_SQUAD_RATIO], m_gateCount[GATE_SQUAD_SHARES], m_gateCount[GATE_SMALL_FORCE], m_gateCount[GATE_REGROW],
+		m_gateCount[GATE_STARTED], m_gateValue, m_gateNeeded, m_gateUnits, m_gateNeededUnits,
+		static_cast<Int>( m_phaseFrames[0] / LOGICFRAMES_PER_SECOND ), static_cast<Int>( m_phaseFrames[1] / LOGICFRAMES_PER_SECOND ), static_cast<Int>( m_phaseFrames[2] / LOGICFRAMES_PER_SECOND ));
+	m_phaseFrames[0] = m_phaseFrames[1] = m_phaseFrames[2] = 0;
+	GameEngine_RunnerLog( line );
+	for (size_t i = 0; i < sizeof( m_gateCount ) / sizeof( m_gateCount[0] ); ++i)
+		m_gateCount[i] = 0;
+}
+
 Bool AICommanderPlayer::startGather( void )
 {
 	if (!m_baseCenterSet)
-		return FALSE;
+		return attackGate( GATE_NO_ENEMY );
 	Player *enemy = m_currentEnemy;
 	if (!isValidEnemy( enemy ))
-		return FALSE;
+		return attackGate( GATE_NO_ENEMY );
 	Coord3D objective;
 	ObjectID objectiveID = INVALID_ID;
 	if (!findAttackObjective( enemy, m_baseCenter, &objective, &objectiveID ))
-		return FALSE;
+		return attackGate( GATE_NO_TARGET );
 
 	// If an allied commander is already gathering against the same enemy, less is enough: better
 	// together with it from two sides than alone later (pincer).
@@ -2343,6 +2960,8 @@ Bool AICommanderPlayer::startGather( void )
 	std::vector<Object *> chosen;
 	Real value = 0.0f, sendable = 0.0f;
 	collectIdleForce( &chosen, 1.0e9f, &value, &sendable );
+	if (!partOff( AI_PART_SQUAD ) && !chosen.empty() && !composeAttackSquad( &chosen, objective, invited, &value ))
+		return attackGate( m_squadFail );
 	const Pace &pace = paceFor( getAIDifficulty(), m_personality );
 	Real minValue = (invited ? JOIN_MIN_VALUE : ATTACK_MIN_VALUE) * pace.attackScale;
 	Int minUnits = static_cast<Int>((invited ? JOIN_MIN_UNITS : ATTACK_MIN_UNITS) * pace.attackScale + 0.5f);
@@ -2353,10 +2972,14 @@ Bool AICommanderPlayer::startGather( void )
 	}
 	if (m_modelTurtle)
 		minValue *= TURTLE_ATTACK_SCALE;	// a fortified enemy needs a bigger force
+	m_gateValue = value;
+	m_gateNeeded = minValue;
+	m_gateUnits = static_cast<Int>( chosen.size() );
+	m_gateNeededUnits = minUnits;
 	if (value < minValue || static_cast<Int>(chosen.size()) < minUnits)
-		return FALSE;
+		return attackGate( GATE_SMALL_FORCE );
 	if (!invited && value < m_regrowValue && TheGameLogic->getFrame() < m_regrowUntil)
-		return FALSE;
+		return attackGate( GATE_REGROW );
 
 	// Staging point: from the base center towards the target, just beyond the edge of the build
 	// list; every AI sets out from its own base, so two allies attack from two sides.
@@ -2376,6 +2999,38 @@ Bool AICommanderPlayer::startGather( void )
 	{
 		dir.x = 0.0f;
 		dir.y = 0.0f;
+	}
+	// Staging point as far towards the target as the known armed buildings of the enemy allow (outside their reach).
+	if (!partOff( AI_PART_MARCH ) && len > 1.0f)
+	{
+		const AICombat::Table &stageTable = m_planner.getCombatTable();
+		static const Real FRACTIONS[] = { 0.6f, 0.5f, 0.4f, 0.3f };
+		for (size_t f = 0; f < sizeof( FRACTIONS ) / sizeof( FRACTIONS[0] ); ++f)
+		{
+			const Real d = len * FRACTIONS[f];
+			if (d <= stageDist)
+				break;
+			Coord3D spot;
+			spot.x = m_baseCenter.x + dir.x * d;
+			spot.y = m_baseCenter.y + dir.y * d;
+			Bool safe = TRUE;
+			for (size_t i = 0; i < m_known.size() && safe; ++i)
+			{
+				const KnownObject &k = m_known[i];
+				if (!k.structure || k.tmpl.isEmpty() || k.owner != enemy->getPlayerIndex())
+					continue;
+				const Int profile = m_planner.profileOf( TheThingFactory->findTemplate( k.tmpl ) );
+				if (profile < 0 || stageTable.profiles[static_cast<size_t>( profile )].range <= 0.0f)
+					continue;
+				const Real reach = stageTable.profiles[static_cast<size_t>( profile )].range + STAGE_SAFE_MARGIN;
+				safe = distSqr2D( &k.pos, &spot ) > reach * reach;
+			}
+			if (safe)
+			{
+				stageDist = d;
+				break;
+			}
+		}
 	}
 	m_stagePos = m_baseCenter;
 	m_stagePos.x += dir.x * stageDist;
@@ -2400,7 +3055,7 @@ Bool AICommanderPlayer::startGather( void )
 	++m_attackMissions;
 
 	char line[256];
-	WWFormat::Into(line, "KIANGRIFF {:d} spieler {:d} sammeln gegner {:d} einheiten {:d} wert {:.0f} einsetzbar {:.0f} ort {:.0f} {:.0f}{}", now, m_player->getPlayerIndex(), m_attackEnemy, static_cast<Int>(chosen.size()), value, sendable, m_stagePos.x, m_stagePos.y, invited ? " eingeladen" : "");
+	WWFormat::Into(line, "AIATTACK {:d} player {:d} gather enemy {:d} units {:d} value {:.0f} usable {:.0f} pos {:.0f} {:.0f}{}", now, m_player->getPlayerIndex(), m_attackEnemy, static_cast<Int>(chosen.size()), value, sendable, m_stagePos.x, m_stagePos.y, invited ? " eingeladen" : "");
 	GameEngine_RunnerLog( line );
 	return TRUE;
 }
@@ -2411,19 +3066,19 @@ void AICommanderPlayer::continueGather( void )
 	Real value = forceCentroid( m_attackers, nullptr, nullptr, 0.0f, nullptr );
 	if (value <= 0.0f)
 	{
-		endAttack( "verloren" );
+		endAttack( "lost" );
 		return;
 	}
-	if (ownBaseThreat() >= MIN_THREAT)
+	if (baseUnderThreat())
 	{
-		endAttack( "eigene_basis" );	// the units are at home anyway and defend
+		endAttack( "own_base" );	// the units are at home anyway and defend
 		return;
 	}
 	if (isValidEnemy( m_currentEnemy ))
 		m_attackEnemy = m_currentEnemy->getPlayerIndex();
 	else
 	{
-		endAttack( "kein_gegner" );
+		endAttack( "no_enemy" );
 		return;
 	}
 
@@ -2451,7 +3106,10 @@ void AICommanderPlayer::continueGather( void )
 	Real atStage = 0.0f;
 	value = forceCentroid( m_attackers, nullptr, &m_stagePos, GATHER_RADIUS, &atStage );
 	UnsignedInt waited = now - m_attackPhaseFrame;
-	m_gatherReady = atStage >= GATHER_READY_FRACTION * value || waited >= GATHER_MAX;
+	if (partOff( AI_PART_MARCH ))
+		m_gatherReady = atStage >= GATHER_READY_FRACTION * value || waited >= GATHER_MAX;
+	else	// gathered means arrived at the staging point, not that the time is up
+		m_gatherReady = atStage >= GATHER_READY_FRACTION * value || (waited >= GATHER_MAX && atStage >= GATHER_MIN_FRACTION * value) || waited >= GATHER_HARD_MAX;
 	if (!m_gatherReady)
 		return;
 	// Start protection: set out so that the force arrives when it ends; meanwhile more units join.
@@ -2471,14 +3129,14 @@ void AICommanderPlayer::continueGather( void )
 			continue;
 		if (c->getAttackPhase() == CommanderAttackPhase::ATTACK && now - c->getAttackPhaseFrame() <= JOIN_WINDOW)
 		{
-			launchAttack( "mit_verbuendetem" );
+			launchAttack( "with_ally" );
 			return;
 		}
 		if (c->getAttackPhase() == CommanderAttackPhase::GATHER && !c->isGatherReady())
 			waitForAlly = TRUE;
 		if (c->getAttackPhase() == CommanderAttackPhase::GATHER && c->isGatherReady())
 		{
-			launchAttack( "zange" );
+			launchAttack( "pincer" );
 			return;
 		}
 	}
@@ -2492,11 +3150,11 @@ void AICommanderPlayer::continueGather( void )
 		{
 			if (waited < 2 * GATHER_MAX)
 				return;
-			endAttack( "zu_schwach" );
+			endAttack( "too_weak" );
 			return;
 		}
 	}
-	launchAttack( "allein" );
+	launchAttack( "alone" );
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -2559,6 +3217,7 @@ void AICommanderPlayer::updateMicro( void )
 		f.x = obj->getPosition()->x;
 		f.y = obj->getPosition()->y;
 		f.speed = topSpeed( obj );
+		f.fireOnMove = obj->getAIUpdateInterface()->getWhichTurretForCurWeapon() != TURRET_INVALID;
 		if (own.empty())
 		{
 			minX = maxX = f.x;
@@ -2663,15 +3322,20 @@ void AICommanderPlayer::updateMicro( void )
 			const std::vector<AICombat::Fighter> spots = AICombat::spreadPositions( group, spacing );
 			for (size_t k = 0; k < members.size(); ++k)
 			{
+				// the spot must be ground the unit can stand on; the unit fights on its way
+				AIPosts::Point spot;
+				spot.x = spots[k].x;
+				spot.y = spots[k].y;
+				makeWalkable( ownObjects[members[k]]->getAIUpdateInterface()->getLocomotorSet(), &spot );
 				Coord3D goal;
-				goal.set( spots[k].x, spots[k].y, TheTerrainLogic->getGroundHeight( spots[k].x, spots[k].y ) );
-				ownObjects[members[k]]->getAIUpdateInterface()->aiMoveToPosition( &goal, CMD_FROM_AI );
+				goal.set( spot.x, spot.y, TheTerrainLogic->getGroundHeight( spot.x, spot.y ) );
+				ownObjects[members[k]]->getAIUpdateInterface()->aiAttackMoveToPosition( &goal, NO_MAX_SHOTS_LIMIT, CMD_FROM_AI );
 				moved[members[k]] = TRUE;
 			}
 			m_nextSpreadFrame = now + SPREAD_INTERVAL;
 			m_microSpread += static_cast<Int>( members.size() );
 			char line[192];
-			WWFormat::Into(line, "KIGEFECHT {:d} spieler {:d} verteilen einheiten {:d} abstand {:.0f} superwaffe {:d}", now, m_player->getPlayerIndex(), static_cast<Int>( members.size() ), spacing, superweaponDanger ? 1 : 0);
+			WWFormat::Into(line, "AIMICRO {:d} player {:d} spread_out units {:d} spacing {:.0f} superweapon {:d}", now, m_player->getPlayerIndex(), static_cast<Int>( members.size() ), spacing, superweaponDanger ? 1 : 0);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -2686,7 +3350,21 @@ void AICommanderPlayer::updateMicro( void )
 		{
 			Coord3D goal;
 			goal.set( x, y, TheTerrainLogic->getGroundHeight( x, y ) );
-			ownObjects[i]->getAIUpdateInterface()->aiMoveToPosition( &goal, CMD_FROM_AI );
+			// only to ground the unit can stand on and that no other enemy covers with its weapons
+			if (!TheAI->pathfinder()->validMovementPosition( FALSE, LAYER_GROUND, ownObjects[i]->getAIUpdateInterface()->getLocomotorSet(), &goal ))
+				continue;
+			Bool covered = FALSE;
+			for (size_t e = 0; e < enemies.size() && !covered; ++e)
+			{
+				if (enemies[e].profile < 0 || table.dpsAgainst( enemies[e].profile, own[i].profile ) <= 0.0f)
+					continue;
+				const Real dx = enemies[e].x - x, dy = enemies[e].y - y;
+				const Real reach = table.profiles[static_cast<size_t>( enemies[e].profile )].range + MICRO_KITE_MARGIN;
+				covered = dx * dx + dy * dy <= reach * reach && table.profiles[static_cast<size_t>( enemies[e].profile )].range >= 0.7f * table.profiles[static_cast<size_t>( own[i].profile )].range;
+			}
+			if (covered)
+				continue;
+			ownObjects[i]->getAIUpdateInterface()->aiAttackMoveToPosition( &goal, NO_MAX_SHOTS_LIMIT, CMD_FROM_AI );
 			moved[i] = TRUE;
 			++m_microKite;
 		}
@@ -2703,7 +3381,8 @@ void AICommanderPlayer::updateMicro( void )
 			shooterIndex.push_back( i );
 		}
 	}
-	const std::vector<AICombat::FocusAssignment> plan = AICombat::assignFocusFire( table, shooters, enemies, FOCUS_APPROACH, FOCUS_KILL_SECONDS );
+	const std::vector<AICombat::FocusAssignment> plan = AICombat::assignFocusFire( table, shooters, enemies, FOCUS_APPROACH, FOCUS_KILL_SECONDS, &m_focusPrevious );
+	m_focusPrevious = plan;
 	for (const AICombat::FocusAssignment &a : plan)
 	{
 		Object *shooter = nullptr;
@@ -2727,7 +3406,7 @@ void AICommanderPlayer::updateMicro( void )
 	{
 		m_nextMicroReportFrame = now + 10 * LOGICFRAMES_PER_SECOND;
 		char line[192];
-		WWFormat::Into(line, "KIGEFECHT {:d} spieler {:d} lage fokus {:d} abstand {:d} verteilt {:d} eigene {:d} feinde {:d}", now, m_player->getPlayerIndex(), m_microFocus, m_microKite, m_microSpread, static_cast<Int>( own.size() ), static_cast<Int>( enemies.size() ));
+		WWFormat::Into(line, "AIMICRO {:d} player {:d} situation focus {:d} spacing {:d} spread {:d} own {:d} enemies {:d}", now, m_player->getPlayerIndex(), m_microFocus, m_microKite, m_microSpread, static_cast<Int>( own.size() ), static_cast<Int>( enemies.size() ));
 		GameEngine_RunnerLog( line );
 		m_microFocus = m_microKite = m_microSpread = 0;
 	}
@@ -2860,7 +3539,7 @@ Bool AICommanderPlayer::startRaidProduction( void )
 	m_raidPhase = CommanderRaidPhase::ASSEMBLE;
 	m_raidPhaseFrame = TheGameLogic->getFrame();
 	char line[256];
-	WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} bau transport {} fahrer {} anzahl {:d} kosten {:d}", m_raidPhaseFrame, m_player->getPlayerIndex(), transport->getName().str(), rider->getName().str(), queued, cost);
+	WWFormat::Into(line, "AIRAID {:d} player {:d} build transport {} riders {} count {:d} cost {:d}", m_raidPhaseFrame, m_player->getPlayerIndex(), transport->getName().str(), rider->getName().str(), queued, cost);
 	GameEngine_RunnerLog( line );
 	return TRUE;
 }
@@ -2871,7 +3550,7 @@ void AICommanderPlayer::continueRaidAssemble( void )
 	Object *transport = (m_raidTransport != INVALID_ID) ? TheGameLogic->findObjectByID( m_raidTransport ) : nullptr;
 	if (m_raidTransport != INVALID_ID && (transport == nullptr || transport->isEffectivelyDead()))
 	{
-		endRaid( "verloren" );
+		endRaid( "lost" );
 		return;
 	}
 
@@ -2930,11 +3609,11 @@ void AICommanderPlayer::continueRaidAssemble( void )
 		m_raidTarget = INVALID_ID;
 		++m_raids;
 		char line[192];
-		WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} los fahrer {:d}", now, m_player->getPlayerIndex(), aboard);
+		WWFormat::Into(line, "AIRAID {:d} player {:d} launch riders {:d}", now, m_player->getPlayerIndex(), aboard);
 		GameEngine_RunnerLog( line );
 	}
 	else if (late)
-		endRaid( "sammeln_zeit" );
+		endRaid( "gather_timeout" );
 }
 
 void AICommanderPlayer::continueRaid( void )
@@ -2943,29 +3622,29 @@ void AICommanderPlayer::continueRaid( void )
 	Object *transport = TheGameLogic->findObjectByID( m_raidTransport );
 	if (transport == nullptr || transport->isEffectivelyDead())
 	{
-		endRaid( "verloren" );
+		endRaid( "lost" );
 		return;
 	}
 	const BodyModuleInterface *body = transport->getBodyModule();
 	if (body && body->getMaxHealth() > 0.0f && body->getHealth() < RAID_RETREAT_HEALTH * body->getMaxHealth())
 	{
-		returnRaid( "beschaedigt" );
+		returnRaid( "damaged" );
 		return;
 	}
 	if (ridersAboard() == 0)
 	{
-		returnRaid( "leer" );
+		returnRaid( "empty" );
 		return;
 	}
 	if (now - m_raidPhaseFrame > RAID_MAX)
 	{
-		returnRaid( "zeit" );
+		returnRaid( "time" );
 		return;
 	}
 	const AIPlanResult *plan = planFor( m_raidPhaseFrame );
 	if (plan && plan->raidSiteEnemyHealth > 0 && plan->raidSiteWinner == 1)
 	{
-		returnRaid( "prognose" );
+		returnRaid( "forecast" );
 		return;
 	}
 
@@ -2990,7 +3669,7 @@ void AICommanderPlayer::continueRaid( void )
 		target = marked;
 		order = TRUE;
 		char line[192];
-		WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} ziel {} id {:d} markierung", now, m_player->getPlayerIndex(), marked->getTemplate()->getName().str(), static_cast<Int>( marked->getID() ));
+		WWFormat::Into(line, "AIRAID {:d} player {:d} target {} id {:d} mark", now, m_player->getPlayerIndex(), marked->getTemplate()->getName().str(), static_cast<Int>( marked->getID() ));
 		GameEngine_RunnerLog( line );
 	}
 	else if (marked == nullptr && plan && plan->raidTargetId != 0 && static_cast<ObjectID>( plan->raidTargetId ) != m_raidTarget
@@ -3004,7 +3683,7 @@ void AICommanderPlayer::continueRaid( void )
 			target = next;
 			order = TRUE;
 			char line[224];
-			WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} ziel {} id {:d} sieger {:d} verhaeltnis {:.2f}", now, m_player->getPlayerIndex(), next->getTemplate()->getName().str(), static_cast<Int>( next->getID() ), plan->raidTargetWinner, plan->raidTargetRatio);
+			WWFormat::Into(line, "AIRAID {:d} player {:d} target {} id {:d} winner {:d} ratio {:.2f}", now, m_player->getPlayerIndex(), next->getTemplate()->getName().str(), static_cast<Int>( next->getID() ), plan->raidTargetWinner, plan->raidTargetRatio);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -3012,7 +3691,7 @@ void AICommanderPlayer::continueRaid( void )
 	{
 		// Target gone: the next plan names a new one; none left means the raid is over.
 		if (marked == nullptr && plan && plan->raidTargetId == 0)
-			returnRaid( "kein_ziel" );
+			returnRaid( "no_target" );
 		return;
 	}
 	if (order)
@@ -3038,7 +3717,7 @@ void AICommanderPlayer::returnRaid( const char *reason )
 			group->groupMoveToPosition( &m_baseCenter, FALSE, CMD_FROM_AI );
 	}
 	char line[160];
-	WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} rueckzug {}", m_raidPhaseFrame, m_player->getPlayerIndex(), reason);
+	WWFormat::Into(line, "AIRAID {:d} player {:d} retreat {}", m_raidPhaseFrame, m_player->getPlayerIndex(), reason);
 	GameEngine_RunnerLog( line );
 }
 
@@ -3048,7 +3727,7 @@ void AICommanderPlayer::continueRaidReturn( void )
 	Object *transport = TheGameLogic->findObjectByID( m_raidTransport );
 	if (transport == nullptr || transport->isEffectivelyDead())
 	{
-		endRaid( "verloren" );
+		endRaid( "lost" );
 		return;
 	}
 	const Real home = m_baseRadius + RAID_HOME_MARGIN;
@@ -3057,7 +3736,7 @@ void AICommanderPlayer::continueRaidReturn( void )
 		m_raidPhase = CommanderRaidPhase::NONE;
 		m_raidCooldownFrame = now + RAID_COOLDOWN;
 		char line[160];
-		WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} heim fahrer {:d}", now, m_player->getPlayerIndex(), ridersAboard());
+		WWFormat::Into(line, "AIRAID {:d} player {:d} home riders {:d}", now, m_player->getPlayerIndex(), ridersAboard());
 		GameEngine_RunnerLog( line );
 		return;
 	}
@@ -3092,8 +3771,104 @@ void AICommanderPlayer::endRaid( const char *reason )
 	m_raidPhase = CommanderRaidPhase::NONE;
 	m_raidCooldownFrame = now + RAID_COOLDOWN;
 	char line[160];
-	WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} ende {}", now, m_player->getPlayerIndex(), reason);
+	WWFormat::Into(line, "AIRAID {:d} player {:d} end {}", now, m_player->getPlayerIndex(), reason);
 	GameEngine_RunnerLog( line );
+}
+
+// Orders riders for the squad that stays home (the template names are kept from the first order).
+Bool AICommanderPlayer::orderMissingRiders( Int missing )
+{
+	if (missing <= 0 || m_raidRiderName.isEmpty())
+		return FALSE;
+	const ThingTemplate *rider = TheThingFactory->findTemplate( m_raidRiderName );
+	if (rider == nullptr)
+		return FALSE;
+	Int queued = 0;
+	for (Object *factory = TheGameLogic->getFirstObject(); factory && queued == 0; factory = factory->getNextObject())
+	{
+		if (factory->getControllingPlayer() != m_player || !factory->isKindOf( KINDOF_STRUCTURE ) || factory->isEffectivelyDead())
+			continue;
+		ProductionUpdateInterface *pu = factory->getProductionUpdateInterface();
+		if (pu == nullptr || TheBuildAssistant->canMakeUnit( factory, rider ) != CanMakeType::CANMAKE_OK)
+			continue;
+		for (Int i = 0; i < missing; ++i)
+		{
+			if (freeMoney() - rider->calcCostToBuild( m_player ) < RAID_KEEP_MONEY || !pu->queueCreateUnit( rider, pu->requestUniqueUnitID() ))
+				break;
+			++queued;
+		}
+	}
+	return queued > 0;
+}
+
+// The squad of an earlier raid stands at home. Damaged transport: it goes to a repair depot (or waits at the base) for at
+// most RAID_REPAIR_MAX, a squad that leaves damaged only comes back at once. Missing riders are ordered again before it
+// leaves. FALSE: nothing to restart, the caller dissolves the squad.
+Bool AICommanderPlayer::restartRaid( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	Object *transport = TheGameLogic->findObjectByID( m_raidTransport );
+	if (transport == nullptr || transport->isEffectivelyDead())
+		return FALSE;
+	const BodyModuleInterface *body = transport->getBodyModule();
+	const Real fraction = (body && body->getMaxHealth() > 0.0f) ? body->getHealth() / body->getMaxHealth() : 1.0f;
+	if (fraction < RAID_RESTART_HEALTH)
+	{
+		// The sides repair in different ways (depot building, repair vehicles or drones, units that repair themselves);
+		// only the depot is known here. Without one the wait goes on only while the health rises.
+		Object *depot = nullptr;
+		for (Object *obj = TheGameLogic->getFirstObject(); obj && depot == nullptr; obj = obj->getNextObject())
+		{
+			if (obj->getControllingPlayer() == m_player && !obj->isEffectivelyDead() && obj->isKindOf( KINDOF_REPAIR_PAD ))
+				depot = obj;
+		}
+		if (m_raidRepairSince == 0)
+		{
+			m_raidRepairSince = now;
+			m_raidRepairHealth = static_cast<Int>( fraction * 1000.0f );
+			AIGroup *group = nullptr;
+			addToGroup( &group, transport );
+			if (group && depot)
+				group->groupGetRepaired( depot, CMD_FROM_AI );
+			char line[160];
+			WWFormat::Into(line, "AIRAID {:d} player {:d} repair health {:d} depot {:d}", now, m_player->getPlayerIndex(),
+				static_cast<Int>( fraction * 100.0f ), depot ? 1 : 0);
+			GameEngine_RunnerLog( line );
+		}
+		const Bool noGain = static_cast<Int>( fraction * 1000.0f ) < m_raidRepairHealth + RAID_REPAIR_GAIN;
+		if (now - m_raidRepairSince > RAID_REPAIR_MAX || (depot == nullptr && noGain && now - m_raidRepairSince > RAID_REPAIR_PROBE))
+		{
+			m_raidRepairSince = 0;
+			return FALSE;
+		}
+		return TRUE;
+	}
+	m_raidRepairSince = 0;
+	const Int missing = m_raidRidersWanted - ridersAboard();
+	if (missing > 0)
+	{
+		if (!orderMissingRiders( missing ))
+			return ridersAboard() > 0 && startRaidNow( now );
+		m_raidPhase = CommanderRaidPhase::ASSEMBLE;
+		m_raidPhaseFrame = now;
+		char line[160];
+		WWFormat::Into(line, "AIRAID {:d} player {:d} riders_reordered count {:d}", now, m_player->getPlayerIndex(), missing);
+		GameEngine_RunnerLog( line );
+		return TRUE;
+	}
+	return startRaidNow( now );
+}
+
+Bool AICommanderPlayer::startRaidNow( UnsignedInt now )
+{
+	m_raidPhase = CommanderRaidPhase::RAID;
+	m_raidPhaseFrame = now;
+	m_raidTarget = INVALID_ID;
+	++m_raids;
+	char line[160];
+	WWFormat::Into(line, "AIRAID {:d} player {:d} launch riders {:d}", now, m_player->getPlayerIndex(), ridersAboard());
+	GameEngine_RunnerLog( line );
+	return TRUE;
 }
 
 void AICommanderPlayer::updateRaid( void )
@@ -3117,22 +3892,12 @@ void AICommanderPlayer::updateRaid( void )
 	}
 	if (now < m_raidCooldownFrame || TheGameLogic->isGracePeriod())
 		return;
-	// A squad from an earlier raid goes again; without riders it breaks up.
+	// A squad from an earlier raid goes again once the transport is repaired and the riders are back; otherwise it
+	// breaks up.
 	if (m_raidTransport != INVALID_ID)
 	{
-		Object *transport = TheGameLogic->findObjectByID( m_raidTransport );
-		if (transport && !transport->isEffectivelyDead() && ridersAboard() > 0)
-		{
-			m_raidPhase = CommanderRaidPhase::RAID;
-			m_raidPhaseFrame = now;
-			m_raidTarget = INVALID_ID;
-			++m_raids;
-			char line[160];
-			WWFormat::Into(line, "KIUEBERFALL {:d} spieler {:d} los fahrer {:d}", now, m_player->getPlayerIndex(), ridersAboard());
-			GameEngine_RunnerLog( line );
-			return;
-		}
-		endRaid( "aufgeloest" );
+		if (!restartRaid())
+			endRaid( "dissolved" );
 		return;
 	}
 	if (now < RAID_START || !isValidEnemy( m_currentEnemy ))
@@ -3208,7 +3973,7 @@ Bool AICommanderPlayer::computeSuperweaponTarget( const SpecialPowerTemplate *po
 		{
 			m_strikeHeldSince = now;
 			char wait[192];
-			WWFormat::Into(wait, "KISUPERWAFFE {:d} spieler {:d} macht {} warten wert {:.0f}", now, self, power->getName().str(), choice.value);
+			WWFormat::Into(wait, "AISUPERWEAPON {:d} player {:d} special_power {} wait value {:.0f}", now, self, power->getName().str(), choice.value);
 			GameEngine_RunnerLog( wait );
 		}
 		pos->zero();
@@ -3217,7 +3982,7 @@ Bool AICommanderPlayer::computeSuperweaponTarget( const SpecialPowerTemplate *po
 	m_strikeHeldSince = 0;
 	pos->set( choice.x, choice.y, TheTerrainLogic->getGroundHeight( choice.x, choice.y ) );
 	char line[256];
-	WWFormat::Into(line, "KISUPERWAFFE {:d} spieler {:d} macht {} gegner {:d} ziel_id {:d} wert {:.0f} radius {:.0f}", TheGameLogic->getFrame(), self, power->getName().str(), playerNdx, static_cast<Int>( choice.id ), choice.value, radius);
+	WWFormat::Into(line, "AISUPERWEAPON {:d} player {:d} special_power {} enemy {:d} target_id {:d} value {:.0f} radius {:.0f}", TheGameLogic->getFrame(), self, power->getName().str(), playerNdx, static_cast<Int>( choice.id ), choice.value, radius);
 	GameEngine_RunnerLog( line );
 	return TRUE;
 }
@@ -3238,7 +4003,7 @@ void AICommanderPlayer::launchAttack( const char *reason )
 	Player *enemy = ThePlayerList->getNthPlayer( m_attackEnemy );
 	if (enemy == nullptr || !findAttackObjective( enemy, centroid, &m_objectivePos, &m_objectiveID ))
 	{
-		endAttack( "kein_ziel" );
+		endAttack( "no_target" );
 		return;
 	}
 	m_attackPhase = CommanderAttackPhase::ATTACK;
@@ -3259,7 +4024,7 @@ void AICommanderPlayer::launchAttack( const char *reason )
 		group->groupAttackMoveToPosition( &m_objectivePos, NO_MAX_SHOTS_LIMIT, CMD_FROM_AI );
 
 	char line[256];
-	WWFormat::Into(line, "KIANGRIFF {:d} spieler {:d} los {} gegner {:d} einheiten {:d} wert {:.0f} ziel {:.0f} {:.0f}", now, m_player->getPlayerIndex(), reason, m_attackEnemy, static_cast<Int>(m_attackers.size()), value, m_objectivePos.x, m_objectivePos.y);
+	WWFormat::Into(line, "AIATTACK {:d} player {:d} launch {} enemy {:d} units {:d} value {:.0f} target {:.0f} {:.0f}", now, m_player->getPlayerIndex(), reason, m_attackEnemy, static_cast<Int>(m_attackers.size()), value, m_objectivePos.x, m_objectivePos.y);
 	GameEngine_RunnerLog( line );
 	if (m_markFrame == 0 && !(m_ownBeacon != INVALID_ID && m_ownBeaconKind == OWN_BEACON_HELP) && hasHumanPartner())
 		placeOwnBeacon( m_objectivePos, OWN_BEACON_ATTACK );
@@ -3272,26 +4037,44 @@ void AICommanderPlayer::continueAttack( void )
 	Real value = forceCentroid( m_attackers, &centroid, nullptr, 0.0f, nullptr );
 	if (value <= 0.0f)
 	{
-		endAttack( "verloren" );
+		endAttack( "lost" );
 		return;
 	}
+	// The clock ends an attack only if the fight is not forecast as won (then up to twice as long).
 	if (now - m_attackPhaseFrame > ATTACK_TIMEOUT)
 	{
-		endAttack( "zeit" );
-		return;
+		const AIPlanResult *outlook = partOff( AI_PART_DURABILITY ) ? nullptr : planFor( m_attackPhaseFrame );
+		const Bool winning = outlook && outlook->siteEnemyHealth > 0 && outlook->siteWinner == 0 && outlook->siteRatio >= TIMEOUT_GOOD_RATIO;
+		if (!winning || now - m_attackPhaseFrame > 2 * ATTACK_TIMEOUT)
+		{
+			endAttack( "time" );
+			return;
+		}
 	}
 
 	// Home in danger: return on a strong threat the units left at home cannot handle.
 	Real homeThreat = ownBaseThreat();
 	if (homeThreat >= (partOff( AI_PART_DEFENCE ) ? BASE_RECALL_THREAT : DEFENCE_RECALL_THREAT))
 	{
-		std::vector<Object *> dummy;
-		Real homeValue = 0.0f, sendable = 0.0f;
-		collectIdleForce( &dummy, 1.0e9f, &homeValue, &sendable );
-		if (homeValue < homeThreat)
+		if (!partOff( AI_PART_STRENGTH ))
 		{
-			endAttack( "eigene_basis" );
-			return;
+			// the combat model: units and armed buildings at home against the enemies in the base
+			if (baseUnderThreat())
+			{
+				endAttack( "own_base" );
+				return;
+			}
+		}
+		else
+		{
+			std::vector<Object *> dummy;
+			Real homeValue = 0.0f, sendable = 0.0f;
+			collectIdleForce( &dummy, 1.0e9f, &homeValue, &sendable );
+			if (homeValue < homeThreat)
+			{
+				endAttack( "own_base" );
+				return;
+			}
 		}
 	}
 
@@ -3309,17 +4092,19 @@ void AICommanderPlayer::continueAttack( void )
 	if (plan && !partOff( AI_PART_FORECAST_RETREAT ) && m_forecastBad >= (confirm ? RETREAT_FORECAST_PLANS : 1)
 		&& (!confirm || value < RETREAT_FORECAST_LOSS * m_attackStartValue || plan->siteRatio < RETREAT_HOPELESS_RATIO))
 	{
-		endAttack( "prognose" );
+		endAttack( "forecast" );
 		return;
 	}
 
-	// Losses: below RETREAT_FRACTION of the start value and outnumbered on site, retreat.
-	if (value < RETREAT_FRACTION * m_attackStartValue)
+	// Losses: below RETREAT_FRACTION of the start value and outnumbered on site, retreat -- only without a forecast of the
+	// fight on site (with one, the forecast above decides).
+	const Bool forecastKnown = plan != nullptr && plan->siteEnemyHealth > 0 && !partOff( AI_PART_DURABILITY );
+	if (value < RETREAT_FRACTION * m_attackStartValue && !forecastKnown)
 	{
 		Real local = enemyStrengthNear( m_player, &centroid, LOCAL_RADIUS, nullptr );
 		if (local > RETREAT_ODDS * value)
 		{
-			endAttack( "rueckzug" );
+			endAttack( "retreat" );
 			return;
 		}
 	}
@@ -3334,7 +4119,7 @@ void AICommanderPlayer::continueAttack( void )
 	Player *enemy = ThePlayerList->getNthPlayer( m_attackEnemy );
 	if (!isValidEnemy( enemy ))
 	{
-		endAttack( "gegner_besiegt" );
+		endAttack( "enemy_defeated" );
 		return;
 	}
 	Bool objectiveGone = TRUE;
@@ -3357,7 +4142,7 @@ void AICommanderPlayer::continueAttack( void )
 			objectiveGone = FALSE;
 			retarget = TRUE;
 			char line[256];
-			WWFormat::Into(line, "KIZIEL {:d} spieler {:d} ziel {} id {:d} sieger {:d} verhaeltnis {:.2f} weg_bedrohung {:.0f}", now, m_player->getPlayerIndex(), target->getTemplate()->getName().str(), static_cast<Int>( target->getID() ), plan->objectiveWinner, plan->objectiveRatio, plan->objectiveThreat);
+			WWFormat::Into(line, "AITARGET {:d} player {:d} target {} id {:d} winner {:d} ratio {:.2f} path_threat {:.0f}", now, m_player->getPlayerIndex(), target->getTemplate()->getName().str(), static_cast<Int>( target->getID() ), plan->objectiveWinner, plan->objectiveRatio, plan->objectiveThreat);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -3365,7 +4150,7 @@ void AICommanderPlayer::continueAttack( void )
 	{
 		if (!findAttackObjective( enemy, centroid, &m_objectivePos, &m_objectiveID ))
 		{
-			endAttack( "kein_ziel" );
+			endAttack( "no_target" );
 			return;
 		}
 		m_objectiveFrame = now;
@@ -3407,7 +4192,7 @@ void AICommanderPlayer::continueAttack( void )
 			m_attackReinforceFrame = now;
 			m_attackStartValue += moreValue;
 			char line[192];
-			WWFormat::Into(line, "KIANGRIFF {:d} spieler {:d} nachschub einheiten {:d} wert {:.0f}", now, m_player->getPlayerIndex(), static_cast<Int>(more.size()), moreValue);
+			WWFormat::Into(line, "AIATTACK {:d} player {:d} resupply units {:d} value {:.0f}", now, m_player->getPlayerIndex(), static_cast<Int>(more.size()), moreValue);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -3415,13 +4200,14 @@ void AICommanderPlayer::continueAttack( void )
 
 void AICommanderPlayer::endAttack( const char *reason )
 {
+	m_squadHome.clear();
 	UnsignedInt now = TheGameLogic->getFrame();
 	Real value = forceCentroid( m_attackers, nullptr, nullptr, 0.0f, nullptr );
 	char line[224];
-	WWFormat::Into(line, "KIANGRIFF {:d} spieler {:d} ende {} phase {:d} dauer {:d} wert {:.0f} start {:.0f}", now, m_player->getPlayerIndex(), reason, static_cast<Int>(m_attackPhase), (now - m_attackPhaseFrame) / LOGICFRAMES_PER_SECOND, value, m_attackStartValue);
+	WWFormat::Into(line, "AIATTACK {:d} player {:d} end {} phase {:d} duration {:d} value {:.0f} start {:.0f}", now, m_player->getPlayerIndex(), reason, static_cast<Int>(m_attackPhase), (now - m_attackPhaseFrame) / LOGICFRAMES_PER_SECOND, value, m_attackStartValue);
 	GameEngine_RunnerLog( line );
 
-	const Bool brokenOff = strcmp( reason, "prognose" ) == 0 || strcmp( reason, "rueckzug" ) == 0 || strcmp( reason, "zu_schwach" ) == 0;
+	const Bool brokenOff = strcmp( reason, "forecast" ) == 0 || strcmp( reason, "retreat" ) == 0 || strcmp( reason, "too_weak" ) == 0;
 	Coord3D retreatFrom;
 	const Bool retreatBeacon = brokenOff && m_attackPhase == CommanderAttackPhase::ATTACK && hasHumanPartner()
 		&& !(m_ownBeacon != INVALID_ID && m_ownBeaconKind == OWN_BEACON_HELP)
@@ -3430,13 +4216,13 @@ void AICommanderPlayer::endAttack( const char *reason )
 	{
 		m_regrowValue = REGROW_FACTOR * m_attackStartValue;
 		m_regrowUntil = now + REGROW_TIME;
-		WWFormat::Into(line, "KIANGRIFF {:d} spieler {:d} erst_ab wert {:.0f} bis {:d}", now, m_player->getPlayerIndex(), m_regrowValue, m_regrowUntil);
+		WWFormat::Into(line, "AIATTACK {:d} player {:d} regrow_from value {:.0f} until {:d}", now, m_player->getPlayerIndex(), m_regrowValue, m_regrowUntil);
 		GameEngine_RunnerLog( line );
 	}
 
 	releaseUnits( &m_attackers );
 	if (m_ownBeacon != INVALID_ID && m_ownBeaconKind == OWN_BEACON_ATTACK)
-		removeOwnBeacon( "angriff_ende" );
+		removeOwnBeacon( "attack_end" );
 	// warn the human partners where the army fell back from
 	if (retreatBeacon)
 		placeOwnBeacon( retreatFrom, OWN_BEACON_RETREAT, now + RETREAT_BEACON_TIME );
@@ -3459,13 +4245,28 @@ void AICommanderPlayer::updateAttack( void )
 			break;
 		case CommanderAttackPhase::NONE:
 		default:
-			if (TheGameLogic->getFrame() < m_attackCooldownFrame || m_assistAlly >= 0)
+			if (TheGameLogic->getFrame() < m_attackCooldownFrame)
+			{
+				attackGate( GATE_COOLDOWN );
 				break;
+			}
+			if (m_assistAlly >= 0)
+			{
+				attackGate( GATE_ASSIST );
+				break;
+			}
 			if (graceLeft() > GRACE_GATHER_LEAD)
+			{
+				attackGate( GATE_GRACE );
 				break;
-			if (ownBaseThreat() >= MIN_THREAT)
+			}
+			if (baseUnderThreat())
+			{
+				attackGate( GATE_THREAT );
 				break;
-			startGather();
+			}
+			if (startGather())
+				attackGate( GATE_STARTED );
 			break;
 	}
 }
@@ -3556,7 +4357,7 @@ Bool AICommanderPlayer::buyUpgrade( void )
 			{
 				++m_upgradesBought;
 				char line[224];
-				WWFormat::Into(line, "KIBAU {:d} spieler {:d} upgrade {} kosten {:d} geld {:d}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), up->getUpgradeName().str(), cost, money);
+				WWFormat::Into(line, "AIBUILD {:d} player {:d} upgrade {} cost {:d} money {:d}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), up->getUpgradeName().str(), cost, money);
 				GameEngine_RunnerLog( line );
 				return TRUE;
 			}
@@ -3607,8 +4408,426 @@ void AICommanderPlayer::collectArmyCandidates( std::vector<AIPlanCandidate> *out
 	}
 }
 
+// Roles of a unit template (combat table plus the support kinds the table does not know).
+unsigned AICommanderPlayer::unitRoles( const ThingTemplate *t ) const
+{
+	unsigned roles = m_planner.roleOf( m_planner.profileOf( t ) );
+	if (isDetectorTemplate( t ) || t->isKindOf( KINDOF_TRANSPORT ))
+		roles |= AIRoles::ROLE_SUPPORT;
+	return roles;
+}
+
+// The wanted shares for the enemy the planner sees now (base shares without a known enemy army).
+void AICommanderPlayer::currentShares( float shares[AIRoles::SHARE_ROLES] ) const
+{
+	AIRoles::EnemyMix mix;
+	if (m_planner.hasResult())
+	{
+		const AIPlanResult &r = m_planner.getResult();
+		const Real field = r.enemyInfantryValue + r.enemyVehicleValue + r.enemyAirValue;
+		if (field > 0.0f)
+		{
+			mix.known = true;
+			mix.infantryShare = r.enemyInfantryValue / field;
+			mix.vehicleShare = r.enemyVehicleValue / field;
+			mix.airShare = std::max( r.enemyAirValue / field, m_enemyAirShare );
+			mix.fieldValue = field;
+			mix.defenceValue = r.enemyDefenceValue;
+		}
+	}
+	AIRoles::targetShares( mix, shares );
+}
+
+// Army value per role of the own mobile combat units (a unit counts for every role it has).
+void AICommanderPlayer::collectRoleValues( float have[AIRoles::SHARE_ROLES] ) const
+{
+	for (int r = 0; r < AIRoles::SHARE_ROLES; ++r)
+		have[r] = 0.0f;
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->getControllingPlayer() != m_player || !isMobileCombatUnit( obj ) || obj->isEffectivelyDead())
+			continue;
+		const unsigned roles = unitRoles( obj->getTemplate() );
+		const float value = static_cast<float>( obj->getTemplate()->calcCostToBuild( m_player ) );
+		for (int r = 0; r < AIRoles::SHARE_ROLES; ++r)
+		{
+			if (roles & AIRoles::ROLE_BIT[r])
+				have[r] += value;
+		}
+	}
+}
+
+// Once per template and side: the roles the classification gave, so they can be checked against the game data.
+void AICommanderPlayer::logRoles( const ThingTemplate *t )
+{
+	const Int profile = m_planner.profileOf( t );
+	if (profile < 0 || std::find( m_rolesLogged.begin(), m_rolesLogged.end(), profile ) != m_rolesLogged.end())
+		return;
+	m_rolesLogged.push_back( profile );
+	const unsigned roles = unitRoles( t );
+	char line[224];
+	WWFormat::Into(line, "AIROLES {:d} player {:d} template {} roles {}{}{}{}{}{}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), t->getName().str(),
+		(roles & AIRoles::ROLE_FRONT) ? "front " : "", (roles & AIRoles::ROLE_ANTI_VEHICLE) ? "anti_vehicle " : "",
+		(roles & AIRoles::ROLE_ANTI_INFANTRY) ? "anti_infantry " : "", (roles & AIRoles::ROLE_ANTI_AIR) ? "anti_air " : "",
+		(roles & AIRoles::ROLE_SIEGE) ? "siege " : "", (roles & AIRoles::ROLE_SUPPORT) ? "support" : "");
+	GameEngine_RunnerLog( line );
+}
+
+// ------------------------------------------------------------------------------------------------
+// Posts
+// ------------------------------------------------------------------------------------------------
+Bool AICommanderPlayer::isPosted( ObjectID id ) const
+{
+	return std::find( m_posted.begin(), m_posted.end(), id ) != m_posted.end();
+}
+
+void AICommanderPlayer::unpost( ObjectID id )
+{
+	std::vector<ObjectID>::iterator it = std::find( m_posted.begin(), m_posted.end(), id );
+	if (it != m_posted.end())
+		m_posted.erase( it );
+}
+
+Bool AICommanderPlayer::isAvailable( Object *obj ) const
+{
+	return obj->getAIUpdateInterface()->isIdle() || isPosted( obj->getID() );
+}
+
+// Moves a post to the nearest cell the locomotors can stand on (not in a building, not in water), searching rings of 80.
+void AICommanderPlayer::makeWalkable( const LocomotorSet &locomotors, AIPosts::Point *post ) const
+{
+	static const Real DIRS[8][2] = { {1.0f, 0.0f}, {0.7071f, 0.7071f}, {0.0f, 1.0f}, {-0.7071f, 0.7071f}, {-1.0f, 0.0f}, {-0.7071f, -0.7071f}, {0.0f, -1.0f}, {0.7071f, -0.7071f} };
+	for (Int ring = 0; ring <= 6; ++ring)
+	{
+		const Int steps = (ring == 0) ? 1 : 8;
+		for (Int k = 0; k < steps; ++k)
+		{
+			Coord3D pos;
+			pos.x = post->x + DIRS[k][0] * 80.0f * static_cast<Real>( ring );
+			pos.y = post->y + DIRS[k][1] * 80.0f * static_cast<Real>( ring );
+			pos.z = TheTerrainLogic->getGroundHeight( pos.x, pos.y );
+			if (TheAI->pathfinder()->validMovementPosition( FALSE, LAYER_GROUND, locomotors, &pos ))
+			{
+				post->x = pos.x;
+				post->y = pos.y;
+				return;
+			}
+		}
+	}
+}
+
+// A factory that builds army units (not the dozers and harvesters of a supply centre): its rally point goes to a post.
+Bool AICommanderPlayer::producesArmy( Object *factory ) const
+{
+	const CommandSet *set = TheControlBar->findCommandSet( factory->getCommandSetString() );
+	if (set == nullptr)
+		return FALSE;
+	for (Int j = 0; j < MAX_COMMANDS_PER_SET; ++j)
+	{
+		const CommandButton *button = set->getCommandButton( j );
+		if (button != nullptr && button->getCommandType() == GUI_COMMAND_UNIT_BUILD && isArmyTemplate( button->getThingTemplate() ))
+			return TRUE;
+	}
+	return FALSE;
+}
+
+// Every POST_INTERVAL: posts from the known enemies (front) and the outlying economy buildings (object), the free units
+// of the default team spread over them, units farther than POST_RADIUS from their post (or not yet standing guard) are
+// sent to guard it. Units that the command layer sends elsewhere leave the list (unpost) and come back when idle again.
+void AICommanderPlayer::updatePosts( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	if (partOff( AI_PART_POSTS ) || !m_baseCenterSet || now < m_nextPostFrame)
+		return;
+	m_nextPostFrame = now + POST_INTERVAL;
+
+	// Directions to the enemies: centre of the known buildings per enemy player, else the start positions away from home.
+	std::vector<AIPosts::Point> directions;
+	std::vector<std::pair<Int, std::pair<Real, std::pair<Real, Int>>>> sums;	// owner, x, y, count
+	for (size_t i = 0; i < m_known.size(); ++i)
+	{
+		if (!m_known[i].structure)
+			continue;
+		size_t j = 0;
+		while (j < sums.size() && sums[j].first != m_known[i].owner)
+			++j;
+		if (j == sums.size())
+			sums.push_back( std::make_pair( m_known[i].owner, std::make_pair( 0.0f, std::make_pair( 0.0f, 0 ) ) ) );
+		sums[j].second.first += m_known[i].pos.x;
+		sums[j].second.second.first += m_known[i].pos.y;
+		++sums[j].second.second.second;
+	}
+	std::sort( sums.begin(), sums.end() );
+	for (size_t j = 0; j < sums.size(); ++j)
+	{
+		const Real count = static_cast<Real>( sums[j].second.second.second );
+		AIPosts::Point d;
+		d.x = sums[j].second.first / count - m_baseCenter.x;
+		d.y = sums[j].second.second.first / count - m_baseCenter.y;
+		directions.push_back( d );
+	}
+	if (directions.empty())
+	{
+		const std::vector<std::pair<Int, Coord3D>> &starts = startPositions();
+		for (size_t s = 0; s < starts.size(); ++s)
+		{
+			if (distSqr2D( &starts[s].second, &m_baseCenter ) < 4.0f * m_baseRadius * m_baseRadius)
+				continue;
+			AIPosts::Point d;
+			d.x = starts[s].second.x - m_baseCenter.x;
+			d.y = starts[s].second.y - m_baseCenter.y;
+			directions.push_back( d );
+		}
+	}
+	std::vector<AIPosts::Point> objects;
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->getControllingPlayer() != m_player || obj->isEffectivelyDead() || !obj->isKindOf( KINDOF_STRUCTURE ))
+			continue;
+		if (!obj->isKindOf( KINDOF_FS_SUPPLY_CENTER ) && !obj->isKindOf( KINDOF_CASH_GENERATOR ))
+			continue;
+		if (distSqr2D( obj->getPosition(), &m_baseCenter ) <= m_baseRadius * m_baseRadius)
+			continue;
+		AIPosts::Point o;
+		o.x = obj->getPosition()->x;
+		o.y = obj->getPosition()->y;
+		objects.push_back( o );
+	}
+	AIPosts::Point base;
+	base.x = m_baseCenter.x;
+	base.y = m_baseCenter.y;
+	std::vector<AIPosts::Post> posts;
+	AIPosts::choosePosts( base, m_baseRadius, directions, objects, POST_MAX_FRONT, &posts );
+
+	// Free units: of the default team (the classic AI's teams keep theirs), no mission, idle or already on guard.
+	Team *defaultTeam = m_player->getDefaultTeam();
+	std::vector<Object *> free;
+	std::vector<AIPosts::Unit> units;
+	Real armyValue = 0.0f, idleHome = 0.0f, idleField = 0.0f, inScript = 0.0f, onMission = 0.0f;
+	const Real homeRadius = m_baseRadius + HOME_RADIUS_MARGIN;
+	std::vector<std::pair<ObjectID, UnsignedInt>> idleNow;
+	std::vector<std::pair<AsciiString, Real>> scriptTeams;	// what binds the army in script teams (log)
+	Int released = 0;
+	Real releasedValue = 0.0f;
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->getControllingPlayer() != m_player || !isMobileCombatUnit( obj ) || obj->isEffectivelyDead() || obj->isKindOf( KINDOF_AIRCRAFT )
+			|| obj->getAIUpdateInterface() == nullptr)
+			continue;
+		const Real v = unitValue( obj );
+		armyValue += v;
+		if (isOnMission( obj->getID() ))
+		{
+			onMission += v;
+			continue;
+		}
+		if (obj->getTeam() != defaultTeam)
+		{
+			inScript += v;
+			Team *scriptTeam = obj->getTeam();
+			if (scriptTeam != nullptr)
+			{
+				const AsciiString &teamName = scriptTeam->getPrototype()->getName();
+				size_t k = 0;
+				while (k < scriptTeams.size() && scriptTeams[k].first != teamName)
+					++k;
+				if (k == scriptTeams.size())
+					scriptTeams.push_back( std::make_pair( teamName, 0.0f ) );
+				scriptTeams[k].second += v;
+			}
+			// A unit that stands idle at home in a script team for a minute does nothing for it: the command layer takes it.
+			if (!partOff( AI_PART_RELEASE ) && scriptTeam != nullptr && scriptTeam->isActive() && obj->getAIUpdateInterface()->isIdle()
+				&& !obj->isContained() && obj->getContain() == nullptr && !obj->isKindOf( KINDOF_TRANSPORT )
+				&& distSqr2D( obj->getPosition(), &m_baseCenter ) <= homeRadius * homeRadius && !isOwnTaskTeam( scriptTeam ))
+			{
+				UnsignedInt since = now;
+				for (size_t k = 0; k < m_idleSince.size(); ++k)
+				{
+					if (m_idleSince[k].first == obj->getID())
+						since = m_idleSince[k].second;
+				}
+				if (now - since >= RELEASE_IDLE)
+				{
+					obj->getAIUpdateInterface()->setIsRecruitable( FALSE );
+					obj->setTeam( defaultTeam );
+					++released;
+					releasedValue += v;
+				}
+				else
+					idleNow.push_back( std::make_pair( obj->getID(), since ) );
+			}
+			continue;
+		}
+		if (!isHelperCandidate( obj ) || isSuperweaponGuard( obj->getID() ) || !isAvailable( obj ))
+			continue;
+		if (!isPosted( obj->getID() ))
+		{
+			if (distSqr2D( obj->getPosition(), &m_baseCenter ) <= homeRadius * homeRadius)
+				idleHome += v;
+			else
+				idleField += v;
+		}
+		AIPosts::Unit u;
+		u.pos.x = obj->getPosition()->x;
+		u.pos.y = obj->getPosition()->y;
+		u.roles = unitRoles( obj->getTemplate() );
+		u.value = static_cast<float>( v );
+		free.push_back( obj );
+		units.push_back( u );
+	}
+	// Posts must be standable ground for the units that go there.
+	if (!free.empty())
+	{
+		const LocomotorSet &locomotors = free[0]->getAIUpdateInterface()->getLocomotorSet();
+		for (size_t i = 0; i < posts.size(); ++i)
+			makeWalkable( locomotors, &posts[i].pos );
+	}
+	std::vector<int> assigned;
+	AIPosts::assignPosts( units, posts, m_baseRadius, &assigned );
+	std::vector<AIGroup *> groups( posts.size(), nullptr );
+	std::vector<ObjectID> posted;
+	Real postedValue = 0.0f;
+	for (size_t i = 0; i < free.size(); ++i)
+	{
+		if (assigned[i] < 0)
+			continue;
+		Object *obj = free[i];
+		const size_t post = static_cast<size_t>( assigned[i] );
+		const Real dx = units[i].pos.x - posts[post].pos.x, dy = units[i].pos.y - posts[post].pos.y;
+		const Bool there = dx * dx + dy * dy <= POST_RADIUS * POST_RADIUS;
+		if (!isPosted( obj->getID() ) || !there)
+		{
+			if (!there || obj->getAIUpdateInterface()->isIdle())
+				addToGroup( &groups[post], obj );
+		}
+		posted.push_back( obj->getID() );
+		postedValue += units[i].value;
+	}
+	for (size_t post = 0; post < posts.size(); ++post)
+	{
+		if (groups[post] == nullptr)
+			continue;
+		Coord3D pos;
+		pos.x = posts[post].pos.x;
+		pos.y = posts[post].pos.y;
+		pos.z = TheTerrainLogic->getGroundHeight( pos.x, pos.y );
+		groups[post]->groupGuardPosition( &pos, GUARDMODE_NORMAL, CMD_FROM_AI );
+	}
+	m_posted.swap( posted );
+	m_idleSince.swap( idleNow );
+	if (released > 0)
+	{
+		char line[160];
+		WWFormat::Into(line, "AIRELEASE {:d} player {:d} units {:d} value {:.0f}", now, m_player->getPlayerIndex(), released, releasedValue);
+		GameEngine_RunnerLog( line );
+	}
+	// every minute: the five script teams that hold the most army value
+	if (++m_scriptLogPass % 2 == 0 && !scriptTeams.empty())
+	{
+		std::stable_sort( scriptTeams.begin(), scriptTeams.end(),
+			[]( const std::pair<AsciiString, Real> &a, const std::pair<AsciiString, Real> &b ) { return a.second > b.second; } );
+		char line[320];
+		std::string names;
+		for (size_t k = 0; k < scriptTeams.size() && k < 5; ++k)
+		{
+			char part[96];
+			WWFormat::Into(part, "{}={:.0f};", scriptTeams[k].first.str(), scriptTeams[k].second);
+			names += part;
+		}
+		WWFormat::Into(line, "AISCRIPT {:d} player {:d} teams {:d} value {:.0f} top {}", now, m_player->getPlayerIndex(), static_cast<Int>( scriptTeams.size() ), inScript, names.c_str());
+		GameEngine_RunnerLog( line );
+	}
+
+	// New units gather at the nearest front post instead of standing at the factory.
+	for (Object *factory = TheGameLogic->getFirstObject(); factory; factory = factory->getNextObject())
+	{
+		if (factory->getControllingPlayer() != m_player || !factory->isKindOf( KINDOF_STRUCTURE ) || factory->isEffectivelyDead()
+			|| factory->getProductionUpdateInterface() == nullptr || factory->getObjectExitInterface() == nullptr || !producesArmy( factory ))
+			continue;
+		const AIPosts::Post *nearest = nullptr;
+		Real best = 0.0f;
+		for (size_t i = 0; i < posts.size(); ++i)
+		{
+			if (posts[i].kind != AIPosts::POST_FRONT)
+				continue;
+			const Real dx = posts[i].pos.x - factory->getPosition()->x, dy = posts[i].pos.y - factory->getPosition()->y;
+			if (nearest == nullptr || dx * dx + dy * dy < best)
+			{
+				nearest = &posts[i];
+				best = dx * dx + dy * dy;
+			}
+		}
+		if (nearest == nullptr)
+			continue;
+		Coord3D rally;
+		rally.x = nearest->pos.x;
+		rally.y = nearest->pos.y;
+		rally.z = TheTerrainLogic->getGroundHeight( rally.x, rally.y );
+		const Coord3D *current = factory->getObjectExitInterface()->getRallyPoint();
+		if (current == nullptr || distSqr2D( current, &rally ) > POST_RADIUS * POST_RADIUS)
+			factory->getObjectExitInterface()->setRallyPoint( &rally );
+	}
+
+	char line[256];
+	WWFormat::Into(line, "AIPOSTS {:d} player {:d} posts {:d} army {:.0f} posted {:.0f} idle_home {:.0f} idle_field {:.0f} script_team {:.0f} mission {:.0f}", now,
+		m_player->getPlayerIndex(), static_cast<Int>( posts.size() ), armyValue, postedValue, idleHome, idleField, inScript, onMission);
+	GameEngine_RunnerLog( line );
+}
+
+// Measurement: seconds in which a threat below HELD_LOG_THREAT halted the leadership; every 30 s one line.
+void AICommanderPlayer::logThreat( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	const Real raw = ownBaseThreat();
+	if (m_lastThreatSampleFrame != 0 && raw >= MIN_THREAT && raw < HELD_LOG_THREAT && baseUnderThreat())
+		m_heldFrames += now - m_lastThreatSampleFrame;
+	m_lastThreatSampleFrame = now;
+	if (now < m_nextThreatLogFrame)
+		return;
+	m_nextThreatLogFrame = now + 30 * LOGICFRAMES_PER_SECOND;
+	char line[192];
+	WWFormat::Into(line, "AITHREAT {:d} player {:d} threat {:.0f} emergency {:d} held_seconds {:d}", now, m_player->getPlayerIndex(), raw,
+		baseUnderThreat() ? 1 : 0, static_cast<Int>( m_heldFrames / LOGICFRAMES_PER_SECOND ));
+	GameEngine_RunnerLog( line );
+}
+
+// Measurement: every 30 s own share and wanted share per role (per mille) and the distance between them.
+void AICommanderPlayer::logMix( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	if (now < m_nextMixLogFrame)
+		return;
+	m_nextMixLogFrame = now + 30 * LOGICFRAMES_PER_SECOND;
+	float have[AIRoles::SHARE_ROLES], shares[AIRoles::SHARE_ROLES];
+	collectRoleValues( have );
+	currentShares( shares );
+	float total = 0.0f;
+	for (int r = 0; r < AIRoles::SHARE_ROLES; ++r)
+		total += have[r];
+	if (total <= 0.0f)
+		return;
+	Int own[AIRoles::SHARE_ROLES];
+	float distance = 0.0f;
+	for (int r = 0; r < AIRoles::SHARE_ROLES; ++r)
+	{
+		own[r] = static_cast<Int>( have[r] * 1000.0f / total );
+		distance += std::fabs( have[r] / total - shares[r] );
+	}
+	char line[256];
+	WWFormat::Into(line, "AIMIX {:d} player {:d} front {:d}/{:d} anti_vehicle {:d}/{:d} anti_infantry {:d}/{:d} anti_air {:d}/{:d} siege {:d}/{:d} distance {:d}",
+		now, m_player->getPlayerIndex(), own[0], static_cast<Int>( shares[0] * 1000.0f ), own[1], static_cast<Int>( shares[1] * 1000.0f ),
+		own[2], static_cast<Int>( shares[2] * 1000.0f ), own[3], static_cast<Int>( shares[3] * 1000.0f ), own[4], static_cast<Int>( shares[4] * 1000.0f ),
+		static_cast<Int>( distance * 1000.0f ));
+	GameEngine_RunnerLog( line );
+}
+
 Int AICommanderPlayer::produceUnits( void )
 {
+	const Bool mixOn = !partOff( AI_PART_MIX );
+	const UnsignedInt now = TheGameLogic->getFrame();
+	float roleHave[AIRoles::SHARE_ROLES], roleShares[AIRoles::SHARE_ROLES];
+	collectRoleValues( roleHave );
+	currentShares( roleShares );
 	// Count per template (lookup only, no order over pointers).
 	std::vector<std::pair<const ThingTemplate *, Int>> have;
 	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
@@ -3671,6 +4890,8 @@ Int AICommanderPlayer::produceUnits( void )
 		const ThingTemplate *bestAir = nullptr;
 		Real bestAirScore = 0.0f;
 		const ThingTemplate *bestDetector = nullptr;
+		std::vector<AIRoles::Candidate> mixCandidates;
+		std::vector<const ThingTemplate *> mixTemplates;
 		for (Int j = 0; j < MAX_COMMANDS_PER_SET; ++j)
 		{
 			const CommandButton *button = set->getCommandButton( j );
@@ -3682,8 +4903,8 @@ Int AICommanderPlayer::produceUnits( void )
 			Int cost = t->calcCostToBuild( m_player );
 			if (cost <= 0 || money - cost < scaledMoney( LATE_KEEP_MONEY ))
 				continue;
-			if (t->isKindOf( KINDOF_INFANTRY ) && money < scaledMoney( LATE_INFANTRY_MONEY ))
-				continue;	// vehicles first; infantry only with a full account
+			if (!mixOn && t->isKindOf( KINDOF_INFANTRY ) && money < scaledMoney( LATE_INFANTRY_MONEY ))
+				continue;	// vehicles first; infantry only with a full account (the role shares decide with the mix on)
 			if (TheBuildAssistant->canMakeUnit( factory, t ) != CanMakeType::CANMAKE_OK)
 				continue;
 			Int count = 0;
@@ -3697,6 +4918,19 @@ Int AICommanderPlayer::produceUnits( void )
 			}
 			Real score = static_cast<Real>(cost);
 			Real counter = m_planner.counterScoreOf( m_planner.profileOf( t ) );
+			if (mixOn)
+			{
+				logRoles( t );
+				AIRoles::Candidate mc;
+				mc.roles = unitRoles( t );
+				mc.cost = static_cast<float>( cost );
+				mc.counter = counter > 0.0f ? static_cast<float>( counter ) : 0.0f;
+				mc.damping = (count >= LATE_SAME_TYPE_CAP) ? 1.0f / 3.0f : 1.0f;
+				if (m_squadWant != 0 && now - m_squadWantFrame < SQUAD_WANT_TIME && (mc.roles & m_squadWant) != 0)
+					mc.damping *= 2.0f;	// the last squad lacked this role
+				mixCandidates.push_back( mc );
+				mixTemplates.push_back( t );
+			}
 			if (m_modelAir && hitsAir( t ))
 			{
 				score *= AIR_PREFERENCE;
@@ -3725,21 +4959,30 @@ Int AICommanderPlayer::produceUnits( void )
 				bestCounterScore = counter;
 			}
 		}
-		const char *why = "kosten";
+		const char *why = "cost";
 		if (bestCounter && !partOff( AI_PART_COUNTERS ))
 		{
 			best = bestCounter;
-			why = "konter";
+			why = "counter";
+		}
+		if (mixOn && !mixCandidates.empty())
+		{
+			const int pick = AIRoles::chooseNextUnit( roleHave, mixCandidates, roleShares );
+			if (pick >= 0)
+			{
+				best = mixTemplates[static_cast<size_t>( pick )];
+				why = "role";
+			}
 		}
 		if (bestAir && airDefenseShare < std::min( m_enemyAirShare, AIR_DEFENSE_MAX ))
 		{
 			best = bestAir;
-			why = "luftabwehr";
+			why = "anti_air";
 		}
 		if (bestDetector && detectorUnits < STEALTH_DETECTOR_UNITS)
 		{
 			best = bestDetector;
-			why = "detektor";
+			why = "detector";
 		}
 		if (best == nullptr)
 			continue;
@@ -3761,13 +5004,19 @@ Int AICommanderPlayer::produceUnits( void )
 			if (!found)
 				have.push_back( std::make_pair( best, 1 ) );
 			armyValue += static_cast<Real>( cost );
+			const unsigned bestRoles = unitRoles( best );
+			for (int r = 0; r < AIRoles::SHARE_ROLES; ++r)
+			{
+				if (bestRoles & AIRoles::ROLE_BIT[r])
+					roleHave[r] += static_cast<float>( cost );
+			}
 			if (hitsAir( best ))
 				airDefenseValue += static_cast<Real>( cost );
 			if (isDetectorTemplate( best ))
 				++detectorUnits;
 			airDefenseShare = airDefenseValue / armyValue;
 			char line[224];
-			WWFormat::Into(line, "KIBAU {:d} spieler {:d} einheit {} kosten {:d} geld {:d} wahl {}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), best->getName().str(), cost, money, why);
+			WWFormat::Into(line, "AIBUILD {:d} player {:d} unit {} cost {:d} money {:d} choice {}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), best->getName().str(), cost, money, why);
 			GameEngine_RunnerLog( line );
 		}
 	}
@@ -3821,13 +5070,13 @@ void AICommanderPlayer::updateFactories( void )
 	const Int have = countOwnOrPlanned( t );
 	if (have == 0 || have >= wanted)
 		return;		// the first one comes from the classic AI's build list
-	if (ownBaseThreat() >= MIN_THREAT || growthBuildPending() || freeMoney() - t->calcCostToBuild( m_player ) < FACTORY_KEEP_MONEY)
+	if (baseUnderThreat() || growthBuildPending() || freeMoney() - t->calcCostToBuild( m_player ) < FACTORY_KEEP_MONEY)
 		return;
 	if (queueBaseBuilding( t ))
 	{
 		++m_economyOrders;
 		char line[224];
-		WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} bau {} bestand {:d} ziel {:d} vorrat {:.0f} grund {}", now, m_player->getPlayerIndex(), t->getName().str(), have, wanted, 0.0f, "produktion");
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} build {} have {:d} target {:d} reserve {:.0f} reason {}", now, m_player->getPlayerIndex(), t->getName().str(), have, wanted, 0.0f, "unit_production");
 		GameEngine_RunnerLog( line );
 	}
 }
@@ -4100,7 +5349,7 @@ Int AICommanderPlayer::manageSupplyTrucks( Int centers, Int depots )
 	{
 		wanted = std::min( TRUCKS_PER_CENTER * centers, TRUCKS_PER_DEPOT * depots + 1 );
 		if (trucks < wanted)
-			queueEconomyUnit( isHarvesterTemplate, "sammler", trucks, wanted );
+			queueEconomyUnit( isHarvesterTemplate, "harvester", trucks, wanted );
 	}
 	return trucks;
 }
@@ -4138,7 +5387,7 @@ Int AICommanderPlayer::queueEconomyUnit( Bool (*match)( const ThingTemplate * ),
 				++ordered;
 				++m_economyOrders;
 				char line[192];
-				WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} {} {} bestand {:d} ziel {:d}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), what, t->getName().str(), have + ordered - 1, wanted);
+				WWFormat::Into(line, "AIECONOMY {:d} player {:d} {} {} have {:d} target {:d}", TheGameLogic->getFrame(), m_player->getPlayerIndex(), what, t->getName().str(), have + ordered - 1, wanted);
 				GameEngine_RunnerLog( line );
 			}
 			break;
@@ -4185,21 +5434,21 @@ void AICommanderPlayer::updateTechCapture( void )
 		const char *result = nullptr;
 		if (target && target->getControllingPlayer() == m_player)
 		{
-			result = "eingenommen";
+			result = "captured";
 			++m_captures;
 		}
 		else if (target == nullptr || target->isEffectivelyDead())
-			result = "ziel_weg";
+			result = "target_gone";
 		else if (unit == nullptr || unit->isEffectivelyDead())
-			result = "einheit_weg";
+			result = "unit_gone";
 		else if (now - m_captureFrame > CAPTURE_TIMEOUT)
-			result = "zeit";
+			result = "time";
 		if (result == nullptr)
 			return;
 		if (unit && !unit->isEffectivelyDead() && unit->getAIUpdateInterface())
 			unit->getAIUpdateInterface()->setIsRecruitable( TRUE );
 		char line[192];
-		WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} technik_ende {} dauer {:d}", now, m_player->getPlayerIndex(), result, (now - m_captureFrame) / LOGICFRAMES_PER_SECOND);
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} tech_end {} duration {:d}", now, m_player->getPlayerIndex(), result, (now - m_captureFrame) / LOGICFRAMES_PER_SECOND);
 		GameEngine_RunnerLog( line );
 		m_captureTarget = INVALID_ID;
 		m_captureUnit = INVALID_ID;
@@ -4275,7 +5524,7 @@ void AICommanderPlayer::updateTechCapture( void )
 			if (m_player->hasUpgradeInProduction( missing ))
 			{
 				char line[192];
-				WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} technik_upgrade {}", now, m_player->getPlayerIndex(), missing->getUpgradeName().str());
+				WWFormat::Into(line, "AIECONOMY {:d} player {:d} tech_upgrade {}", now, m_player->getPlayerIndex(), missing->getUpgradeName().str());
 				GameEngine_RunnerLog( line );
 			}
 		}
@@ -4287,7 +5536,7 @@ void AICommanderPlayer::updateTechCapture( void )
 	m_captureTarget = target->getID();
 	m_captureFrame = now;
 	char line[224];
-	WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} technik {} einheit {} ort {:.0f} {:.0f}", now, m_player->getPlayerIndex(), target->getTemplate()->getName().str(), unit->getTemplate()->getName().str(), target->getPosition()->x, target->getPosition()->y);
+	WWFormat::Into(line, "AIECONOMY {:d} player {:d} tech {} unit {} pos {:.0f} {:.0f}", now, m_player->getPlayerIndex(), target->getTemplate()->getName().str(), unit->getTemplate()->getName().str(), target->getPosition()->x, target->getPosition()->y);
 	GameEngine_RunnerLog( line );
 }
 
@@ -4308,7 +5557,7 @@ void AICommanderPlayer::updateTechCapture( void )
 // (buildSpecificAIBuilding); the command layer's own priority builds are economy buildings.
 // baseReserve = cost of the next missing base building: the first unstarted priority build that is
 // not an economy building, else the first missing automatic entry. The extra programs (growth,
-// raids, late army, hackers) spend only what is left. 0 with -aiOhne haushalt.
+// raids, late army, hackers) spend only what is left. 0 with -aiOff haushalt.
 Int AICommanderPlayer::baseReserve( void ) const
 {
 	if (partOff( AI_PART_BUDGET ))
@@ -4362,6 +5611,129 @@ Bool AICommanderPlayer::growthBuildPending( void ) const
 	return FALSE;
 }
 
+// ------------------------------------------------------------------------------------------------
+// Energy
+// ------------------------------------------------------------------------------------------------
+
+// Energy of the finished buildings plus what is ordered or under construction (positive: produces).
+Int AICommanderPlayer::energyBalance( void ) const
+{
+	std::vector<Int> pending;
+	for (BuildListInfo *info = m_player->getBuildList(); info; info = info->getNext())
+	{
+		if (info->getTemplateName().isEmpty())
+			continue;
+		const ThingTemplate *t = TheThingFactory->findTemplate( info->getTemplateName() );
+		if (t == nullptr)
+			continue;
+		const Object *bldg = TheGameLogic->findObjectByID( info->getObjectID() );
+		if (bldg == nullptr)
+		{
+			// an order the classic AI has not started yet
+			if (info->isPriorityBuild() && info->isBuildable())
+				pending.push_back( t->getEnergyProduction() );
+		}
+		else if (bldg->getControllingPlayer() == m_player && bldg->getStatusBits().test( OBJECT_STATUS_UNDER_CONSTRUCTION ))
+			pending.push_back( t->getEnergyProduction() );
+	}
+	const Energy *energy = m_player->getEnergy();
+	return AIEconomy::energyAfter( energy->getProduction(), energy->getConsumption(), pending.empty() ? nullptr : &pending[0],
+		static_cast<Int>( pending.size() ) );
+}
+
+// The power plant the dozers can build; the lookup walks the objects and command sets, so it is kept for a few seconds.
+const ThingTemplate *AICommanderPlayer::findPowerPlant( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	if (m_powerPlantFrame == 0 || now - m_powerPlantFrame >= 5 * LOGICFRAMES_PER_SECOND)
+	{
+		m_powerPlantFrame = now;
+		m_powerPlant = findConstructable( KINDOF_FS_POWER );
+		if (m_powerPlant && (m_powerPlant->isKindOf( KINDOF_CASH_GENERATOR ) || m_powerPlant->getEnergyProduction() <= 0))
+			m_powerPlant = nullptr;
+	}
+	return m_powerPlant;
+}
+
+// May this building be ordered now? A consumer only if the energy still suffices afterwards. Without a power plant the
+// side can build there is nothing to wait for.
+Bool AICommanderPlayer::energyAllows( const ThingTemplate *t )
+{
+	if (partOff( AI_PART_ENERGY ) || t == nullptr || t->getEnergyProduction() >= 0 || findPowerPlant() == nullptr)
+		return TRUE;
+	return AIEconomy::energyAllows( energyBalance(), t->getEnergyProduction() );
+}
+
+// A power plant is ordered (at the head of the build list) when the balance, with everything ordered, falls below the yield
+// of half a plant: the plant stands before the consumer that would have tipped it.
+void AICommanderPlayer::updateEnergy( void )
+{
+	if (partOff( AI_PART_ENERGY ) || !m_baseCenterSet)
+		return;
+	const ThingTemplate *plant = findPowerPlant();
+	if (plant == nullptr)
+		return;
+	const Int balance = energyBalance();
+	const Int margin = plant->getEnergyProduction() / 2;
+	if (AIEconomy::powerPlantsNeeded( balance, margin, plant->getEnergyProduction() ) == 0)
+		return;
+	if (queueBaseBuilding( plant ))
+	{
+		++m_economyOrders;
+		char line[224];
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} build {} have {:d} target {:d} reserve {:.0f} reason {}", TheGameLogic->getFrame(),
+			m_player->getPlayerIndex(), plant->getName().str(), balance, margin, 0.0f, "power");
+		GameEngine_RunnerLog( line );
+	}
+}
+
+// The classic AI picked a building from its list: a consumer waits while the energy does not suffice (the power plant
+// is ordered meanwhile), the rest of the list goes on in the next round.
+Bool AICommanderPlayer::allowBaseBuilding( const ThingTemplate *t )
+{
+	if (energyAllows( t ))
+		return TRUE;
+	updateEnergy();
+	const UnsignedInt now = TheGameLogic->getFrame();
+	if (now >= m_nextPowerBlockLogFrame)
+	{
+		m_nextPowerBlockLogFrame = now + 10 * LOGICFRAMES_PER_SECOND;
+		char line[224];
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} blocked {} balance {:d} reason {}", now, m_player->getPlayerIndex(), t->getName().str(),
+			energyBalance(), "power");
+		GameEngine_RunnerLog( line );
+	}
+	return FALSE;
+}
+
+// Measurement: every 10 s the energy and the power plants and defences standing (the seconds without sufficient power
+// count from the first check).
+void AICommanderPlayer::logPower( void )
+{
+	const UnsignedInt now = TheGameLogic->getFrame();
+	if (m_lastPowerSampleFrame != 0 && !m_player->getEnergy()->hasSufficientPower())
+		m_underpoweredFrames += now - m_lastPowerSampleFrame;
+	m_lastPowerSampleFrame = now;
+	if (now < m_nextPowerLogFrame)
+		return;
+	m_nextPowerLogFrame = now + 10 * LOGICFRAMES_PER_SECOND;
+	Int plants = 0, defences = 0;
+	for (Object *obj = TheGameLogic->getFirstObject(); obj; obj = obj->getNextObject())
+	{
+		if (obj->getControllingPlayer() != m_player || obj->isEffectivelyDead() || !obj->isKindOf( KINDOF_STRUCTURE ))
+			continue;
+		if (obj->isKindOf( KINDOF_FS_POWER ) && !obj->isKindOf( KINDOF_CASH_GENERATOR ))
+			++plants;
+		if (obj->isKindOf( KINDOF_FS_BASE_DEFENSE ))
+			++defences;
+	}
+	char line[224];
+	WWFormat::Into(line, "AIPOWER {:d} player {:d} production {:d} consumption {:d} underpowered_s {:d} power_plants {:d} defence {:d}", now,
+		m_player->getPlayerIndex(), m_player->getEnergy()->getProduction(), m_player->getEnergy()->getConsumption(),
+		static_cast<Int>( m_underpoweredFrames / LOGICFRAMES_PER_SECOND ), plants, defences);
+	GameEngine_RunnerLog( line );
+}
+
 void AICommanderPlayer::updateEconomy( void )
 {
 	UnsignedInt now = TheGameLogic->getFrame();
@@ -4382,7 +5754,7 @@ void AICommanderPlayer::updateEconomy( void )
 	const AIPlanResult *forecast = m_planner.hasResult() ? &m_planner.getResult() : nullptr;
 	const Bool armyBehind = forecast && forecast->enemyHealthSeen > 0 && forecast->fieldWinner == 1 && forecast->fieldRatio < INVEST_MIN_RATIO
 		&& !TheGameLogic->isGracePeriod() && !m_modelTurtle;
-	const Bool invest = ownBaseThreat() < MIN_THREAT && !armyBehind && !m_modelRush && !partOff( AI_PART_GROWTH );
+	const Bool invest = !baseUnderThreat() && !armyBehind && !m_modelRush && !partOff( AI_PART_GROWTH );
 	// Growth steps by game time; during the start protection as at its end (the army comes later).
 	const UnsignedInt growthNow = now + graceLeft();
 
@@ -4424,7 +5796,7 @@ void AICommanderPlayer::updateEconomy( void )
 			{
 				++m_economyOrders;
 				char line[224];
-				WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} ausbau {} vorrat {:.0f} zentren {:d} grund {}", now, m_player->getPlayerIndex(), center->getName().str(), reserve, centers, growth ? "wachstum" : "knapp");
+				WWFormat::Into(line, "AIECONOMY {:d} player {:d} expansion {} reserve {:.0f} centres {:d} reason {}", now, m_player->getPlayerIndex(), center->getName().str(), reserve, centers, growth ? "growth" : "scarce");
 				GameEngine_RunnerLog( line );
 			}
 		}
@@ -4475,7 +5847,7 @@ void AICommanderPlayer::updateEconomy( void )
 			if (lead && !m_hackerLead)
 			{
 				char line[256];
-				WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} vorlauf restzeit_min {:.1f} sammelrate {:.0f} elite_min {:.1f} ertrag_elite {:.0f} bedarf {:d}", now, m_player->getPlayerIndex(), minutesLeft, m_gatherRate, eliteMinutes, he.incomePerMinute[LEVEL_ELITE], need);
+				WWFormat::Into(line, "AIECONOMY {:d} player {:d} lead minutes_left {:.1f} gather_rate {:.0f} elite_min {:.1f} yield_elite {:.0f} need {:d}", now, m_player->getPlayerIndex(), minutesLeft, m_gatherRate, eliteMinutes, he.incomePerMinute[LEVEL_ELITE], need);
 				GameEngine_RunnerLog( line );
 			}
 			m_hackerLead = lead;
@@ -4526,7 +5898,7 @@ void AICommanderPlayer::updateEconomy( void )
 			{
 				++m_economyOrders;
 				char line[224];
-				WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} bau {} bestand {:d} ziel {:d} vorrat {:.0f} grund {}", now, m_player->getPlayerIndex(), t->getName().str(), have, wanted, reserve, depleting ? "knapp" : "wachstum");
+				WWFormat::Into(line, "AIECONOMY {:d} player {:d} build {} have {:d} target {:d} reserve {:.0f} reason {}", now, m_player->getPlayerIndex(), t->getName().str(), have, wanted, reserve, depleting ? "scarce" : "growth");
 				GameEngine_RunnerLog( line );
 			}
 		}
@@ -4551,7 +5923,7 @@ void AICommanderPlayer::updateEconomy( void )
 			m_economyNeed += t->calcCostToBuild( m_player );
 	}
 
-	// Status report every minute (income per minute is measured from KISTAT).
+	// Status report every minute (income per minute is measured from AISTAT).
 	if (now >= m_nextEconomyReportFrame)
 	{
 		m_nextEconomyReportFrame = now + 60 * LOGICFRAMES_PER_SECOND;
@@ -4577,11 +5949,11 @@ void AICommanderPlayer::updateEconomy( void )
 		if (!partOff( AI_PART_BUDGET ))
 		{
 			char budget[160];
-			WWFormat::Into(budget, "KIHAUSHALT {:d} spieler {:d} geld {:d} basis {:d} frei {:d} vorrang_offen {:d}", now, m_player->getPlayerIndex(), money, baseReserve(), freeMoney(), growthBuildPending() ? 1 : 0);
+			WWFormat::Into(budget, "AIBUDGET {:d} player {:d} money {:d} base {:d} free {:d} priority_open {:d}", now, m_player->getPlayerIndex(), money, baseReserve(), freeMoney(), growthBuildPending() ? 1 : 0);
 			GameEngine_RunnerLog( budget );
 		}
 		char line[320];
-		WWFormat::Into(line, "KIWIRTSCHAFT {:d} spieler {:d} lage vorrat {:.0f} zentren {:d} geld {:d} hacker {:d} sammler {:d} bedarf {:d} einnahmebauten {:d} technik {:d} frei {:d} sammelrate {:.0f} restzeit_min {:.1f} investieren {:d}", now, m_player->getPlayerIndex(), reserve, centers, money, hackers, trucks, m_economyNeed, incomeBuildings, ownTech, freeTech, m_gatherRate, minutesLeft, invest ? 1 : 0);
+		WWFormat::Into(line, "AIECONOMY {:d} player {:d} situation reserve {:.0f} centres {:d} money {:d} hackers {:d} harvesters {:d} need {:d} income_buildings {:d} tech {:d} free {:d} gather_rate {:.0f} minutes_left {:.1f} invest {:d}", now, m_player->getPlayerIndex(), reserve, centers, money, hackers, trucks, m_economyNeed, incomeBuildings, ownTech, freeTech, m_gatherRate, minutesLeft, invest ? 1 : 0);
 		GameEngine_RunnerLog( line );
 	}
 }
@@ -4619,7 +5991,7 @@ void AICommanderPlayer::crc( Xfer *xfer )
 // ------------------------------------------------------------------------------------------------
 void AICommanderPlayer::xfer( Xfer *xfer )
 {
-	XferVersion currentVersion = 19;
+	XferVersion currentVersion = 23;
 	XferVersion version = currentVersion;
 	xfer->xferVersion( &version, currentVersion );
 
@@ -4747,6 +6119,13 @@ void AICommanderPlayer::xfer( Xfer *xfer )
 			xfer->xferUnsignedInt( &k.frame );
 			xfer->xferReal( &k.value );
 			xfer->xferBool( &k.structure );
+			if (version >= 20)
+			{
+				xfer->xferAsciiString( &k.tmpl );
+				xfer->xferInt( &k.health );
+			}
+			else if (xfer->getXferMode() == XFER_LOAD)
+				k.health = 1000;
 		}
 		xfer->xferObjectID( &m_scout );
 		xfer->xferCoord3D( &m_scoutTarget );
@@ -4814,6 +6193,23 @@ void AICommanderPlayer::xfer( Xfer *xfer )
 	{
 		xfer->xferInt( &m_ownBeaconKind );
 		xfer->xferUnsignedInt( &m_ownBeaconUntil );
+	}
+	if (version >= 21)
+		xfer->xferUnsignedInt( &m_raidRepairSince );
+	if (version >= 22)
+	{
+		xfer->xferInt( &m_raidRepairHealth );
+		UnsignedShort posted = static_cast<UnsignedShort>( m_posted.size() );
+		xfer->xferUnsignedShort( &posted );
+		if (xfer->getXferMode() == XFER_LOAD)
+			m_posted.assign( posted, INVALID_ID );
+		for (UnsignedShort i = 0; i < posted; ++i)
+			xfer->xferObjectID( &m_posted[i] );
+	}
+	if (version >= 23)
+	{
+		xfer->xferUnsignedInt( &m_squadWant );
+		xfer->xferUnsignedInt( &m_squadWantFrame );
 	}
 }
 

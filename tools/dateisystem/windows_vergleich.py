@@ -5,7 +5,7 @@
 """Dateisystem unter Windows mit EA-Daten: Index des Spiels gegen VfsDump (10.8).
 
 Der alte Namensbaum und -altesDateisystem sind entfernt; die alte Vorrangregel bildet VfsDump nach (tools/dateisystem/pruefen.sh).
-Teil A: Indexabzug (-dateiIndexAusgeben, -freeContent ea) gegen VfsDump ohne Mod, fuer einen Mod als BIG, einen Mod als ZIP
+Teil A: Indexabzug (-dumpFileIndex, -freeContent ea) gegen VfsDump ohne Mod, fuer einen Mod als BIG, einen Mod als ZIP
 (je 40 Dateien aus Data/FreierBoden, die Dateien des freien Bodens ueberschreiben) und fuer -baseGame; vergleichen.py muss
 "gleich" melden. VfsDump kennt das Texturpaket (Texturstufen\\Paket) nicht: liegt eines bei den Assets, --stufe sd nehmen.
 Teil B: Ladezeit des Kartenladens (Zeile LOADTIME, Replay als Szene), Median ohne den kalten ersten Lauf; der Vergleichswert
@@ -87,7 +87,7 @@ def main():
     print("== A: Indexabzug des Spiels gegen VfsDump")
     for name, mod, vfs in faelle:
         neu = win(os.path.join(out, name + "_spiel.txt"))
-        lauf(exe, os.path.join(out, "lauf_" + name), ["--scene", "shellmap"], ["-dateiIndexAusgeben", neu, "-freeContent", "ea"] + mod)
+        lauf(exe, os.path.join(out, "lauf_" + name), ["--scene", "shellmap"], ["-dumpFileIndex", neu, "-freeContent", "ea"] + mod)
         ref = os.path.join(out, name + "_vfsdump.txt")
         with open(ref, "w", encoding="latin-1") as f:
             subprocess.call([a.vfsdump, spiel, "--tier", STUFE] + (["--zh"] if zh else []) + vfs, stdout=f)

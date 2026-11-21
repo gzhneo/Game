@@ -53,6 +53,8 @@ G="$OUT/$GAMEDIR"
 [ -f "$G/$EXE" ] || { echo "$G/$EXE fehlt: erst tools/wine/build_game.sh (bei GZHNeo.exe mit --generals) ausfuehren"; exit 2; }
 WINE=$(command -v wine64 || echo /usr/lib/wine/wine64)
 WINESERVER=$(command -v wineserver || echo /usr/lib/wine/wineserver64)
+# Wine 9.0 aborts ("free(): invalid pointer") whenever TMPDIR is set, whatever its value; work dirs are derived above.
+unset TMPDIR
 command -v Xvfb >/dev/null || { echo "Xvfb fehlt (Paket xvfb)"; exit 2; }
 [ -n "$LOG" ] || LOG="$DATA/wine.log"
 

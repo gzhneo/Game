@@ -139,6 +139,8 @@ fi
 
 export WINEPREFIX="${WINEPREFIX:-$OUT/wineprefix}"
 export WINEDEBUG=-all
+# Wine 9.0 aborts ("free(): invalid pointer") whenever TMPDIR is set, whatever its value; work dirs are derived above.
+unset TMPDIR
 # Eine vom Karten-Fuzzer zurueckgelassene (absichtlich kaputte) Nutzerkarte wuerde jeder andere Harness in der
 # Kartenliste finden und als Assertion zaehlen (MapCache::addMap); vor jedem Lauf entfernen.
 rm -rf "$WINEPREFIX"/drive_c/users/*/Documents/"Command and Conquer Generals"*Data/Maps/fuzzmap

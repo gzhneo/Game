@@ -13,7 +13,7 @@ ArchiveFileSystem::loadTextureTiers, TextureLoader). Ergebnis:
 
 jedes Archiv mit texturpaket.txt an der Wurzel:
 
-    TEXTURPAKET 1 <hoechste Stufe SD|HD|UHD>
+    TEXTUREPACK 1 <hoechste Stufe SD|HD|UHD>
     <Pfad im Archiv> <Breite SD> <Hoehe SD>
 
 Quelle der Fassungen sind die vorhandenen Stufenarchive (Texturstufen\\HD und \\UHD, mit --hd/--uhd andere Ordner,
@@ -152,7 +152,7 @@ def plan(sd_files, tier_sets):
 
 
 def manifest_text(highest, lines):
-    return ("TEXTURPAKET 1 %s\r\n" % TIER_NAMES[highest] + "".join("%s %d %d\r\n" % l for l in lines)).encode("latin-1")
+    return ("TEXTUREPACK 1 %s\r\n" % TIER_NAMES[highest] + "".join("%s %d %d\r\n" % l for l in lines)).encode("latin-1")
 
 
 def build(root, hd_dir, uhd_dir, out_root, limit=None):
@@ -259,7 +259,7 @@ def selftest():
                          "art\\textures\\zhca_infanterie.tga", MANIFEST],
               "Auswahl: %s" % names)
         text = big.read(MANIFEST).decode("latin-1").split("\r\n")
-        check(text[0] == "TEXTURPAKET 1 UHD", "Manifest: Kopf %r" % text[0])
+        check(text[0] == "TEXTUREPACK 1 UHD", "Manifest: Kopf %r" % text[0])
         check("art\\textures\\panzer.dds 64 32" in text and "art\\terrain\\gras.tga 128 128" in text
               and "art\\textures\\leiste.tga 32 16" in text, "Manifest: Originalgroessen %r" % text)
         check(header(big.read("art\\terrain\\gras.tga"), "x.tga")[1] == 512, "Gelaende: UHD-Fassung gewinnt")

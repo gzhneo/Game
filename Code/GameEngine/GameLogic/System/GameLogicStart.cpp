@@ -1415,11 +1415,6 @@ void GameLogic::startNewGame( Bool loadingSaveGame )
 	// (fluff on the client only).
 	Bool forceFluffToProp = TheGameLODManager->getStaticLODLevel() != STATIC_GAME_LOD_HIGH
 			&& TheGameLODManager->getStaticLODLevel() != STATIC_GAME_LOD_VERY_HIGH;
-	if (TheGameLODManager->getStaticLODLevel() == STATIC_GAME_LOD_CUSTOM && 
-			TheGlobalData->m_useShadowVolumes) {
-		// Custom LOD, and volumetric shadows turned on - very high detail.  So use logic props too. jba. [7/14/2003]
-		forceFluffToProp = false;
-	}
 
 	if (TheRecorder && TheRecorder->isMultiplayer()) {
 		useTrees = TRUE; // Always use trees in multiplayer, cause we want it to sync properly. jba.

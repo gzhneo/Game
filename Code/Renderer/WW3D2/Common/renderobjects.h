@@ -138,6 +138,7 @@ struct WW3DVertexShaderObject
 	GpuBlob*					bytecode;		///< for the input layouts
 	int							refcount;
 	unsigned					shadow_kind;	///< 1 = Trees.vs.hlsl (shadow caster with wind sway), 2 = instanced shadow caster
+	unsigned					serial;			///< number given at the first input layout request; unlike an address never reused
 };
 
 struct WW3DPixelShaderObject
@@ -170,10 +171,11 @@ struct WW3DVertexDeclObject
 	WW3DVertexElement			elements[WW3D_MAX_DECL_LENGTH];
 	unsigned					element_count;
 	struct LayoutEntry {
-		const void*				vs_bytecode;	///< key: the vertex shader blob
+		unsigned				vs_serial;		///< key: WW3DVertexShaderObject::serial
 		GpuInputLayout*		layout;
 	}							layouts[WW3D_MAX_INPUT_LAYOUTS];
 	unsigned					layout_count;
+	unsigned					layout_next;	///< entry replaced next when the cache is full
 	int							refcount;
 };
 

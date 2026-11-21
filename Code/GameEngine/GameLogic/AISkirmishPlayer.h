@@ -99,6 +99,9 @@ protected:
 
 	virtual Bool isAGoodIdeaToBuildTeam( TeamPrototype *proto ) override;		///< return true if team should be built
 	virtual void processBaseBuilding( void ) override;		///< do base-building behaviors
+	/// The building chosen from the build list may be started now (the command layer of the new AI holds back consumers
+	/// when the energy would not suffice). The classic AI always says yes.
+	virtual Bool allowBaseBuilding( const ThingTemplate * ) { return TRUE; }
 	virtual void processTeamBuilding( void ) override;		///< do team-building behaviors
 
 protected:

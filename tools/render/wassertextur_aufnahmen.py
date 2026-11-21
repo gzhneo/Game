@@ -9,7 +9,7 @@ EA-Wasserfarbe und mit -waterTexture free, je Wasserstufe.
       [--stufen 2,0] [--varianten ea,frei] [--parallel 3]
 
 Jeder Lauf wartet auf die Spielstart-Warteschlange (tools/abnahme/slot.py) und startet run_render_test.py mit
---mehrfach im Fenster. Ergebnis: <out>/<variante>_q<stufe>/<szene>/shot_*.bmp samt Protokoll.
+--multiInstance im Fenster. Ergebnis: <out>/<variante>_q<stufe>/<szene>/shot_*.bmp samt Protokoll.
 Szenen: Meer (Tournament Island, Shell-Map Zero Hour), See (Tournament Lake), Fluss (Winding River, Heartland
 Shield), Winter (Bitter Winter mit truebem Wasser, Whiteout), Wueste (Golden Oasis, Barren Badlands mit truebem
 Wasser), Nacht (Silent River).
@@ -56,7 +56,7 @@ def lauf(name, variante, stufe, a, ergebnisse):
     out = os.path.join(a.out, marke, name)
     cmd = [sys.executable, os.path.join(WURZEL, "tools", "render", "run_render_test.py"), "run", "--exe", exe,
            "--out", out, "--xres", str(a.xres), "--yres", str(a.yres), "--texture-quality", a.texture_quality,
-           "--mehrfach", "--timeout", "1200"] + argumente
+           "--multiInstance", "--timeout", "1200"] + argumente
     # -ignoreAsserts: the debug build stops at the known load-screen assertion for observer games otherwise
     cmd += ["--extra", "-ignoreAsserts", "-waterQuality", str(stufe)] + VARIANTEN[variante]
     wait_free(log=lambda s: None, parallel=a.parallel)

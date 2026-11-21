@@ -1,4 +1,4 @@
-TEXTURPAKET 1 HD
+TEXTUREPACK 1 HD
 ; free trees and plants (baum_frei.py), textures in HD size, sizes are the SD tier
 Art\Textures\ptpine01_tree.dds 512 512
 Art\Textures\ptpine01_b_tree.dds 512 512

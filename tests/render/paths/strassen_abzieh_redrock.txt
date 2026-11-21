@@ -1,4 +1,4 @@
-# Strassen frei, Abziehbilder zh red rock (Nr. 83)
+# Strassen frei, Abziehbilder zh red rock
 # frame   x      y      zoom       drehung   neigung
 # drycracks01, drycracks03
 60        0.213  0.077  0.30       0         standard

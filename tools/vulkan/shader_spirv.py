@@ -249,6 +249,8 @@ def uebersetze(dxc, wine, datei, makros, ziel):
     env = dict(os.environ)
     if wine:
         env.setdefault("WINEDEBUG", "-all")
+        # Wine 9.0 aborts when TMPDIR is set, whatever its value.
+        env.pop("TMPDIR", None)
     r = subprocess.run(args, cwd=SHADER_DIR, capture_output=True, text=True, errors="replace", env=env)
     text = (r.stdout + r.stderr).strip()
     if r.returncode != 0 or not os.path.isfile(ziel):

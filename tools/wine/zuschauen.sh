@@ -5,7 +5,7 @@
 #
 # Watching a running LAN game under Wine, like tools/netz/zuschauen_test.py (variant "direkt") on Windows: three
 # instances, driven by the test sequences tools/netz/szenen/zuschauen_*.txt. Each runs in its own network namespace
-# (gzh-zu1 to -zu3, 10.78.0.1 to .3 on one bridge); loopback instances (-netzLokal) do not work under Wine, which binds
+# (gzh-zu1 to -zu3, 10.78.0.1 to .3 on one bridge); loopback instances (-netLocal) do not work under Wine, which binds
 # a broadcast socket to every address, so the second instance cannot bind the lobby port.
 # Instance 1 hosts, instance 2 joins, both play; instance 3 starts once the game runs, joins as spectator, watches and
 # quits, then starts a second time and watches again. Every instance logs the logic CRC of every frame.
@@ -75,7 +75,7 @@ instanz() {
 	mkdir -p "$U"
 	printf '[Lan]\r\nUserName = Spieler%d\r\n' "$i" > "$U/State.ini"
 	ip netns exec gzh-zu$i env WINEPREFIX_CNC="$BAU/wineprefix-zu$i" "$HERE/run_game.sh" --menue --zeit 3600 "$D" \
-		-einstellungenNurLesen -d3d11Effects none -crcLog crc.log -crcLogInterval 1 -testablauf "$S" "${EXTRA[@]}" \
+		-settingsReadOnly -d3d11Effects none -crcLog crc.log -crcLogInterval 1 -testScript "$S" "${EXTRA[@]}" \
 		> "$D.out" 2>&1 &
 	PID=$!
 }
@@ -131,7 +131,7 @@ def lesen(n):
             t = z.split()
             if len(t) == 2 and t[0].isdigit() and len(t[1]) == 8:
                 werte[int(t[0])] = t[1]
-            elif z.startswith('TESTABLAUF'):
+            elif z.startswith('TESTSCRIPT'):
                 zeilen.append(z.rstrip())
     return werte, zeilen
 
@@ -161,7 +161,7 @@ for n in ('zuschauer1', 'zuschauer2'):
     if not sah and start.get(n, 0) >= logik - 30:
         text.append('  %s startete bei Frame %d, die Partie des Gastgebers endet bei %d: Testaufbau, Partie zu kurz'
                     % (n, start[n], logik))
-fehler = [z for z in hz + sz if 'TESTABLAUF ERROR' in z]
+fehler = [z for z in hz + sz if 'TESTSCRIPT ERROR' in z]
 if fehler:
     ok = False
     text.append('Testablauf-Fehler: ' + fehler[0])

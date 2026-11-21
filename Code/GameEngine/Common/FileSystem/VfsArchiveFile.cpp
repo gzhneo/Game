@@ -117,7 +117,7 @@ VfsArchiveFile *VfsArchiveFile::openZip(const AsciiString &path)
 	if (!archive->open(path.str()))
 	{
 		setLastOpenError("not readable");
-		WWFormat::Into(line, "MOD zip abgewiesen {} wegen nicht lesbar", path.str());
+		WWFormat::Into(line, "MOD zip rejected {} because unreadable", path.str());
 		line[sizeof(line) - 1] = 0;
 		runnerLog(line);
 		return nullptr;
@@ -130,7 +130,7 @@ VfsArchiveFile *VfsArchiveFile::openZip(const AsciiString &path)
 	if (source == nullptr)
 	{
 		setLastOpenError(Engine::zipArchiveErrorText(error));
-		WWFormat::Into(line, "MOD zip abgewiesen {} wegen {}", path.str(), Engine::zipArchiveErrorText(error));
+		WWFormat::Into(line, "MOD zip rejected {} because {}", path.str(), Engine::zipArchiveErrorText(error));
 		line[sizeof(line) - 1] = 0;
 		runnerLog(line);
 		return nullptr;
@@ -138,12 +138,12 @@ VfsArchiveFile *VfsArchiveFile::openZip(const AsciiString &path)
 
 	for (const Engine::ZipArchiveSkipped &skipped : source->rejected())
 	{
-		WWFormat::Into(line, "MOD zip {} eintrag ausgelassen {} wegen {}", path.str(), skipped.path.c_str(),
+		WWFormat::Into(line, "MOD zip {} entry skipped {} because {}", path.str(), skipped.path.c_str(),
 			Engine::zipArchiveErrorText(skipped.reason));
 		line[sizeof(line) - 1] = 0;
 		runnerLog(line);
 	}
-	WWFormat::Into(line, "MOD zip {} dateien {:d} ausgelassen {:d}", path.str(), static_cast<Int>(source->entries().size()),
+	WWFormat::Into(line, "MOD zip {} files {:d} skipped {:d}", path.str(), static_cast<Int>(source->entries().size()),
 		static_cast<Int>(source->rejected().size() + source->skippedEntries()));
 	line[sizeof(line) - 1] = 0;
 	runnerLog(line);
@@ -182,7 +182,7 @@ VfsArchiveFile *VfsArchiveFile::openFolder(const AsciiString &folder, const std:
 		});
 
 	char line[MAX_PATH * 2 + 64];
-	WWFormat::Into(line, "MOD ordner {} dateien {:d}", folder.str(), static_cast<Int>(source->entries().size()));
+	WWFormat::Into(line, "MOD folder {} files {:d}", folder.str(), static_cast<Int>(source->entries().size()));
 	line[sizeof(line) - 1] = 0;
 	runnerLog(line);
 
@@ -289,7 +289,7 @@ File *VfsArchiveFile::openFile(const Char *filename, Int access)
 		if (error != Engine::ZipArchiveError::None)
 		{
 			char line[MAX_PATH * 2 + 128];
-			WWFormat::Into(line, "MOD zip {} eintrag {} nicht lesbar: {}", m_path.str(), entry->stored.c_str(),
+			WWFormat::Into(line, "MOD zip {} entry {} unreadable: {}", m_path.str(), entry->stored.c_str(),
 				Engine::zipArchiveErrorText(error));
 			line[sizeof(line) - 1] = 0;
 			runnerLog(line);

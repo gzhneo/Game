@@ -87,7 +87,7 @@ TEAM_COLOUR = False
 TEAM_COLOUR_TEXTURE = 'zhca_testunit.tga'
 
 # --rund: the units are coarse ellipsoids with smooth normals and a white highlight, for the lighting per pixel; their
-# texture has a normal map next to it (<name>_n.dds), for the normal maps of models lit per pixel
+# texture has a normal map next to it (<name>_nrm.dds), for the normal maps of models lit per pixel
 ROUND = False
 ROUND_TEXTURE = 'testround.tga'
 
@@ -125,7 +125,7 @@ def round_textures(size=128):
         levels.append(bytes(nxt))
         current, n = nxt, h
     return {'Art/Textures/' + ROUND_TEXTURE: tga_bytes(64, 64, colour),
-            'Art/Textures/' + ROUND_TEXTURE.replace('.tga', '_n.dds'): dds_bgra(size, levels)}
+            'Art/Textures/' + ROUND_TEXTURE.replace('.tga', '_nrm.dds'): dds_bgra(size, levels)}
 
 
 def team_colour_texture(size=64):

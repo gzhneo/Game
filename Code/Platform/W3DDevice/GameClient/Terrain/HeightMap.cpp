@@ -964,6 +964,7 @@ The vertex coordinates and texture coordinates, as well as static lighting are u
 */
 void HeightMapRenderObjClass::doPartialUpdate(const IRegion2D &partialRange, WorldHeightMap *htMap, RefRenderObjListIterator *pLightsIterator)
 {	
+	++m_heightFieldVersion;
 	// Adjust range into the current drawn map range.
 	Int minX = partialRange.lo.x - htMap->getDrawOrgX();
 	Int maxX = partialRange.hi.x - htMap->getDrawOrgX();
@@ -1056,6 +1057,7 @@ The vertex coordinates and texture coordinates, as well as static lighting are u
 */
 Int HeightMapRenderObjClass::updateBlock(Int x0, Int y0, Int x1, Int y1,  WorldHeightMap *pMap, RefRenderObjListIterator *pLightsIterator)
 {	
+	++m_heightFieldVersion;
 #ifdef _DEBUG
 	DEBUG_ASSERTCRASH(x0>=0,  ("HeightMapRenderObjClass::UpdateBlock parameters extend beyond left edge."));
 	DEBUG_ASSERTCRASH(y0>=0,  ("HeightMapRenderObjClass::UpdateBlock parameters extend beyond bottom edge."));
@@ -1245,6 +1247,7 @@ void HeightMapRenderObjClass::reset(void)
 //=============================================================================
 void HeightMapRenderObjClass::oversizeTerrain(Int tilesToOversize) 
 {
+	++m_heightFieldVersion;
 	// The base size is the default draw window, so the widescreen extension survives a scripted
 	// camera move that calls oversizeTerrain(0).
 	Int width = WorldHeightMap::getDefaultDrawSize();
@@ -1291,6 +1294,7 @@ shaders, and materials.*/
 //=============================================================================
 Int HeightMapRenderObjClass::initHeightData(Int x, Int y, WorldHeightMap *pMap, RefRenderObjListIterator *pLightsIterator, Bool updateExtraPassTiles)
 {	
+	++m_heightFieldVersion;
 	BaseHeightMapRenderObjClass::initHeightData(x, y, pMap, pLightsIterator, updateExtraPassTiles);
 	Int i,j;
 //	Int	vertsPerRow=x*2-2;
@@ -1771,6 +1775,7 @@ two cells), not the whole window. Scorches and road lighting follow as with a li
 //=============================================================================
 void HeightMapRenderObjClass::heightsChanged( const IRegion2D &range )
 {
+	++m_heightFieldVersion;
 	IRegion2D grown;
 	grown.lo.x = range.lo.x - 2;
 	grown.lo.y = range.lo.y - 2;
@@ -2373,7 +2378,7 @@ void HeightMapRenderObjClass::Render(RenderInfoClass & rinfo)
 	if (m_map && (terrainPixelLight || terrainTess || shaderLights))
 	{
 		RenderDevice::Set_Terrain_Height_Field(m_map->getDataPtr(), m_map->getXExtent(), m_map->getYExtent(),
-			m_map->getBorderSize(), MAP_XY_FACTOR, MAP_HEIGHT_SCALE);
+			m_map->getBorderSize(), MAP_XY_FACTOR, MAP_HEIGHT_SCALE, m_heightFieldVersion);
 	}
 	if (m_map)
 	{

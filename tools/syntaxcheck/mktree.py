@@ -13,7 +13,7 @@ Skript zweimal in denselben Spiegel aufgerufen (siehe setup.sh): erst Code/, dan
 <Baum>/Code. Ein schon vorhandener Eintrag wird nie ueberschrieben -- der erste
 Aufruf gewinnt. Die beiden Quellen sind ueberschneidungsfrei (was unter Code/ liegt, gibt es
 in keinem Baum mehr; tools/mdsync/treediff.py --overlap prueft das), die Reihenfolge
-entscheidet also nichts; sie ist nur festgelegt, damit der Spiegel reproduzierbar bleibt (R-66).
+entscheidet also nichts; sie ist nur festgelegt, damit der Spiegel reproduzierbar bleibt.
 Seit Phase 7 Teil 3 fuellt Code/ auch Teile von GameEngine und GameEngineDevice: im Spiegel
 stehen unter tree/GameEngine die gemeinsamen und die baumeigenen Ordner wieder nebeneinander.
 Code/Tools faellt wie <Baum>/Code/Tools unter SKIP."""

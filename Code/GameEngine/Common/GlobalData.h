@@ -56,30 +56,42 @@ enum AIDebugOptions : int;	// Explicit underlying type so the forward declaratio
 
 const Int MAX_GLOBAL_LIGHTS	= 3;
 
-/// Parts of the new AI that -aiOhne can switch off, to measure each part on its own.
+/// Parts of the new AI that -aiOff can switch off, to measure each part on its own.
 enum AIPart : UnsignedInt
 {
-	AI_PART_FORECAST_RETREAT	= 0x001,	///< -aiOhne prognose: retreat when the planner forecasts a lost fight
-	AI_PART_CONFIRM						= 0x002,	///< -aiOhne bestaetigen: that retreat only after several plans and losses
-	AI_PART_REGROW						= 0x004,	///< -aiOhne erstab: after a broken-off attack wait for a stronger force
-	AI_PART_LAUNCH_GATE				= 0x008,	///< -aiOhne zuschwach: set out alone only if the target's defenders are not stronger
-	AI_PART_PLANNER_TARGET		= 0x010,	///< -aiOhne ziel: attack target from the planner
-	AI_PART_COUNTERS					= 0x020,	///< -aiOhne konter: late units by counter score
-	AI_PART_RAIDS							= 0x040,	///< -aiOhne ueberfall: raids with transports
-	AI_PART_MICRO							= 0x080,	///< -aiOhne gefecht: fight control
-	AI_PART_SUPERWEAPON				= 0x100,	///< -aiOhne superwaffe: own superweapon targeting
-	AI_PART_GROWTH						= 0x200,	///< -aiOhne wachstum: early expansion, permanent income and hackers as investment
-	AI_PART_BUDGET						= 0x400,	///< -aiOhne haushalt: the classic AI's base build list comes before the extra spending
-	AI_PART_FACTORIES					= 0x800,	///< -aiOhne fabriken: second and third war factory early
-	AI_PART_EARLY_PRODUCTION	= 0x1000,	///< -aiOhne fruehproduktion: own unit purchases from minute 3 instead of the late game
-	AI_PART_EARLY_ATTACK			= 0x2000,	///< -aiOhne fruehangriff: smaller attacks in the first minutes
-	AI_PART_DEFENCE						= 0x4000,	///< -aiOhne verteidigung: idle units defend the own base, attacks come back earlier
-	AI_PART_SCOUTING					= 0x8000,	///< -aiOhne aufklaerung: a scout explores the start positions
-	AI_PART_UNKNOWN						= 0x80000000	///< a name -aiOhne did not know
+	AI_PART_FORECAST_RETREAT	= 0x001,	///< -aiOff forecast: retreat when the planner forecasts a lost fight
+	AI_PART_CONFIRM						= 0x002,	///< -aiOff confirm: that retreat only after several plans and losses
+	AI_PART_REGROW						= 0x004,	///< -aiOff regrow: after a broken-off attack wait for a stronger force
+	AI_PART_LAUNCH_GATE				= 0x008,	///< -aiOff launchgate: set out alone only if the target's defenders are not stronger
+	AI_PART_PLANNER_TARGET		= 0x010,	///< -aiOff target: attack target from the planner
+	AI_PART_COUNTERS					= 0x020,	///< -aiOff counters: late units by counter score
+	AI_PART_RAIDS							= 0x040,	///< -aiOff raids: raids with transports
+	AI_PART_MICRO							= 0x080,	///< -aiOff micro: fight control
+	AI_PART_SUPERWEAPON				= 0x100,	///< -aiOff superweapon: own superweapon targeting
+	AI_PART_GROWTH						= 0x200,	///< -aiOff growth: early expansion, permanent income and hackers as investment
+	AI_PART_BUDGET						= 0x400,	///< -aiOff budget: the classic AI's base build list comes before the extra spending
+	AI_PART_FACTORIES					= 0x800,	///< -aiOff factories: second and third war factory early
+	AI_PART_EARLY_PRODUCTION	= 0x1000,	///< -aiOff earlyproduction: own unit purchases from minute 3 instead of the late game
+	AI_PART_EARLY_ATTACK			= 0x2000,	///< -aiOff earlyattack: smaller attacks in the first minutes
+	AI_PART_DEFENCE						= 0x4000,	///< -aiOff defence: idle units defend the own base, attacks come back earlier
+	AI_PART_SCOUTING					= 0x8000,	///< -aiOff scouting: a scout explores the start positions
+	AI_PART_RELEASE						= 0x8000000,	///< -aiOn release: units that stand idle in a script team at home for a minute go to the command layer (off by default)
+	AI_PART_STRENGTH					= 0x4000000,	///< -aiOff strength: an attack is recalled by build cost values instead of the combat model
+	AI_PART_TAKEOVER					= 0x2000000,	///< -aiOff takeover: the command layer takes the units of fresh script teams (not those with an own task)
+	AI_PART_DURABILITY				= 0x1000000,	///< -aiOff durability: retreat at a fixed share of the start value and attack timeout whatever the forecast
+	AI_PART_MARCH							= 0x800000,	///< -aiOff march: gather by the clock and stage next to the base, not outside the known defences
+	AI_PART_SQUAD							= 0x400000,	///< -aiOff squad: attack forces are the idle units in list order, not composed for the target
+	AI_PART_EVADE							= 0x200000,	///< -aiOff evade: harvesters and dozers stay at work while enemies are in the base
+	AI_PART_POSTS							= 0x100000,	///< -aiOff posts: idle units stand where they are instead of guarding posts
+	AI_PART_THREAT						= 0x80000,	///< -aiOff threat: any enemy worth the minimum threat in the base halts growth and help, even when the home defenders win
+	AI_PART_MIX								= 0x40000,	///< -aiOff mix: the next unit is chosen by cost and counter score, not by the gap to the wanted role shares
+	AI_PART_MEMORY_MIX				= 0x20000,	///< -aiOff memorymix: the enemy mix of the counters counts seen units only
+	AI_PART_ENERGY						= 0x10000,	///< -aiOff energy: power plants before the consumer that would tip the energy balance
+	AI_PART_UNKNOWN						= 0x80000000	///< a name -aiOff did not know
 };
 
-/// Off unless -aiMit names them: they did not raise the win rate.
-constexpr UnsignedInt AI_PARTS_OFF_BY_DEFAULT = AI_PART_FACTORIES | AI_PART_EARLY_PRODUCTION | AI_PART_EARLY_ATTACK;
+/// Off unless -aiOn names them: they did not raise the win rate.
+constexpr UnsignedInt AI_PARTS_OFF_BY_DEFAULT = AI_PART_FACTORIES | AI_PART_EARLY_PRODUCTION | AI_PART_EARLY_ATTACK | AI_PART_RELEASE;
 
 //-------------------------------------------------------------------------------------------------
 /** Global data container class
@@ -147,6 +159,7 @@ public:
 	//-----------------------------------------------------------------------------------------------
 
 	AsciiString m_mapName;  ///< hack for now, this whole this is going away
+	AsciiString m_graphicsCard;	///< name of the graphics card the renderer runs on (set by the display; crash report)
 	AsciiString m_moveHintName;
 	Bool m_useTrees;
 	Bool m_useTreeSway;
@@ -197,7 +210,7 @@ public:
 	Bool m_rightMouseAlwaysScrolls;
 	Bool m_useWaterPlane;
 	Bool m_useCloudPlane;
-	Bool m_useShadowVolumes;
+	Bool m_unusedShadowVolumes;	///<read from old GameData.ini files, no longer used
 	Bool m_useShadowDecals;
 	Int  m_textureReductionFactor;	//how much to cut texture resolution: 2 is half, 3 is quarter, etc.
 	Bool m_enableBehindBuildingMarkers;
@@ -348,7 +361,7 @@ public:
 	// release/profile build)
 	Bool m_runnerMode;											///< -runner: no drawing/sound, logic ticks unthrottled
 	AsciiString m_crcLogFile;								///< -crcLog: file for "Frame CRC" lines
-	AsciiString m_modelCheckFile;							///< -modellPruefung: load every model and DDS, write the result there, quit
+	AsciiString m_modelCheckFile;							///< -modelCheck: load every model and DDS, write the result there, quit
 	Int m_crcLogInterval;										///< -crcLogInterval: log the CRC every N logic frames
 	Int m_deepCRCFrameFirst;								///< -deepCRCFrames: deep CRC dump (file + .idx) from this logic frame (-1 = off)
 	Int m_deepCRCFrameLast;									///< -deepCRCFrames: ... up to and including this logic frame
@@ -357,12 +370,12 @@ public:
 	AsciiString m_autoSkirmishMap;					///< -skirmish: map for a skirmish without menu
 	Int m_autoSkirmishAIs;									///< -skirmishAI: number of AI opponents (brutal)
 	Int m_autoSkirmishSeed;									///< -skirmishSeed: game seed
-	Int m_autoSkirmishGraceMinutes;					///< -schonzeit N: start protection of the auto skirmish in minutes
-	Bool m_autoSkirmishSuperweaponLimit;		///< -superwaffenlimit: the auto skirmish limits superweapons
-	Int m_autoSkirmishStartingCash;					///< -startkapital N: starting cash of the auto skirmish (0 = default)
+	Int m_autoSkirmishGraceMinutes;					///< -graceTime N: start protection of the auto skirmish in minutes
+	Bool m_autoSkirmishSuperweaponLimit;		///< -superweaponLimit: the auto skirmish limits superweapons
+	Int m_autoSkirmishStartingCash;					///< -startMoney N: starting cash of the auto skirmish (0 = default)
 	AsciiString m_autoSkirmishSpec;					///< -skirmishAI as a per-slot list, e.g. "N1,N1,K2,K2"
-	Int m_aiStatsInterval;									///< -aiStats N: KISTAT every N logic frames, ends on victory (0 = off)
-	UnsignedInt m_aiPartsOff;								///< AIPart bits switched off: AI_PARTS_OFF_BY_DEFAULT, plus -aiOhne, minus -aiMit (not stored in replays)
+	Int m_aiStatsInterval;									///< -aiStats N: AISTAT every N logic frames, ends on victory (0 = off)
+	UnsignedInt m_aiPartsOff;								///< AIPart bits switched off: AI_PARTS_OFF_BY_DEFAULT, plus -aiOff, minus -aiOn (not stored in replays)
 	Bool m_blockedDeadlockFix;							///< vehicles blocked by moving vehicles for seconds get a new path (off with -noDeadlockFix)
 	UnsignedInt m_blockedDeadlockFixFrame;			///< -deadlockFixFrom N: the fix applies from logic frame N on (keeps a replay in sync up to there)
 	AsciiString m_recordReplayFile;					///< -recordReplay: copy the recorded replay here at the end
@@ -370,27 +383,27 @@ public:
 	Bool m_audioLog;												///< -audioLog: one line per audio request, cull and playback into the runner log
 
 	// Network test aids, all build configurations
-	Int m_netEmuLatency;									///< -netzLatenz: delay of received game packets in ms
-	Int m_netEmuJitter;										///< -netzSchwankung: additional random delay 0..N ms
-	Int m_netEmuLoss;											///< -netzVerlust: percent of received packets dropped
-	Int m_netEmuDuplicate;								///< -netzDoppelt: percent of received packets delivered twice
-	Int m_netEmuReorder;									///< -netzUmordnung: percent of received packets held back behind later ones
-	UnsignedInt m_netEmuSeed;							///< -netzSaat: seed of the emulator decisions (0 = from the process ID)
-	Bool m_settingsReadOnly;							///< -einstellungenNurLesen: Settings.ini and State.ini are not written
-	Int m_netLocalInstance;								///< -netzLokal N (1..8): LAN on loopback address 127.0.0.N, several instances on one machine
-	Bool m_netNoPortMapping;							///< -netzOhnePortfreigabe: do not ask the router to forward the game's ports
-	AsciiString m_netRendezvous;					///< -treffpunkt host[:port] (repeatable, ';'-separated): rendezvous servers tried first
-	Bool m_netNoRendezvous;								///< -netzOhneTreffpunkt: no rendezvous servers (no invitation codes, no relay)
-	Bool m_netForceRelay;									///< -netzNurRelais: every way between the game sockets goes through the relay (tests)
-	Int m_desyncReportFrame;							///< -desyncBerichtBei N: write a desync report at logic frame N (test of the report)
-	Bool m_noRealInput;										///< -echteEingabeAus: real mouse and keyboard input is ignored (image and input tests)
+	Int m_netEmuLatency;									///< -netLatency: delay of received game packets in ms
+	Int m_netEmuJitter;										///< -netJitter: additional random delay 0..N ms
+	Int m_netEmuLoss;											///< -netLoss: percent of received packets dropped
+	Int m_netEmuDuplicate;								///< -netDuplicate: percent of received packets delivered twice
+	Int m_netEmuReorder;									///< -netReorder: percent of received packets held back behind later ones
+	UnsignedInt m_netEmuSeed;							///< -netSeed: seed of the emulator decisions (0 = from the process ID)
+	Bool m_settingsReadOnly;							///< -settingsReadOnly: Settings.ini and State.ini are not written
+	Int m_netLocalInstance;								///< -netLocal N (1..8): LAN on loopback address 127.0.0.N, several instances on one machine
+	Bool m_netNoPortMapping;							///< -netNoPortMapping: do not ask the router to forward the game's ports
+	AsciiString m_netRendezvous;					///< -rendezvous host[:port] (repeatable, ';'-separated): rendezvous servers tried first
+	Bool m_netNoRendezvous;								///< -netNoRendezvous: no rendezvous servers (no invitation codes, no relay)
+	Bool m_netForceRelay;									///< -netRelayOnly: every way between the game sockets goes through the relay (tests)
+	Int m_desyncReportFrame;							///< -desyncReportAt N: write a desync report at logic frame N (test of the report)
+	Bool m_noRealInput;										///< -noRealInput: real mouse and keyboard input is ignored (image and input tests)
 	Bool m_testRealInput;									///< a test script command sends window messages through the real input path
-	Int m_monitorIndex;										///< -bildschirm N: open on monitor N (1 = primary); 0: the monitor of the last run
-	Int m_watchTestStart;									///< -zuschauerTest N: play -replay as a watched game that is N frames ahead at first and then grows in bursts
+	Int m_monitorIndex;										///< -monitor N: open on monitor N (1 = primary); 0: the monitor of the last run
+	Int m_watchTestStart;									///< -watchTest N: play -replay as a watched game that is N frames ahead at first and then grows in bursts
 
 	// Test helpers
-	Bool m_testAids;											///< -testhilfen or Options.ini "Testhilfen = yes": test helpers enabled (single player only)
-	AsciiString m_testAidsScript;					///< -testhilfenAblauf: file of "logic frame command [player]" lines (replay test of the test helpers)
+	Bool m_testAids;											///< -testAids or Options.ini "Testhilfen = yes": test helpers enabled (single player only)
+	AsciiString m_testAidsScript;					///< -testAidsScript: file of "logic frame command [player]" lines (replay test of the test helpers)
 	AsciiString m_testAidsMission;				///< -mission: campaign (e.g. USA, GLA, China)
 	Int m_testAidsMissionNr;							///< -mission: mission number, starting at 1
 	// Image comparison and render baseline, all build configurations
@@ -402,7 +415,7 @@ public:
 	UnsignedInt m_shotEveryDraw;							///< -shotEveryDraw: a screenshot every N drawn frames of the process, menus included (0 = off)
 	Bool m_logActions;										///< -logActions: runner log lines for destroyed objects and new particle systems
 	AsciiString m_cameraPathFile;						///< -cameraPath: camera path for image comparisons (GameClient/CameraPath.h)
-	AsciiString m_testScriptFile;						///< -testablauf: script for unattended tests (GameClient/TestScript.h)
+	AsciiString m_testScriptFile;						///< -testScript: script for unattended tests (GameClient/TestScript.h)
 	UnsignedInt m_quitAfterFrames;					///< -quitAfter: quit after N client frames, also in the menu (0 = never)
 	Bool m_noVSync;												///< -noVSync: present without vertical sync (performance measurement)
 	AsciiString m_cursorLogFile;					///< -logCursor: cursor changes and images with time, a summary per second
@@ -438,6 +451,8 @@ public:
 	Real m_terrainTessMax;								///< Largest tessellation factor (-terrainTessMax, 1..64)
 	Real m_terrainTessPixels;							///< Target screen length of a tessellated edge piece (-terrainTessPixels, 2..64)
 	Int m_terrainTessProbe;								///< Crack probe: tessellated terrain green on red (-terrainTessProbe)
+	UnsignedInt m_failTextureEvery;					///< Every n-th texture creation fails (-failTextureEvery, tests; 0 = off)
+	UnsignedInt m_simulateDeviceLoss;				///< The n-th Present counts as a lost device (-simulateDeviceLoss, tests; 0 = off)
 	Bool m_noConstantBufferRing;						///< One DISCARD per constant buffer and draw instead of the ring (-noConstantBufferRing, comparisons)
 	Bool m_noMeshInstancing;						///< every mesh drawn on its own, no instanced draws (-noMeshInstancing, comparisons)
 	Bool m_simThread;										///< logic tick on the simulation thread, main thread waits (-simThread)
@@ -744,7 +759,7 @@ public:
 
 	// the trailing '\' is included!
   const AsciiString &getPath_UserData() const { return m_userDataDir; }
-  /// EA's user data folder of the original game (read only), empty if absent or with -benutzerdaten.
+  /// EA's user data folder of the original game (read only), empty if absent or with -userData.
   const AsciiString &getPath_EAUserData() const { return m_eaUserDataDir; }
 
 private:

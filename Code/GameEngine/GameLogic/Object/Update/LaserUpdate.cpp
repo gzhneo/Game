@@ -82,6 +82,9 @@ namespace
 		LaserUpdate *newestUpdate = nullptr;
 		Int count = 0;
 		Real brightness = 1.0f;
+		// Flares of the newest laser after it ended while older ones live on: the next newest laser takes them over.
+		ParticleSystemID heldSystem = INVALID_PARTICLE_SYSTEM_ID;
+		ParticleSystemID heldTargetSystem = INVALID_PARTICLE_SYSTEM_ID;
 	};
 	using LaserPairKey = std::pair<DrawableID, DrawableID>;
 	using LaserPairMap = std::map<LaserPairKey, LaserPair>;
@@ -151,10 +154,28 @@ LaserUpdate::~LaserUpdate( void )
 	{
 		if( LaserPair *pair = findLaserPair( m_pairParentID, m_pairTargetID ) )
 		{
+			Drawable *draw = getDrawable();
+			const Bool wasNewest = draw && pair->newest == draw->getID();
 			if( pair->newestUpdate == this )
 				pair->newestUpdate = nullptr;
 			if( --pair->count <= 0 )
+			{
+				if( pair->heldSystem )
+					TheParticleSystemManager->destroyParticleSystemByID( pair->heldSystem );
+				if( pair->heldTargetSystem )
+					TheParticleSystemManager->destroyParticleSystemByID( pair->heldTargetSystem );
 				removeLaserPair( m_pairParentID, m_pairTargetID );
+			}
+			else if( wasNewest )
+			{
+				// Older lasers of the pair live on: without a newest they would all count as superseded and draw
+				// nothing until the next shot. The next one to update becomes the newest and gets the flares.
+				pair->newest = INVALID_DRAWABLE_ID;
+				pair->heldSystem = m_particleSystemID;
+				pair->heldTargetSystem = m_targetParticleSystemID;
+				m_particleSystemID = INVALID_PARTICLE_SYSTEM_ID;
+				m_targetParticleSystemID = INVALID_PARTICLE_SYSTEM_ID;
+			}
 		}
 	}
 
@@ -258,7 +279,7 @@ Bool LaserUpdate::isSupersededInPair() const
 	if( m_pairParentID == INVALID_DRAWABLE_ID )
 		return FALSE;
 	const LaserPair *pair = findLaserPair( m_pairParentID, m_pairTargetID );
-	return pair && pair->newest != getDrawable()->getID();
+	return pair && pair->newest != INVALID_DRAWABLE_ID && pair->newest != getDrawable()->getID();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -277,6 +298,24 @@ void LaserUpdate::clientUpdate( void )
 {
 	updateStartPos();
 	updateEndPos();
+
+	// The newest laser of the pair ended: this one takes its place and its flares.
+	if( m_pairParentID != INVALID_DRAWABLE_ID && getDrawable() )
+	{
+		LaserPair *pair = findLaserPair( m_pairParentID, m_pairTargetID );
+		if( pair && pair->newest == INVALID_DRAWABLE_ID )
+		{
+			pair->newest = getDrawable()->getID();
+			pair->newestUpdate = this;
+			if( !m_particleSystemID && !m_targetParticleSystemID )
+			{
+				m_particleSystemID = pair->heldSystem;
+				m_targetParticleSystemID = pair->heldTargetSystem;
+				pair->heldSystem = INVALID_PARTICLE_SYSTEM_ID;
+				pair->heldTargetSystem = INVALID_PARTICLE_SYSTEM_ID;
+			}
+		}
+	}
 
 	// A superseded laser of a stacked stream drops its muzzle and target flares; the newest one keeps them and
 	// follows the number of live lasers of the pair slowly.
@@ -411,7 +450,7 @@ void LaserUpdate::initLaser( const Object *parent, const Object *target, const C
 	// (and the light they cast) do not restart with every shot.
 	if( m_parentID != INVALID_DRAWABLE_ID && pairTargetID != INVALID_DRAWABLE_ID && !m_particleSystemID && !m_targetParticleSystemID )
 	{
-		const LaserPair *pair = findLaserPair( m_parentID, pairTargetID );
+		LaserPair *pair = findLaserPair( m_parentID, pairTargetID );
 		if( pair && pair->newestUpdate && pair->newestUpdate != this )
 		{
 			LaserUpdate *previous = pair->newestUpdate;
@@ -419,6 +458,13 @@ void LaserUpdate::initLaser( const Object *parent, const Object *target, const C
 			m_targetParticleSystemID = previous->m_targetParticleSystemID;
 			previous->m_particleSystemID = INVALID_PARTICLE_SYSTEM_ID;
 			previous->m_targetParticleSystemID = INVALID_PARTICLE_SYSTEM_ID;
+		}
+		else if( pair && !pair->newestUpdate && ( pair->heldSystem || pair->heldTargetSystem ) )
+		{
+			m_particleSystemID = pair->heldSystem;
+			m_targetParticleSystemID = pair->heldTargetSystem;
+			pair->heldSystem = INVALID_PARTICLE_SYSTEM_ID;
+			pair->heldTargetSystem = INVALID_PARTICLE_SYSTEM_ID;
 		}
 	}
 

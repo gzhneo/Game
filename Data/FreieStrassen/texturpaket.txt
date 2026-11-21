@@ -1,4 +1,4 @@
-TEXTURPAKET 1 UHD
+TEXTUREPACK 1 UHD
 ; free road textures (strassen_frei.py), files in UHD size, sizes are the EA originals
 Art\Textures\trarrow.dds 256 256
 Art\Textures\trarrowbidir.dds 256 256

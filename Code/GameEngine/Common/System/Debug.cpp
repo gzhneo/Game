@@ -62,6 +62,7 @@
 #include "GameClient/Mouse.h"
 #include "Lib/SafeString.h"
 #include "Engine/UserDataFiles.h"
+#include "Engine/EngineLog.h"
 #if defined(DEBUG_STACKTRACE) || defined(IG_DEBUG_STACKTRACE)
 	#include "Common/StackDump.h"
 #endif
@@ -388,13 +389,13 @@ void DebugInit(int flags)
 		char prevbuf[ _MAX_PATH ];
 		char curbuf[ _MAX_PATH ];
 
-		// -mehrfach (see WinMain.cpp): one log per instance, m<PID>_DebugLogFile*.txt. Read directly from
+		// -multiInstance (see WinMain.cpp): one log per instance, m<PID>_DebugLogFile*.txt. Read directly from
 		// the command line because static constructors call DebugInit before WinMain.
 		char instancePrefix[32] = "";
 		{
 			const char *cmd = ::GetCommandLineA();
 			for (const char *p = cmd; p && *p; ++p) {
-				if (_strnicmp(p, "-mehrfach", 9) == 0 && (p[9] == 0 || p[9] == ' ' || p[9] == '"')
+				if (_strnicmp(p, "-multiInstance", 14) == 0 && (p[14] == 0 || p[14] == ' ' || p[14] == '"')
 					&& p != cmd && (p[-1] == ' ' || p[-1] == '"')) {
 					WWFormat::Into(instancePrefix, "m{:d}_", ::GetCurrentProcessId());
 					break;
@@ -453,6 +454,19 @@ void DebugLog(const char *format, ...)
 
 	whackFunnyCharacters(theBuffer);
 	doLogOutput(theBuffer);
+
+	// Also into the ring buffer of the crash report, so EngineLog.txt shows what led up to a crash.
+	// Only once main has started the memory manager: the engine log's first use allocates. Lines logged
+	// while static constructors start it would re-enter that start and the log's static init, and a log
+	// built that early is destroyed at exit after the debug shutdown.
+	if (isMemoryManagerOfficiallyInited())
+	{
+		char line[192];
+		safe_strcpy(line, theBuffer);
+		for (size_t n = strlen(line); n > 0 && (line[n - 1] == '\n' || line[n - 1] == '\r'); --n)
+			line[n - 1] = 0;
+		::Engine::Log::write(::Engine::LOG_CAT_ENGINE, ::Engine::LOG_DEBUG, "%s", line);
+	}
 } 
 #endif
 

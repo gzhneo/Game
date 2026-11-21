@@ -2,7 +2,7 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Determinismus-Werkzeug fuer Replays (E-0.2/E-0.3).
+"""Determinismus-Werkzeug fuer Replays.
 
 Zwei Befehle:
 
@@ -193,7 +193,7 @@ def main():
     r = sub.add_parser("record", parents=[common], help="Referenz-Replay aufnehmen")
     r.add_argument("--map", required=True, help='z. B. "Alpine Assault"')
     r.add_argument("--ai", default="3",
-                   help='Zahl der KI-Gegner oder Belegung je Platz wie -skirmishAI, z. B. "N1,N1,K2,K2" (neue KI, TODO 50)')
+                   help='Zahl der KI-Gegner oder Belegung je Platz wie -skirmishAI, z. B. "N1,N1,K2,K2" (neue KI)')
     r.add_argument("--seed", type=int, default=1)
     r.add_argument("--frames", type=int, default=9000, help="Logik-Frames (30 = 1 s Spielzeit)")
     r.add_argument("--out", required=True, help="Pfad ohne Endung; legt .rep und .crc an")

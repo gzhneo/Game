@@ -88,7 +88,7 @@ public:
 	///Swaps the specified textures in the render object prototype.
 	int replacePrototypeTexture(RenderObjClass *robj, const char * oldname, const char * newname);
 
-	/// -modellPruefung: loads every model under Art\W3D and every DDS under Art\Textures, writes what loaded,
+	/// -modelCheck: loads every model under Art\W3D and every DDS under Art\Textures, writes what loaded,
 	/// what was already there and what the loaders rejected to outPath. Returns the number of rejected parts.
 	int Check_Model_Files(const char *outPath);
 

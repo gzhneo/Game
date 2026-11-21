@@ -1,12 +1,17 @@
-TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
+TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15419 MB uma nein vorhanden SD,HD,UHD paket 5 abgewiesen 0
+MOD ordner ProjectData\Inhalt\BaeumeFrei\ dateien 217
+FREIER INHALT ProjectData\Inhalt\BaeumeFrei\ dateien 217 stufe SD manifest 101
 MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
 FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
 MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
 FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
-TEXTURPAKET ersetzt 0 texturen 63
-VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+TEXTURPAKET ersetzt 0 texturen 164
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15419 MB (used 0 MB), dedicated 16191 MB, shared 48862 MB
 WORKERS 30
-D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+VORABLESEN plan dateien 1013 mb 1087
+D3D11EFFECTS flags 0xC7DDFFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+GRAFIKKARTE 1002:7550 AMD Radeon RX 9070 von 2
+VORABLESEN dateien 1013 mb 1087 ms 234
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
 STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
 TESTHILFE ERROR script file not found
@@ -159,13 +164,13 @@ STATE frame 2700 mode 2 players 6 objects 705 recorder 0 particles 4/0
 END maxFrames 3600
 3600 DDDD357B
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
-BENCH ticks 3598 mean 0.325 p50 0.240 p95 0.622 p99 0.895 max 13.997 total 1169 ms
-FRAMES frames 3540 mean 0.332 p50 0.243 p95 0.623 p99 0.896 max 19.474 total 1176 ms
-PFADSUCHE 0.0217 ms je Tick mit Anfragen (323 Ticks, hoechstens 2.307 ms) anfragen 347 zellen 12664 warteschlange 1.1 hoechstens 3 rest 0.00 anfragen_je_tick 301 22 0 0 einzeln_hoechstens 1.615 ms
-PFADSUCHE_ARTEN pfad 331 zellen 12170 ms 6.4 hoechstens 1.61 naechster 1 zellen 259 ms 0.1 hoechstens 0.09 ausweichen 5 zellen 256 ms 0.1 hoechstens 0.04 sichtlinie 11314 schritte 155988 abbrueche 11277 vorrat_leer 0 pfad_fehlschlaege 0 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 27137 kleinste 27066 frei_bei_vorrat_leer 0
-LOGIKPHASEN 3601 Ticks, 0.2665 ms je Tick (Mittel/hoechstens ms): skript 0.0215/0.574 gelaende 0.0001/0.000 befehle 0.0051/16.953 updates 0.1786/202.266 ki 0.0348/17.425 bau 0.0001/0.001 partition 0.0254/0.421 tickende 0.0010/0.162
-LOGIKMODULE 32 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): RailroadBehavior 0.1236 13.0 202.175 ProductionUpdate 0.0129 9.9 11.617 AIUpdateInterface 0.0055 4.3 0.371 CommandButtonHuntUpdate 0.0053 0.1 0.543 DozerAIUpdate 0.0050 3.8 0.471 GarrisonContain 0.0030 26.0 0.209 PhysicsBehavior 0.0028 4.5 0.301 SupplyTruckAIUpdate 0.0027 1.6 0.322 SpawnBehavior 0.0018 1.5 3.150 ChinookAIUpdate 0.0015 1.1 0.263 ObjectWeaponStatusHelper 0.0010 14.7 0.254 StealthDetectorUpdate 0.0009 0.5 0.018
-LOGIKSPITZE ab Tick 31: laengster Tick 3600 16.992 ms: skript 0.031 gelaende 0.000 befehle 16.953 updates 0.000 ki 0.002 bau 0.000 partition 0.002 tickende 0.002; laengstes Update 11.617 ms Tick 2072 ProductionUpdate an AmericaBarracks
-GPUEFFEKTE flags 0x1FFFF samples 8 bilder 49 bild 13.0199 ms (49) bodendetail zeichnungen 0.0 von 0.0 felder 204 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 279.2 umlaeufe 0.09
-PARTIKELZEIT simulation 0.0003 ms je Tick (53 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+BENCH ticks 3598 mean 0.346 p50 0.267 p95 0.611 p99 0.944 max 17.886 total 1245 ms
+FRAMES frames 3540 mean 0.351 p50 0.268 p95 0.616 p99 0.940 max 19.399 total 1243 ms
+PFADSUCHE 0.0260 ms je Tick mit Anfragen (323 Ticks, hoechstens 2.899 ms) anfragen 347 zellen 12664 warteschlange 1.1 hoechstens 3 rest 0.00 anfragen_je_tick 301 22 0 0 einzeln_hoechstens 1.825 ms
+PFADSUCHE_ARTEN pfad 331 zellen 12170 ms 7.7 hoechstens 1.82 naechster 1 zellen 259 ms 0.1 hoechstens 0.10 ausweichen 5 zellen 256 ms 0.1 hoechstens 0.03 sichtlinie 11314 schritte 155988 abbrueche 11277 vorrat_leer 0 pfad_fehlschlaege 0 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 27137 kleinste 27066 frei_bei_vorrat_leer 0
+LOGIKPHASEN 3601 Ticks, 0.2216 ms je Tick (Mittel/hoechstens ms): skript 0.0236/0.738 gelaende 0.0001/0.008 befehle 0.0052/17.479 updates 0.1255/7.805 ki 0.0403/20.056 bau 0.0001/0.005 partition 0.0256/0.221 tickende 0.0012/0.121
+LOGIKMODULE 32 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): RailroadBehavior 0.0697 13.0 4.386 ProductionUpdate 0.0113 9.9 7.721 DozerAIUpdate 0.0060 3.8 0.376 AIUpdateInterface 0.0056 4.3 0.212 CommandButtonHuntUpdate 0.0049 0.1 0.395 GarrisonContain 0.0030 26.0 0.087 PhysicsBehavior 0.0030 4.5 0.113 SupplyTruckAIUpdate 0.0028 1.6 0.188 SpawnBehavior 0.0023 1.5 4.315 ChinookAIUpdate 0.0016 1.1 0.110 StealthDetectorUpdate 0.0012 0.5 0.031 ObjectWeaponStatusHelper 0.0010 14.7 0.058
+LOGIKSPITZE ab Tick 31: laengster Tick 3600 17.534 ms: skript 0.047 gelaende 0.000 befehle 17.479 updates 0.000 ki 0.002 bau 0.000 partition 0.002 tickende 0.003; laengstes Update 7.721 ms Tick 1376 ProductionUpdate an ChinaBarracks
+GPUEFFEKTE flags 0xC7DDFFFF samples 8 bilder 49 bild 4.3953 ms (49) bodendetail zeichnungen 0.0 von 0.0 felder 204 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 279.2 umlaeufe 0.09
+PARTIKELZEIT simulation 0.0005 ms je Tick (53 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
 EXIT code 0

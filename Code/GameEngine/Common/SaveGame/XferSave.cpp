@@ -74,7 +74,7 @@ XferSave::~XferSave( void )
 	{
 
 		DEBUG_CRASH(( "Warning: Xfer file '%s' was left open\n", m_identifier.str() ));
-		close();
+		try { close(); } catch( ... ) {}		// a destructor must not throw
 
 	}  // end if
 
@@ -149,12 +149,22 @@ void XferSave::close( void )
 
 	}  // end if
 
-	// close the file
-	fclose( m_fileFP );
+	// Buffered data that cannot be written (disk full, network drive gone) shows only when the file is flushed
+	// and closed: report it, or an incomplete file would replace the good save.
+	const Bool flushed = ( fflush( m_fileFP ) == 0 && ferror( m_fileFP ) == 0 );
+	const Bool closed = ( fclose( m_fileFP ) == 0 );
 	m_fileFP = nullptr;
 
 	// erase the filename
 	m_identifier.clear();
+
+	if( !flushed || !closed )
+	{
+
+		DEBUG_CRASH(( "XferSave::close - Error writing the file\n" ));
+		throw XFER_WRITE_ERROR;
+
+	}  // end if
 
 }  // end close
 
@@ -182,7 +192,7 @@ Int XferSave::beginBlock( void )
 		
 		DEBUG_CRASH(( "XferSave::beginBlock - Error writing block size in '%s'\n",
 									m_identifier.str() ));
-		return XFER_WRITE_ERROR;
+		throw XFER_WRITE_ERROR;
 
 	}  // end if
 

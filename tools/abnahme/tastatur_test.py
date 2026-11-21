@@ -2,20 +2,20 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Tastatur-Livetest (TODO 68 (1), 2026-09-26): Tastendruecke als Fensternachrichten an das eigene Spielfenster.
+"""Tastatur-Livetest: Tastendruecke als Fensternachrichten an das eigene Spielfenster.
 
-Seit TODO 68 liest das Spiel die Tastatur aus WM_KEYDOWN/WM_KEYUP/WM_SYSKEY* (Win32Keyboard) statt ueber
+Das Spiel liest die Tastatur aus WM_KEYDOWN/WM_KEYUP/WM_SYSKEY* (Win32Keyboard) statt ueber
 DirectInput. Deshalb lassen sich Tasten hier per PostMessage an genau das Fenster des gestarteten Spiels schicken
 -- kein globales SendInput, andere Fenster (und der Nutzer am Rechner) bekommen nichts ab. Belege sind
 Fensterbilder (PrintWindow, auch wenn das Fenster verdeckt ist) und das Spielprotokoll.
 
-Zwei Laeufe je Spiel, jeder mit -testablauf (Code/GameEngine/GameClient/TestScript.cpp), das die Menues
+Zwei Laeufe je Spiel, jeder mit -testScript (Code/GameEngine/GameClient/TestScript.cpp), das die Menues
 faehrt und an festen Stellen "log TASTE_..." schreibt; dieses Skript wartet auf die Zeile und handelt dann:
 
-  menue    Hauptmenue (Bild), Mehrspieler-Untermenue (Bild: kein "Online"-Knopf mehr, TODO 69), LAN-Lobby:
+  menue    Hauptmenue (Bild), Mehrspieler-Untermenue (Bild: kein "Online"-Knopf mehr), LAN-Lobby:
            in das Chatfeld "Tast", Umlaute per WM_CHAR (der Weg fuer Texteingabe und IME, unveraendert),
            Ruecktaste (Tastencode), Enter (Tastencode) -- die Chatzeile muss im Bild erscheinen.
-  partie   Skirmish als Beobachter (-skirmish, -testhilfen): Pfeiltaste rechts gedrueckt halten, die Kamera
+  partie   Skirmish als Beobachter (-skirmish, -testAids): Pfeiltaste rechts gedrueckt halten, die Kamera
            faehrt (Bilder unterscheiden sich); Fokusverlust (WM_KILLFOCUS) -- die Kamera muss stehen bleiben,
            obwohl kein Loslassen kam (keine festhaengende Taste). Dann Pfeil links druecken und loslassen.
            Alt+M (WM_SYSKEYDOWN, Alt-Modifikator): Testhilfen-Seitenleiste klappt auf.
@@ -62,41 +62,41 @@ TASTEN = {
 # 1,5 s); eine festhaengende Taste faehrt dagegen mit rund 100 Pixeln je Sekunde weiter.
 STEHT_PX = 5.0
 
-FENSTER = ["-win", "-xres", "800", "-yres", "600", "-fixedTimeStep", "-mehrfach", "-ignoreAsserts", "-nologo"]
+FENSTER = ["-win", "-xres", "800", "-yres", "600", "-fixedTimeStep", "-multiInstance", "-ignoreAsserts", "-nologo"]
 
 MENUE = """# tastatur_test.py: Menues, LAN-Lobby-Chat
-hauptmenue
-warte 120
+mainMenu
+wait 120
 log TASTE_HAUPTMENUE
-warte 400
-klickFalls MainMenu.wnd:ButtonMultiplayer
-fenster MainMenu.wnd:ButtonNetwork
-warte 60
+wait 400
+clickIf MainMenu.wnd:ButtonMultiplayer
+window MainMenu.wnd:ButtonNetwork
+wait 60
 log TASTE_MEHRSPIELER
-warte 400
-klick MainMenu.wnd:ButtonNetwork
-fenster LanLobbyMenu.wnd:ButtonHost
-warte 120
-klick LanLobbyMenu.wnd:TextEntryChat
-warte 30
+wait 400
+click MainMenu.wnd:ButtonNetwork
+window LanLobbyMenu.wnd:ButtonHost
+wait 120
+click LanLobbyMenu.wnd:TextEntryChat
+wait 30
 log TASTE_LANLOBBY
-warte 4000
+wait 4000
 log TASTE_LANLOBBY_ENDE
-klick LanLobbyMenu.wnd:ButtonBack
-hauptmenue
-klickFalls MainMenu.wnd:ButtonMultiBack
-hauptmenue
-warte 60
-beenden
+click LanLobbyMenu.wnd:ButtonBack
+mainMenu
+clickIf MainMenu.wnd:ButtonMultiBack
+mainMenu
+wait 60
+quit
 """
 
 PARTIE = """# tastatur_test.py: Partie als Beobachter
-partie
-logik 90
+game
+logic 90
 log TASTE_PARTIE
-logik 1500
+logic 1500
 log TASTE_PARTIE_ENDE
-beenden
+quit
 """
 
 
@@ -214,7 +214,7 @@ class Lauf:
 
     def start(self):
         wait_free()
-        cmd = [self.exe] + FENSTER + ["-testablauf", self.skriptpfad] + self.extra
+        cmd = [self.exe] + FENSTER + ["-testScript", self.skriptpfad] + self.extra
         self.proc = subprocess.Popen(cmd, cwd=os.path.dirname(self.exe))
         self.log = os.path.join(os.path.dirname(self.exe), f"m{self.proc.pid}_DebugLogFileD.txt")
         self.hwnd = fenster_von(self.proc.pid)
@@ -298,8 +298,8 @@ def lauf_menue(a, erg):
 
 
 def lauf_partie(a, erg):
-    extra = ["-skirmish", a.map, "-skirmishAI", "2", "-skirmishSeed", "1", "-testhilfen"]
-    lauf = Lauf(a.exe, a.out, "partie", PARTIE, extra)
+    extra = ["-skirmish", a.map, "-skirmishAI", "2", "-skirmishSeed", "1", "-testAids"]
+    lauf = Lauf(a.exe, a.out, "game", PARTIE, extra)
     hwnd = lauf.start()
     try:
         lauf.warte_auf("TASTE_PARTIE", frist=900)
@@ -369,14 +369,14 @@ def main():
     ap.add_argument("--exe", required=True)
     ap.add_argument("--out", default="tastatur-out")
     ap.add_argument("--map", default="Alpine Assault")
-    ap.add_argument("--nur", choices=("menue", "partie"))
+    ap.add_argument("--nur", choices=("menue", "game"))
     a = ap.parse_args()
     if Image is None:
         print("Pillow fehlt (pip install pillow)")
         return 2
     os.makedirs(a.out, exist_ok=True)
     erg = []
-    for name, fn in (("menue", lauf_menue), ("partie", lauf_partie)):
+    for name, fn in (("menue", lauf_menue), ("game", lauf_partie)):
         if a.nur and a.nur != name:
             continue
         try:

@@ -50,7 +50,7 @@ constexpr auto DEFAULT_IB_SIZE = 5000;
 static bool _DynamicSortingIndexArrayInUse=false;
 static SortingIndexBufferClass* _DynamicSortingIndexArray;
 static unsigned short _DynamicSortingIndexArraySize=0;
-static unsigned short _DynamicSortingIndexArrayOffset=0;	
+static unsigned _DynamicSortingIndexArrayOffset=0;		// wider than the 16 bit index range: the sum of a frame can pass 65535	
 
 static bool _DynamicDeviceIndexBufferInUse=false;
 static DeviceIndexBufferClass* _DynamicDeviceIndexBuffer=nullptr;
@@ -182,7 +182,7 @@ void IndexBufferClass::Copy(unsigned short* indices,unsigned first_index,unsigne
 // ----------------------------------------------------------------------------
 
 
-IndexBufferClass::WriteLockClass::WriteLockClass(IndexBufferClass* index_buffer_, int flags) : index_buffer(index_buffer_)
+IndexBufferClass::WriteLockClass::WriteLockClass(IndexBufferClass* index_buffer_, int flags) : index_buffer(index_buffer_), indices(nullptr)
 {
 	RENDER_THREAD_ASSERT();
 	WWASSERT(index_buffer);
@@ -192,6 +192,7 @@ IndexBufferClass::WriteLockClass::WriteLockClass(IndexBufferClass* index_buffer_
 	case BUFFER_TYPE_DEVICE:
 		Device_Assert();
 		Device_ErrorCode(RenderDevice::Lock_Index_Buffer(static_cast<DeviceIndexBufferClass*>(index_buffer)->Get_Device_Index_Buffer(), 0, index_buffer->Get_Index_Count()*sizeof(WORD), reinterpret_cast<void**>(&indices), flags));
+		if (!indices) indices=static_cast<unsigned short*>(Scratch.Get(index_buffer->Get_Index_Count()*sizeof(unsigned short)));
 		break;
 	case BUFFER_TYPE_SORTING:
 		indices=static_cast<SortingIndexBufferClass*>(index_buffer)->index_buffer;
@@ -228,7 +229,8 @@ IndexBufferClass::WriteLockClass::~WriteLockClass()
 
 IndexBufferClass::AppendLockClass::AppendLockClass(IndexBufferClass* index_buffer_,unsigned start_index, unsigned index_range)
 	:
-	index_buffer(index_buffer_)
+	index_buffer(index_buffer_),
+	indices(nullptr)
 {
 	RENDER_THREAD_ASSERT();
 	WWASSERT(start_index+index_range<=index_buffer->Get_Index_Count());
@@ -239,6 +241,7 @@ IndexBufferClass::AppendLockClass::AppendLockClass(IndexBufferClass* index_buffe
 	case BUFFER_TYPE_DEVICE:
 		Device_Assert();
 		Device_ErrorCode(RenderDevice::Lock_Index_Buffer(static_cast<DeviceIndexBufferClass*>(index_buffer)->index_buffer, start_index*sizeof(unsigned short), index_range*sizeof(unsigned short), reinterpret_cast<void**>(&indices), 0));
+		if (!indices) indices=static_cast<unsigned short*>(Scratch.Get(index_range*sizeof(unsigned short)));
 		break;
 	case BUFFER_TYPE_SORTING:
 		indices=static_cast<SortingIndexBufferClass*>(index_buffer)->index_buffer+start_index;
@@ -409,7 +412,8 @@ void DynamicIBAccessClass::_Deinit()
 
 DynamicIBAccessClass::WriteLockClass::WriteLockClass(DynamicIBAccessClass* ib_access_)
 	:
-	DynamicIBAccess(ib_access_)
+	DynamicIBAccess(ib_access_),
+	Indices(nullptr)
 {
 	RENDER_THREAD_ASSERT();
 	DynamicIBAccess->IndexBuffer->Add_Ref();
@@ -420,6 +424,7 @@ DynamicIBAccessClass::WriteLockClass::WriteLockClass(DynamicIBAccessClass* ib_ac
 		Device_Assert();
 		Device_ErrorCode(
 			RenderDevice::Lock_Index_Buffer(static_cast<DeviceIndexBufferClass*>(DynamicIBAccess->IndexBuffer)->Get_Device_Index_Buffer(), DynamicIBAccess->IndexBufferOffset*sizeof(WORD), DynamicIBAccess->Get_Index_Count()*sizeof(WORD), reinterpret_cast<void**>(&Indices), !DynamicIBAccess->IndexBufferOffset ? WW3D_LOCK_DISCARD : WW3D_LOCK_NOOVERWRITE));
+		if (!Indices) Indices=static_cast<unsigned short*>(Scratch.Get(DynamicIBAccess->Get_Index_Count()*sizeof(unsigned short)));
 		break;
 	case BUFFER_TYPE_DYNAMIC_SORTING:
 		Indices=static_cast<SortingIndexBufferClass*>(DynamicIBAccess->IndexBuffer)->index_buffer;
@@ -495,7 +500,12 @@ void DynamicIBAccessClass::Allocate_Sorting_Dynamic_Buffer()
 	_DynamicSortingIndexArrayInUse=true;
 
 	unsigned new_index_count=_DynamicSortingIndexArrayOffset+IndexCount;
-	WWASSERT(new_index_count<65536);
+	if (new_index_count>65535) {
+		// The nodes already inserted hold their own reference to the old array.
+		REF_PTR_RELEASE(_DynamicSortingIndexArray);
+		_DynamicSortingIndexArrayOffset=0;
+		new_index_count=IndexCount;
+	}
 	if (new_index_count>_DynamicSortingIndexArraySize) {
 		REF_PTR_RELEASE(_DynamicSortingIndexArray);
 		_DynamicSortingIndexArraySize=static_cast<unsigned short>(new_index_count);
@@ -508,7 +518,7 @@ void DynamicIBAccessClass::Allocate_Sorting_Dynamic_Buffer()
 	}
 
 	REF_PTR_SET(IndexBuffer,_DynamicSortingIndexArray);
-	IndexBufferOffset=_DynamicSortingIndexArrayOffset;
+	IndexBufferOffset=static_cast<unsigned short>(_DynamicSortingIndexArrayOffset);
 }
 
 void DynamicIBAccessClass::_Reset(bool frame_changed)

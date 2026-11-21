@@ -413,7 +413,6 @@ Int parseNoShadows(char *args[], int)
 {
 	if (TheWritableGlobalData)
 	{
-		TheWritableGlobalData->m_useShadowVolumes = false;
 		TheWritableGlobalData->m_useShadowDecals = false;
 	}
 	return 1;
@@ -1044,14 +1043,14 @@ Int parseBaseGame(char *args[], Int num)
 	return (num > 1) ? 2 : 1;
 }
 
-// -benutzerdaten <folder> (user data folder, so test runs stay out of the real one) is evaluated by the
+// -userData <folder> (user data folder, so test runs stay out of the real one) is evaluated by the
 // GlobalData constructor before parseCommandLine; here only skip the value.
 Int parseUserDataFolder(char *args[], Int num)
 {
 	return (num > 1) ? 2 : 1;
 }
 
-// -vorlagenAusgeben <file>: after the subsystems are loaded, write the things, upgrades, sciences and special
+// -dumpGameData <file>: after the subsystems are loaded, write the things, upgrades, sciences and special
 // powers with the numbers that replays and network commands carry (GameEngine::init). A plain std::string:
 // this static lives past the memory manager.
 static std::string s_gameDataDumpPath;
@@ -1089,13 +1088,13 @@ const char *getGameDataDumpPath()
 	return s_gameDataDumpPath.empty() ? nullptr : s_gameDataDumpPath.c_str();
 }
 
-// -dateiIndexAusgeben <file>: after the tiers and mods are loaded, write every archived path and the
+// -dumpFileIndex <file>: after the tiers and mods are loaded, write every archived path and the
 // archive it resolves to (ArchiveFileSystem::writeIndexDump). A plain std::string: this static lives
 // past the memory manager, which an AsciiString would need at exit. Its heap block is released right
 // after the dump, otherwise the leak report at exit counts it.
 static std::string s_indexDumpPath;
 
-// -modellPruefung <file>: after the display is up, load every model under Art\W3D and every DDS under
+// -modelCheck <file>: after the display is up, load every model under Art\W3D and every DDS under
 // Art\Textures, write loaded, duplicate and rejected parts to <file> and quit (W3DAssetManager::Check_Model_Files).
 Int parseModelCheck(char *args[], Int num)
 {
@@ -1353,7 +1352,7 @@ Int parseSkirmishAI(char *args[], int num)
 	return 2;
 }
 
-// -aiStats N: KISTAT every N logic frames to the runner log, KISIEG and quit as soon as only one
+// -aiStats N: AISTAT every N logic frames to the runner log, AIVICTORY and quit as soon as only one
 // alliance is left.
 Int parseAIStats(char *args[], int num)
 {
@@ -1366,17 +1365,17 @@ Int parseAIStats(char *args[], int num)
 }
 
 // Bits of a comma list of AIPart names; an unknown name gives AI_PART_UNKNOWN, which the AI reports in
-// its KIOHNE log line.
+// its AIOFF log line.
 static UnsignedInt parseAIPartList( const char *text )
 {
 	static const struct { const char *name; UnsignedInt part; } parts[] =
 	{
-		{ "prognose", AI_PART_FORECAST_RETREAT }, { "bestaetigen", AI_PART_CONFIRM }, { "erstab", AI_PART_REGROW },
-		{ "zuschwach", AI_PART_LAUNCH_GATE }, { "ziel", AI_PART_PLANNER_TARGET }, { "konter", AI_PART_COUNTERS },
-		{ "ueberfall", AI_PART_RAIDS }, { "gefecht", AI_PART_MICRO }, { "superwaffe", AI_PART_SUPERWEAPON },
-		{ "wachstum", AI_PART_GROWTH }, { "haushalt", AI_PART_BUDGET }, { "fabriken", AI_PART_FACTORIES },
-		{ "fruehproduktion", AI_PART_EARLY_PRODUCTION }, { "fruehangriff", AI_PART_EARLY_ATTACK },
-		{ "verteidigung", AI_PART_DEFENCE }, { "aufklaerung", AI_PART_SCOUTING }
+		{ "forecast", AI_PART_FORECAST_RETREAT }, { "confirm", AI_PART_CONFIRM }, { "regrow", AI_PART_REGROW },
+		{ "launchgate", AI_PART_LAUNCH_GATE }, { "target", AI_PART_PLANNER_TARGET }, { "counters", AI_PART_COUNTERS },
+		{ "raids", AI_PART_RAIDS }, { "micro", AI_PART_MICRO }, { "superweapon", AI_PART_SUPERWEAPON },
+		{ "growth", AI_PART_GROWTH }, { "budget", AI_PART_BUDGET }, { "factories", AI_PART_FACTORIES },
+		{ "earlyproduction", AI_PART_EARLY_PRODUCTION }, { "earlyattack", AI_PART_EARLY_ATTACK },
+		{ "defence", AI_PART_DEFENCE }, { "scouting", AI_PART_SCOUTING }, { "energy", AI_PART_ENERGY }, { "memorymix", AI_PART_MEMORY_MIX }, { "mix", AI_PART_MIX }, { "threat", AI_PART_THREAT }, { "posts", AI_PART_POSTS }, { "evade", AI_PART_EVADE }, { "squad", AI_PART_SQUAD }, { "march", AI_PART_MARCH }, { "durability", AI_PART_DURABILITY }, { "takeover", AI_PART_TAKEOVER }, { "strength", AI_PART_STRENGTH }, { "release", AI_PART_RELEASE }
 	};
 	UnsignedInt bits = 0;
 	std::string list = text;
@@ -1402,16 +1401,16 @@ static UnsignedInt parseAIPartList( const char *text )
 	return bits;
 }
 
-// -aiOhne prognose,erstab,...: switch parts of the new AI off (AIPart).
-Int parseAIOhne(char *args[], int num)
+// -aiOff forecast,regrow,...: switch parts of the new AI off (AIPart).
+Int parseAIOff(char *args[], int num)
 {
 	if (TheWritableGlobalData && num > 1)
 		TheWritableGlobalData->m_aiPartsOff |= parseAIPartList( args[1] );
 	return 2;
 }
 
-// -aiMit fabriken,...: switch parts of the new AI on that are off by default (AI_PARTS_OFF_BY_DEFAULT).
-Int parseAIMit(char *args[], int num)
+// -aiOn factories,...: switch parts of the new AI on that are off by default (AI_PARTS_OFF_BY_DEFAULT).
+Int parseAIOn(char *args[], int num)
 {
 	if (TheWritableGlobalData && num > 1)
 	{
@@ -1449,7 +1448,7 @@ Int parseSkirmishSeed(char *args[], int num)
 	return 2;
 }
 
-// -startkapital N: starting cash of the auto skirmish (-skirmish).
+// -startMoney N: starting cash of the auto skirmish (-skirmish).
 Int parseStartkapital(char *args[], int num)
 {
 	if (TheWritableGlobalData && num > 1)
@@ -1460,7 +1459,7 @@ Int parseStartkapital(char *args[], int num)
 	return 2;
 }
 
-// -superwaffenlimit: the auto skirmish (-skirmish) limits superweapons (one per player).
+// -superweaponLimit: the auto skirmish (-skirmish) limits superweapons (one per player).
 Int parseSuperwaffenlimit(char *args[], int num)
 {
 	if (TheWritableGlobalData)
@@ -1468,7 +1467,7 @@ Int parseSuperwaffenlimit(char *args[], int num)
 	return 1;
 }
 
-// -schonzeit N: start protection of the auto skirmish (-skirmish) in minutes.
+// -graceTime N: start protection of the auto skirmish (-skirmish) in minutes.
 Int parseSchonzeit(char *args[], int num)
 {
 	if (TheWritableGlobalData && num > 1)
@@ -1593,7 +1592,7 @@ Int parseCameraPath(char *args[], int num)
 	return 2;
 }
 
-// -testablauf <file>: script for unattended tests, format in GameClient/TestScript.cpp.
+// -testScript <file>: script for unattended tests, format in GameClient/TestScript.cpp.
 Int parseTestScript(char *args[], int num)
 {
 	if (TheWritableGlobalData && num > 1)
@@ -1935,7 +1934,7 @@ Int parseSceneFormat(char *args[], int num)
 	return 2;
 }
 
-// -gpuTiming: GPU timestamps (3D scene, upscale, whole frame) also without effects; GPUEFFEKTE line at the end.
+// -gpuTiming: GPU timestamps (3D scene, upscale, whole frame) also without effects; GPUEFFECTS line at the end.
 Int parseGpuTiming(char *args[], int num)
 {
 	if (TheWritableGlobalData)
@@ -2012,7 +2011,7 @@ Int parseDepthD32(char *args[], int)
 }
 
 // Network emulator for received game and lobby packets (Transport, Engine::NetEmulator), and a LAN
-// on loopback addresses so several instances (-mehrfach) play a LAN game on one machine.
+// on loopback addresses so several instances (-multiInstance) play a LAN game on one machine.
 static Int parseNetInt(char *args[], int num, Int GlobalData::*field)
 {
 	if (TheWritableGlobalData && num > 1)
@@ -2036,7 +2035,7 @@ Int parseMsaa(char *args[], int num)
 	return 2;
 }
 
-// -einstellungenNurLesen: the settings files are read but not written (tests on the user's machine).
+// -settingsReadOnly: the settings files are read but not written (tests on the user's machine).
 Int parseSettingsReadOnly(char *[], int)
 {
 	if (TheWritableGlobalData)
@@ -2059,7 +2058,7 @@ Int parseNetNoPortMapping(char *[], int)
 		TheWritableGlobalData->m_netNoPortMapping = TRUE;
 	return 1;
 }
-// Rendezvous servers for games over the internet; -treffpunkt may be given several times.
+// Rendezvous servers for games over the internet; -rendezvous may be given several times.
 Int parseRendezvous(char *args[], int num)
 {
 	if (TheWritableGlobalData && num > 1)
@@ -2076,7 +2075,7 @@ Int parseNoRendezvous(char *[], int)
 		TheWritableGlobalData->m_netNoRendezvous = TRUE;
 	return 1;
 }
-// -netzNurRelais: with a rendezvous server (-treffpunkt) every way between the game sockets uses the relay, no direct path
+// -netRelayOnly: with a rendezvous server (-rendezvous) every way between the game sockets uses the relay, no direct path
 Int parseNetForceRelay(char *[], int)
 {
 	if (TheWritableGlobalData)
@@ -2090,7 +2089,7 @@ Int parseNetSeed(char *args[], int num)
 	return 2;
 }
 
-// -testhilfen enables the test helpers (effective in single player only); -testhilfenAblauf <file>
+// -testAids enables the test helpers (effective in single player only); -testAidsScript <file>
 // triggers them at fixed logic frames (replay test, also enables them); -mission <campaign> <nr> starts
 // a campaign mission without menu. GameEngine::init sets the map once the campaigns are loaded; until
 // then a placeholder holds the shell.
@@ -2228,9 +2227,38 @@ Int parseNoConstantBufferRing(char *args[], int)
 	return 1;
 }
 
+// -simulateDeviceLoss N: the N-th Present counts as a lost device; the renderer then recreates the device
+// (test of the rebuild).
+Int parseSimulateDeviceLoss(char *args[], int num)
+{
+	if (TheWritableGlobalData && num > 1)
+		TheWritableGlobalData->m_simulateDeviceLoss = static_cast<UnsignedInt>(atoi(args[1]));
+	return 2;
+}
+
+// -failTextureEvery N: every N-th texture creation fails (test of the handling of a full video memory).
+Int parseFailTextureEvery(char *args[], int num)
+{
+	if (TheWritableGlobalData && num > 1)
+		TheWritableGlobalData->m_failTextureEvery = static_cast<UnsignedInt>(atoi(args[1]));
+	return 2;
+}
+
+// -adapter <choice>: the graphics card for this run, over Settings.ini [Display] Adapter. The choice is "VVVV:DDDD"
+// (hexadecimal vendor and device identifier), the number of the adapter in the list or part of its name.
+Int parseAdapter(char *args[], int num)
+{
+	if (num > 1)
+		UserSettings::setCommandLine("Display.Adapter", args[1]);
+	return 2;
+}
+
 static CommandLineParam params[] =
 {
 	{ "-noshellmap", parseNoShellMap },
+	{ "-adapter", parseAdapter },
+	{ "-simulateDeviceLoss", parseSimulateDeviceLoss },
+	{ "-failTextureEvery", parseFailTextureEvery },
 	{ "-noConstantBufferRing", parseNoConstantBufferRing },
 	{ "-cpuTerrainLights", parseCpuTerrainLights },
 	{ "-cpuSkinning", parseCpuSkinning },
@@ -2248,36 +2276,36 @@ static CommandLineParam params[] =
 	{ "-skirmish", parseSkirmish },
 	{ "-skirmishAI", parseSkirmishAI },
 	{ "-skirmishSeed", parseSkirmishSeed },
-	{ "-schonzeit", parseSchonzeit },
-	{ "-superwaffenlimit", parseSuperwaffenlimit },
-	{ "-startkapital", parseStartkapital },
+	{ "-graceTime", parseSchonzeit },
+	{ "-superweaponLimit", parseSuperwaffenlimit },
+	{ "-startMoney", parseStartkapital },
 	{ "-aiStats", parseAIStats },
-	{ "-aiOhne", parseAIOhne },
-	{ "-aiMit", parseAIMit },
+	{ "-aiOff", parseAIOff },
+	{ "-aiOn", parseAIOn },
 	{ "-noDeadlockFix", parseNoDeadlockFix },
 	{ "-deadlockFixFrom", parseDeadlockFixFrom },
 	{ "-recordReplay", parseRecordReplay },
 	{ "-affinity", parseAffinity },
 	{ "-audioLog", parseAudioLog },
-	{ "-netzLatenz", parseNetLatency },
-	{ "-netzSchwankung", parseNetJitter },
-	{ "-netzVerlust", parseNetLoss },
-	{ "-netzDoppelt", parseNetDuplicate },
-	{ "-netzUmordnung", parseNetReorder },
-	{ "-netzSaat", parseNetSeed },
-	{ "-netzLokal", parseNetLocal },
-	{ "-einstellungenNurLesen", parseSettingsReadOnly },
+	{ "-netLatency", parseNetLatency },
+	{ "-netJitter", parseNetJitter },
+	{ "-netLoss", parseNetLoss },
+	{ "-netDuplicate", parseNetDuplicate },
+	{ "-netReorder", parseNetReorder },
+	{ "-netSeed", parseNetSeed },
+	{ "-netLocal", parseNetLocal },
+	{ "-settingsReadOnly", parseSettingsReadOnly },
 	{ "-msaa", parseMsaa },
-	{ "-netzOhnePortfreigabe", parseNetNoPortMapping },
-	{ "-treffpunkt", parseRendezvous },
-	{ "-netzOhneTreffpunkt", parseNoRendezvous },
-	{ "-netzNurRelais", parseNetForceRelay },
-	{ "-desyncBerichtBei", parseDesyncReportFrame },
-	{ "-zuschauerTest", parseWatchTest },
-	{ "-bildschirm", parseMonitor },
-	{ "-echteEingabeAus", parseNoRealInput },
-	{ "-testhilfen", parseTesthilfen },
-	{ "-testhilfenAblauf", parseTestAidsScript },
+	{ "-netNoPortMapping", parseNetNoPortMapping },
+	{ "-rendezvous", parseRendezvous },
+	{ "-netNoRendezvous", parseNoRendezvous },
+	{ "-netRelayOnly", parseNetForceRelay },
+	{ "-desyncReportAt", parseDesyncReportFrame },
+	{ "-watchTest", parseWatchTest },
+	{ "-monitor", parseMonitor },
+	{ "-noRealInput", parseNoRealInput },
+	{ "-testAids", parseTesthilfen },
+	{ "-testAidsScript", parseTestAidsScript },
 	{ "-mission", parseMission },
 	// Image comparison and render baseline (all build configurations)
 	{ "-shotAfter", parseShotAfter },
@@ -2287,7 +2315,7 @@ static CommandLineParam params[] =
 	{ "-cameraPath", parseCameraPath },
 	{ "-logActions", parseLogActions },
 	{ "-quitAfter", parseQuitAfter },
-	{ "-testablauf", parseTestScript },
+	{ "-testScript", parseTestScript },
 	{ "-fixedTimeStep", parseFixedTimeStep },
 	{ "-noVSync", parseNoVSync },
 	{ "-logRenderTime", parseLogRenderTime },
@@ -2317,7 +2345,7 @@ static CommandLineParam params[] =
 	{ "-terrainTessPixels", parseTerrainTessPixels },
 	{ "-terrainTessProbe", parseTerrainTessProbe },
 	{ "-gamma", parseGamma },					// brightness slider 0..100
-	{ "-vorlagenAusgeben", parseGameDataDump },
+	{ "-dumpGameData", parseGameDataDump },
 	{ "-staticLOD", parseStaticLOD },
 	{ "-nologo", parseNoLogo },	// also in release builds
 	// Render backend (all build configurations)
@@ -2342,9 +2370,9 @@ static CommandLineParam params[] =
 	{ "-playStats", parsePlayStats },
 	{ "-mod", parseMod },
 	{ "-baseGame", parseBaseGame },
-	{ "-benutzerdaten", parseUserDataFolder },
-	{ "-dateiIndexAusgeben", parseIndexDump },
-	{ "-modellPruefung", parseModelCheck },
+	{ "-userData", parseUserDataFolder },
+	{ "-dumpFileIndex", parseIndexDump },
+	{ "-modelCheck", parseModelCheck },
 	{ "-noshaders", parseNoShaders },
 	{ "-quickstart", parseQuickStart },
 

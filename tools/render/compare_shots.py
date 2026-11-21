@@ -2,40 +2,38 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Bildvergleich fuer Render-Tests (DX11-Portierung).
+"""Picture comparison for render tests (Direct3D 11 backend).
 
-Vergleicht zwei Screenshots (oder zwei Ordner mit gleichnamigen Screenshots) und gibt PSNR und
-den Anteil abweichender Pixel aus. Optional wird ein Differenzbild geschrieben: das Referenzbild
-in Graustufen, abgedunkelt, und jedes Pixel ueber der Schwelle rot markiert (Helligkeit nach
-Groesse der Abweichung).
+Compares two screenshots (or two folders with screenshots of the same names) and prints the PSNR and the share
+of differing pixels. Optionally a difference image is written: the reference picture in grey levels, darkened,
+with every pixel over the threshold marked red (brightness by the size of the difference).
 
-Nur Standardbibliothek. Gelesen werden unkomprimierte BMP-Dateien mit 24 oder 32 Bit (so wie der
-Backbuffer-Screenshot des Spiels sie schreibt), bottom-up und top-down.
+Standard library only. Uncompressed BMP files with 24 or 32 bit are read (as the back-buffer screenshot of the
+game writes them), bottom-up and top-down.
 
-Aufruf:
-    python tools/render/compare_shots.py referenz.bmp neu.bmp
-    python tools/render/compare_shots.py ref_ordner neu_ordner --diff diff_ordner
+Usage:
+    python tools/render/compare_shots.py reference.bmp new.bmp
+    python tools/render/compare_shots.py ref_folder new_folder --diff diff_folder
     python tools/render/compare_shots.py a.bmp b.bmp --min-psnr 40 --max-diff-ratio 0.001
-    python tools/render/compare_shots.py ref neu --ignore 0,0,30%,12%   # Bildbereich ausnehmen
+    python tools/render/compare_shots.py ref new --ignore 0,0,30%,12%   # exclude an image region
     python tools/render/compare_shots.py --selftest
 
-Rueckgabewert: 0 = alle Vergleiche innerhalb der Toleranz, 1 = mindestens einer ausserhalb,
-2 = Fehler (Datei fehlt, Groessen verschieden, Format nicht lesbar).
+Exit code: 0 = all comparisons within the tolerance, 1 = at least one outside, 2 = error (file missing,
+sizes differ, format not readable).
 
-Toleranz: Standard ist PSNR >= 40 dB und hoechstens 0,1 % Pixel mit einer Kanalabweichung ueber
-8 (von 255). Die Werte sind vorlaeufig; P-0.4 legt sie nach zwei D3D9-Laeufen derselben Szene
-endgueltig fest.
+Tolerance: default is PSNR >= 40 dB and at most 0.1 % of the pixels with a channel difference over 8 (of 255).
+The values are provisional.
 
-Bereiche ausnehmen (--ignore, mehrfach angebbar): X,Y,BREITE,HOEHE. Jede Zahl entweder in Pixeln
-oder mit nachgestelltem % als Anteil der Bildbreite bzw. -hoehe -- Prozent ist vorzuziehen, weil
-dieselbe Maske dann fuer jede Aufloesung gilt. Ausgenommene Pixel gehen weder in PSNR noch in die
-Abweichungsquote ein und sind im Differenzbild blau hinterlegt.
+Excluding regions (--ignore, may be given several times): X,Y,WIDTH,HEIGHT. Each number either in pixels or with
+a trailing % as a share of the image width or height -- percent is preferable because the same mask then holds for
+every resolution. Excluded pixels enter neither the PSNR nor the difference ratio and are drawn blue in the
+difference image.
 
-Wozu: die Menue-Einblendung der Shell-Map erscheint nicht deterministisch (TODO Nr. 16) -- sie
-haengt an Fensterposition, Mausbewegung und CPU-Last. Unter Last fehlte sie bei Frame 900, im
-Wiederholungslauf war sie da; die 3D-Szene darunter ist pixelidentisch. Ohne Maske faellt der
-ganze Vergleich deshalb gelegentlich durch, obwohl nichts kaputt ist. Mit --ignore laesst sich
-genau dieser Bereich herausnehmen, statt die Toleranz fuer das ganze Bild aufzuweichen.
+Why: the menu fade-in of the shell map does not appear deterministically -- it depends on window position, mouse
+movement and CPU load. Under load it was missing at frame 900 and present in the repeated run; the 3D scene
+underneath is pixel-identical. Without a mask the whole comparison therefore fails now and then although nothing
+is broken. With --ignore exactly this region can be taken out instead of loosening the tolerance for the whole
+picture.
 """
 import argparse
 import json
@@ -129,7 +127,7 @@ def read_bmp(path):
         raise ValueError(f"{path}: nur 24/32 Bit werden unterstuetzt (hat {bpp} Bit)")
     # BI_RGB (0); BI_BITFIELDS (3) nur bei 32 Bit mit Standardmasken (BGRA) akzeptieren
     if compression not in (0, 3) or (compression == 3 and bpp != 32):
-        raise ValueError(f"{path}: komprimierte BMP nicht unterstuetzt (compression={compression})")
+        raise ValueError(f"{path}: compressed BMP not supported (compression={compression})")
     top_down = height < 0
     height = abs(height)
     if width <= 0 or height == 0:
@@ -138,7 +136,7 @@ def read_bmp(path):
     row_size = ((width * bytes_pp + 3) // 4) * 4
     needed = pixel_offset + row_size * height
     if len(data) < needed:
-        raise ValueError(f"{path}: Datei zu kurz ({len(data)} statt {needed} Byte)")
+        raise ValueError(f"{path}: file too short ({len(data)} instead of {needed} bytes)")
     out = bytearray(width * height * 3)
     for row in range(height):
         src_row = row if top_down else height - 1 - row
@@ -174,25 +172,25 @@ def write_bmp(path, image):
 
 
 # --- Vergleich ------------------------------------------------------------------------------------
-BRIGHTNESS_WARN_PCT = 3.0   # Helligkeitswarnung ab dieser Abweichung der mittleren Luminanz
+BRIGHTNESS_WARN_PCT = 3.0   # brightness warning from this deviation of the mean luminance
 
 
 def compare_images(ref, new, threshold=DEFAULT_THRESHOLD, diff_path=None, ignore=None):
     if (ref.width, ref.height) != (new.width, new.height):
-        raise ValueError(f"Groessen verschieden: {ref.width}x{ref.height} gegen {new.width}x{new.height}")
+        raise ValueError(f"sizes differ: {ref.width}x{ref.height} against {new.width}x{new.height}")
     a, b = ref.bgr, new.bgr
     n_pixels = ref.width * ref.height
     mask, n_masked = build_mask(ref.width, ref.height, ignore)
     n_compared = n_pixels - n_masked
     if n_compared == 0:
-        raise ValueError("die ausgenommenen Bereiche decken das ganze Bild ab")
+        raise ValueError("the excluded regions cover the whole picture")
     sq_sum = 0
     max_diff = 0
     over = 0
-    lum_a = 0      # Helligkeit (2026-09-24): Summe der Luminanz (BT.601-Gewichte) der verglichenen Pixel
+    lum_a = 0      # brightness: sum of the luminance (BT.601 weights) of the compared pixels
     lum_b = 0
     diff_img = bytearray(n_pixels * 3) if diff_path else None
-    # Kanalweise Differenzen; pro Pixel zaehlt die groesste Kanalabweichung
+    # per-channel differences; the largest channel difference counts per pixel
     for p in range(n_pixels):
         i = p * 3
         if mask is not None and mask[p]:
@@ -250,13 +248,13 @@ def within_tolerance(result, min_psnr, max_diff_ratio):
 
 
 def format_psnr(psnr):
-    return "identisch" if math.isinf(psnr) else f"{psnr:.2f} dB"
+    return "identical" if math.isinf(psnr) else f"{psnr:.2f} dB"
 
 
 def collect_pairs(ref, new):
-    """Liefert (Name, Referenzpfad, Neupfad) fuer Datei- oder Ordnervergleich."""
+    """Returns (name, reference path, new path) for a file or folder comparison."""
     if os.path.isdir(ref) != os.path.isdir(new):
-        raise ValueError("beide Argumente muessen Dateien oder beide Ordner sein")
+        raise ValueError("both arguments must be files or both folders")
     if not os.path.isdir(ref):
         return [(os.path.basename(new), ref, new)], [], []
     ref_names = {n for n in os.listdir(ref) if n.lower().endswith(".bmp")}
@@ -269,7 +267,7 @@ def run_compare(args):
     try:
         pairs, only_ref, only_new = collect_pairs(args.reference, args.candidate)
     except (OSError, ValueError) as e:
-        print(f"FEHLER: {e}")
+        print(f"ERROR: {e}")
         return 2
     ignore = getattr(args, "ignore", None) or []
     report = {"threshold": args.threshold, "min_psnr": args.min_psnr,
@@ -277,15 +275,15 @@ def run_compare(args):
               "ignored_regions": [str(r) for r in ignore],
               "only_in_reference": only_ref, "only_in_candidate": only_new}
     if ignore:
-        print("Ausgenommen: " + ", ".join(str(r) for r in ignore))
+        print("Ignored: " + ", ".join(str(r) for r in ignore))
     worst = 0
     for name in only_ref:
-        print(f"FEHLT    {name} (nur in der Referenz)")
+        print(f"MISSING  {name} (only in the reference)")
         worst = 2
     for name in only_new:
-        print(f"NEU      {name} (keine Referenz)")
+        print(f"NEW      {name} (no reference)")
     if not pairs and not only_ref:
-        print("FEHLER: keine BMP-Dateien zum Vergleichen gefunden")
+        print("ERROR: no BMP files to compare found")
         return 2
     for name, ref_path, new_path in pairs:
         diff_path = None
@@ -295,26 +293,26 @@ def run_compare(args):
         try:
             r = compare_images(read_bmp(ref_path), read_bmp(new_path), args.threshold, diff_path, ignore)
         except (OSError, ValueError) as e:
-            print(f"FEHLER   {name}: {e}")
+            print(f"ERROR   {name}: {e}")
             report["results"].append({"name": name, "error": str(e)})
             worst = 2
             continue
         ok = within_tolerance(r, args.min_psnr, args.max_diff_ratio)
-        status = "OK      " if ok else "ABWEICHT"
+        status = "OK      " if ok else "DIFFERS"
         print(f"{status} {name}: PSNR {format_psnr(r['psnr'])}, "
-              f"{r['pixels_over_threshold']} Pixel ueber Schwelle ({r['diff_ratio'] * 100:.4f} %), "
-              f"max. Kanalabweichung {r['max_channel_diff']}"
-              + (f", {r['pixels_ignored']} Pixel ausgenommen" if r["pixels_ignored"] else "")
-              + (f", Helligkeit {r['brightness_delta_pct']:+.1f} %" if r["brightness_delta_pct"] else "")
-              + (f", Differenzbild {diff_path}" if diff_path else ""))
-        # Nutzerwunsch 2026-09-24: Bilder, die insgesamt deutlich heller oder dunkler sind als die Referenz,
-        # eigens melden -- auch wenn die Pixelschwelle sie als gewollte Aenderung durchlaesst. Nur Warnung.
+              f"{r['pixels_over_threshold']} pixels over the threshold ({r['diff_ratio'] * 100:.4f} %), "
+              f"max. channel difference {r['max_channel_diff']}"
+              + (f", {r['pixels_ignored']} pixels excluded" if r["pixels_ignored"] else "")
+              + (f", brightness {r['brightness_delta_pct']:+.1f} %" if r["brightness_delta_pct"] else "")
+              + (f", difference image {diff_path}" if diff_path else ""))
+        # Report pictures that are clearly brighter or darker overall than the reference separately -- even when the
+        # pixel threshold lets them pass as an intended change. A warning only.
         if abs(r["brightness_delta_pct"]) >= BRIGHTNESS_WARN_PCT:
-            print(f"HELL     {name}: mittlere Helligkeit {r['brightness_ref']:.1f} -> {r['brightness_new']:.1f} "
-                  f"({r['brightness_delta_pct']:+.1f} %, Warnschwelle {BRIGHTNESS_WARN_PCT:.0f} %)")
+            print(f"BRIGHT   {name}: mean brightness {r['brightness_ref']:.1f} -> {r['brightness_new']:.1f} "
+                  f"({r['brightness_delta_pct']:+.1f} %, warning threshold {BRIGHTNESS_WARN_PCT:.0f} %)")
         r.update(name=name, ok=ok, diff_image=diff_path)
         if math.isinf(r["psnr"]):
-            r["psnr"] = None  # JSON kennt kein Unendlich; None = identisch
+            r["psnr"] = None  # JSON has no infinity; None = identical
         report["results"].append(r)
         if not ok:
             worst = max(worst, 1)
@@ -324,7 +322,7 @@ def run_compare(args):
     return worst
 
 
-# --- Selbsttest -----------------------------------------------------------------------------------
+# --- Self test -----------------------------------------------------------------------------------
 def selftest():
     w, h = 37, 23  # ungerade Breite -> Zeilen-Padding wird mitgetestet
     base = bytearray()
@@ -439,31 +437,31 @@ def selftest():
         for m in failures:
             print(f"SELBSTTEST FEHLGESCHLAGEN: {m}")
         return 2
-    print("Selbsttest ok")
+    print("Self test ok")
     return 0
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("reference", nargs="?", help="Referenzbild oder -ordner")
-    ap.add_argument("candidate", nargs="?", help="neues Bild oder neuer Ordner")
-    ap.add_argument("--diff", help="Differenzbild (.bmp) bzw. Ordner fuer Differenzbilder")
+    ap.add_argument("reference", nargs="?", help="reference picture or folder")
+    ap.add_argument("candidate", nargs="?", help="new picture or folder")
+    ap.add_argument("--diff", help="difference image (.bmp) or folder for difference images")
     ap.add_argument("--threshold", type=int, default=DEFAULT_THRESHOLD,
-                    help=f"Kanalabweichung, ab der ein Pixel als abweichend zaehlt (Standard {DEFAULT_THRESHOLD})")
+                    help=f"channel difference from which a pixel counts as differing (default {DEFAULT_THRESHOLD})")
     ap.add_argument("--min-psnr", type=float, default=DEFAULT_MIN_PSNR,
-                    help=f"Mindest-PSNR in dB (Standard {DEFAULT_MIN_PSNR})")
+                    help=f"minimum PSNR in dB (default {DEFAULT_MIN_PSNR})")
     ap.add_argument("--max-diff-ratio", type=float, default=DEFAULT_MAX_DIFF_RATIO,
-                    help=f"hoechster Anteil abweichender Pixel, 0..1 (Standard {DEFAULT_MAX_DIFF_RATIO})")
-    ap.add_argument("--ignore", action="append", type=Rect, metavar="X,Y,B,H", default=[],
-                    help="Bildbereich vom Vergleich ausnehmen; mehrfach angebbar. Werte in Pixeln "
-                         "oder mit %% als Anteil (z. B. 0,0,30%%,12%%)")
-    ap.add_argument("--json", help="Ergebnis zusaetzlich als JSON-Datei schreiben")
-    ap.add_argument("--selftest", action="store_true", help="eingebauten Selbsttest ausfuehren")
+                    help=f"highest share of differing pixels, 0..1 (default {DEFAULT_MAX_DIFF_RATIO})")
+    ap.add_argument("--ignore", action="append", type=Rect, metavar="X,Y,W,H", default=[],
+                    help="exclude an image region from the comparison; may be given several times. Values in pixels "
+                         "or with %% as a share (e.g. 0,0,30%%,12%%)")
+    ap.add_argument("--json", help="also write the result as a JSON file")
+    ap.add_argument("--selftest", action="store_true", help="run the built-in self test")
     args = ap.parse_args()
     if args.selftest:
         return selftest()
     if not args.reference or not args.candidate:
-        ap.error("Referenz und Kandidat angeben (oder --selftest)")
+        ap.error("give a reference and a candidate (or --selftest)")
     return run_compare(args)
 
 

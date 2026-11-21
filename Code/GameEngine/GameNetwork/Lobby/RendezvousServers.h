@@ -6,9 +6,9 @@
 
 // RendezvousServers.h -- the rendezvous servers the lobby asks, from where the player keeps them.
 //
-// Order: -treffpunkt on the command line, <user data>\Rendezvous.txt, the list shipped with the
+// Order: -rendezvous on the command line, <user data>\Rendezvous.txt, the list shipped with the
 // game (ProjectData\Network\Rendezvous.txt), <user data>\RendezvousFound.txt (servers other servers
-// named). -netzOhneTreffpunkt leaves the list empty. Host names are resolved once and kept.
+// named). -netNoRendezvous leaves the list empty. Host names are resolved once and kept.
 
 #pragma once
 

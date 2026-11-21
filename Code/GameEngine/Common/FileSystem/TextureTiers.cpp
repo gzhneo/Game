@@ -128,7 +128,7 @@ ArchiveFile *ArchiveFileSystem::openTexturePackageArchive(const AsciiString &arc
 	{
 		DEBUG_LOG(("texture package: %s rejected, %s %s\n", archiveName.str(), reason, offending.str()));
 		char line[MAX_PATH * 2 + 64];
-		WWFormat::Into(line, "TEXTURPAKET abgewiesen {} wegen {} {}", archiveName.str(), reason, offending.str());
+		WWFormat::Into(line, "TEXTUREPACK rejected {} because {} {}", archiveName.str(), reason, offending.str());
 		line[sizeof(line) - 1] = 0;
 		GameEngine_RunnerLog(line);
 		return nullptr;
@@ -224,7 +224,7 @@ void ArchiveFileSystem::loadTextureTiers()
 		package.setTier(choice.tier);
 
 		char line[512];
-		WWFormat::Into(line, "TEXTURPAKET {} wunsch {} ({}) grund {} hoehe {:d} budget {:d} MB uma {} hoechste {} archive {:d} texturen {:d} fehlerzeilen {:d} abgewiesen {:d}", ::Engine::textureTierName(choice.tier), ::Engine::textureTierName(input.requested), source, choice.reason, input.outputHeight, static_cast<unsigned>(input.budgetBytes / (1024ull * 1024ull)), memory.umaKnown ? (input.unifiedMemory ? "ja" : "nein") : "unbekannt", ::Engine::textureTierName(package.highestTier()), static_cast<Int>(packageArchives.size()), static_cast<Int>(package.size()), static_cast<Int>(package.badLines()), packageRejected);
+		WWFormat::Into(line, "TEXTUREPACK {} wanted {} ({}) reason {} height {:d} budget {:d} MB uma {} highest {} archives {:d} textures {:d} error_lines {:d} rejected {:d}", ::Engine::textureTierName(choice.tier), ::Engine::textureTierName(input.requested), source, choice.reason, input.outputHeight, static_cast<unsigned>(input.budgetBytes / (1024ull * 1024ull)), memory.umaKnown ? (input.unifiedMemory ? "yes" : "no") : "unknown", ::Engine::textureTierName(package.highestTier()), static_cast<Int>(packageArchives.size()), static_cast<Int>(package.size()), static_cast<Int>(package.badLines()), packageRejected);
 		line[sizeof(line) - 1] = 0;
 		GameEngine_RunnerLog(line);
 		DEBUG_LOG(("HD_ASSETS: %s\n", line));
@@ -237,7 +237,7 @@ void ArchiveFileSystem::loadTextureTiers()
 	package.setTier(choice.tier);
 
 	char line[512];
-	WWFormat::Into(line, "TEXTURESTUFE {} wunsch {} ({}) grund {} hoehe {:d} budget {:d} MB uma {} vorhanden SD{}{} paket {:d} abgewiesen {:d}", ::Engine::textureTierName(choice.tier), ::Engine::textureTierName(input.requested), source, choice.reason, input.outputHeight, static_cast<unsigned>(input.budgetBytes / (1024ull * 1024ull)), memory.umaKnown ? (input.unifiedMemory ? "ja" : "nein") : "unbekannt", input.available[::Engine::TEXTURE_TIER_HD] ? ",HD" : "", input.available[::Engine::TEXTURE_TIER_UHD] ? ",UHD" : "", static_cast<Int>(packageArchives.size()), packageRejected);
+	WWFormat::Into(line, "TEXTURETIER {} wanted {} ({}) reason {} height {:d} budget {:d} MB uma {} available SD{}{} package {:d} rejected {:d}", ::Engine::textureTierName(choice.tier), ::Engine::textureTierName(input.requested), source, choice.reason, input.outputHeight, static_cast<unsigned>(input.budgetBytes / (1024ull * 1024ull)), memory.umaKnown ? (input.unifiedMemory ? "yes" : "no") : "unknown", input.available[::Engine::TEXTURE_TIER_HD] ? ",HD" : "", input.available[::Engine::TEXTURE_TIER_UHD] ? ",UHD" : "", static_cast<Int>(packageArchives.size()), packageRejected);
 	line[sizeof(line) - 1] = 0;
 	GameEngine_RunnerLog(line);
 	DEBUG_LOG(("HD_ASSETS: %s\n", line));
@@ -270,7 +270,7 @@ void ArchiveFileSystem::loadModPackage(const AsciiString &folder)
 		++archives;
 	}
 	char line[MAX_PATH + 96];
-	WWFormat::Into(line, "MOD paket {} {} archive {:d} abgewiesen {:d}", ::Engine::textureTierName(TheGlobalData->m_textureTier), folder.str(), archives, rejected);
+	WWFormat::Into(line, "MOD package {} {} archives {:d} rejected {:d}", ::Engine::textureTierName(TheGlobalData->m_textureTier), folder.str(), archives, rejected);
 	line[sizeof(line) - 1] = 0;
 	GameEngine_RunnerLog(line);
 	DEBUG_LOG(("%s\n", line));
@@ -299,7 +299,7 @@ void ArchiveFileSystem::checkTexturePackageSources()
 		}
 	}
 	char line[96];
-	WWFormat::Into(line, "TEXTURPAKET ersetzt {:d} texturen {:d}", replaced, static_cast<Int>(package.size()));
+	WWFormat::Into(line, "TEXTUREPACK replaced {:d} textures {:d}", replaced, static_cast<Int>(package.size()));
 	line[sizeof(line) - 1] = 0;
 	GameEngine_RunnerLog(line);
 }
@@ -337,7 +337,7 @@ Int ArchiveFileSystem::loadFreeContentFolder(const AsciiString &folder, Int &man
 		{
 			DEBUG_LOG(("free content: %s rejected, contains %s (only textures and models allowed)\n", folder.str(), relative.str()));
 			char line[MAX_PATH * 2 + 64];
-			WWFormat::Into(line, "FREIER INHALT abgewiesen {} wegen {}", folder.str(), relative.str());
+			WWFormat::Into(line, "FREE CONTENT rejected {} because {}", folder.str(), relative.str());
 			line[sizeof(line) - 1] = 0;
 			GameEngine_RunnerLog(line);
 			return -1;
@@ -362,7 +362,7 @@ Int ArchiveFileSystem::loadFreeContentFolder(const AsciiString &folder, Int &man
 		if (manifestEntries < 0)
 		{
 			char line[MAX_PATH + 64];
-			WWFormat::Into(line, "FREIER INHALT manifest unlesbar {}", folder.str());
+			WWFormat::Into(line, "FREE CONTENT manifest unreadable {}", folder.str());
 			line[sizeof(line) - 1] = 0;
 			GameEngine_RunnerLog(line);
 		}
@@ -391,7 +391,7 @@ void ArchiveFileSystem::loadFreeContent()
 	}
 	if (TheGlobalData->m_freeContent != 1)
 	{
-		GameEngine_RunnerLog("FREIER INHALT aus");
+		GameEngine_RunnerLog("FREE CONTENT off");
 		return;
 	}
 
@@ -419,12 +419,12 @@ void ArchiveFileSystem::loadFreeContent()
 		Int manifestEntries = -1;
 		const Int files = loadFreeContentFolder(package, manifestEntries);
 		char line[MAX_PATH + 96];
-		WWFormat::Into(line, "FREIER INHALT {} dateien {:d} stufe {} manifest {:d}", package.str(), files,
+		WWFormat::Into(line, "FREE CONTENT {} files {:d} tier {} manifest {:d}", package.str(), files,
 			::Engine::textureTierName(TheGlobalData->m_textureTier), manifestEntries);
 		line[sizeof(line) - 1] = 0;
 		GameEngine_RunnerLog(line);
 		DEBUG_LOG(("%s\n", line));
 	}
 	if (packages.empty())
-		GameEngine_RunnerLog("FREIER INHALT keine Pakete");
+		GameEngine_RunnerLog("FREE CONTENT no packages");
 }

@@ -46,7 +46,7 @@ import pfade  # noqa: E402
 
 WURZEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 API = 'https://api.polyhaven.com'
-KOPF = {'User-Agent': 'gzh-neo (TODO 92, Einzelabruf)'}
+KOPF = {'User-Agent': 'gzh-neo (single request)'}
 AUFLOESUNG = '8k'
 KACHEL = 512
 UEBERHANG = 128

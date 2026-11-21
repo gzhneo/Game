@@ -3096,14 +3096,12 @@ GameMessageDisposition CommandTranslator::translateGameMessage(const GameMessage
 			if (TheGlobalData)
 			{
 				static Bool isLowDetails = FALSE;
-				static Bool oldShadowVolumsValue = TRUE;
 				static Bool oldLightMapValue = TRUE;
 				static Bool oldCloudMap = TRUE;
 				static Bool oldBehindBuildingMarkers = TRUE;
 				static Int oldMaxParticleCount = 0;
 				if(isLowDetails)
 				{
-					TheWritableGlobalData->m_useShadowVolumes = oldShadowVolumsValue;
 					TheWritableGlobalData->m_useLightMap = oldLightMapValue;
 					TheWritableGlobalData->m_useCloudMap = oldCloudMap;
 					TheWritableGlobalData->m_maxParticleCount = oldMaxParticleCount;
@@ -3113,9 +3111,6 @@ GameMessageDisposition CommandTranslator::translateGameMessage(const GameMessage
 				}
 				else
 				{
-					oldShadowVolumsValue = TheGlobalData->m_useShadowVolumes;
-					TheWritableGlobalData->m_useShadowVolumes = FALSE;
-
 					oldLightMapValue = TheGlobalData->m_useLightMap;
 					TheWritableGlobalData->m_useLightMap = FALSE;
 
@@ -3956,7 +3951,6 @@ GameMessageDisposition CommandTranslator::translateGameMessage(const GameMessage
 		//-----------------------------------------------------------------------------------------
 		case GameMessage::MSG_META_DEMO_TOGGLE_SHADOW_VOLUMES:
 		{
-			TheWritableGlobalData->m_useShadowVolumes = !TheGlobalData->m_useShadowVolumes;
 			TheWritableGlobalData->m_useShadowDecals = !TheGlobalData->m_useShadowDecals;
 			disp = GameMessageDisposition::DESTROY_MESSAGE;
 			break;

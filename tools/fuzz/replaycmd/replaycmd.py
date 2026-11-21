@@ -321,7 +321,7 @@ def cmd_play(a):
 
     def one(name, report):
         rep = os.path.abspath(os.path.join(a.dir, name))
-        code, secs, crashes = runner.run_game(a.exe, ["-runner", "-replay", rep, "-mehrfach"], a.timeout, a.extra)
+        code, secs, crashes = runner.run_game(a.exe, ["-runner", "-replay", rep, "-multiInstance"], a.timeout, a.extra)
         if code is None:
             result = f"HAENGER (Zeitlimit {a.timeout} s)"
         elif code not in expected:

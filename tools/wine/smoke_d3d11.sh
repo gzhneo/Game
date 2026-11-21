@@ -19,6 +19,8 @@ $CXX -std=c++20 -O1 -o "$OUT/d3d11_smoke.exe" "$HERE/d3d11_smoke.cpp" -ld3d11 -l
 export WINEPREFIX="${WINEPREFIX_CNC:-$OUT/wineprefix}" WINEDEBUG="${WINEDEBUG:--all,err+all}"
 export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
 WINE=$(command -v wine64 || echo /usr/lib/wine/wine64)
+# Wine 9.0 aborts ("free(): invalid pointer") whenever TMPDIR is set, whatever its value; work dirs are derived above.
+unset TMPDIR
 N=$((100 + RANDOM % 800))
 Xvfb ":$N" -screen 0 1280x720x24 >/dev/null 2>&1 &
 XPID=$!

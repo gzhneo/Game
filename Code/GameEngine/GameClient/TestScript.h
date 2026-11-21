@@ -8,7 +8,7 @@
 // Test script: drives the game without input through menus, games, campaign missions, save/load and
 // up to exit. Meant for unattended tests, above all the leak check (tools/lecksuche/lecksuche.py).
 //
-// Usage: -testablauf <file>. Commands and file format: see the head of GameClient/TestScript.cpp.
+// Usage: -testScript <file>. Commands and file format: see the head of GameClient/TestScript.cpp.
 // Without the switch this module does nothing.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

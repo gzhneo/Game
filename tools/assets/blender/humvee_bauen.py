@@ -1,7 +1,7 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-# Humvee aus einem KI-3D-Modell (Meshy) auf das EA-Gerüst AvHummer.w3d bringen -- TODO 62, Pilot.
+# Humvee aus einem KI-3D-Modell (Meshy) auf das EA-Gerüst AvHummer.w3d bringen.
 #
 # Blender ohne Oberfläche (5.2, Add-on io_mesh_w3d):
 #   blender --background --factory-startup --python humvee_bauen.py -- <schritt> <arbeitsordner> [optionen]

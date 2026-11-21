@@ -575,8 +575,8 @@ StateReturnType HackInternetState::update()
           {
             Real width = internetCenter->getGeometryInfo().getMajorRadius() * 0.3f;
             Real depth = internetCenter->getGeometryInfo().getMinorRadius() * 0.3f;
-            pos.x += GameClientRandomValue(static_cast<Int>(-width),static_cast<Int>(width));
-            pos.y += GameClientRandomValue(static_cast<Int>(-depth),static_cast<Int>(depth));
+            pos.x += GameClientRandomValueReal(-width, width);
+            pos.y += GameClientRandomValueReal(-depth, depth);
           }
 
 

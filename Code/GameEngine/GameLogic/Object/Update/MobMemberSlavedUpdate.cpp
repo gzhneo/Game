@@ -358,7 +358,7 @@ void MobMemberSlavedUpdate::doCatchUpLogic( Coord3D *pos )
 	Coord3D nuPos;
 	const MobMemberSlavedUpdateModuleData* data = getMobMemberSlavedUpdateModuleData();
 	// recalc where we want to be if we wander around
-	Real randomDirection = static_cast<Real>(GameLogicRandomValue( 0, static_cast<Int>(2*PI) ));
+	Real randomDirection = GameLogicRandomValueReal( 0, 2*PI );
 	Real randomRadius = static_cast<Real>(GameLogicRandomValue( 0, data->m_noNeedToCatchUpRadius ));
 	nuPos.set(pos);
 	nuPos.x += randomRadius * Cos( randomDirection );

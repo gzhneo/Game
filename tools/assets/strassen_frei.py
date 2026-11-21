@@ -1135,7 +1135,7 @@ STUFEN_NAME = {1: "SD", 2: "HD", 4: "UHD"}
 
 def cmd_manifest(a):
     """Manifest of the free content folder: header with the highest tier, then path and EA size per texture."""
-    zeilen = ["TEXTURPAKET 1 " + STUFEN_NAME[a.stufe],
+    zeilen = ["TEXTUREPACK 1 " + STUFEN_NAME[a.stufe],
               "; free road textures (strassen_frei.py), files in %s size, sizes are the EA originals" % STUFEN_NAME[a.stufe]]
     for n in sorted(STRASSEN):
         kante = STRASSEN[n][0]

@@ -83,3 +83,18 @@ const GpuLayerInfo* Gpu_Find_Layer(const char* name)
 	}
 	return nullptr;
 }
+
+namespace {
+char Preferred_Adapter[320] = "";
+}
+
+void Gpu_Set_Preferred_Adapter(const char* choice)
+{
+	strncpy(Preferred_Adapter, choice ? choice : "", sizeof(Preferred_Adapter) - 1);
+	Preferred_Adapter[sizeof(Preferred_Adapter) - 1] = 0;
+}
+
+const char* Gpu_Preferred_Adapter()
+{
+	return Preferred_Adapter;
+}

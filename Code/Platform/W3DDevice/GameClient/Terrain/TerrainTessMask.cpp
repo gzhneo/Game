@@ -192,7 +192,7 @@ void TerrainTessMask::buildStatic(WorldHeightMap *map)
 		}
 	}
 	char line[128];
-	snprintf(line, sizeof(line), "TERRAINTESS maske %d x %d wasserpunkte %d strassen %d", m_width, m_height, wet, roads);
+	snprintf(line, sizeof(line), "TERRAINTESS mask %d x %d water_points %d roads %d", m_width, m_height, wet, roads);
 	DEBUG_LOG(("%s\n", line));
 	GameEngine_RunnerLog(line);
 }

@@ -11,7 +11,7 @@
 #   --karte Name Karte (Standard TestSkirmish; TestWeit hat acht Startplaetze, etwa --ki "N1,K2,N3,K4,E1,K2m,M3,K4e")
 #   1. Skirmish mit -runner aufnehmen (Release-Bau): Replay (.rep) und CRC-Verlauf (.crc)
 #   2. dasselbe Replay im Release-Bau zweimal abspielen: CRC-Verlauf muss der Aufnahme entsprechen
-#   3. dasselbe Replay als zugeschaute Partie (-zuschauerTest): Nachholen und Warten auf Daten aendern nichts
+#   3. dasselbe Replay als zugeschaute Partie (-watchTest): Nachholen und Warten auf Daten aendern nichts
 #   4. dasselbe Replay im Debug-Bau abspielen (falls gebaut): Release und Debug muessen gleich rechnen
 # Ablagen: CNC_WINE_DIR (Release, Standard ${TMPDIR:-/tmp}/cnc-wine), CNC_WINE_DEBUG_DIR (Standard /tmp/cnc-wine-debug).
 # Die Referenzreplays unter tests/replays gehoeren zu EA-Karten und laufen nur unter Windows mit den Spieldaten.
@@ -72,7 +72,7 @@ echo "== Aufnahme (Release, $FRAMES Frames)"
 RD=$(prep "$REL")
 play "$REL" "$RD" -skirmish "$MAP" -skirmishAI "$SKI" -skirmishSeed "$SEED" -maxFrames "$FRAMES" -recordReplay rec.rep -crcLog rec.crc -crcLogInterval 30 || fail=1
 [ -s "$RD/rec.rep" ] || { echo "  FEHLER kein Replay"; exit 1; }
-echo "  Replay $(stat -c %s "$RD/rec.rep") Byte, Ende: $(grep -a 'END\|KISIEG' "$RD/rec.crc" | tr -d '\r' | head -2 | tr '\n' ' ')"
+echo "  Replay $(stat -c %s "$RD/rec.rep") Byte, Ende: $(grep -a 'END\|AIVICTORY' "$RD/rec.crc" | tr -d '\r' | head -2 | tr '\n' ' ')"
 
 echo "== Wiedergabe 1 und 2 (Release)"
 for i in 1 2; do
@@ -80,8 +80,8 @@ for i in 1 2; do
 	same "$RD/rec.crc" "$RD/play$i.crc" "Wiedergabe $i gegen Aufnahme"
 done
 
-echo "== Wiedergabe als zugeschaute Partie (Release, -zuschauerTest: Daten kommen schubweise, Nachholen und Warten)"
-play "$REL" "$RD" -replay "$(winpath "$RD/rec.rep")" -zuschauerTest 300 -crcLog live.crc -crcLogInterval 30 || fail=1
+echo "== Wiedergabe als zugeschaute Partie (Release, -watchTest: Daten kommen schubweise, Nachholen und Warten)"
+play "$REL" "$RD" -replay "$(winpath "$RD/rec.rep")" -watchTest 300 -crcLog live.crc -crcLogInterval 30 || fail=1
 same "$RD/rec.crc" "$RD/live.crc" "Zuschauer-Wiedergabe gegen Aufnahme"
 grep -a "LIVE complete" "$RD/live.crc" | tr -d '\r' | sed 's/^/  /'
 grep -aq "LIVE complete" "$RD/live.crc" || { echo "  FEHLER die Zuschauer-Wiedergabe erreichte das Ende des Stroms nicht"; fail=1; }

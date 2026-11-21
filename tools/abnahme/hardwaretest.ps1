@@ -32,7 +32,7 @@
 	7b. Renderskalierungslauf (nur mit -Renderskalierung): bei Low derselbe halbe Gefechtsabschnitt in 1280x720, 1600x900
 	   und 1920x1080, je mit der internen Renderaufloesung -Anteile (Vorgabe 1, 0.75, 0.67, 0.5; -renderScale), dazu bei
 	   1920x1080 und dem kleinsten Anteil unter 1 die Filter bilinear und cas zum Vergleich mit bicubic (Vorgabe). Mit -gpuTiming:
-	   GPU-Zeit der 3D-Szene, des Hochskalierens und des ganzen Bildes je Lauf (GPUEFFEKTE); zwei Bilder je Lauf
+	   GPU-Zeit der 3D-Szene, des Hochskalierens und des ganzen Bildes je Lauf (GPUEFFECTS); zwei Bilder je Lauf
 	   (bilder-rs-<Lauf>) zur Sichtung; ersetzt die Teile 3 und 4.
     8. Auslastung: waehrend jedes Laufs alle 3 s CPU gesamt, CPU des Spiels (in Prozent aller logischen
        Prozessoren) und GPU (3D-Engine des Spielprozesses) ueber WMI; Mittelwert und p95 je Lauf in summary.md
@@ -146,7 +146,7 @@ function Mittel95($werte) {
 function Lauf([string]$kennung, [string[]]$spielArgs, [int]$sekunden) {
     $log = Join-Path $Ausgabe "$kennung.crc"
     Remove-Item $log, "$log.frames.csv", "$log.ticks.csv" -ErrorAction SilentlyContinue
-    $alle = @("-win", "-xres", $Breite, "-yres", $Hoehe, "-nologo", "-noaudio", "-ignoreAsserts", "-mehrfach",
+    $alle = @("-win", "-xres", $Breite, "-yres", $Hoehe, "-nologo", "-noaudio", "-ignoreAsserts", "-multiInstance",
               "-crcLog", $log) + $spielArgs
     $start = Get-Date
     $p = Start-Process -FilePath $exe -ArgumentList $alle -WorkingDirectory $Spielordner -PassThru
@@ -184,7 +184,7 @@ function Info([string]$log, [string]$marke) {
 }
 function GpuMs([string]$log, [string]$bereich) {
 	if (-not (Test-Path $log)) { return $null }
-	$z = Select-String -Path $log -Pattern "^GPUEFFEKTE " -Encoding Default | Select-Object -Last 1
+	$z = Select-String -Path $log -Pattern "^GPUEFFECTS " -Encoding Default | Select-Object -Last 1
 	if ($z -and $z.Line -match " $bereich ([\d.]+) ms") { return [double]$Matches[1] }
 	return $null
 }
@@ -203,7 +203,7 @@ Zeile ""
 Zeile "== Starttest"
 $r = Lauf "start" @("-quitAfter", "60") 180
 Zeile ("Start: {0}, {1:N0} s" -f $r.grund, $r.dauer)
-foreach ($m in @("TEXTURESTUFE", "VIDEOMEM", "WORKERS", "D3D11EFFECTS")) { $i = Info $r.log $m; if ($i) { Zeile $i } }
+foreach ($m in @("TEXTURETIER", "VIDEOMEM", "WORKERS", "D3D11EFFECTS")) { $i = Info $r.log $m; if ($i) { Zeile $i } }
 
 # ---- 3. Laeufe je Stufe
 foreach ($stufe in $Stufen) {
@@ -367,7 +367,7 @@ if ($Renderskalierung) {
 								 "-shotDir", (Join-Path $Ausgabe "bilder-rs-$nr"), "-shotEvery", "$([int]($gefechtFrames / 4))",
 								 "-quitAfter", "$([int]($gefechtFrames / 2))") 1800
 			$aw = Werte $a.log "FRAMES"
-			$g = @{ szene = (GpuMs $a.log "szene"); hoch = (GpuMs $a.log "hochskalieren"); bild = (GpuMs $a.log "bild") }
+			$g = @{ szene = (GpuMs $a.log "scene"); hoch = (GpuMs $a.log "upscale"); bild = (GpuMs $a.log "frame") }
 			$name = "$($p.b) x $($p.h), Anteil $anteil, $($p.f)"
 			if ($aw) { Zeile ("{0}: mittel {1:N2} ms je Bild, p95 {2:N2} ms; GPU Szene {3} ms, Hochskalieren {4} ms, Bild {5} ms; {6:N0} s; {7}" -f $name, $aw.mean, $aw.p95, $g.szene, $g.hoch, $g.bild, $a.dauer, $a.grund) }
 			else { Zeile "${name}: keine Messwerte ($($a.grund))" }

@@ -5,14 +5,14 @@
 """Abstaende zwischen gezeigten Bildern auswerten (Ruckler).
 
 Liest die CSV aus `-logRenderTime <Datei>` (GameEngine.cpp, logRenderTime; Spalten ms, art, tick, frame,
-alpha, anzeige, ticklen) und wertet die Abstaende zwischen aufeinanderfolgenden Bildern aus:
+alpha, display, ticklen) und wertet die Abstaende zwischen aufeinanderfolgenden Bildern aus:
 
   - Verteilung p50/p95/p99/p99.9, laengster Abstand, Bilder/s
   - Zahl der Abstaende ueber 2 x Median und ueber feste Grenzen (Standard 16,7 / 33,3 / 50 ms)
   - getrennt nach der Art des Bildes, das den Abstand beendet: T = Tick-Bild (davor lief die Logik),
     R = Zwischenbild, F = Tick-Bild ohne Interpolation. Ruckler durch lange Ticks landen bei T.
   - getrennt nach Dritteln der Laufzeit (spaetes Gefecht = letztes Drittel)
-  - die laengsten Abstaende einzeln mit Logik-Frame, zum Abgleich mit LOGIKSPITZE aus -crcLog
+  - die laengsten Abstaende einzeln mit Logik-Frame, zum Abgleich mit LOGICPEAK aus -crcLog
 
 Abstaende ueber --pause ms (Laden, Alt-Tab, Haltepunkt) zaehlen nicht mit und werden nur genannt.
 Mit --vergleich <CSV> steht ein zweiter Lauf daneben (vorher/nachher).
@@ -41,7 +41,7 @@ def lesen(pfad, skip):
     with open(pfad, newline='') as f:
         for r in csv.DictReader(f):
             try:
-                zeilen.append((float(r['ms']), r['art'], int(r['frame'])))
+                zeilen.append((float(r['ms']), r['kind'], int(r['frame'])))
             except (KeyError, ValueError):
                 print('%s: unlesbare Zeile: %s' % (pfad, r))
                 return None

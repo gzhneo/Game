@@ -588,8 +588,12 @@ UpdateSleepTime ParticleUplinkCannonUpdate::update()
 							Int linkCount = way->getNumLinks();
 							Int which = GameLogicRandomValue( 0, linkCount-1 );
 							way = way->getLink( which );
-							m_nextDestWaypointID = way->getID();
-							m_overrideTargetDestination.set( way->getLocation() );
+							// A path end or dead-end branch has no link; the beam stays at the last waypoint.
+							if( way )
+							{
+								m_nextDestWaypointID = way->getID();
+								m_overrideTargetDestination.set( way->getLocation() );
+							}
 						}
 					}
 				}

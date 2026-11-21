@@ -49,6 +49,7 @@
 #include "wwdebug.h"
 #include "refcount.h"
 #include "sphere.h"
+#include "lockscratch.h"
 
 class RenderDevice;
 class SortingRendererClass;
@@ -81,6 +82,7 @@ public:
 	{
 		IndexBufferClass* index_buffer;
 		unsigned short* indices;
+		LockScratch Scratch;		// stands in for the buffer when the device lock fails
 	public:
 		WriteLockClass(IndexBufferClass* index_buffer, int flags=0);
 		~WriteLockClass();
@@ -92,6 +94,7 @@ public:
 	{
 		IndexBufferClass* index_buffer;
 		unsigned short* indices;
+		LockScratch Scratch;		// stands in for the buffer when the device lock fails
 	public:
 		AppendLockClass(IndexBufferClass* index_buffer,unsigned start_index, unsigned index_range);
 		~AppendLockClass();
@@ -146,6 +149,7 @@ public:
 	{
 		DynamicIBAccessClass* DynamicIBAccess;
 		unsigned short* Indices;		
+		LockScratch Scratch;		// stands in for the buffer when the device lock fails
 	public:
 		WriteLockClass(DynamicIBAccessClass* ib_access);
 		~WriteLockClass();

@@ -53,6 +53,7 @@
 #include <algorithm>
 #include <vector>
 #include "rendercore_internal.h"
+#include "Engine/Watchdog.h"
 #include "gpudisplay.h"
 #include "gpulayers.h"
 
@@ -241,6 +242,7 @@ bool RenderCore::Create_Device()
 		return false;
 	}
 
+	M->scene_safe = false;		// a new device starts with the requested settings (sample_count is set by the setup)
 	if (!Create_Scene_Target(M->width, M->height))
 		return false;
 
@@ -301,15 +303,42 @@ static void Scene_Target_Size(unsigned width, unsigned height, unsigned* target_
 
 bool RenderCore::Create_Scene_Target(unsigned width, unsigned height)
 {
+	if (Build_Scene_Target(width, height)) return true;
+	if (!M->device || width == 0 || height == 0 || M->scene_safe) return false;
+	// Not possible with these settings (video memory, a format the device lacks): without a target the picture
+	// stays black until the restart, so try the plain one.
+	Scene_Target_Size(width, height, &M->safe_width, &M->safe_height);
+	M->safe_hdr = Hdr_Wanted();
+	M->safe_samples = M->sample_count;
+	M->scene_safe = true;
+	if (Build_Scene_Target(width, height)) {
+		WWRELEASE_SAY(("Render: scene target %ux%u (hdr %d) not possible, using %ux%u without multisampling and hdr\n",
+			M->safe_width, M->safe_height, M->safe_hdr ? 1 : 0, width, height));
+		return true;
+	}
+	M->scene_safe = false;
+	return false;
+}
+
+void RenderCore::Leave_Safe_Scene_Target()
+{
+	if (!M->scene_safe) return;
+	M->scene_safe = false;
+	M->sample_count = M->safe_samples;		// the plain target had reduced it to 1
+}
+
+bool RenderCore::Build_Scene_Target(unsigned width, unsigned height)
+{
 	Release_Scene_Target();
 	if (!M->device || width == 0 || height == 0) return false;
 	unsigned target_width, target_height;
 	Scene_Target_Size(width, height, &target_width, &target_height);
+	if (M->scene_safe) { target_width = width; target_height = height; }
 
-	unsigned scene_format = RenderDevice::Get_Effect_Settings().scene_format;
+	unsigned scene_format = M->scene_safe ? SCENE_FORMAT_BGRA8 : RenderDevice::Get_Effect_Settings().scene_format;
 	// RENDER_EFFECT_HDR decides with the target: it needs a float target without multisampling (Hdr_Active). A change
 	// of the switch (detail level in the menu) creates the next frame's target anew (Present).
-	M->hdr_target = Hdr_Wanted();
+	M->hdr_target = !M->scene_safe && Hdr_Wanted();
 	if (scene_format == SCENE_FORMAT_BGRA8 && M->hdr_target)
 		scene_format = SCENE_FORMAT_R11G11B10;
 	switch (scene_format) {
@@ -323,7 +352,7 @@ bool RenderCore::Create_Scene_Target(unsigned width, unsigned height)
 	}
 
 	// Clamp the sample count to what the device supports for both the color and the depth target.
-	unsigned samples = M->sample_count;
+	unsigned samples = M->scene_safe ? 1 : M->sample_count;
 	while (samples > 1) {
 		UINT color_quality = 0, depth_quality = 0;
 		if (SUCCEEDED(M->device->CheckMultisampleQualityLevels(M->scene_format, samples, &color_quality)) && color_quality > 0 &&
@@ -345,8 +374,7 @@ bool RenderCore::Create_Scene_Target(unsigned width, unsigned height)
 	td.BindFlags          = GPU_BIND_RENDER_TARGET | (samples == 1 ? GPU_BIND_SHADER_RESOURCE : 0);
 	if (FAILED(M->device->CreateTexture2D(&td, nullptr, &M->scene_color))) return false;
 	if (FAILED(M->device->CreateRenderTargetView(M->scene_color, nullptr, &M->scene_rtv))) return false;
-	if (samples == 1)
-		M->device->CreateShaderResourceView(M->scene_color, nullptr, &M->scene_srv);
+	if (samples == 1 && FAILED(M->device->CreateShaderResourceView(M->scene_color, nullptr, &M->scene_srv))) return false;
 
 	GPU_TEXTURE2D_DESC dd = td;
 	dd.Format    = Scene_Depth_Format();
@@ -396,7 +424,7 @@ bool RenderCore::Create_Scene_Target(unsigned width, unsigned height)
 		GPU_TEXTURE2D_DESC rd = td;
 		rd.SampleDesc.Count = 1;
 		rd.BindFlags        = GPU_BIND_RENDER_TARGET | GPU_BIND_SHADER_RESOURCE;
-		M->device->CreateTexture2D(&rd, nullptr, &M->resolve_target);
+		if (FAILED(M->device->CreateTexture2D(&rd, nullptr, &M->resolve_target))) return false;
 	}
 
 	M->sample_count = samples;
@@ -487,7 +515,11 @@ HRESULT RenderCore::Reset_Device()
 		M->output->Release_Device(M->device, M->context);
 		Release_Interface();
 		Init_Default_States();
-		return Create_Device() ? static_cast<HRESULT>(WW3D_OK) : static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
+		if (!Create_Device()) return static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
+		// The buffers, shaders and layouts that outlived the device have new objects now (device layer);
+		// the contents of the static buffers come from their staging copies.
+		Restore_Buffer_Contents();
+		return static_cast<HRESULT>(WW3D_OK);
 	}
 
 	// Minimised window: ResizeBuffers to 0x0 fails, and a zero-sized scene target cannot exist.
@@ -499,6 +531,7 @@ HRESULT RenderCore::Reset_Device()
 	}
 
 	Release_Scene_Target();
+	Leave_Safe_Scene_Target();		// another size: try the requested target again
 	HRESULT hr = Resize_Swap_Chain();
 	if (FAILED(hr))
 		return hr;
@@ -605,7 +638,15 @@ HRESULT RenderCore::Present()
 		RECT client = { 0, 0, 0, 0 };
 		if (::GetClientRect(M->hwnd, &client) && client.right > 0 && client.bottom > 0 &&
 			(client.right != M->output_width || client.bottom != M->output_height))
-			Resize_Swap_Chain();
+		{
+			// A lost device is noted by Resize_Swap_Chain (device_removed); the caller sees it from the next Present.
+			const HRESULT resized = Resize_Swap_Chain();
+			if (FAILED(resized)) {
+				static unsigned reported = 0;
+				if (reported++ < 5) WWRELEASE_SAY(("Render: swap chain resize to %ldx%ld failed (0x%08X)\n",
+					static_cast<long>(client.right), static_cast<long>(client.bottom), static_cast<unsigned>(resized)));
+			}
+		}
 	}
 	if (M->back_buffer && source) {
 		// With supersampling the scene target is larger; the finished image lies at its top left.
@@ -640,13 +681,26 @@ HRESULT RenderCore::Present()
 	// new size or format.
 	unsigned target_width, target_height;
 	Scene_Target_Size(M->width, M->height, &target_width, &target_height);
-	if (M->scene_color && (target_width != M->scene_width || target_height != M->scene_height || Hdr_Wanted() != M->hdr_target)) {
+	// With the plain stand-in target (scene_safe) the settings are compared with those that failed.
+	const bool settings_changed = M->scene_safe
+		? (target_width != M->safe_width || target_height != M->safe_height || Hdr_Wanted() != M->safe_hdr)
+		: (target_width != M->scene_width || target_height != M->scene_height || Hdr_Wanted() != M->hdr_target);
+	if (M->scene_color && settings_changed) {
+		Leave_Safe_Scene_Target();
 		if (!Create_Scene_Target(M->width, M->height)) {
 			WWDEBUG_SAY(("Render: scene target %ux%u (hdr %d) not possible\n", target_width, target_height, Hdr_Wanted() ? 1 : 0));
 		}
 	}
 
 	Drain_Debug_Messages();		// debug layer findings into the game log
+	// Test switch: treat one Present as a lost device (the rebuild then runs for real).
+	static unsigned presents = 0;
+	const unsigned simulated = RenderDevice::Simulated_Device_Loss();
+	if (simulated && ++presents == simulated) {
+		WWDEBUG_SAY(("Render: simulated device loss at present %u\n", presents));
+		M->device_removed = true;
+		return static_cast<HRESULT>(WW3D_ERR_DEVICELOST);
+	}
 	if (M->output->Is_Device_Lost(hr)) {
 		M->device_removed = true;
 		return static_cast<HRESULT>(WW3D_ERR_DEVICELOST);
@@ -1145,14 +1199,14 @@ void Set_Shader_Compile_Device(GpuDevice* device)
 // --- Shader cache ---------------------------------------------------------------------------------
 // D3DCompile needs about 330 ms for ffp.ps.hlsl and 70 to 100 ms per vertex permutation, which adds
 // up to a stall of almost a second at game start. So the compiled bytecode is kept under
-// %LOCALAPPDATA%\CnCGenerals\ShaderCache. The key is a hash over the preprocessed source (so includes
+// %LOCALAPPDATA%\GZHNeo\ShaderCache. The key is a hash over the preprocessed source (so includes
 // and macros are covered), the profile and the compiler settings -- a changed shader file gives a new
 // entry. Every hit refreshes the file's timestamp; on the first access per game start
 // Shader_Cache_Prune cleans up (long unused entries, size limit, leftover temp files).
 // Any read or write error falls back to normal compilation.
 
 static const UINT FFP_SHADER_FLAGS = GPU_COMPILE_OPTIMIZATION_LEVEL3;
-static const unsigned SHADER_CACHE_MAGIC = 0x31435357;	// "WSC1"
+static const unsigned SHADER_CACHE_MAGIC = 0x32435357;	// "WSC2": header with a checksum of the code
 static const unsigned SHADER_CACHE_MAX_AGE_DAYS = 30;			///< delete unused entries after this
 static const uint64_t SHADER_CACHE_MAX_BYTES = 16u << 20;		///< above this, oldest first
 static const uint64_t FILETIME_PER_DAY = 24ull * 60 * 60 * 10000000;
@@ -1229,6 +1283,31 @@ static void Shader_Cache_Prune(const char* directory)
 	}
 }
 
+/// Earlier versions kept the cache under %LOCALAPPDATA%\CnCGenerals\ShaderCache; it is of no use any more.
+/// Deletes its cache files (shaders and the Vulkan pipeline cache) once and the folder if nothing else is left in it.
+static void Shader_Cache_Remove_Old_Directory(const char* base)
+{
+	char directory[MAX_PATH];
+	char pattern[MAX_PATH];
+	char path[MAX_PATH];
+	if (_snprintf_s(directory, sizeof(directory), _TRUNCATE, "%s\\CnCGenerals\\ShaderCache", base) < 0) return;
+	if (_snprintf_s(pattern, sizeof(pattern), _TRUNCATE, "%s\\*", directory) < 0) return;
+	WIN32_FIND_DATAA found;
+	HANDLE find = ::FindFirstFileA(pattern, &found);
+	if (find == INVALID_HANDLE_VALUE) return;
+	do {
+		if (found.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) continue;
+		const size_t len = strlen(found.cFileName);
+		const bool ours = len > 4 && (_stricmp(found.cFileName + len - 4, ".cso") == 0 || _stricmp(found.cFileName + len - 4, ".tmp") == 0
+			|| (_strnicmp(found.cFileName, "vulkan_pipelines_", 17) == 0 && _stricmp(found.cFileName + len - 4, ".bin") == 0));
+		if (!ours) continue;
+		if (_snprintf_s(path, sizeof(path), _TRUNCATE, "%s\\%s", directory, found.cFileName) < 0) continue;
+		::DeleteFileA(path);
+	} while (::FindNextFileA(find, &found));
+	::FindClose(find);
+	::RemoveDirectoryA(directory);	// fails while foreign files are left, which stay untouched
+}
+
 /// Cache directory with trailing backslash, created on demand.
 /// Empty if there is none.
 static const char* Shader_Cache_Directory()
@@ -1242,9 +1321,9 @@ static const char* Shader_Cache_Directory()
 	const DWORD len = ::GetEnvironmentVariableA("LOCALAPPDATA", base, sizeof(base));
 	if (len == 0 || len >= sizeof(base)) return directory;
 	char path[MAX_PATH];
-	if (_snprintf_s(path, sizeof(path), _TRUNCATE, "%s\\CnCGenerals", base) < 0) return directory;
+	if (_snprintf_s(path, sizeof(path), _TRUNCATE, "%s\\GZHNeo", base) < 0) return directory;
 	::CreateDirectoryA(path, nullptr);
-	if (_snprintf_s(path, sizeof(path), _TRUNCATE, "%s\\CnCGenerals\\ShaderCache", base) < 0) return directory;
+	if (_snprintf_s(path, sizeof(path), _TRUNCATE, "%s\\GZHNeo\\ShaderCache", base) < 0) return directory;
 	::CreateDirectoryA(path, nullptr);
 	const DWORD attributes = ::GetFileAttributesA(path);
 	if (attributes == INVALID_FILE_ATTRIBUTES || !(attributes & FILE_ATTRIBUTE_DIRECTORY)) return directory;
@@ -1253,6 +1332,7 @@ static const char* Shader_Cache_Directory()
 		return directory;
 	}
 	Shader_Cache_Prune(directory);
+	Shader_Cache_Remove_Old_Directory(base);
 	return directory;
 }
 
@@ -1293,7 +1373,31 @@ struct ShaderCacheHeader
 	unsigned magic;
 	unsigned size;
 	uint64_t key;
+	uint64_t checksum;		///< Shader_Hash over the code
 };
+
+static const uint64_t SHADER_HASH_START = 0xCBF29CE484222325ull;
+
+static void Shader_Cache_Remove(uint64_t key)
+{
+	char path[MAX_PATH];
+	if (key && Shader_Cache_Path(key, path, sizeof(path))) ::DeleteFileA(path);
+}
+
+/// Does the device take the code? Cached bytecode can be damaged or from another driver generation.
+static bool Shader_Accepts(GpuBlob* code, const char* profile)
+{
+	if (!Shader_Device || !code) return false;
+	HRESULT hr = S_OK;
+	switch (profile[0]) {
+	case 'v': { GpuVertexShader* shader = nullptr; hr = Shader_Device->CreateVertexShader(code->GetBufferPointer(), code->GetBufferSize(), nullptr, &shader); if (shader) shader->Release(); break; }
+	case 'p': { GpuPixelShader* shader = nullptr; hr = Shader_Device->CreatePixelShader(code->GetBufferPointer(), code->GetBufferSize(), nullptr, &shader); if (shader) shader->Release(); break; }
+	case 'h': { GpuHullShader* shader = nullptr; hr = Shader_Device->CreateHullShader(code->GetBufferPointer(), code->GetBufferSize(), nullptr, &shader); if (shader) shader->Release(); break; }
+	case 'd': { GpuDomainShader* shader = nullptr; hr = Shader_Device->CreateDomainShader(code->GetBufferPointer(), code->GetBufferSize(), nullptr, &shader); if (shader) shader->Release(); break; }
+	default: break;
+	}
+	return SUCCEEDED(hr);
+}
 
 static bool Shader_Cache_Load(uint64_t key, GpuBlob** code)
 {
@@ -1307,7 +1411,8 @@ static bool Shader_Cache_Load(uint64_t key, GpuBlob** code)
 	if (fread(&header, sizeof(header), 1, file) == 1 && header.magic == SHADER_CACHE_MAGIC
 		&& header.key == key && header.size > 0 && header.size < (16u << 20)
 		&& (*code = Gpu_Create_Blob(header.size)) != nullptr) {
-		if (fread((*code)->GetBufferPointer(), header.size, 1, file) == 1) {
+		if (fread((*code)->GetBufferPointer(), header.size, 1, file) == 1
+			&& Shader_Hash(SHADER_HASH_START, (*code)->GetBufferPointer(), header.size) == header.checksum) {
 			ok = true;
 		} else {
 			(*code)->Release();
@@ -1315,7 +1420,10 @@ static bool Shader_Cache_Load(uint64_t key, GpuBlob** code)
 		}
 	}
 	fclose(file);
-	if (!ok) return false;
+	if (!ok) {
+		if (header.magic == SHADER_CACHE_MAGIC) ::DeleteFileA(path);		// damaged: compile again and write a new entry
+		return false;
+	}
 	// Used: refresh the timestamp so Shader_Cache_Prune keeps the entry.
 	const HANDLE handle = ::CreateFileA(path, FILE_WRITE_ATTRIBUTES,
 		FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, 0, nullptr);
@@ -1342,6 +1450,7 @@ static void Shader_Cache_Store(uint64_t key, GpuBlob* code)
 	header.magic = SHADER_CACHE_MAGIC;
 	header.size  = static_cast<unsigned>(code->GetBufferSize());
 	header.key   = key;
+	header.checksum = Shader_Hash(SHADER_HASH_START, code->GetBufferPointer(), header.size);
 	const bool ok = fwrite(&header, sizeof(header), 1, file) == 1
 				 && fwrite(code->GetBufferPointer(), header.size, 1, file) == 1;
 	if (fclose(file) != 0 || !ok || !::MoveFileExA(temp, path, MOVEFILE_REPLACE_EXISTING)) {
@@ -1350,7 +1459,7 @@ static void Shader_Cache_Store(uint64_t key, GpuBlob* code)
 }
 
 // Shaders that did not compile: the effect or draw path that needs one falls away without a picture of its own, so
-// tests must see it in the release build too (RenderDevice::Get_Shader_Failures, line SHADERFEHLER).
+// tests must see it in the release build too (RenderDevice::Get_Shader_Failures, line SHADERFAILURE).
 static unsigned Shader_Failure_Count = 0;
 static char Shader_Failure_Names[512];
 
@@ -1370,16 +1479,31 @@ void RenderDevice::Get_Shader_Failures(char* text, unsigned size)
 	if (!text || !size) return;
 	text[0] = 0;
 	if (Shader_Failure_Count)
-		_snprintf_s(text, size, _TRUNCATE, "SHADERFEHLER %u%s", Shader_Failure_Count, Shader_Failure_Names);
+		_snprintf_s(text, size, _TRUNCATE, "SHADERFAILURE %u%s", Shader_Failure_Count, Shader_Failure_Names);
+}
+
+static void Shader_Watchdog_Beat()
+{
+	Engine::Watchdog::get().heartbeat(Engine::WATCHDOG_MAIN);
+	Engine::Watchdog::get().heartbeat(Engine::WATCHDOG_SIM);
 }
 
 HRESULT Compile_FFP_Shader(const char* source, unsigned length, const char* debug_name,
 								  const GPU_SHADER_MACRO* macros, const char* profile, GpuBlob** code)
 {
 	const uint64_t key = Shader_Cache_Key(source, length, debug_name, macros, profile);
-	if (Shader_Cache_Load(key, code)) return S_OK;
+	if (Shader_Cache_Load(key, code)) {
+		if (Shader_Accepts(*code, profile)) return S_OK;
+		// The device rejects the cached code: drop the entry and compile once more.
+		(*code)->Release();
+		*code = nullptr;
+		Shader_Cache_Remove(key);
+	}
 
 	if (!Shader_Device) return E_FAIL;
+	// Compiling without a cache entry is slow (first start, changed shaders) and runs on the thread the
+	// watchdog watches; report before and after so a long run of compiles is not taken for a hang.
+	Shader_Watchdog_Beat();
 	RenderShaderInclude includes;
 	GpuBlob* errors = nullptr;
 	HRESULT hr = Shader_Device->CompileShader(source, length, debug_name, macros, &includes, "main", profile,
@@ -1393,7 +1517,41 @@ HRESULT Compile_FFP_Shader(const char* source, unsigned length, const char* debu
 		Note_Shader_Failure(debug_name, profile);
 	}
 	else Shader_Cache_Store(key, *code);
+	Shader_Watchdog_Beat();
 	return hr;
+}
+
+/// Compiles the vertex shader variants that the game's vertex formats produce (normal, diffuse and
+/// specular in any mix, zero to two texture coordinate sets, plain and instanced), so the first frames
+/// of a map do not compile them one by one. With a filled cache this only loads them.
+void RenderCore::Warm_Shaders()
+{
+	if (!M->device) return;
+	const unsigned start = ::GetTickCount();
+	unsigned count = 0;
+	for (unsigned instanced = 0; instanced < 2; ++instanced) {
+		for (unsigned texcoords = 0; texcoords < 3; ++texcoords) {
+			for (unsigned flags = 0; flags < 8; ++flags) {
+				const unsigned permutation = flags | (texcoords << 3) | (instanced ? FFP_VS_INSTANCED : 0u);
+				if (M->ffp_vs[permutation]) continue;
+				// A variant the game never draws with must not switch off a feature when it fails.
+				const bool load_failed = M->ffp_load_failed, instancing_failed = M->mi_failed, light_failed = M->ffp_light_failed[0];
+				if (Get_FFP_Vertex_Shader(permutation)) {
+					++count;
+					continue;
+				}
+				const bool source_missing = M->ffp_vs_source == nullptr;
+				M->ffp_load_failed = load_failed;
+				M->mi_failed = instancing_failed;
+				M->ffp_light_failed[0] = light_failed;
+				if (source_missing) return;
+			}
+		}
+	}
+	// Also in release builds: the time of the first start without a shader cache.
+	if (count) {
+		WWRELEASE_SAY(("Render: %u vertex shader variants prepared in %lu ms\n", count, static_cast<unsigned long>(::GetTickCount() - start)));
+	}
 }
 
 /// Permutation key from the vertex declaration (see FFP_VS_PERMUTATIONS).
@@ -1635,9 +1793,12 @@ void* RenderCore::Get_Input_Layout(WW3DVertexDeclHandle decl, WW3DVertexShaderHa
 {
 	if (!decl || !vs || !vs->bytecode) return nullptr;
 	const void* key = vs->bytecode->GetBufferPointer();
+	// The key is a number, not the bytecode address: a freed shader's address can belong to another shader.
+	static unsigned shader_serial = 0;
+	if (!vs->serial) vs->serial = ++shader_serial;
 
 	for (unsigned i = 0; i < decl->layout_count; ++i) {
-		if (decl->layouts[i].vs_bytecode == key) return decl->layouts[i].layout;
+		if (decl->layouts[i].vs_serial == vs->serial) return decl->layouts[i].layout;
 	}
 
 	GPU_INPUT_ELEMENT_DESC elements[WW3D_MAX_DECL_LENGTH];
@@ -1691,16 +1852,18 @@ void* RenderCore::Get_Input_Layout(WW3DVertexDeclHandle decl, WW3DVertexShaderHa
 	}
 
 	if (decl->layout_count < WW3D_MAX_INPUT_LAYOUTS) {
-		decl->layouts[decl->layout_count].vs_bytecode = key;
-		decl->layouts[decl->layout_count].layout      = layout;
+		decl->layouts[decl->layout_count].vs_serial = vs->serial;
+		decl->layouts[decl->layout_count].layout    = layout;
 		++decl->layout_count;
 	}
 	else {
-		// Full: the layout is not cached and gets rebuilt next time. D3D11 returns the same
-		// object for identical inputs, so nothing piles up.
-		WWDEBUG_SAY(("Render: input layout cache of the declaration full\n"));
-		layout->Release();
-		return nullptr;
+		// Full: the oldest entry makes room (round robin); dropping the draw would repeat at every call.
+		WW3DVertexDeclObject::LayoutEntry& entry = decl->layouts[decl->layout_next];
+		decl->layout_next = (decl->layout_next + 1) % WW3D_MAX_INPUT_LAYOUTS;
+		if (M->bound_layout == entry.layout) M->bound_layout = (GpuInputLayout*)1;
+		Gpu_Release(entry.layout);
+		entry.vs_serial = vs->serial;
+		entry.layout    = layout;
 	}
 	return layout;
 }
@@ -1814,7 +1977,10 @@ void RenderCore::Find_State_Objects()
 				else if (*b == GPU_BLEND_INV_DEST_ALPHA)	*b = GPU_BLEND_INV_SRC_ALPHA;
 			}
 		}
-		if (SUCCEEDED(M->device->CreateBlendState(&desc, &blend))) M->blend_cache.Insert(key, blend);
+		if (SUCCEEDED(M->device->CreateBlendState(&desc, &blend))) {
+			GpuBlendState* keep[2] = { M->state_blend, M->bound_blend };
+			M->blend_cache.Insert(key, blend, keep, 2);
+		}
 	}
 	M->state_blend = blend;
 
@@ -1834,7 +2000,10 @@ void RenderCore::Find_State_Objects()
 	if (!depth) {
 		GPU_DEPTH_STENCIL_DESC desc;
 		Render_Build_Depth_Stencil_Desc(rs, desc);
-		if (SUCCEEDED(M->device->CreateDepthStencilState(&desc, &depth))) M->depth_cache.Insert(key, depth);
+		if (SUCCEEDED(M->device->CreateDepthStencilState(&desc, &depth))) {
+			GpuDepthStencilState* keep[2] = { M->state_depth, M->bound_depth };
+			M->depth_cache.Insert(key, depth, keep, 2);
+		}
 	}
 	// The scene target's stencil is 8 bits wide (D24S8); the upper bits of the reference are
 	// dropped. The shadow paths pass 0x80808080 and mean 0x80.
@@ -1854,7 +2023,10 @@ void RenderCore::Find_State_Objects()
 	if (!raster) {
 		GPU_RASTERIZER_DESC desc;
 		Render_Build_Rasterizer_Desc(rs, desc, M->sample_count > 1);
-		if (SUCCEEDED(M->device->CreateRasterizerState(&desc, &raster))) M->raster_cache.Insert(key, raster);
+		if (SUCCEEDED(M->device->CreateRasterizerState(&desc, &raster))) {
+			GpuRasterizerState* keep[2] = { M->state_raster, M->bound_raster };
+			M->raster_cache.Insert(key, raster, keep, 2);
+		}
 	}
 	M->state_raster = raster;
 }
@@ -1902,7 +2074,12 @@ void RenderCore::Bind_Textures()
 				GPU_SAMPLER_DESC desc;
 				Render_Build_Sampler_Desc(M->sampler_states[slot], desc);
 				if (rs_bias) desc.MipLODBias += M->rs_bias;
-				if (SUCCEEDED(M->device->CreateSamplerState(&desc, &sampler))) M->sampler_cache.Insert(key, sampler);
+				if (SUCCEEDED(M->device->CreateSamplerState(&desc, &sampler))) {
+				// The samplers of the slots handled so far are bound after the loop: they must survive.
+				GpuSamplerState* keep[16];
+				for (unsigned k = 0; k < 8; ++k) { keep[k] = M->slot_sampler[k]; keep[8 + k] = M->bound_sampler[k]; }
+				M->sampler_cache.Insert(key, sampler, keep, 16);
+			}
 			}
 			::memcpy(M->slot_sampler_key[slot], ss, sizeof(M->slot_sampler_key[slot]));
 			M->slot_sampler[slot] = sampler;
@@ -2333,6 +2510,13 @@ bool RenderCore::Prepare_Draw(unsigned primitive_type)
 		M->ml_normal_active = normal_map;
 		M->object_cb_dirty = true;
 	}
+	// Batched draws (Mi_Flush) keep the constants filled at capture time, when the flag still held the previous
+	// draw's state; it has to follow this draw like everything Fill_Object_Constants would compute now.
+	const float normal_flag = normal_map ? 1.0f : 0.0f;
+	if (M->mi_preset && M->object_cb.teamColor.w != normal_flag) {
+		M->object_cb.teamColor.w = normal_flag;
+		M->object_cb_dirty = true;
+	}
 	// Terrain draws (Set_Terrain_Detail) with one of the terrain shaders use its permutation
 	// TERRAIN_DETAIL and read the detail textures and table (t9, t10, s9, b6). With "terrainrock"
 	// the same draws use the permutation TERRAIN_ROCK (plus TERRAIN_DETAIL when the detail layer is
@@ -2495,14 +2679,14 @@ void RenderCore::Draw_Indexed_Primitive(WW3DPrimitiveType type, int base_vertex,
 	// Outside the view but a possible shadow caster: the caster record needs the bound state, not the draw.
 	if (M->sh_caster_only) {
 		Sa_Done();
-		if (M->sh_recording) Sh_Record(true, index_count, start_index, base_vertex, min_index, num_vertices, 0, 0);
+		if (M->sh_recording) Sh_Record(type, true, index_count, start_index, base_vertex, min_index, num_vertices, 0, 0);
 		return;
 	}
 	M->context->DrawIndexed(index_count, start_index, base_vertex);
 	number_of_API_calls++;
 	Sa_Done();
 	// Record opaque world geometry as a shadow caster.
-	if (M->sh_recording) Sh_Record(true, index_count, start_index, base_vertex, min_index, num_vertices, 0, 0);
+	if (M->sh_recording) Sh_Record(type, true, index_count, start_index, base_vertex, min_index, num_vertices, 0, 0);
 }
 
 void RenderCore::Draw_Primitive_UP(WW3DPrimitiveType type, unsigned prim_count,
@@ -2548,7 +2732,7 @@ void RenderCore::Draw_Primitive_UP(WW3DPrimitiveType type, unsigned prim_count,
 	M->context->Draw(vertex_count, 0);
 	number_of_API_calls++;
 	Sa_Done();
-	if (M->sh_recording) Sh_Record(false, vertex_count, 0, 0, 0, 0, offset, stride);
+	if (M->sh_recording) Sh_Record(type, false, vertex_count, 0, 0, 0, 0, offset, stride);
 
 	// The wrapper then sets VERTEX_BUFFER_CHANGED and rebinds the real source.
 	M->stream_vb = nullptr;

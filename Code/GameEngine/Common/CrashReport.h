@@ -15,6 +15,8 @@
 //         Replay.rep          the running game up to the crash, if the recorder was active
 //         Stack.txt           call stack of the faulting thread with symbols (needs the pdb)
 //
+// The newest report is also noted in `Crashes\\Pending.txt`; the next start announces it.
+//
 // Called from the exception filter (StackDump.cpp) and from the watchdog when a thread hangs, so
 // it runs in a process that cannot be trusted. Hence the order: the minidump first. It needs only
 // Windows calls, no heap and no engine singletons, so it is written even with a corrupted heap.
@@ -36,5 +38,13 @@ struct _EXCEPTION_POINTERS;
 /// created; its path is then in `outFolder` (if given).
 Bool WriteCrashReport( const char *reason, struct _EXCEPTION_POINTERS *exceptionInfo,
 	char *outFolder = nullptr, int outFolderSize = 0 );
+
+/// At start: if the last run left a crash report, logs its path and (interactive) asks whether to
+/// open the folder. The note is removed, so it appears once.
+void CrashReportAnnouncePrevious( Bool interactive );
+
+/// Writes one line of counters (frame, objects, particles, memory) into the engine log ring buffer at
+/// most once per second; call from the main loop.
+void CrashReportLogCounters( void );
 
 #endif // __CRASHREPORT_H_

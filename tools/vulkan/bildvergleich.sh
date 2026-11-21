@@ -47,15 +47,15 @@ for p in "${PROFILE[@]}"; do
 	# shellcheck disable=SC2206
 	schalter=(${p#*|})
 	if ! "$HERE/bildserie_wine.sh" "$DATEN" "$ZIEL/$name" "${schalter[@]}" "$@" > "$ZIEL.$name.log" 2>&1; then
-		echo "FEHLER $name: Lauf gescheitert ($ZIEL.$name.log)"; fails=$((fails + 1)); continue
+		echo "ERROR $name: Lauf gescheitert ($ZIEL.$name.log)"; fails=$((fails + 1)); continue
 	fi
 	if [ "$ART" != referenz ]; then
 		if python3 "$ROOT/tools/render/compare_shots.py" "$ABLAGE/referenz/$name" "$ZIEL/$name" "${TOLERANZ[@]}" \
 			> "$ZIEL.$name.vergleich" 2>&1; then
 			if [ "$ART" = pruefen ]; then echo "OK     $name: $(ls "$ZIEL/$name"/*.bmp | wc -l) Bilder pixelgleich"
-			else echo "OK     $name: $(ls "$ZIEL/$name"/*.bmp | wc -l) Bilder in der Toleranz"; grep "PSNR" "$ZIEL.$name.vergleich" | head -4; fi
+			else echo "OK     $name: $(ls "$ZIEL/$name"/*.bmp | wc -l) Bilder within tolerance"; grep "PSNR" "$ZIEL.$name.vergleich" | head -4; fi
 		else
-			echo "FEHLER $name: Bilder weichen ab ($ZIEL.$name.vergleich)"; grep -v "^OK" "$ZIEL.$name.vergleich" | head -4
+			echo "ERROR $name: Bilder weichen ab ($ZIEL.$name.vergleich)"; grep -v "^OK" "$ZIEL.$name.vergleich" | head -4
 			fails=$((fails + 1))
 		fi
 	else

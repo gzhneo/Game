@@ -29,8 +29,8 @@
 // it. It also forecasts the force against the enemies around its current position, so the command
 // layer can retreat before a lost fight.
 //
-// Log with -aiStats: KIPLAN (summary and checksum, equal in every run), KIPROGNOSE and KIKONTER
-// (every 10 plans), KIZEIT (measured times, real time). They only read and do not change the CRC.
+// Log with -aiStats: AIPLAN (summary and checksum, equal in every run), AIFORECAST and AICOUNTER
+// (every 10 plans), AITIMING (measured times, real time). They only read and do not change the CRC.
 
 #pragma once
 
@@ -60,7 +60,8 @@ struct AIPlanObject
 		TECH				= 0x40,		///< capturable tech building
 		CAN_ATTACK	= 0x80,
 		SUPERWEAPON	= 0x100,	///< superweapon building
-		ECONOMY			= 0x200		///< supply centre (cash generator)
+		ECONOMY			= 0x200,	///< supply centre (cash generator)
+		REMEMBERED	= 0x400		///< enemy unit out of sight, taken from the memory
 	};
 
 	UnsignedInt	id;					///< ObjectID
@@ -120,6 +121,9 @@ struct AIPlanResult
 	Int					ownStructures = 0;
 	Int					allyValue = 0;
 	Int					enemyUnitsSeen = 0;
+	Int					enemyUnitsRemembered = 0;	///< of those: out of sight, from the memory
+	// Value (build cost x health) of the focus enemy's field army by class and of his armed buildings, for the unit mix.
+	Real				enemyInfantryValue = 0.0f, enemyVehicleValue = 0.0f, enemyAirValue = 0.0f, enemyDefenceValue = 0.0f;
 	Int					enemyValueSeen = 0;
 	Int					enemyStructuresKnown = 0;
 	Int					suppliesKnown = 0;
@@ -185,8 +189,10 @@ public:
 	/// TRUE if update() takes a snapshot this frame; then call setInputs() first.
 	Bool isSnapshotDue( void ) const;
 	/// Inputs the command layer provides for the next snapshot.
+	/// memory: enemy units not in sight any more (health already weighted by age), added to the snapshot unless the
+	/// unit is in sight.
 	void setInputs( const std::vector<AIPlanCandidate> &candidates, Int focusEnemy, const std::vector<UnsignedInt> &mission,
-		const std::vector<UnsignedInt> &raid );
+		const std::vector<UnsignedInt> &raid, const std::vector<AIPlanObject> &memory );
 
 	/// Every logic frame: take the result over when due, start the next job when due.
 	void update( Player *self );
@@ -195,6 +201,11 @@ public:
 	Int profileOf( const ThingTemplate *t ) const;
 	/// Counter score of a profile in the last result, -1 if it is not ranked.
 	Real counterScoreOf( Int profile ) const;
+	/// AIRoles bits of a combat table row (0 for -1), computed once at init.
+	unsigned roleOf( Int profile ) const
+	{
+		return (profile >= 0 && static_cast<size_t>( profile ) < m_roleOfProfile.size()) ? m_roleOfProfile[static_cast<size_t>( profile )] : 0u;
+	}
 	const AICombat::Table &getCombatTable( void ) const { return m_table; }
 
 	Bool hasResult( void ) const { return m_hasResult; }
@@ -216,10 +227,12 @@ private:
 	::Engine::AsyncTask	m_task;
 	AICombat::Table	m_table;				///< built once in init(), read-only afterwards (also by jobs)
 	std::vector<Int> m_profileOfTemplate;	///< by template id
+	std::vector<unsigned> m_roleOfProfile;
 	std::vector<const ThingTemplate *> m_templateOfProfile;	///< for log lines (sim thread only)
 	std::vector<AIPlanCandidate> m_nextCandidates;
 	std::vector<UnsignedInt> m_nextMission;
 	std::vector<UnsignedInt> m_nextRaid;
+	std::vector<AIPlanObject> m_nextMemory;
 	Int						m_nextFocusEnemy;
 	Int						m_plans;					///< plans taken over (log rate)
 	AIPlanInput		m_input;				///< read by the running job

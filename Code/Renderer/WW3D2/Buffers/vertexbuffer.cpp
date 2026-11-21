@@ -52,7 +52,7 @@ static bool _DynamicSortingVertexArrayInUse=false;
 //static VertexFormatXYZNDUV2* _DynamicSortingVertexArray=NULL;
 static SortingVertexBufferClass* _DynamicSortingVertexArray=nullptr;
 static unsigned short _DynamicSortingVertexArraySize=0;
-static unsigned short _DynamicSortingVertexArrayOffset=0;	
+static unsigned _DynamicSortingVertexArrayOffset=0;		// wider than the 16 bit vertex indices: the sum of a frame can pass 65535	
 
 static bool _DynamicDeviceVertexBufferInUse=false;
 static DeviceVertexBufferClass* _DynamicDeviceVertexBuffer=nullptr;
@@ -173,6 +173,7 @@ VertexBufferClass::WriteLockClass::WriteLockClass(VertexBufferClass* VertexBuffe
 #endif
 		Device_Assert();
 		Device_ErrorCode(RenderDevice::Lock_Vertex_Buffer(static_cast<DeviceVertexBufferClass*>(VertexBuffer)->Get_Device_Vertex_Buffer(), 0, 0, static_cast<void**>(&Vertices), flags));	//flags
+		if (!Vertices) Vertices=Scratch.Get(VertexBuffer->Get_Vertex_Count()*VertexBuffer->FVF_Info().Get_FVF_Size());
 		break;
 	case BUFFER_TYPE_SORTING:
 		Vertices=static_cast<SortingVertexBufferClass*>(VertexBuffer)->VertexBuffer;
@@ -235,6 +236,7 @@ VertexBufferClass::AppendLockClass::AppendLockClass(VertexBufferClass* VertexBuf
 #endif
 		Device_Assert();
 		Device_ErrorCode(RenderDevice::Lock_Vertex_Buffer(static_cast<DeviceVertexBufferClass*>(VertexBuffer)->Get_Device_Vertex_Buffer(), start_index*VertexBuffer->FVF_Info().Get_FVF_Size(), index_range*VertexBuffer->FVF_Info().Get_FVF_Size(), static_cast<void**>(&Vertices), 0));	// Default (no) flags
+		if (!Vertices) Vertices=Scratch.Get(index_range*VertexBuffer->FVF_Info().Get_FVF_Size());
 		break;
 	case BUFFER_TYPE_SORTING:
 		Vertices=static_cast<SortingVertexBufferClass*>(VertexBuffer)->VertexBuffer+start_index;
@@ -785,7 +787,13 @@ void DynamicVBAccessClass::Allocate_Sorting_Dynamic_Buffer()
 	_DynamicSortingVertexArrayInUse=true;
 
 	unsigned new_vertex_count=_DynamicSortingVertexArrayOffset+VertexCount;
-	WWASSERT(new_vertex_count<65536);
+	if (new_vertex_count>65535) {
+		// More sorted vertices in this frame than 16 bit indices reach: start a new array. The nodes already
+		// inserted hold their own reference to the old one.
+		REF_PTR_RELEASE(_DynamicSortingVertexArray);
+		_DynamicSortingVertexArrayOffset=0;
+		new_vertex_count=VertexCount;
+	}
 	if (new_vertex_count>_DynamicSortingVertexArraySize) {
 		REF_PTR_RELEASE(_DynamicSortingVertexArray);
 		_DynamicSortingVertexArraySize=static_cast<unsigned short>(new_vertex_count);
@@ -798,14 +806,15 @@ void DynamicVBAccessClass::Allocate_Sorting_Dynamic_Buffer()
 	}
 
 	REF_PTR_SET(VertexBuffer,_DynamicSortingVertexArray);
-	VertexBufferOffset=_DynamicSortingVertexArrayOffset;
+	VertexBufferOffset=static_cast<unsigned short>(_DynamicSortingVertexArrayOffset);
 }
 
 // ----------------------------------------------------------------------------
 static int device_lock;
 DynamicVBAccessClass::WriteLockClass::WriteLockClass(DynamicVBAccessClass* dynamic_vb_access_)
 	:
-	DynamicVBAccess(dynamic_vb_access_)
+	DynamicVBAccess(dynamic_vb_access_),
+	Vertices(nullptr)
 {
 	RENDER_THREAD_ASSERT();
 	switch (DynamicVBAccess->Get_Type()) {
@@ -830,6 +839,7 @@ DynamicVBAccessClass::WriteLockClass::WriteLockClass(DynamicVBAccessClass* dynam
 		Device_Assert();
 		// Lock with discard contents if the buffer offset is zero
 		Device_ErrorCode(RenderDevice::Lock_Vertex_Buffer(static_cast<DeviceVertexBufferClass*>(DynamicVBAccess->VertexBuffer)->Get_Device_Vertex_Buffer(), DynamicVBAccess->VertexBufferOffset*_DynamicDeviceVertexBuffer->FVF_Info().Get_FVF_Size(), DynamicVBAccess->Get_Vertex_Count()*DynamicVBAccess->VertexBuffer->FVF_Info().Get_FVF_Size(), reinterpret_cast<void**>(&Vertices), WW3D_LOCK_NOSYSLOCK | (!DynamicVBAccess->VertexBufferOffset ? WW3D_LOCK_DISCARD : WW3D_LOCK_NOOVERWRITE)));
+		if (!Vertices) Vertices=static_cast<VertexFormatXYZNDUV2*>(Scratch.Get(DynamicVBAccess->Get_Vertex_Count()*DynamicVBAccess->VertexBuffer->FVF_Info().Get_FVF_Size()));
 		break;
 	case BUFFER_TYPE_DYNAMIC_SORTING:
 		Vertices=static_cast<SortingVertexBufferClass*>(DynamicVBAccess->VertexBuffer)->VertexBuffer;

@@ -110,7 +110,7 @@ def run_one(exe, mission, frames, out, timeout):
         except subprocess.TimeoutExpired:
             pass
         # Das Leck-Assert beim Beenden mitten in der Mission erscheint trotz -ignoreAsserts als Dialog
-        # (TODO 39); weiterklicken und mitzaehlen.
+        # weiterklicken und mitzaehlen.
         for x in click_assert_dialogs(proc.pid):
             if x not in dialogs[-1:]:
                 dialogs.append(x)

@@ -18,7 +18,7 @@ LIBS = ("Core/WWMath",
         "Core/WWLib",
         "Core/WWDebug",
         "Core/WWSaveLoad",
-        # WWDownload seit 2026-09-26 entfernt (TODO 69 Runde A)
+        # WWDownload ist entfernt
         "Core/Compression")
 
 

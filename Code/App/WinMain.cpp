@@ -950,6 +950,29 @@ static LONG WINAPI TheUnhandledExceptionFilter( EXCEPTION_POINTERS *e_info )
 #include "Engine/EngineLog.h"
 #include "Engine/ThreadRole.h"
 #include "Lib/SafeString.h"
+#include "wwdebug.h"
+
+// WWRELEASE_SAY, _WARNING and _ERROR (renderer and save code) reach the logs through this handler, so
+// they show up in release builds and in the crash report's ring buffer; without a handler
+// WWDebug_Printf drops them.
+static void wwDebugToEngineLog( DebugType type, const char *message )
+{
+	if( message == nullptr )
+		return;
+	char line[512];
+	safe_strcpy( line, message );
+	size_t len = strlen( line );
+	while( len > 0 && ( line[len - 1] == '\n' || line[len - 1] == '\r' ) )
+		line[--len] = 0;
+	const ::Engine::LogLevel level = type == WWDEBUG_TYPE_ERROR ? ::Engine::LOG_ERROR
+		: type == WWDEBUG_TYPE_WARNING ? ::Engine::LOG_WARNING : ::Engine::LOG_INFO;
+#ifdef DEBUG_LOGGING
+	(void)level;
+	DEBUG_LOG(( "%s\n", line ));	// DebugLog also feeds the engine log
+#else
+	ENGINE_LOG( ::Engine::LOG_CAT_CLIENT, level, "%s", line );
+#endif
+}
 
 #ifdef _DEBUG
 // abort() (e.g. an assertion inside FFmpeg or std::terminate) would otherwise end with the modal CRT
@@ -1005,7 +1028,7 @@ static void startAgain( void )
 // Without EA's game data the engine fails deep in its initialisation with a generic error message. A package from
 // the setup has no data until its setup program (GZHNeoEinrichtung.exe, one folder up) has copied it, so say that
 // and offer to run it. Data counts as present with any .big archive next to the exe or with loose files in Data\INI
-// (test data). No dialog in automated runs (-runner, -mehrfach). Returns true if the start has to stop.
+// (test data). No dialog in automated runs (-runner, -multiInstance). Returns true if the start has to stop.
 static bool reportMissingGameData( bool automated )
 {
 	WIN32_FIND_DATAA found;
@@ -1099,14 +1122,14 @@ Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		}
 		::SetCurrentDirectory(buffer);
 
-		// -mehrfach: several instances side by side for parallel test runs (image comparison, start
+		// -multiInstance: several instances side by side for parallel test runs (image comparison, start
 		// tests). Skips the single-instance lock, and the logs in the exe folder (DebugLogFile*.txt,
 		// EngineLog*.txt) get the per-instance prefix m<PID>_ so instances do not overwrite each other.
 		// Read early because the logs are opened before the regular command line parsing.
 		Bool isMultiInstance = FALSE;
 		static char s_instancePrefix[32] = "";
 		for (const char *p = lpCmdLine; p && *p; ++p) {
-			if (_strnicmp(p, "-mehrfach", 9) == 0 && (p[9] == 0 || p[9] == ' ' || p[9] == '"')
+			if (_strnicmp(p, "-multiInstance", 14) == 0 && (p[14] == 0 || p[14] == ' ' || p[14] == '"')
 				&& (p == lpCmdLine || p[-1] == ' ' || p[-1] == '"')) {
 				isMultiInstance = TRUE;
 				break;
@@ -1124,7 +1147,7 @@ Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		// than DebugLogFileD.txt. The ring buffer runs in every build anyway (crash report), even
 		// without a file.
 		{
-			char engineLogName[64];	// -mehrfach: per-instance prefix (see above)
+			char engineLogName[64];	// -multiInstance: per-instance prefix (see above)
 			WWFormat::Into(engineLogName, "{}{}{}", s_instancePrefix, gAppPrefix, isGameEditionZeroHour() ? "EngineLogZH.txt" : "EngineLog.txt");
 			engineLogName[sizeof(engineLogName) - 1] = 0;
 			::Engine::Log::openFile(engineLogName);
@@ -1229,7 +1252,7 @@ Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 
 		// install debug callbacks
-	//	WWDebug_Install_Message_Handler(WWDebug_Message_Callback);
+		WWDebug_Install_Message_Handler(wwDebugToEngineLog);
 	//	WWDebug_Install_Assert_Handler(WWAssert_Callback);
 
 		// Force "splash image" to be loaded from a file, not a resource so same exe can be used in different localizations.
@@ -1282,7 +1305,7 @@ Int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		//Create a mutex with a unique name to Generals in order to determine if
 		//our app is already running.
 		//WARNING: DO NOT use this number for any other application except Generals.
-		// Runner instances (-runner, determinism tests/benchmarks) and -mehrfach skip the lock;
+		// Runner instances (-runner, determinism tests/benchmarks) and -multiInstance skip the lock;
 		// otherwise a test run would silently exit with 0 whenever any game with the same GUID runs.
 		// Parallel runner recordings share the replay file 00000000.rep and must not run at once.
 		const Bool skipMutex = isRunnerInstance || isMultiInstance;

@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 import pfade  # noqa: E402
 
 API = 'https://api.polyhaven.com'
-KOPF = {'User-Agent': 'cnc-generals-modernisierung (TODO 56, Einzelabruf)'}
+KOPF = {'User-Agent': 'cnc-generals-modernisierung (single request)'}
 
 
 def hole(url):

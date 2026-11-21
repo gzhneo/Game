@@ -12,7 +12,7 @@
 // four times its edge length, never larger than the file.
 //
 // Manifest (text, one archive may carry one as TEXTURE_PACKAGE_MANIFEST at its root):
-//   TEXTURPAKET 1 <highest tier SD|HD|UHD>
+//   TEXTUREPACK 1 <highest tier SD|HD|UHD>     (older packages: TEXTURPAKET 1 ...)
 //   ; comment
 //   <archive path of the texture> <original width> <original height>
 // Names are looked up without folder and extension, case-insensitive: the models name "abc.tga",

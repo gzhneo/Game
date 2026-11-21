@@ -76,15 +76,26 @@ Bool FFmpegFile::open( File *file )
 
 	const size_t avioBufferSize = 0x10000;
 	m_avioBuffer = static_cast<UnsignedByte *>(av_malloc( avioBufferSize ));
+	if ( !m_avioBuffer )
+	{
+		close();
+		return false;
+	}
 	m_avioCtx = avio_alloc_context( m_avioBuffer, static_cast<Int>(avioBufferSize), 0, m_file,
 		&FFmpegFile::readPacket, nullptr, &FFmpegFile::seekPacket );
 	if ( !m_avioCtx )
 	{
+		av_freep( &m_avioBuffer );		// avio_alloc_context does not take the buffer when it fails
 		close();
 		return false;
 	}
 
 	m_fmtCtx = avformat_alloc_context();
+	if ( !m_fmtCtx )
+	{
+		close();
+		return false;
+	}
 	m_fmtCtx->pb = m_avioCtx;
 	m_fmtCtx->flags |= AVFMT_FLAG_CUSTOM_IO;
 

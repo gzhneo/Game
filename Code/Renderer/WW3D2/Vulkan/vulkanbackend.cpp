@@ -175,7 +175,7 @@ bool Vulkan_Probe(VulkanProbeResult& result)
 
 	vkDestroyInstance(instance, nullptr);
 
-	result.chosen = Vulkan_Choose_Device(result.devices, result.device_count);
+	result.chosen = Vulkan_Choose_Device_Preferred(result.devices, result.device_count, Gpu_Preferred_Adapter());
 	if (result.chosen < 0) {
 		if (result.device_count == 0) {
 			std::snprintf(result.error, sizeof(result.error), "no Vulkan device");

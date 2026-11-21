@@ -1,4 +1,4 @@
-# Strassen frei, Abziehbilder zh md_gla05 (Nr. 83)
+# Strassen frei, Abziehbilder zh md_gla05
 # frame   x      y      zoom       drehung   neigung
 # arrowlong, parkspace, wordcaution, wordstophere, wordyield
 60        0.385  0.235  0.30       0         standard

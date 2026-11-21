@@ -328,11 +328,11 @@ public:
 
 protected:
 
-	/// Models lit per pixel: looks once for <name>_n.dds and hands it to the renderer with stage 0.
+	/// Models lit per pixel: looks once for <name>_nrm.dds and hands it to the renderer with stage 0.
 	void Apply_Normal_Map();
 
 	WW3DFormat				TextureFormat;
-	TextureClass*			NormalMap = nullptr;		///< <name>_n.dds, own reference
+	TextureClass*			NormalMap = nullptr;		///< <name>_nrm.dds, own reference
 	bool					NormalMapProbed = false;
 
 	// legacy

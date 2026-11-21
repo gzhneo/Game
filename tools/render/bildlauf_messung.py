@@ -4,9 +4,9 @@
 """Bildlauf-Messung: Kamerageschwindigkeit je Auflösung, Bildlauf-Art und Reglerstellung.
 
 Startet das Spiel je Auflösung im Fenster mit einem Skirmish (lokaler Spieler Beobachter) und einem Testablauf
-(-testablauf). Der Befehl `bildlauf` speist Eingaben ein (Umschalt+Pfeiltaste, Zeiger am Bildschirmrand, rechte
+(-testScript). Der Befehl `scroll` speist Eingaben ein (Umschalt+Pfeiltaste, Zeiger am Bildschirmrand, rechte
 Taste gezogen) und protokolliert die Kamerabewegung in Weltkoordinaten pro Sekunde und als Anteil des sichtbaren
-Bodens pro Sekunde (Mittelzeile bzw. Mittelspalte zu Beginn des Laufs), Zeilen "TESTABLAUF BILDLAUF ..." im
+Bodens pro Sekunde (Mittelzeile bzw. Mittelspalte zu Beginn des Laufs), Zeilen "TESTSCRIPT SCROLLRUN ..." im
 Runner-Protokoll. `bildlaufregler` setzt den Bildlauf-Regler (ScrollFactor) nur für den Lauf. Ausgabe: Tabelle
 und CSV (`bildlauf.csv`).
 
@@ -16,7 +16,7 @@ Aufruf (Windows, Pfade im Windows-Format):
         [--map "Alpine Assault"] [--bildrate 10] [--extra -schalter ...]
 
 Wartet vor jedem Start auf die Spielstart-Warteschlange (tools/abnahme/slot.py). Settings.ini/Options.ini werden
-nicht geschrieben (-einstellungenNurLesen); der Randbildlauf wird nur für die Dauer des Befehls im Fenster erlaubt.
+nicht geschrieben (-settingsReadOnly); der Randbildlauf wird nur für die Dauer des Befehls im Fenster erlaubt.
 Die Pfeiltasten wählen in der deutschen Tastenbelegung Einheiten aus, deshalb mit Umschalt (LookAtXlat wertet
 die Umschalttaste nicht aus); der erste Lauf mit Umschalt dient nur zum Aufwärmen (Modifikator-Wechsel).
 """
@@ -34,29 +34,29 @@ sys.path.insert(0, os.path.join(HIER, "..", "abnahme"))
 # (Art, Richtung, Zugweg in Pixeln, Teiler der Laufzeit). Hin und zurück, damit die Kamera nicht an den
 # Kartenrand läuft; schnelle Läufe kürzer.
 LAEUFE = [
-    ("taste", "rechts", 0, 1), ("taste", "links", 0, 1),
-    ("taste", "hoch", 0, 1), ("taste", "runter", 0, 1),
-    ("rand", "rechts", 0, 1), ("rand", "links", 0, 1),
-    ("rand", "hoch", 0, 1), ("rand", "runter", 0, 1),
-    ("ziehen", "rechts", 100, 3), ("ziehen", "links", 100, 3),
-    ("ziehen", "hoch", 100, 3), ("ziehen", "runter", 100, 3),
-    ("ziehen", "rechts", 300, 6), ("ziehen", "links", 300, 6),
+    ("key", "right", 0, 1), ("key", "left", 0, 1),
+    ("key", "up", 0, 1), ("key", "down", 0, 1),
+    ("edge", "right", 0, 1), ("edge", "left", 0, 1),
+    ("edge", "up", 0, 1), ("edge", "down", 0, 1),
+    ("drag", "right", 100, 3), ("drag", "left", 100, 3),
+    ("drag", "up", 100, 3), ("drag", "down", 100, 3),
+    ("drag", "right", 300, 6), ("drag", "left", 300, 6),
 ]
 
-ZEILE = re.compile(r"BILDLAUF (art=.*)$")
+ZEILE = re.compile(r"SCROLLRUN (kind=.*)$")
 
 
 def ablauf_text(ticks, regler, bildrate=0):
-    zeilen = ["# Bildlauf-Messung (tools/render/bildlauf_messung.py)", "partie 30000", "logik 90",
-              "bildlauf taste rechts 1", "logik 10"]
+    zeilen = ["# Bildlauf-Messung (tools/render/bildlauf_messung.py)", "game 30000", "logic 90",
+              "scroll key right 1", "logic 10"]
     if bildrate:
-        zeilen += [f"bildrate {bildrate}", "logik 30"]
+        zeilen += [f"frameRate {bildrate}", "logic 30"]
     for r in regler:
-        zeilen.append(f"bildlaufregler {r}")
+        zeilen.append(f"scrollSpeed {r}")
         for art, richtung, weg, teiler in LAEUFE:
-            zeilen.append(f"bildlauf {art} {richtung} {max(1, ticks // teiler)}" + (f" {weg}" if weg else ""))
-            zeilen.append("logik 10")
-    zeilen.append("beenden")
+            zeilen.append(f"scroll {art} {richtung} {max(1, ticks // teiler)}" + (f" {weg}" if weg else ""))
+            zeilen.append("logic 10")
+    zeilen.append("quit")
     return "\n".join(zeilen) + "\n"
 
 
@@ -72,7 +72,7 @@ def lauf(a, res, out, regler):
         os.remove(log)
     exe = os.path.abspath(a.exe)
     cmd = [exe, "-win", "-xres", xres, "-yres", yres, "-quickstart", "-noaudio", "-d3d11",
-           "-einstellungenNurLesen", "-crcLog", log, "-testablauf", skript,
+           "-settingsReadOnly", "-crcLog", log, "-testScript", skript,
            "-skirmish", a.map, "-skirmishAI", "1", "-skirmishSeed", "1"] + list(a.extra or [])
     from slot import wait_free
     wait_free()
@@ -121,7 +121,7 @@ def main():
         code, werte, fehler = lauf(a, res, a.out, regler)
         fehlerzahl += len(fehler) + (0 if code == 0 else 1)
         alle += werte
-    felder = ["res", "factor", "art", "dir", "drag", "ticks", "ms", "world", "world_s", "across", "down", "view_s",
+    felder = ["res", "factor", "kind", "dir", "drag", "ticks", "ms", "world", "world_s", "across", "down", "view_s",
               "screen_px", "screen_s", "zoom", "zoom_end", "height", "pitch"]
     with open(os.path.join(a.out, "bildlauf.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=felder, extrasaction="ignore")
@@ -131,8 +131,8 @@ def main():
     print(f"\n{'Auflösung':>10} {'Regler':>6} {'Art':>6} {'Richtung':>8} {'Zug':>4} {'Welt/s':>8} {'Sicht':>7} "
           f"{'Bild/s':>7} {'Zoom':>6}")
     for z in alle:
-        sicht = z["across"] if z["dir"] in ("rechts", "links") else z["down"]
-        print(f"{z['res']:>10} {float(z['factor']):6.2f} {z['art']:>6} {z['dir']:>8} {z['drag']:>4} "
+        sicht = z["across"] if z["dir"] in ("right", "left") else z["down"]
+        print(f"{z['res']:>10} {float(z['factor']):6.2f} {z["kind"]:>6} {z['dir']:>8} {z['drag']:>4} "
               f"{float(z['world_s']):8.1f} {float(sicht):7.1f} {float(z['view_s']):7.3f} {float(z['zoom']):6.3f}")
     print(f"\nCSV: {os.path.join(a.out, 'bildlauf.csv')}")
     return 1 if fehlerzahl else 0

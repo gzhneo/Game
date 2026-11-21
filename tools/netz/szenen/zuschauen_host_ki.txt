@@ -1,29 +1,29 @@
 # Zuschauen-Test, Gastgeber ohne Mitspieler: Spiel eroeffnen, Platz 1 mit einer leichten KI besetzen, starten, {LOGIK}
 # Logik-Frames spielen (lange genug, dass ein Zuschauer zweimal beitritt), ueber das Spielmenue verlassen.
-hauptmenue
-klick MainMenu.wnd:ButtonMultiplayer
-klick MainMenu.wnd:ButtonNetwork
-fenster LanLobbyMenu.wnd:ButtonHost
-warte 60
-klick LanLobbyMenu.wnd:ButtonHost
-fenster LanGameOptionsMenu.wnd:ButtonStart
-warte 60
-auswahl LanGameOptionsMenu.wnd:ComboBoxPlayer1 2
-warte 60
-klick LanGameOptionsMenu.wnd:ButtonStart 9000
-partie 2000000
+mainMenu
+click MainMenu.wnd:ButtonMultiplayer
+click MainMenu.wnd:ButtonNetwork
+window LanLobbyMenu.wnd:ButtonHost
+wait 60
+click LanLobbyMenu.wnd:ButtonHost
+window LanGameOptionsMenu.wnd:ButtonStart
+wait 60
+select LanGameOptionsMenu.wnd:ComboBoxPlayer1 2
+wait 60
+click LanGameOptionsMenu.wnd:ButtonStart 9000
+game 2000000
 log SPIEL BEGINNT
-logik {LOGIK}
-spielmenue
-klick QuitNoSave.wnd:ButtonExit
-klick QuitMessageBox.wnd:ButtonYes
-keinePartie 2000000
-klick ScoreScreen.wnd:ButtonOk
-fenster LanLobbyMenu.wnd:ButtonBack 3000
-warte 60
-klick LanLobbyMenu.wnd:ButtonBack
-hauptmenue
-klickFalls MainMenu.wnd:ButtonMultiBack
-hauptmenue
-warte 60
-beenden
+logic {LOGIK}
+gameMenu
+click QuitNoSave.wnd:ButtonExit
+click QuitMessageBox.wnd:ButtonYes
+noGame 2000000
+click ScoreScreen.wnd:ButtonOk
+window LanLobbyMenu.wnd:ButtonBack 3000
+wait 60
+click LanLobbyMenu.wnd:ButtonBack
+mainMenu
+clickIf MainMenu.wnd:ButtonMultiBack
+mainMenu
+wait 60
+quit

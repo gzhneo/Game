@@ -413,7 +413,7 @@ void W3DModelDraw::setHidden(Bool hidden)
 	if (m_shadow)
 		m_shadow->enableShadowRender(!hidden);
 
-	m_shadowEnabled = hidden;
+	m_shadowEnabled = !hidden;
 
 	if (m_terrainDecal)
 		m_terrainDecal->enableShadowRender(!hidden);

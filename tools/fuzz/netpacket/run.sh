@@ -39,7 +39,7 @@ FLAGS="-std=c++20 -w -O1 -g -DWIN32 -D_WINDOWS -DNOMINMAX -D_WIN32_WINNT=0x0A00 
        -fsanitize=bounds -fsanitize-undefined-trap-on-error"
 
 # Referenz fuer den Differenztest: Serialisierung von NetPacket vor der Neufassung (EA-Code samt den
-# Korrekturen R-306, R-308, R-309), als Kopie in referenz/ (Stand von Commit bc8042d7, damit der Test
+# Korrekturen), als Kopie in referenz/ (Stand von Commit bc8042d7, damit der Test
 # ohne Historie laeuft). Textuell in RefNetPacket umbenannt (ganze Woerter; NetPacketRouter* bleibt),
 # eigener Kopfschutz.
 REF="$OUT/netref"
@@ -63,6 +63,8 @@ $CXX $FLAGS $INC -I "$REF" -o "$OUT/NetPacketTests.exe" $SRC "$OUT/libengine.a" 
 
 export WINEPREFIX="${WINEPREFIX:-$OUT/wineprefix}"
 export WINEDEBUG=-all
+# Wine 9.0 aborts ("free(): invalid pointer") whenever TMPDIR is set, whatever its value; work dirs are derived above.
+unset TMPDIR
 ARGS="$HERE/golden.txt"
 [ "$EXTRA" = "--write-golden" ] && ARGS="$ARGS --write-golden"
 [ "$ITER" != "0" ] && ARGS="$ARGS --fuzz $ITER"

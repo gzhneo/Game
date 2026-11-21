@@ -576,7 +576,7 @@ void Win32Mouse::initCursorResources(void)
 						: loadArchivedModCursor(resourcePath);
 					loaded = (cursorResources[cursor][direction] != nullptr);
 					char line[512];
-					WWFormat::Into(line, "MOD zeiger {} {}", resourcePath, loaded ? "geladen" : "nicht ladbar");
+					WWFormat::Into(line, "MOD cursor {} {}", resourcePath, loaded ? "loaded" : "not loadable");
 					line[sizeof(line) - 1] = 0;
 					GameEngine_RunnerLog(line);
 				}

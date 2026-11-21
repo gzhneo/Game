@@ -118,7 +118,7 @@ void SkirmishBattleHonors::clear()
 
 Bool SkirmishBattleHonors::write()
 {
-	// Several local instances (-netzLokal) share the file and would overwrite each other.
+	// Several local instances (-netLocal) share the file and would overwrite each other.
 	if (TheGlobalData && TheGlobalData->m_netLocalInstance > 0)
 		return false;
 

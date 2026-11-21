@@ -1071,7 +1071,7 @@ def cmd_packen(a):
 
 
 # -------------------------------------------------------------------------------------------------
-# Relief: Normalen, Glanz und Hoehe je Textur (TODO 82 Stufe 1)
+# Relief: Normalen, Glanz und Hoehe je Textur
 # -------------------------------------------------------------------------------------------------
 # Datei Art/Terrain/<name>_n.dds neben der Farbtextur, BC7, gleiche Kachelkennung ZHTS<s>. Kanaele (RGBA):
 #   R, G  Normale x, y in Bildachsen (OpenGL: G zeigt im Bild nach oben), Byte = 128 + 127 * Wert (128 = flach)
@@ -1167,7 +1167,7 @@ def cmd_relief(a):
 
 
 # -------------------------------------------------------------------------------------------------
-# Hoehe fuer die Tessellation (TODO 82 Stufe 2)
+# Hoehe fuer die Tessellation
 # -------------------------------------------------------------------------------------------------
 # Datei Art/Terrain/<name>_h.dds neben der Farbtextur, BC4 (ein Kanal), Kachelkennung ZHTS<s> wie die Farbe. Byte =
 # 255 * (Hoehe - Mittel + 0,5): je Textur mittelwertfrei um 128, die Engine zieht 0,5 ab und skaliert mit der Amplitude
@@ -1240,7 +1240,7 @@ def cmd_archiv(a):
 
 
 # -------------------------------------------------------------------------------------------------
-# Schaerfen je Mip-Stufe (TODO 81)
+# Schaerfen je Mip-Stufe
 # -------------------------------------------------------------------------------------------------
 def _hoch2(x):
     """Bilinear auf doppelte Groesse, periodischer Rand; Pixelmitten wie bei der 2x2-Mittelung (Gewichte 3/4, 1/4)."""

@@ -783,6 +783,8 @@ void WaterRenderObjClass::ReAcquireResources(void)
 {
 	HRESULT hr;
 
+	reloadCodeTextures();
+
 	m_indexBuffer=NEW_REF(DeviceIndexBufferClass,(6));
 	// Fill up the IB
 	{
@@ -1015,7 +1017,8 @@ Int WaterRenderObjClass::init(Real waterLevel, Real dx, Real dy, SceneClass *par
 	//For some reason setting a NULL texture does not result in 0xffffffff for pixel shaders so using explicit "white" texture.
 	m_whiteTexture=MSGNEW("TextureClass") TextureClass(1,1,WW3D_FORMAT_A4R4G4B4,MIP_LEVELS_1);
 	SurfaceClass *surface=m_whiteTexture->Get_Surface_Level();
-	surface->DrawPixel(0,0,0xffffffff);
+	if (surface)		// none if the device could not create the texture
+		surface->DrawPixel(0,0,0xffffffff);
 	REF_PTR_RELEASE(surface);
 
 	m_waterNoiseTexture = LoadFreeWaterTexture("wasser_rauschen.dds", "Noise0000.tga");

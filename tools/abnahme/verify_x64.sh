@@ -22,8 +22,8 @@ echo "##### ctest build-x64 #####"; (cd build-x64 && "$CT" -C Debug -LE assets 2
 
 G=build-x64/Generals/Code/Main/Debug/GZHNeo.exe; Z=build-x64/GeneralsMD/Code/Main/Debug/GZHNeoZH.exe
 RR="python tools/render/run_render_test.py"
-cmp_out() { grep -E "^OK|^ABWEICHT|^FEHLER|Exit-Code" | sed 's/, max.*//'; }
-# TODO 67 Teil 2 (2026-09-26): nur noch Direct3D 11 (D3D9 und --mit-d3d9 entfernt); die Ordner behalten die Endung -d3d11.
+cmp_out() { grep -E "^OK|^DIFFERS|^ERROR|Exit-Code" | sed 's/, max.*//'; }
+# Only Direct3D 11 (D3D9 and --mit-d3d9 are gone); the folders behalten die Endung -d3d11.
 for b in d3d11; do
   echo "##### Bild Generals Shell-Map $b #####"
   $RR run --exe $G --scene shellmap --frames 300,900 --out render-out/v64-g-shell-$b --reference render-out/x64ref-g-shell-$b --extra -ignoreAsserts -$b 2>&1 | cmp_out
@@ -32,13 +32,12 @@ for b in d3d11; do
   echo "##### Bild ZH Shell-Map $b #####"
   $RR run --exe $Z --scene shellmap --frames 300,900 --out render-out/v64-zh-shell-$b --reference render-out/x64ref-zh-shell-$b --extra -ignoreAsserts -$b 2>&1 | cmp_out
 done
-# R-131: Zwischensequenz ZH USA 1 -- tiefe, fast waagerechte Skriptkamera, frueher ohne Gelaende (Bilder 100 bis 450)
+# Zwischensequenz ZH USA 1 -- tiefe, fast waagerechte Skriptkamera, frueher ohne Gelaende (Bilder 100 bis 450)
 echo "##### Bild ZH Zwischensequenz USA 1 d3d11 #####"
 $RR run --exe $Z --scene mission --map 'Maps\md_usa01.map' --frames 100,300,450,600 --out render-out/v64-zh-usa01-d3d11 --reference render-out/x64ref-zh-usa01-d3d11 --extra -ignoreAsserts -d3d11 2>&1 | cmp_out
 
 R="python tools/determinism/runner.py check"
-# Debug und Release: alle x64-Referenzreplays beider Spiele (drei je Spiel). Release lief bis TODO 36
-# (R-70, 2026-09-19) nur mit zwei Replays.
+# Debug und Release: alle x64-Referenzreplays beider Spiele (drei je Spiel). Release laeuft mit allen.
 echo "##### Replays Generals (alle) #####"; $R --exe $G --all tests/replays/x64 --extra -ignoreAsserts; echo "exit=$?"
 echo "##### Replays ZH (alle) #####"; $R --exe $Z --all tests/replays/zh/x64 --extra -ignoreAsserts; echo "exit=$?"
 if [ -n "$REL" ]; then
@@ -53,7 +52,7 @@ done
 
 f() { n=$1; e=$2; r=$3; p=$4
   echo "##### Fahrt $n #####"
-  $RR run --exe $e --scene replay --replay $r --path tests/render/paths/$p.txt --out render-out/v64-$n --reference render-out/x64ref-$n --extra -ignoreAsserts 2>&1 | grep -E "^ABWEICHT|^FEHLER" | sed 's/, max.*//'
+  $RR run --exe $e --scene replay --replay $r --path tests/render/paths/$p.txt --out render-out/v64-$n --reference render-out/x64ref-$n --extra -ignoreAsserts 2>&1 | grep -E "^DIFFERS|^ERROR" | sed 's/, max.*//'
   echo "Fahrt $n: $(ls render-out/v64-$n/shot_*.bmp 2>/dev/null | wc -l) Bilder, $(grep -c '"pixels_over_threshold": 0' render-out/v64-$n/compare.json 2>/dev/null) pixelgleich"
   python tools/render/inspect_shots.py --quiet render-out/v64-$n | tail -1; }
 RA=tests/replays/x64/e0-alpine-assault-2ai-seed1.rep; RZ=tests/replays/zh/x64/e0zh-green-pastures-2ai-seed1.rep
@@ -63,7 +62,7 @@ f zoom $G $RA zoom
 f rand $G $RA rand
 f zh-rundum $Z $RZ rundum
 if [ -n "$LECKS" ]; then
-  # TODO 52 (2026-09-25): Abnahme-Auswahl der Lecksuche im Aufrufketten-Build
+  # Abnahme-Auswahl der Lecksuche im Aufrufketten-Build
   # build-leak -- nur dort trennt das Werkzeug Wachstum in Zwischenspeicher und Rest. Beide Spiele, Runner-Laeufe
   # zu viert parallel, die Fensterszene daneben; unter 10 Minuten.
   echo "##### build-leak (Aufrufketten) #####"

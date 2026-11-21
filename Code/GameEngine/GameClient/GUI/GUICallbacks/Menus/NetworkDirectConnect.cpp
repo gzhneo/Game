@@ -375,7 +375,7 @@ void NetworkDirectConnectInit( WindowLayout *layout, void *userData )
 //		DEBUG_ASSERTCRASH(TheLobby != NULL, ("TheLobby is null initializing the direct connect screen."));
 		::Engine::context().lobby = NEW GameLobby();
 
-		// every adapter, unless -netzLokal or the setting Network.IPAddress names one address
+		// every adapter, unless -netLocal or the setting Network.IPAddress names one address
 		const UnsignedInt IP = GetLocalNetInstanceIP() ? GetLocalNetInstanceIP() : TheGlobalData->m_defaultIP;
 		TheLobby->init();
 		TheLobby->SetLocalIP(IP);

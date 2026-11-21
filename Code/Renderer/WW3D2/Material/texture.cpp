@@ -758,6 +758,9 @@ void TextureClass::Apply_New_Surface
 	bool disable_auto_invalidation
 )
 {
+	// No texture (creation failed): keep what the texture shows now.
+	if (!d3d_texture) return;
+
 	WW3DTextureHandle d3d_tex=Peek_D3D_Base_Texture();
 
 	if (d3d_tex) RenderDevice::Release_Resource(d3d_tex);
@@ -768,12 +771,11 @@ void TextureClass::Apply_New_Surface
 	if (initialized) Initialized=true;
 	if (disable_auto_invalidation) InactivationTime = 0;
 
-	WWASSERT(d3d_texture);
-	WW3DSurfaceHandle surface;
+	WW3DSurfaceHandle surface=nullptr;
 	Device_ErrorCode(RenderDevice::Get_Texture_Surface_Level(Peek_D3D_Texture(), 0, &surface));
 	WW3DSurfaceDesc d3d_desc;
 	::ZeroMemory(&d3d_desc, sizeof(WW3DSurfaceDesc));
-	Device_ErrorCode(RenderDevice::Get_Surface_Desc(surface, &d3d_desc));
+	if (surface) Device_ErrorCode(RenderDevice::Get_Surface_Desc(surface, &d3d_desc));
 	if (initialized) 
 	{
 		TextureFormat=D3DFormat_To_WW3DFormat(d3d_desc.Format);
@@ -794,7 +796,8 @@ TextureClass::~TextureClass()
 	REF_PTR_RELEASE(NormalMap);
 }
 
-// The name of a normal map ends in "_n" before the extension, as the terrain relief tiles (WorldHeightMap). Only
+// The name of a normal map ends in "_nrm" before the extension. Not "_n" as the terrain relief tiles: the game data
+// use that suffix for the night textures of buildings (lit windows on black), which would bend every normal. Only
 // stage 0: its coordinates are the ones the pixel shader reads the normal map with.
 void TextureClass::Apply_Normal_Map()
 {
@@ -806,9 +809,9 @@ void TextureClass::Apply_Normal_Map()
 		const char* text = name;
 		const char* dot = strrchr(text, '.');
 		const int stem = dot ? static_cast<int>(dot - text) : name.Get_Length();
-		if (stem > 0 && !(stem >= 2 && text[stem - 2] == '_' && (text[stem - 1] == 'n' || text[stem - 1] == 'N'))) {
+		if (stem > 0 && !(stem >= 4 && _strnicmp(text + stem - 4, "_nrm", 4) == 0)) {
 			StringClass normal_name;
-			normal_name.Format("%.*s_n.dds", stem, text);
+			normal_name.Format("%.*s_nrm.dds", stem, text);
 			file_auto_ptr file(_TheFileFactory, normal_name);
 			if (file->Is_Available())
 				NormalMap = WW3DAssetManager::Get_Instance()->Get_Texture(normal_name);
@@ -853,6 +856,15 @@ SurfaceClass *TextureClass::Get_Surface_Level(unsigned int level)
 {
 	if (!Peek_D3D_Texture()) 
 	{
+		// A texture made by the game itself that the device could not create (video memory full): the callers
+		// write into it without a check, so a surface in main memory takes the writes and the texture stays blank.
+		// That case is handled, so it raises no assertion; any other texture without a device texture is a bug.
+		if (IsProcedural)
+		{
+			const unsigned width = ((Width >> level) > 0) ? (Width >> level) : 1;
+			const unsigned height = ((Height >> level) > 0) ? (Height >> level) : 1;
+			return new SurfaceClass(width, height, TextureFormat == WW3D_FORMAT_UNKNOWN ? WW3D_FORMAT_A8R8G8B8 : TextureFormat);
+		}
 		WWASSERT_PRINT(0, "Get_Surface_Level: D3DTexture is NULL!\n");
 		return 0;
 	}
@@ -861,6 +873,17 @@ SurfaceClass *TextureClass::Get_Surface_Level(unsigned int level)
 	Device_ErrorCode(RenderDevice::Get_Texture_Surface_Level(Peek_D3D_Texture(), level, &d3d_surface));
 	SurfaceClass *surface = new SurfaceClass(d3d_surface);
 	RenderDevice::Release_Resource(d3d_surface);
+
+	// A file texture that could not be loaded shows the shared missing texture; callers that recolor
+	// the surface must not write into it, so they get a private copy in main memory instead.
+	if (!IsProcedural && surface && Is_Missing_Texture())
+	{
+		SurfaceClass::SurfaceDescription desc;
+		surface->Get_Description(desc);
+		SurfaceClass *copy = new SurfaceClass(desc.Width, desc.Height, desc.Format);
+		REF_PTR_RELEASE(surface);
+		return copy;
+	}
 
 	return surface;
 }
@@ -1181,6 +1204,9 @@ void ZTextureClass::Apply_New_Surface
 	bool disable_auto_invalidation
 )
 {
+	// No texture (creation failed): keep what the texture shows now.
+	if (!d3d_texture) return;
+
 	WW3DTextureHandle d3d_tex=Peek_D3D_Base_Texture();
 
 	if (d3d_tex) RenderDevice::Release_Resource(d3d_tex);
@@ -1191,12 +1217,11 @@ void ZTextureClass::Apply_New_Surface
 	if (initialized) Initialized=true;
 	if (disable_auto_invalidation) InactivationTime = 0;
 
-	WWASSERT(Peek_D3D_Texture());
-	WW3DSurfaceHandle surface;
+	WW3DSurfaceHandle surface=nullptr;
 	Device_ErrorCode(RenderDevice::Get_Texture_Surface_Level(Peek_D3D_Texture(), 0, &surface));
 	WW3DSurfaceDesc d3d_desc;
 	::ZeroMemory(&d3d_desc, sizeof(WW3DSurfaceDesc));
-	Device_ErrorCode(RenderDevice::Get_Surface_Desc(surface, &d3d_desc));
+	if (surface) Device_ErrorCode(RenderDevice::Get_Surface_Desc(surface, &d3d_desc));
 	if (initialized) 
 	{
 		DepthStencilTextureFormat=D3DFormat_To_WW3DZFormat(d3d_desc.Format);

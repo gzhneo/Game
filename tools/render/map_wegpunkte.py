@@ -3,7 +3,7 @@
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
 """Wegpunkte einer Karte (Startpositionen u. a.) in Weltkoordinaten und kartenrelativ (0..1) ausgeben --
-für Kamerafahrten zu einem Ort (TODO 62: Humvees an einer KI-Basis).
+für Kamerafahrten zu einem Ort (Humvees an einer KI-Basis).
 
   python tools/render/map_wegpunkte.py "Tournament Lake" [--alle]
 

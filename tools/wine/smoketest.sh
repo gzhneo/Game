@@ -42,7 +42,7 @@ rc=$?
 echo "Rueckgabewert $rc"
 if [ $rc -eq 0 ] && grep -q "EXIT code 0" "$DATA/run.log" 2>/dev/null; then
 	echo "Rauchtest bestanden ($KIND, ${FRAMES} Frames)"
-	grep -a "KISIEG" "$DATA/run.log" | head -1
+	grep -a "AIVICTORY" "$DATA/run.log" | head -1
 	exit 0
 fi
 echo "Rauchtest FEHLGESCHLAGEN -- $DATA/run.log, $DATA/wine.log"

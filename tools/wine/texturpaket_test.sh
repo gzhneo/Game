@@ -12,9 +12,9 @@
 # (tools/assets/build_texture_package.py). Dann sechs kurze Skirmish-Laeufe mit -logTextureStats: ohne Paket,
 # mit Paket in -textureQuality sd, hd und uhd, uhd mit einem Mod, der die Wassertextur in Originalgroesse ersetzt, und
 # die Texturen des Pakets samt Manifest als freier Inhalt (ProjectData\Inhalt) ohne Paket des Spiels, also in SD.
-# Geprueft: Zeile TEXTURPAKET mit der verlangten Stufe in HD und UHD; SD laedt die Originale (Zeile TEXTURESTUFE SD,
+# Geprueft: Zeile TEXTUREPACK mit der verlangten Stufe in HD und UHD; SD laedt die Originale (Zeile TEXTURETIER SD,
 # gleich viele Texel wie ohne Paket), HD mehr, UHD noch mehr, eine DXT-Textur aus dem Paket in HD; der Gelaendeatlas in SD wie ohne Paket, in HD und UHD mit
-# Kacheln vom Faktor 2 bzw. 4 (Zeile TERRAINATLAS_HD); mit Mod die Zeile TEXTURPAKET ersetzt 1 und weniger Texel
+# Kacheln vom Faktor 2 bzw. 4 (Zeile TERRAINATLAS_HD); mit Mod die Zeile TEXTUREPACK replaced 1 und weniger Texel
 # als UHD ohne Mod (die Datei des Mods wird nicht nach den Massen des Pakets behandelt); der freie Inhalt in SD mit
 # seinem Manifest so viele Texel wie die Originale; jeder Lauf endet mit 0.
 # Rueckgabewert 0 = bestanden.
@@ -105,21 +105,21 @@ mv "$DATA/Texturstufen/Paket" "$DATA/Paket.weg"
 lauf frei || fehler=$((fehler + 1))
 mv "$DATA/Paket.weg" "$DATA/Texturstufen/Paket"
 rm -rf "$DATA/ProjectData/Inhalt"
-grep -aq "^FREIER INHALT .*TestFrei.* stufe SD manifest [1-9]" "$DATA/run_frei.log" \
+grep -aq "^FREE CONTENT .*TestFrei.* tier SD manifest [1-9]" "$DATA/run_frei.log" \
 	|| { echo "FEHLER frei: freier Inhalt ohne Manifest geladen"; fehler=$((fehler + 1)); }
 
 for name in ohne sd hd uhd mod frei; do
-	printf '%-5s %s | %s\n' "$name" "$(grep -a -m1 '^TEXTURPAKET\|^TEXTURESTUFE' "$DATA/run_$name.log" 2>/dev/null)" \
+	printf '%-5s %s | %s\n' "$name" "$(grep -a -m1 '^TEXTUREPACK\|^TEXTURETIER' "$DATA/run_$name.log" 2>/dev/null)" \
 		"$(grep -a '^TEXSTATS' "$DATA/run_$name.log" 2>/dev/null | tail -1)"
 done
 for stufe in hd uhd; do
 	want=$(echo "$stufe" | tr a-z A-Z)
-	grep -aq "^TEXTURPAKET $want " "$DATA/run_$stufe.log" || { echo "FEHLER $stufe: keine Zeile TEXTURPAKET $want"; fehler=$((fehler + 1)); }
+	grep -aq "^TEXTUREPACK $want " "$DATA/run_$stufe.log" || { echo "FEHLER $stufe: keine Zeile TEXTUREPACK $want"; fehler=$((fehler + 1)); }
 done
 # SD zeigt die Originale, das Paket bleibt ungeladen
-grep -aq "^TEXTURESTUFE SD " "$DATA/run_sd.log" || { echo "FEHLER sd: keine Zeile TEXTURESTUFE SD"; fehler=$((fehler + 1)); }
-grep -aq "^TEXTURPAKET ersetzt 0 " "$DATA/run_uhd.log" || { echo "FEHLER uhd: keine Zeile TEXTURPAKET ersetzt 0"; fehler=$((fehler + 1)); }
-grep -aq "^TEXTURPAKET ersetzt 1 " "$DATA/run_mod.log" || { echo "FEHLER mod: keine Zeile TEXTURPAKET ersetzt 1"; fehler=$((fehler + 1)); }
+grep -aq "^TEXTURETIER SD " "$DATA/run_sd.log" || { echo "FEHLER sd: keine Zeile TEXTURETIER SD"; fehler=$((fehler + 1)); }
+grep -aq "^TEXTUREPACK replaced 0 " "$DATA/run_uhd.log" || { echo "FEHLER uhd: keine Zeile TEXTUREPACK replaced 0"; fehler=$((fehler + 1)); }
+grep -aq "^TEXTUREPACK replaced 1 " "$DATA/run_mod.log" || { echo "FEHLER mod: keine Zeile TEXTUREPACK replaced 1"; fehler=$((fehler + 1)); }
 tmod=$(feld mod mtexel)
 echo "Texel mit Mod (UHD): $tmod"
 python3 -c "import sys; sys.exit(0 if float('${tmod:-0}') > 0 and float('${tmod:-0}') < float('$(feld uhd mtexel)') else 1)" \

@@ -1631,7 +1631,7 @@ void W3DAssetManager::Recolor_Asset(RenderObjClass *robj, const Vector3 &hsv_shi
 */
 
 //---------------------------------------------------------------------
-// -modellPruefung
+// -modelCheck
 //---------------------------------------------------------------------
 namespace
 {

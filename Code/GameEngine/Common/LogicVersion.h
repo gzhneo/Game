@@ -15,6 +15,6 @@
 #ifndef _LOGICVERSION_H_
 #define _LOGICVERSION_H_
 
-static const unsigned int GZH_LOGIC_VERSION = 0xE56F4BCFu;
+static const unsigned int GZH_LOGIC_VERSION = 0xA582C4BFu;
 
 #endif // _LOGICVERSION_H_

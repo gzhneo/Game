@@ -85,9 +85,13 @@ void RenderCore::Taa_Scene_Begin()
 	M->taa_in_scene = Taa_Wanted() && !M->current_render_target && Fx_Depth_Readable();
 	// A history older than the previous frame (a loading screen or menu in between) is dropped. The jitter sequence
 	// starts with the history, not with the program: how many frames were drawn before depends on the time, and the
-	// result of a frame depends on its phase.
-	if (M->taa_frame != M->fx_frame && M->taa_frame != M->fx_frame + 1) M->taa_valid = false;
-	if (!M->taa_valid) M->taa_phase_base = M->fx_frame;
+	// result of a frame depends on its phase. A history lost only with its targets (a lost device, a resize) keeps the
+	// sequence, so the frames after it match those of a run without the loss.
+	if (M->taa_frame != M->fx_frame && M->taa_frame != M->fx_frame + 1) {
+		M->taa_valid = false;
+		M->taa_phase_keep = false;
+	}
+	if (!M->taa_valid && !M->taa_phase_keep) M->taa_phase_base = M->fx_frame;
 	M->taa_jittered = M->taa_in_scene;
 	M->frame_cb_dirty = true;
 	M->object_cb_dirty = true;
@@ -233,6 +237,7 @@ void RenderCore::Fx_Run_TAA(int x0, int y0, int x1, int y1)
 	M->taa_prev_view_proj = view_proj;
 	M->taa_rect[0] = x0;  M->taa_rect[1] = y0;  M->taa_rect[2] = x1;  M->taa_rect[3] = y1;
 	M->taa_valid = true;
+	M->taa_phase_keep = false;
 }
 
 void RenderCore::Taa_Release_Targets()
@@ -242,6 +247,7 @@ void RenderCore::Taa_Release_Targets()
 		Gpu_Release(M->taa_rtv[i]);
 		Gpu_Release(M->taa_tex[i]);
 	}
+	if (M->taa_valid) M->taa_phase_keep = true;
 	M->taa_valid = false;
 }
 

@@ -52,7 +52,7 @@ def main():
     # Texturpaket (ab HD): das alphabetisch spätere Archiv gewinnt; ein Archiv mit anderem Inhalt wird ganz
     # abgewiesen, eines ohne Manifest bleibt draußen; ein alter Stufenordner wird nicht gelesen
     paket = os.path.join(spiel, "Texturstufen", "Paket")
-    manifest = ("texturpaket.txt", b"TEXTURPAKET 1 UHD\r\nart\\textures\\gzhtest_t.dds 4 4\r\nart\\textures\\gzhtest_h.dds 4 4\r\n")
+    manifest = ("texturpaket.txt", b"TEXTUREPACK 1 UHD\r\nart\\textures\\gzhtest_t.dds 4 4\r\nart\\textures\\gzhtest_h.dds 4 4\r\n")
     big(os.path.join(paket, "gzh_a.big"), [manifest, ("art\\textures\\gzhtest_t.dds", t), ("Art\\Textures\\gzhtest_h.dds", t)])
     big(os.path.join(paket, "gzh_b.big"), [manifest, ("art\\textures\\gzhtest_t.dds", t)])
     big(os.path.join(paket, "schlecht.big"), [manifest, ("art\\textures\\gzhtest_s.dds", t), ("gzhtest\\schlecht.txt", t)])

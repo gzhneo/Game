@@ -35,6 +35,7 @@
 
 #include "Common/GameCommon.h"	// ensure we get DUMP_PERF_STATS, or not
 #include <memory>
+#include <unordered_set>
 #include "Common/GameType.h"
 #include "Common/Snapshot.h"
 #include "Common/STLTypedefs.h"
@@ -199,6 +200,12 @@ public:
 	Bool isLoadingMap() const { return m_loadingMap; }			// Whenever a map is in the process of loading.
 	Bool isLoadingSave() const { return m_loadingSave; }		// Whenever a saved game is in the process of loading.
 	Bool isClearingGameData() const { return m_clearingGameData; }
+	/// True while all objects are destroyed in bulk (reset, shutdown): teams and players are already gone,
+	/// so nothing may die, fire death weapons or be created from object creation lists.
+	Bool isDestroyingAllObjects() const { return m_destroyingAllObjects; }
+	/// True while the pointer names an object that is registered in the lookup table. Never dereferences it,
+	/// so it can check list entries that may have been freed.
+	Bool isObjectPointerLive( const Object *obj ) const { return m_livePointers.find( obj ) != m_livePointers.end(); }
 
 	void enableScoring(Bool score) { m_isScoringEnabled = score; }
 	Bool isScoringEnabled() const { return m_isScoringEnabled; }
@@ -325,6 +332,7 @@ private:
 	Bool m_loadingMap;
 	Bool m_loadingSave;
 	Bool m_clearingGameData;
+	Bool m_destroyingAllObjects;
 
 	Bool m_isInUpdate;
 
@@ -347,6 +355,7 @@ private:
 	// handle to a dead object stays detectable even if its ID is reused. The mechanism lives in
 	// Engine/GenerationTable.h and is tested there (EngineTests).
 	Engine::GenerationTable m_objGeneration;
+	std::unordered_set<const Object*> m_livePointers;	///< every object of m_objVector, by address
 
 	// this is a vector, but is maintained as a priority queue.
 	// never modify it directly; please use the proper access methods.

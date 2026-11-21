@@ -1394,6 +1394,10 @@ void W3DTreeBuffer::allocateTreeBuffers(void)
 		m_curNumTreeVertices[i]=0;
 		m_curNumTreeIndices[i]=0;
 	}
+	// New buffers are empty, and after a lost device the combined tree texture is too: build both again.
+	m_anythingChanged = true;
+	if (m_numTreeTypes > 0)
+		m_needToUpdateTexture = true;
 
 	HRESULT hr;
 	hr = W3DShaderManager::LoadAndCreateD3DShader("shaders\\Trees.vso", nullptr, 0, true, reinterpret_cast<void**>(&m_dwTreeVertexShader));

@@ -95,7 +95,7 @@ static void startAutoSkirmish( void );
 static Bool s_autoSkirmishPending = FALSE;	// set in init(), started in the first update()
 static Bool s_replayPending = FALSE;				// same for -replay/-file with .rep
 
-// -zuschauerTest N: the replay plays as if it arrived from a host (RecorderClass::playbackLive). At first N
+// -watchTest N: the replay plays as if it arrived from a host (RecorderClass::playbackLive). At first N
 // frames are there (the spectator catches up), then one more arrives in each of 40 passes out of 100 (the
 // spectator, one tick per pass in the runner, waits for the rest). Replays checksum alike either way.
 static UnsignedInt s_watchTestEnd = 0;	// frames of the replay; 0: not running
@@ -695,6 +695,9 @@ void GameEngine::init( int argc, char *argv[] )
 			watchdog.start();
 		}
 
+		// Tell the player where the report of a crash in the last run is.
+		CrashReportAnnouncePrevious( !UserSettings::isAutomatedRun() );
+
 		// Read archives ahead in the background so the file cache is warm when the first map loads.
 		// Settings.ini "PrefetchArchives = no" disables it; all archives are mounted by now.
 		{
@@ -850,7 +853,7 @@ void GameEngine::init( int argc, char *argv[] )
 		ini.load("Data\\INI\\CommandMapDebug.ini", INILoadType::INI_LOAD_MULTIFILE, nullptr);
 #endif
 
-		// Test helpers, enabled with -testhilfen or Options.ini "Testhilfen = yes". The key bindings live in the
+		// Test helpers, enabled with -testAids or Options.ini "Testhilfen = yes". The key bindings live in the
 		// project data (Data/INI, copied to ProjectData\INI at build time) and are loaded last:
 		// MetaEventTranslator checks the most recently added entries first, so keys shared with
 		// CommandMapDebug.ini go to the test helpers.
@@ -1092,6 +1095,7 @@ void GameEngine::update( void )
 			VERIFY_CRC
 
 			ArchivePrefetch_Poll();
+			CrashReportLogCounters();
 			{
 				// Asserts from non-main threads show no message box there but end up in a queue. The main thread
 				// reports them here like a normal assert.
@@ -1142,7 +1146,7 @@ void GameEngine::update( void )
 		if (TheGameClient)
 			TheGameClient->captureObjectViews();
 
-		// Test sequence (-testablauf) after client, message stream and logic
+		// Test sequence (-testScript) after client, message stream and logic
 		if (TheGlobalData->m_testScriptFile.isNotEmpty())
 			TestScript_Update();
 
@@ -1207,7 +1211,7 @@ void GameEngine::update( void )
 			}
 		}
 
-		// With -aiStats a recorded match ends as soon as only one alliance is left (KISIEG in the runner log);
+		// With -aiStats a recorded match ends as soon as only one alliance is left (AIVICTORY in the runner log);
 		// AI series need the winner, not the time until -maxFrames. Ends like -maxFrames.
 		if (TheGlobalData->m_aiStatsInterval > 0 && !m_quitting && TheGameLogic->isInGame() && !TheGameLogic->isInShellGame()
 			&& TheRecorder && TheRecorder->getMode() != RecorderModeType::RECORDERMODETYPE_PLAYBACK)
@@ -1316,7 +1320,7 @@ static void logRenderTime( char kind, Real alpha, Real tickLenMs )
 			return;
 		}
 		setvbuf(s_renderTimeLog, nullptr, _IOFBF, 1 << 16);
-		fprintf(s_renderTimeLog, "ms,art,tick,frame,alpha,anzeige,ticklen\n");
+		fprintf(s_renderTimeLog, "ms,kind,tick,frame,alpha,display,ticklen\n");
 		s_renderTimeStart = now;
 	}
 	const double ms = static_cast<double>(now.QuadPart - s_renderTimeStart.QuadPart) * 1000.0 / static_cast<double>(freq.QuadPart);
@@ -1625,7 +1629,7 @@ void GameEngine::execute( void )
 		TheGameLogic->releasePhaseStatistics();
 	}
 	if (TheDisplay)
-		TheDisplay->writeRenderStatistics();	// GPUEFFEKTE line, only with a selected effect
+		TheDisplay->writeRenderStatistics();	// GPUEFFECTS line, only with a selected effect
 	delete s_tickMs; s_tickMs = nullptr;
 	delete s_frameMs; s_frameMs = nullptr;
 

@@ -38,8 +38,8 @@ inline std::uint32_t inputAgeMs(std::uint32_t messageTime, std::uint32_t now)
 }
 
 /// Which real input a run takes. Image tests (-shotAfter, -shotEvery, -cameraPath) and test sequences
-/// (-testablauf, which give their own mouse messages) ignore the real mouse: a cursor over the window would
-/// change hover effects and the camera. -echteEingabeAus ignores mouse and keyboard.
+/// (-testScript, which give their own mouse messages) ignore the real mouse: a cursor over the window would
+/// change hover effects and the camera. -noRealInput ignores mouse and keyboard.
 struct RealInputFilter
 {
 	bool imageTest = false;

@@ -1720,7 +1720,7 @@ AsciiString RecorderClass::getLastReplayFileName()
 		own.format("%s_%lu", lastReplayFileName, static_cast<unsigned long>(::GetCurrentProcessId()));
 		return own;
 	}
-	// Local instances of one LAN game (-netzLokal) record at the same time, one file each.
+	// Local instances of one LAN game (-netLocal) record at the same time, one file each.
 	if (TheGlobalData && TheGlobalData->m_netLocalInstance > 0)
 	{
 		AsciiString own;

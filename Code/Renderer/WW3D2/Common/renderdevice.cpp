@@ -83,6 +83,7 @@
 
 #include "shdlib.h"
 #include "gpulayers.h"
+#include "gpuadapter.h"
 #include "formatinto.h"
 
 const int DEFAULT_RESOLUTION_WIDTH = 640;
@@ -106,6 +107,9 @@ static int						_FullscreenAreaHeight							= 0;
 bool								RenderDevice::IsInitted									= false;
 bool								RenderDevice::_EnableTriangleDraw						= true;
 bool								RenderDevice::_ConstantBufferRing						= true;
+unsigned							RenderDevice::_SimulatedDeviceLoss						= 0;
+unsigned							RenderDevice::_DeviceResetCount							= 0;
+unsigned							RenderDevice::_FailTextureEvery							= 0;
 bool								RenderDevice::_MeshInstancing							= true;
 
 int								RenderDevice::CurRenderDevice							= -1;
@@ -245,9 +249,15 @@ void Log_Device_ErrorCode(unsigned res)
 {
 	char tmp[256]="";
 	WWFormat::Into(tmp, "DX Error: 0x{:08X} ({})", res, Device_Error_Code_Name(res));
-	WWDEBUG_SAY(("%s", tmp));
+	// Also in release builds (the assertion is not), but not a flood: a lost device fails every call.
+	static unsigned logged=0;
+	if (logged<100) {
+		++logged;
+		WWRELEASE_SAY(("%s\n", tmp));
+	}
 
-	WWASSERT(0);
+	// -failTextureEvery makes creations fail on purpose; the callers handle that, so no assertion.
+	WWASSERT(RenderDevice::Fail_Texture_Creation_Every() != 0);
 }
 
 void Non_Fatal_Log_Device_ErrorCode(unsigned res,const char * file,int line)
@@ -563,6 +573,32 @@ void RenderDevice::Set_Backend_Request(const char* name)
 	WWFormat::Into(BackendRequest, "{}", name ? name : "");
 }
 
+void RenderDevice::Set_Preferred_Adapter(const char* choice)
+{
+	Gpu_Set_Preferred_Adapter(choice);
+}
+
+unsigned RenderDevice::Get_Graphics_Card_Count()
+{
+	return Backend ? Backend->Get_Adapter_Count() : 0;
+}
+
+bool RenderDevice::Get_Graphics_Card(unsigned index, char* choice, unsigned choice_size, char* name, unsigned name_size)
+{
+	WW3DAdapterIdentifier id;
+	if (!Backend || !Backend->Get_Adapter_Identifier(index, &id)) return false;
+	if (choice && choice_size) {
+		const std::string spec = GpuAdapter::Spec(id.VendorId, id.DeviceId, id.Description);
+		strncpy(choice, spec.c_str(), choice_size - 1);
+		choice[choice_size - 1] = 0;
+	}
+	if (name && name_size) {
+		strncpy(name, id.Description, name_size - 1);
+		name[name_size - 1] = 0;
+	}
+	return true;
+}
+
 const char* RenderDevice::Get_Backend_Name()	{ return BackendLayer ? BackendLayer->name : ""; }
 const char* RenderDevice::Get_Backend_Title()	{ return BackendLayer ? BackendLayer->title : ""; }
 unsigned RenderDevice::Get_Backend_Choices()	{ return Gpu_Layer_Count(); }
@@ -668,7 +704,11 @@ bool RenderDevice::Reset_Device(bool reload_assets)
 		}
 		Invalidate_Cached_Render_States();
 		Set_Default_Global_Render_States();
+		// The new device starts without anisotropy; the filter tables set it per stage, which otherwise
+		// happens only once at startup (Do_Onetime_Device_Dependent_Inits).
+		TextureFilterClass::_Init_Filters(static_cast<TextureFilterClass::TextureFilterMode>(WW3D::Get_Texture_Filter()));
 		SHD_INIT_SHADERS;
+		++_DeviceResetCount;
 		WWDEBUG_SAY(("Device reset completed\n"));
 		return true;
 	}
@@ -1516,17 +1556,22 @@ void RenderDevice::Set_Terrain_Detail_Table(const RenderTerrainDetailTable& tabl
 	if (Backend) Backend->Set_Terrain_Detail_Table(table);
 }
 
+void RenderDevice::Warm_Shaders()
+{
+	if (Backend) Backend->Warm_Shaders();
+}
+
 void RenderDevice::Set_Terrain_Detail(bool enable)
 {
 	if (Backend) Backend->Set_Terrain_Detail(enable);
 }
 
 // Needed by the rock layer and by the dynamic terrain lights. The backend compares the height field
-// with its copy and uploads only on a change.
+// with its copy (only when the version counter moved) and uploads only on a change.
 void RenderDevice::Set_Terrain_Height_Field(const unsigned char* heights, int width, int height, int border,
-	float cell_size, float height_scale)
+	float cell_size, float height_scale, unsigned version)
 {
-	if (Backend) Backend->Set_Terrain_Height_Field(heights, width, height, border, cell_size, height_scale);
+	if (Backend) Backend->Set_Terrain_Height_Field(heights, width, height, border, cell_size, height_scale, version);
 }
 
 void RenderDevice::Set_Terrain_Lighting(const RenderTerrainLighting& lighting)
@@ -1865,13 +1910,15 @@ void RenderDevice::Draw_Sorting_IB_VB(
 	}
 	WW3D_RECORD_VERTEX_BUFFER_CHANGE();
 
-	unsigned index_count=0;
-	switch (primitive_type) {
-	case WW3D_PT_TRIANGLELIST: index_count=polygon_count*3; break;
-	case WW3D_PT_TRIANGLESTRIP: index_count=polygon_count+2; break;
-	case WW3D_PT_TRIANGLEFAN: index_count=polygon_count+2; break;
-	default: WWASSERT(0); break; // Unsupported primitive type
+	if (primitive_type!=WW3D_PT_TRIANGLELIST && primitive_type!=WW3D_PT_TRIANGLESTRIP && primitive_type!=WW3D_PT_TRIANGLEFAN) {
+		WWASSERT(0); // Unsupported primitive type
+		return;
 	}
+
+	// Strips and fans are expanded to a triangle list. The dynamic index buffer takes at most 65535
+	// indices (16 bit count): a larger call draws what fits.
+	if (polygon_count>65535/3) polygon_count=65535/3;
+	const unsigned index_count=polygon_count*3u;
 
 	// Fill dynamic index buffer with sorting index buffer vertices
 	DynamicIBAccessClass dyn_ib_access(BUFFER_TYPE_DYNAMIC_DEVICE,static_cast<unsigned short>(index_count));
@@ -1883,11 +1930,26 @@ void RenderDevice::Draw_Sorting_IB_VB(
 		src+=render_state.iba_offset+start_index;
 
 		try {
-		for (unsigned short i=0;i<index_count;++i) {
-			unsigned short index=*src++;
-			index-=min_vertex_index;
-			WWASSERT(index<vertex_count);
-			*dest++=index;
+		for (unsigned p=0;p<polygon_count;++p) {
+			unsigned short i0,i1,i2;
+			if (primitive_type==WW3D_PT_TRIANGLELIST) {
+				i0=src[p*3]; i1=src[p*3+1]; i2=src[p*3+2];
+			} else if (primitive_type==WW3D_PT_TRIANGLESTRIP) {
+				// every second triangle of a strip has the opposite winding
+				const bool odd=(p&1)!=0;
+				i0=odd ? src[p+1] : src[p];
+				i1=odd ? src[p] : src[p+1];
+				i2=src[p+2];
+			} else {
+				i0=src[0]; i1=src[p+1]; i2=src[p+2];
+			}
+			i0=static_cast<unsigned short>(i0-min_vertex_index);
+			i1=static_cast<unsigned short>(i1-min_vertex_index);
+			i2=static_cast<unsigned short>(i2-min_vertex_index);
+			WWASSERT(i0<vertex_count && i1<vertex_count && i2<vertex_count);
+			*dest++=i0;
+			*dest++=i1;
+			*dest++=i2;
 		}
 		IndexBufferExceptionFunc();
 		} catch(...) {
@@ -1979,11 +2041,16 @@ void RenderDevice::Draw(
 		case BUFFER_TYPE_DEVICE:
 		case BUFFER_TYPE_DYNAMIC_DEVICE:
 			{
-/*				if ((start_index+render_state.iba_offset+polygon_count*3) > render_state.index_buffer->Get_Index_Count())
-				{	WWASSERT_PRINT(0,"OVERFLOWING INDEX BUFFER");
-					///@todo: MUST FIND OUT WHY THIS HAPPENS WITH LOTS OF PARTICLES ON BIG FIGHT!  -MW
-					break;
-				}*/
+				{
+					static unsigned overrun_reports = 0;
+					const unsigned needed = (primitive_type==WW3D_PT_TRIANGLELIST) ? polygon_count*3u : polygon_count+2u;
+					if (overrun_reports < 8 && (start_index+render_state.iba_offset+needed) > render_state.index_buffer->Get_Index_Count()) {
+						++overrun_reports;
+						WWDEBUG_SAY(("RenderDevice::Draw: index buffer overrun (start %u + offset %u + %u indices > %u)\n",
+							static_cast<unsigned>(start_index), static_cast<unsigned>(render_state.iba_offset), needed,
+							static_cast<unsigned>(render_state.index_buffer->Get_Index_Count())));
+					}
+				}
 				if (!_ShadowCasterOnly) {
 					WW3D_RECORD_RENDER(polygon_count,vertex_count,render_state.shader);
 					WW3D_RECORD_DRAW_CALLS();
@@ -2208,6 +2275,11 @@ void RenderDevice::Apply_Render_State_Changes()
 				WW3D_RECORD_VERTEX_BUFFER_CHANGE();
 			}
 		}
+		// A new vertex buffer moves vba_offset; the corner base offset of the bound index buffer follows it.
+		if (render_state.index_buffer &&
+			(render_state.index_buffer_type==BUFFER_TYPE_DEVICE || render_state.index_buffer_type==BUFFER_TYPE_DYNAMIC_DEVICE)) {
+			CachedIndexBaseOffset = render_state.index_base_offset+render_state.vba_offset;
+		}
 	}
 	if (render_state_changed&INDEX_BUFFER_CHANGED) {
 		SNAPSHOT_SAY(("D3D - apply ib change\n"));
@@ -2370,6 +2442,7 @@ WW3DTextureHandle RenderDevice::_Create_Device_Texture
 	// not in a supported texture format.
 	WW3DFormat format=D3DFormat_To_WW3DFormat(surface_desc.Format);
 	texture = _Create_Device_Texture(surface_desc.Width, surface_desc.Height, format, mip_level_count);
+	if (!texture) return nullptr;
 
 	// Copy the surface to the texture (TexUtil, DirectXTex)
 	WW3DSurfaceHandle tex_surface = nullptr;
@@ -2499,9 +2572,10 @@ WW3DSurfaceHandle RenderDevice::_Create_Device_Surface(const char *filename_)
 			// If file not found, try the dds format
 			// else create a surface with missing texture in it
 			char compressed_name[200];
-			strncpy(compressed_name,filename_, 200);
-			char *ext = strstr(compressed_name, ".");
-			if ( (strlen(ext)==4) && 
+			strncpy(compressed_name,filename_, sizeof(compressed_name) - 1);
+			compressed_name[sizeof(compressed_name) - 1] = '\0';
+			char *ext = strrchr(compressed_name, '.');
+			if ( ext && (strlen(ext)==4) && 
 				  ( (ext[1] == 't') || (ext[1] == 'T') ) && 
 				  ( (ext[2] == 'g') || (ext[2] == 'G') ) && 
 				  ( (ext[3] == 'a') || (ext[3] == 'A') ) ) {
@@ -2800,92 +2874,6 @@ RenderDevice::Create_Render_Target (int width, int height, WW3DFormat format)
 	}
 
 	return tex;
-}
-
-//**********************************************************************************************
-//! Create render target with associated depth stencil buffer
-/*! KJM
-*/
-void RenderDevice::Create_Render_Target
-(
-	int width, 
-	int height, 
-	WW3DFormat format,
-	WW3DZFormat zformat,
-	TextureClass** target,
-	ZTextureClass** depth_buffer
-)
-{
-	RENDER_THREAD_ASSERT();
-	Device_Assert();
-	number_of_API_calls++;
-
-	// Use the current display format if format isn't specified
-	if (format==WW3D_FORMAT_UNKNOWN) 
-	{
-		*target=nullptr;
-		*depth_buffer=nullptr;
-		return;
-/*		unsigned mode_width=0, mode_height=0, mode_format=WW3D_FMT_UNKNOWN;
-		Backend->Get_Adapter_Display_Mode(0, &mode_width, &mode_height, &mode_format);
-		format=D3DFormat_To_WW3DFormat(mode_format);*/
-	}
-
-	// If render target format isn't supported return NULL
-	if (!RenderCaps::Support_Render_To_Texture_Format(format) ||
-		 !RenderCaps::Support_Depth_Stencil_Format(zformat)) 
-	{
-		WWDEBUG_SAY(("RenderDevice - Render target with depth format is not supported\r\n"));
-		return;
-	}
-
-	//	Note: We're going to force the width and height to be powers of two and equal
-	const unsigned max_texture_width  = RenderCaps::Get_Max_Texture_Width();
-	const unsigned max_texture_height = RenderCaps::Get_Max_Texture_Height();
-	float poweroftwosize = static_cast<float>(width);
-	if (height > 0 && height < width) 
-	{
-		poweroftwosize = static_cast<float>(height);
-	}
-	poweroftwosize = static_cast<float>(::Find_POT (static_cast<int>(poweroftwosize)));
-
-	if (poweroftwosize>max_texture_width) 
-	{
-		poweroftwosize=static_cast<float>(max_texture_width);
-	}
-
-	if (poweroftwosize>max_texture_height) 
-	{
-		poweroftwosize=static_cast<float>(max_texture_height);
-	}
-
-	width = height = static_cast<int>(poweroftwosize);
-
-	//	Attempt to create the render target
-	TextureClass* tex=NEW_REF(TextureClass,(width,height,format,MIP_LEVELS_1,TextureClass::POOL_DEFAULT,true));
-
-	// 3dfx drivers are lying in the CheckDeviceFormat call and claiming
-	// that they support render targets!
-	if (tex->Peek_D3D_Base_Texture() == nullptr) 
-	{
-		WWDEBUG_SAY(("RenderDevice - Render target creation failed!\r\n"));
-		REF_PTR_RELEASE(tex);
-	}
-
-	*target=tex;
-
-	// attempt to create the depth stencil buffer
-	*depth_buffer=NEW_REF
-	(
-		ZTextureClass,
-		(
-			width,
-			height,
-			zformat,
-			MIP_LEVELS_1,
-			TextureClass::POOL_DEFAULT
-		)
-	);
 }
 
 /*!
@@ -4260,26 +4248,32 @@ void RenderDevice::Set_Cursor_Position(int x, int y, DWORD flags)
 }
 
 // Resource access behind the wrapper. The backend fills WW3DSurfaceDesc/WW3DLockedRect.
+// The accessors below also set their outputs when the call fails: callers read and release them regardless
+// (no texture after a failed creation).
 HRESULT RenderDevice::Get_Texture_Surface_Level(WW3DTextureHandle texture, unsigned level, WW3DSurfaceHandle * out)
 {
+	if (out) *out = nullptr;
 	if (!texture || !out) return E_INVALIDARG;
 	return Backend->Get_Texture_Surface_Level(texture, level, out);
 }
 
 HRESULT RenderDevice::Get_Texture_Level_Desc(WW3DTextureHandle texture, unsigned level, WW3DSurfaceDesc* desc)
 {
+	if (desc) ::ZeroMemory(desc, sizeof(WW3DSurfaceDesc));
 	if (!texture || !desc) return E_INVALIDARG;
 	return Backend->Get_Texture_Level_Desc(texture, level, desc);
 }
 
 HRESULT RenderDevice::Get_Surface_Desc(WW3DSurfaceHandle surface, WW3DSurfaceDesc* desc)
 {
+	if (desc) ::ZeroMemory(desc, sizeof(WW3DSurfaceDesc));
 	if (!surface || !desc) return E_INVALIDARG;
 	return Backend->Get_Surface_Desc(surface, desc);
 }
 
 HRESULT RenderDevice::Lock_Surface(WW3DSurfaceHandle surface, WW3DLockedRect* out, const RECT* rect, unsigned flags)
 {
+	if (out) { out->pBits = nullptr; out->Pitch = 0; }
 	if (!surface || !out) return E_INVALIDARG;
 	return Backend->Lock_Surface(surface, out, rect, flags);
 }
@@ -4292,6 +4286,7 @@ HRESULT RenderDevice::Unlock_Surface(WW3DSurfaceHandle surface)
 
 HRESULT RenderDevice::Lock_Texture(WW3DTextureHandle texture, unsigned level, WW3DLockedRect* out, const RECT* rect, unsigned flags)
 {
+	if (out) { out->pBits = nullptr; out->Pitch = 0; }
 	if (!texture || !out) return E_INVALIDARG;
 	return Backend->Lock_Texture(texture, level, out, rect, flags);
 }

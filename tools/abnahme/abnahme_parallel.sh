@@ -2,8 +2,8 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-# Abnahme im Parallelbetrieb (2026-09-24): Bildlaeufe mit --mehrfach (bis zu 3 Spiele gleichzeitig),
-# Replays sechs Saetze parallel (-runner), Starttests mit -mehrfach und Protokoll je Instanz.
+# Abnahme im Parallelbetrieb (2026-09-24): Bildlaeufe mit --multiInstance (bis zu 3 Spiele gleichzeitig),
+# Replays sechs Saetze parallel (-runner), Starttests mit -multiInstance und Protokoll je Instanz.
 # Aufruf aus Git-Bash: bash tools/abnahme/abnahme_parallel.sh <Referenzpraefix> (etwa p8reg: vergleicht gegen
 # render-out/p8reg-*). Zwischenergebnisse in render-out/abnahme/. Ende: Zeile ABNAHME_FERTIG.
 # 2026-09-26 aus dem Sitzungs-Scratchpad uebernommen; Warteschlange tools/abnahme/slot.py.
@@ -28,7 +28,7 @@ echo "Bau und ctest: $(( $(date +%s) - T0 )) s"
 G=build-x64/Generals/Code/Main/Debug/GZHNeo.exe; Z=build-x64/GeneralsMD/Code/Main/Debug/GZHNeoZH.exe
 GR=build-x64/Generals/Code/Main/Release/GZHNeo.exe; ZR=build-x64/GeneralsMD/Code/Main/Release/GZHNeoZH.exe
 RR="python tools/render/run_render_test.py"
-lauf() { out="$1"; shift; frei3; $RR run --mehrfach --out "$out" "$@" > "$out.txt" 2>&1; }
+lauf() { out="$1"; shift; frei3; $RR run --multiInstance --out "$out" "$@" > "$out.txt" 2>&1; }
 # Replays: vier Saetze parallel, laufen neben den Bildtests her
 R="python tools/determinism/runner.py check"
 k=0; for e in "$G tests/replays/x64" "$Z tests/replays/zh/x64" "$GR tests/replays/x64" "$ZR tests/replays/zh/x64" "$GR tests/replays/neueki/x64" "$ZR tests/replays/neueki/zh/x64"; do set -- $e; k=$((k+1))
@@ -38,7 +38,7 @@ T1=$(date +%s)
 # Bildvergleiche (5) und Fahrten (5), bis zu drei Spiele gleichzeitig
 n=0
 job() { lauf "$@" & n=$((n+1)); sleep 3; if [ $((n % 3)) = 0 ]; then wait -n; fi; }
-# Nur noch Direct3D 11 (TODO 67, 2026-09-26; Teil 2: D3D9 entfernt, run_render_test.py ohne --backend).
+# Nur noch Direct3D 11 (D3D9 removed, run_render_test.py without --backend).
 for b in d3d11; do
   job render-out/v64-g-shell-$b --exe $G --scene shellmap --frames 300,900 --reference render-out/$REF-g-shell-$b --extra -ignoreAsserts
   job render-out/v64-g-water-$b --exe $G --scene skirmish --map "Tournament Lake" --ai 2 --seed 1 --frames 300,900 --reference render-out/$REF-g-water-$b --extra -ignoreAsserts
@@ -49,16 +49,16 @@ for f in "quer $G $RA quer" "rundum $G $RA rundum" "zoom $G $RA zoom" "rand $G $
   job render-out/v64-$1 --exe $2 --scene replay --replay $3 --path tests/render/paths/$4.txt --reference render-out/$REF-$1 --extra -ignoreAsserts
 done
 wait_bilder() { for j in $(jobs -p); do :; done; }
-# Starttests mit -mehrfach
+# Starttests mit -multiInstance
 for e in $G $Z; do frei3; n=$(basename $e); d=$(dirname $e)
-  ( cd $d && ./$n -win -xres 800 -yres 600 -nologo -noaudio -fixedTimeStep -quitAfter 60 -ignoreAsserts -mehrfach; echo "rc=$?" ) > "$S/start_$n.txt" 2>&1 &
+  ( cd $d && ./$n -win -xres 800 -yres 600 -nologo -noaudio -fixedTimeStep -quitAfter 60 -ignoreAsserts -multiInstance; echo "rc=$?" ) > "$S/start_$n.txt" 2>&1 &
 done
 wait
 echo "Spieltests und Replays: $(( $(date +%s) - T1 )) s"
-for b in d3d11; do for s in shell water; do f=render-out/v64-g-$s-$b.txt; echo "g-$s-$b: $(grep -cE '^OK' $f) OK, $(grep -cE '^ABWEICHT|^FEHLER' $f) abweichend, $(grep -c '^HELL' $f) Helligkeit"; done; done
-f=render-out/v64-zh-shell-d3d11.txt; echo "zh-shell-d3d11: $(grep -cE '^OK' $f) OK, $(grep -cE '^ABWEICHT|^FEHLER' $f) abweichend, $(grep -c '^HELL' $f) Helligkeit"
+for b in d3d11; do for s in shell water; do f=render-out/v64-g-$s-$b.txt; echo "g-$s-$b: $(grep -cE '^OK' $f) OK, $(grep -cE '^DIFFERS|^ERROR' $f) abweichend, $(grep -c '^HELL' $f) Helligkeit"; done; done
+f=render-out/v64-zh-shell-d3d11.txt; echo "zh-shell-d3d11: $(grep -cE '^OK' $f) OK, $(grep -cE '^DIFFERS|^ERROR' $f) abweichend, $(grep -c '^HELL' $f) Helligkeit"
 for n in quer rundum zoom rand zh-rundum; do echo "Fahrt $n: $(ls render-out/v64-$n/shot_*.bmp 2>/dev/null | wc -l) Bilder, $(grep -c '"pixels_over_threshold": 0' render-out/v64-$n/compare.json 2>/dev/null) pixelgleich"; done
-# Bildpruefung der Fahrten (zoom meldet bekannt Bild 840 und 900, tools/render/alle_fahrten.py ERWARTET)
+# Bildpruefung der Fahrten (zoom meldet bekannt Bild 840 und 900, tools/render/all_camera_paths.py EXPECTED)
 for n in quer rundum zoom rand zh-rundum; do echo "Bildpruefung $n: $(python tools/render/inspect_shots.py render-out/v64-$n 2>&1 | tail -1)"; done
 cat "$S"/rep_par_[1-6].txt
 for e in $G $Z; do n=$(basename $e); d=$(dirname $e); f=$(ls -t $d/m*_DebugLogFileD.txt 2>/dev/null | head -1)

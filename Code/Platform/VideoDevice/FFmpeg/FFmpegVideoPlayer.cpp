@@ -45,7 +45,7 @@ FFmpegVideoStream::FFmpegVideoStream() :
 	m_swsCtx(nullptr), m_swrCtx(nullptr), m_swsSrcFormat(AV_PIX_FMT_NONE),
 	m_audioVoice(nullptr), m_audioSampleRate(0),
 	m_frameIndex(-1), m_frameCount(0), m_frameTimeMS(33), m_startTimeMS(0),
-	m_endOfStream(false), m_haveVideoFrame(false)
+	m_endOfStream(false), m_haveVideoFrame(false), m_wrapped(false), m_cannotRewind(false), m_audioFailed(false)
 {
 	m_videoFrame = av_frame_alloc();
 	m_audioFrame = av_frame_alloc();
@@ -194,6 +194,8 @@ void FFmpegVideoStream::freePlayedAudioBuffers( void )
 
 void FFmpegVideoStream::feedAudioFrame( AVFrame *frame )
 {
+	if ( m_audioFailed )
+		return;
 	ensureAudioVoice();
 	if ( !m_audioVoice )
 		return;
@@ -212,7 +214,9 @@ void FFmpegVideoStream::feedAudioFrame( AVFrame *frame )
 
 		if ( result < 0 || !m_swrCtx || swr_init( m_swrCtx ) < 0 )
 		{
-			m_swrCtx = nullptr;
+			// Free the half-built context and stop trying: a retry per audio frame would leak one each time.
+			swr_free( &m_swrCtx );
+			m_audioFailed = true;
 			return;
 		}
 	}
@@ -308,7 +312,60 @@ void FFmpegVideoStream::frameRender( VideoBuffer *buffer )
 
 void FFmpegVideoStream::frameNext( void )
 {
-	decodeNextVideoFrame();
+	if ( decodeNextVideoFrame() )
+		return;
+	// Past the last frame: the callers (InGameUI, WindowVideoManager) take frameIndex() == 0 as "the movie
+	// has ended", and looping movies rely on the stream starting over.
+	if ( m_endOfStream )
+		rewindToStart();
+}
+
+void FFmpegVideoStream::rewindToStart( void )
+{
+	m_wrapped = true;
+	m_frameIndex = 0;		// what callers see if the rewind fails below
+	if ( !m_file || m_cannotRewind )
+		return;
+
+	AVFormatContext *fmtCtx = m_file->getFormatContext();
+	Int videoStreamIdx = m_file->getVideoStreamIndex();
+	AVCodecContext *audioCtx = m_file->hasAudio() ? m_file->getAudioCodecContext() : nullptr;
+
+	// Hand the audio still buffered inside the decoder to the voice first; the voice keeps playing what is
+	// queued, so the end of the old pass and the start of the new one join without a gap or an overlap.
+	if ( audioCtx )
+	{
+		avcodec_send_packet( audioCtx, nullptr );
+		while ( avcodec_receive_frame( audioCtx, m_audioFrame ) == 0 )
+			feedAudioFrame( m_audioFrame );
+		avcodec_flush_buffers( audioCtx );
+	}
+
+	AVStream *stream = fmtCtx->streams[videoStreamIdx];
+	Int64 startTs = ( stream->start_time != AV_NOPTS_VALUE ) ? stream->start_time : 0;
+	if ( av_seek_frame( fmtCtx, videoStreamIdx, startTs, AVSEEK_FLAG_BACKWARD ) < 0 )
+	{
+		m_cannotRewind = true;
+		return;
+	}
+	avcodec_flush_buffers( m_file->getVideoCodecContext() );
+
+	m_frameIndex = -1;
+	m_haveVideoFrame = false;
+	m_endOfStream = false;
+	if ( !decodeNextVideoFrame() )
+	{
+		// Nothing to show at the start: stay on index 0 and do not try again.
+		m_cannotRewind = true;
+		m_frameIndex = 0;
+		return;
+	}
+	m_startTimeMS = GetTickCount();
+}
+
+Bool FFmpegVideoStream::hasPlayedToEnd( void )
+{
+	return m_wrapped;
 }
 
 Int FFmpegVideoStream::frameIndex( void )
@@ -454,7 +511,7 @@ VideoStreamInterface *FFmpegVideoPlayer::open( AsciiString movieTitle )
 		{
 			const Bool opened = file->open( modFile );
 			char line[512];
-			WWFormat::Into( line, "MOD film {} {}", filePath.str(), opened ? "geladen" : "nicht lesbar" );
+			WWFormat::Into( line, "MOD movie {} {}", filePath.str(), opened ? "loaded" : "unreadable" );
 			line[sizeof(line) - 1] = 0;
 			GameEngine_RunnerLog( line );
 			if ( opened )

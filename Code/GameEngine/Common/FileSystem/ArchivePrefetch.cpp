@@ -95,7 +95,7 @@ void ArchivePrefetch_Poll( void )
 		return;
 	s_reported = true;
 	char line[160];
-	WWFormat::Into(line, "VORABLESEN dateien {:d} mb {:d} ms {:d}{}", s_statFiles, s_statMegabytes, s_statMillis,
+	WWFormat::Into(line, "PREFETCH files {:d} mb {:d} ms {:d}{}", s_statFiles, s_statMegabytes, s_statMillis,
 		s_stop.load() ? " abgebrochen" : "");
 	line[sizeof(line) - 1] = 0;
 	GameEngine_RunnerLog(line);
@@ -115,7 +115,7 @@ void ArchivePrefetch_Start( void )
 	s_reported = false;
 
 	char line[160];
-	WWFormat::Into(line, "VORABLESEN plan dateien {:d} mb {:d}", static_cast<Int>(s_jobs->size()),
+	WWFormat::Into(line, "PREFETCH plan files {:d} mb {:d}", static_cast<Int>(s_jobs->size()),
 		static_cast<unsigned>(s_plannedBytes / (1024 * 1024)));
 	line[sizeof(line) - 1] = 0;
 	GameEngine_RunnerLog(line);

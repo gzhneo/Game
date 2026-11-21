@@ -204,7 +204,7 @@ bool RenderCore::Mi_Capture(unsigned type, int base_vertex, unsigned min_index, 
 	::memcpy(&M->mi_matrices[M->mi_count * 4], &M->object_cb, matrix_bytes);
 	++M->mi_count;
 
-	if (M->sh_recording) Sh_Record(true, index_count, start_index, base_vertex, min_index, num_vertices, 0, 0);
+	if (M->sh_recording) Sh_Record(type, true, index_count, start_index, base_vertex, min_index, num_vertices, 0, 0);
 	return true;
 }
 

@@ -1,5 +1,5 @@
 # Volle Drehung in der Kartenmitte, danach um 90 Grad gedreht und ganz herausgezoomt scrollen.
-# Der zweite Teil ist die Probe fuer die Hauptvermutung zu TODO 31: das Gelaendefenster ist nur in
+# Der zweite Teil ist die Probe fuer die Hauptvermutung zum fehlenden Gelaende-Nachschub: das Gelaendefenster ist nur in
 # Welt-X verbreitert (W-05), bei 90 Grad liegt die breite Bildachse in Welt-Y
 # (Phase 4 "Gelaende G0-G5 und Kamera-API"). Karte beliebig.
 0       0.50  0.50  standard  0    standard

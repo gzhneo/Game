@@ -456,6 +456,12 @@ WorldHeightMap::~WorldHeightMap(void)
 		REF_PTR_RELEASE(m_reliefTiles[i]);
 		REF_PTR_RELEASE(m_heightTiles[i]);
 	}
+	freeDeviceTextures();
+}
+
+// The atlases are built from the tile data (getTerrainTexture), which stays.
+void WorldHeightMap::freeDeviceTextures(void)
+{
 	if (m_terrainReliefTex) {
 		RenderDevice::Set_Terrain_Relief_Atlas(m_terrainReliefTex->Peek_D3D_Texture(), false);
 		REF_PTR_RELEASE(m_terrainReliefTex);
@@ -2582,7 +2588,7 @@ void WorldHeightMap::updateTerrainDetailTable(void)
 	}
 	RenderDevice::Set_Terrain_Detail_Table(table);
 	char line[128];
-	WWFormat::Into(line, "BODENDETAIL klassen {:d} mit_detail {:d} zuordnungen {:d} raster {:d} x {:d} atlas {:d}", m_numTextureClasses, withDetail, s_terrainDetailCount, columns, rows, m_terrainTexHeight);
+	WWFormat::Into(line, "GROUNDDETAIL classes {:d} with_detail {:d} mappings {:d} grid {:d} x {:d} atlas {:d}", m_numTextureClasses, withDetail, s_terrainDetailCount, columns, rows, m_terrainTexHeight);
 	GameEngine_RunnerLog(line);
 	DEBUG_LOG(("Terrain detail: %s\n", line));
 }
@@ -2613,7 +2619,7 @@ void WorldHeightMap::updateTerrainReliefAtlas(Int pow2Height)
 	m_terrainReliefTex->updateRelief(this, scale);
 	RenderDevice::Set_Terrain_Relief_Atlas(m_terrainReliefTex->Peek_D3D_Texture(), true);
 	char line[128];
-	WWFormat::Into(line, "TERRAINRELIEF kacheln {:d} von {:d} stufe {:d} atlas {:d} x {:d}", tiles, m_numBitmapTiles, scale,
+	WWFormat::Into(line, "TERRAINRELIEF tiles {:d} of {:d} level {:d} atlas {:d} x {:d}", tiles, m_numBitmapTiles, scale,
 		TEXTURE_WIDTH * scale, pow2Height * scale);
 	GameEngine_RunnerLog(line);
 	DEBUG_LOG(("%s\n", line));
@@ -2683,7 +2689,7 @@ void WorldHeightMap::updateTerrainHeightAtlas(Int pow2Height)
 	data.height = m_height;
 	RenderDevice::Set_Terrain_Tess_Data(data, true);
 	char line[160];
-	WWFormat::Into(line, "TERRAINTESS kacheln {:d} von {:d} stufe {:d} klassen {:d} von {:d} gitter {:d} x {:d} abweichend {:d}", tiles,
+	WWFormat::Into(line, "TERRAINTESS tiles {:d} of {:d} level {:d} classes {:d} of {:d} grid {:d} x {:d} deviating {:d}", tiles,
 		m_numBitmapTiles, scale, classes, m_numTextureClasses, m_width, m_height, mismatched);
 	GameEngine_RunnerLog(line);
 	DEBUG_LOG(("%s\n", line));

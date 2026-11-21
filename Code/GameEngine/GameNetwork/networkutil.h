@@ -49,9 +49,9 @@ std::vector<::Engine::LocalNetwork> LocalIPv4Networks();
 /// stable one before a temporary one, which the system changes from day to day.
 ::Engine::NetAddress PublishedIPv6Address();
 
-/// -netzLokal: highest instance number; instance N uses the loopback address 127.0.0.N.
+/// -netLocal: highest instance number; instance N uses the loopback address 127.0.0.N.
 constexpr Int MAX_LOCAL_NET_INSTANCES = 8;
-/// Loopback address of this instance with -netzLokal, 0 without.
+/// Loopback address of this instance with -netLocal, 0 without.
 UnsignedInt GetLocalNetInstanceIP();
 /// Loopback address of instance n (1..MAX_LOCAL_NET_INSTANCES).
 inline UnsignedInt LocalNetInstanceIP(Int n) { return 0x7F000000u | static_cast<UnsignedInt>(n); }

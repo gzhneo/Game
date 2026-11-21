@@ -403,6 +403,26 @@ void XAudio2AudioManager::update()
 	processPlayingList();
 	processFadingList();
 	processStoppedList();
+	processForcePlayedList();
+}
+
+void XAudio2AudioManager::releaseForcePlayed(const ForcePlayed &played)
+{
+	if (played.m_voice) { played.m_voice->Stop(0); played.m_voice->DestroyVoice(); }
+	// Only after DestroyVoice(): the voice read its samples from this file.
+	if (played.m_file) m_audioCache->closeFile(played.m_file);
+}
+
+void XAudio2AudioManager::processForcePlayedList(void)
+{
+	for (std::list<ForcePlayed>::iterator it = m_audioForcePlayed.begin(); it != m_audioForcePlayed.end(); ) {
+		XAUDIO2_VOICE_STATE state;
+		it->m_voice->GetState(&state, XAUDIO2_VOICE_NOSAMPLESPLAYED);
+		if (state.BuffersQueued == 0) {
+			releaseForcePlayed(*it);
+			it = m_audioForcePlayed.erase(it);
+		} else { ++it; }
+	}
 }
 
 //===================================================================================================
@@ -690,9 +710,8 @@ void XAudio2AudioManager::stopAllAudioImmediately(void)
 		it = m_stoppedAudio.erase(it);
 	}
 
-	std::list<IXAudio2SourceVoice *>::iterator vit;
-	for (vit = m_audioForcePlayed.begin(); vit != m_audioForcePlayed.end(); ++vit) {
-		if (*vit) { (*vit)->Stop(0); (*vit)->DestroyVoice(); }
+	for (std::list<ForcePlayed>::iterator vit = m_audioForcePlayed.begin(); vit != m_audioForcePlayed.end(); ++vit) {
+		releaseForcePlayed(*vit);
 	}
 	m_audioForcePlayed.clear();
 }
@@ -1788,9 +1807,9 @@ void XAudio2AudioManager::friend_forcePlayAudioEventRTS(const AudioEventRTS* eve
 
 	voice->SubmitSourceBuffer(&buffer);
 	voice->Start(0);
-	m_audioForcePlayed.push_back(voice);
-	// Intentionally not closing fileBuffer here -- matches the original's "fire and forget"
-	// lifetime; it stays cached (refcounted) until the cache evicts it under memory pressure.
+	// The file stays open while the voice plays; processForcePlayedList() closes it afterwards.
+	ForcePlayed played = { voice, fileBuffer };
+	m_audioForcePlayed.push_back(played);
 }
 
 #if defined(_DEBUG)

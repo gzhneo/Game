@@ -72,6 +72,8 @@ public:
 	virtual Int getDisplayModeCount(void) override;	///<return number of display modes/resolutions supported by video card.
 	virtual void getDisplayModeDescription(Int modeIndex, Int *xres, Int *yres, Int *bitDepth) override;	///<return description of mode
 	virtual Bool offersRendererChoice( void ) override;
+	virtual Int getGraphicsCardCount( void ) override;
+	virtual Bool getGraphicsCard( Int index, AsciiString *choice, AsciiString *name ) override;
  	virtual void setGamma(Real gamma, Real bright, Real contrast, Bool calibrate) override;
 	virtual void doSmartAssetPurgeAndPreload(const char* usageFileName) override;
 #if defined(_DEBUG)

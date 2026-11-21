@@ -1,4 +1,4 @@
-# Strassen frei, Abziehbilder zh tournament urban (Nr. 83)
+# Strassen frei, Abziehbilder zh tournament urban
 # frame   x      y      zoom       drehung   neigung
 # helipad, wordcaution
 60        0.322  0.806  0.30       0         standard

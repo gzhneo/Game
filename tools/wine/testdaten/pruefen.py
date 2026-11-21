@@ -164,6 +164,8 @@ def main():
     fuzz = env['ENGINEFUZZ_DIR']
     env.setdefault('WINEPREFIX', os.path.expanduser('~/.wine-cnc'))
     env.setdefault('WINEDEBUG', '-all')
+    # Wine 9.0 aborts when TMPDIR is set, whatever its value.
+    env.pop('TMPDIR', None)
     wine = env.get('WINE') or shutil.which('wine64') or '/usr/lib/wine/wine64'
 
     def harness(exe, name):

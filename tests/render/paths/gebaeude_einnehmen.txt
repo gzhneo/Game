@@ -1,0 +1,10 @@
+# Long hold over one base while buildings change owner during the Tournament Lake replay; every shot compares the
+# remaining equal buildings with and without mesh instancing. Positions: base 1 first, then base 3, with a late
+# return to base 1.
+# frame   x      y      zoom   drehung   neigung
+6000      0.134  0.874  0.40   0         standard
+9000      0.134  0.874  0.40   0         standard
+9100      0.869  0.129  0.40   0         standard
+12000     0.869  0.129  0.40   0         standard
+12100     0.134  0.874  0.40   0         standard
+15000     0.134  0.874  0.40   0         standard

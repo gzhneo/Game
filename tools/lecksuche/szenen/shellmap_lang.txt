@@ -1,8 +1,8 @@
 # Shell-Map im Fenster mit Zeichnen und Ton lange laufen lassen (6000 Durchlaeufe), dann ueber den Knopf
 # "Beenden" des Hauptmenues schliessen.
-hauptmenue
-warte 6000
-klick MainMenu.wnd:ButtonExit
-warte 600
+mainMenu
+wait 6000
+click MainMenu.wnd:ButtonExit
+wait 600
 log Beenden-Knopf ohne Wirkung
-beenden
+quit

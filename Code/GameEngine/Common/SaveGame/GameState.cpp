@@ -608,14 +608,29 @@ SaveCode GameState::saveGame( AsciiString filename, UnicodeString desc,
 		MessageBoxOk(TheGameText->fetch("GUI:Error"), msg, nullptr);
 
 		// close the file and get out of here
-		xferSave.close();
+		try { xferSave.close(); } catch( ... ) {}
 		::Engine::UserDataFiles::remove( diskPath( temppath ) );	// do not leave a partial file behind
 		return SaveCode::SC_ERROR;
 		
 	}  // end catch
 
-	// close the file
-	xferSave.close();
+	// close the file; a write error that only shows now means the file is incomplete
+	try
+	{
+		xferSave.close();
+	}
+	catch( ... )
+	{
+		UnicodeString ufilepath;
+		ufilepath.translate(filepath);
+
+		UnicodeString msg;
+		msg.format( TheGameText->fetch("GUI:ErrorSavingGame"), ufilepath.str() );
+
+		MessageBoxOk(TheGameText->fetch("GUI:Error"), msg, nullptr);
+		::Engine::UserDataFiles::remove( diskPath( temppath ) );
+		return SaveCode::SC_ERROR;
+	}
 
 	// Only now, with the file complete and closed, move it into place. MOVEFILE_REPLACE_EXISTING
 	// replaces the previous save game in one step; if that fails, the old save stays intact.
@@ -674,6 +689,28 @@ SaveCode GameState::loadGame( AvailableGameInfo gameInfo )
 	if( doesSaveGameExist( gameInfo.filename ) == FALSE )
 		return SaveCode::SC_FILE_NOT_FOUND;
 
+	// construct path to file
+	AsciiString filepath = getFilePathInSaveDirectory(gameInfo.filename);
+
+	// Open the file before anything of the running game is torn down: a file that cannot be opened (locked, no
+	// access rights) leaves the game as it is and shows the error.
+	XferLoad xferLoad;
+	try
+	{
+		xferLoad.open( filepath );
+	}
+	catch( ... )
+	{
+		UnicodeString ufilepath;
+		ufilepath.translate(filepath);
+
+		UnicodeString msg;
+		msg.format( TheGameText->fetch("GUI:ErrorLoadingGame"), ufilepath.str() );
+
+		MessageBoxOk(TheGameText->fetch("GUI:Error"), msg, nullptr);
+		return SaveCode::SC_ERROR;
+	}
+
 	// clear game data just like loading from the debug map load screen for mission saves
 	if( gameInfo.saveGameInfo.saveFileType == SAVE_FILE_TYPE_MISSION )
 	{
@@ -689,16 +726,9 @@ SaveCode GameState::loadGame( AvailableGameInfo gameInfo )
 	//
 	TheGameStateMap->clearScratchPadMaps();
 
-	// construct path to file
-	AsciiString filepath = getFilePathInSaveDirectory(gameInfo.filename);
-
 	// Reading the save builds the map (startNewGame suspends the watchdog only for that part) and then the
 	// objects and the post processing, all without a tick; large maps take longer than the watchdog limit.
 	::Engine::WatchdogSuspension watchdogSuspension;
-
-	// open the save file
-	XferLoad xferLoad;
-	xferLoad.open( filepath );
 
 	// clear out the game engine
 	TheGameEngine->reset();

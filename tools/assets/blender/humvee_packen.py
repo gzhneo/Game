@@ -1,7 +1,7 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-# Testarchiv für den KI-3D-Humvee (TODO 62): Modelle AvHummer und AvHummer_D mit ihren Texturen in ein .big.
+# Testarchiv für den KI-3D-Humvee: Modelle AvHummer und AvHummer_D mit ihren Texturen in ein .big.
 #
 #   python humvee_packen.py <arbeitsordner> <ziel.big> [--groesse 512] [--textur ZHCA_AvHummerKI] [--dxt]
 #

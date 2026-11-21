@@ -38,8 +38,8 @@ for lauf in ohne mit mit-str; do
 		# the map's name tag (WorldInfo mapName) is MAP:TestVersus
 		printf 'MAP:TestVersus\r\n"Meine Karte"\r\nEND\r\n' > "$U/Maps/MeineKarte/map.str"
 	fi
-	printf 'hauptmenue\r\nwarte 120\r\nbeenden\r\n' > "$D/ablauf.txt"
-	"$HERE/run_game.sh" --menue --zeit 900 "$D" -einstellungenNurLesen -mehrfach -crcLog run.log -testablauf ablauf.txt \
+	printf 'mainMenu\r\nwait 120\r\nquit\r\n' > "$D/ablauf.txt"
+	"$HERE/run_game.sh" --menue --zeit 900 "$D" -settingsReadOnly -multiInstance -crcLog run.log -testScript ablauf.txt \
 		> "$D/lauf.out" 2>&1
 	rc=$?
 	L=$(ls "$D"/*DebugLogFile*.txt 2>/dev/null | head -1)

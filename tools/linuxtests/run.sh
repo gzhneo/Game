@@ -41,7 +41,7 @@ INC="-I $HERE/shim -I $OUT/sysalias -I $OUT/mirror/shim -I $OUT/mirror/shim2/anc
      -I $T/Core/WWSaveLoad -I $T/Core -I $T/Core/Compression"
 # -include bits/stdc++.h: Lib/BaseType.h definiert min/max als Makro; die STL muss vorher da sein.
 # -D_cdecl: MSVC kennt die Schreibweise ohne doppelten Unterstrich, MinGW nicht.
-# WWDownload (EA-FTP-Patchdownload) ist seit 2026-09-26 entfernt (TODO 69 Runde A).
+# WWDownload (EA-FTP-Patchdownload) ist entfernt.
 FLAGS="-std=c++20 -w -DWIN32 -D_WINDOWS -DNOMINMAX -D_WIN32_WINNT=0x0A00 -D_cdecl=__cdecl -include bits/stdc++.h"
 
 # 3. Bibliotheken uebersetzen. Die Quelllisten kommen aus den CMakeLists, damit hier keine
@@ -98,6 +98,8 @@ $CXX $FLAGS $INC -I $T/Renderer/WW3D2 -I $T/Renderer/WW3D2/Animation -I $T/Rende
 # 5. Ausfuehren
 export WINEPREFIX="${WINEPREFIX:-$OUT/wineprefix}"
 export WINEDEBUG=-all
+# Wine 9.0 aborts ("free(): invalid pointer") whenever TMPDIR is set, whatever its value; work dirs are derived above.
+unset TMPDIR
 rc=0
 "$WINE" "$OUT/UnitTests.exe" || rc=1
 "$WINE" "$OUT/RenderUnitTests.exe" || rc=1

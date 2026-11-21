@@ -385,8 +385,11 @@ Render2DSentenceClass::Build_Textures (void)
 		//
 		//	Copy the contents of the texture from the surface
 		//
-		RenderDevice::_Copy_Rects (curr_surface->Peek_D3D_Surface (), nullptr, 0, texture_surface->Peek_D3D_Surface (), nullptr);
-		REF_PTR_RELEASE (texture_surface);
+		// (no surface if the device could not create the texture: the text stays blank)
+		if (texture_surface != nullptr) {
+			RenderDevice::_Copy_Rects (curr_surface->Peek_D3D_Surface (), nullptr, 0, texture_surface->Peek_D3D_Surface (), nullptr);
+			REF_PTR_RELEASE (texture_surface);
+		}
 	
 		//
 		//	Assign this texture to any renderers that need it

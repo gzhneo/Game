@@ -6,7 +6,7 @@
 # Leaving a LAN game under Wine: two instances, the guest leaves through the game menu while the host keeps giving
 # orders (it queues dozers at its command center), both log the logic CRC of every frame (-crcLog). Afterwards the
 # CRC histories are compared frame by frame: the frames both logged must match. Driven by test sequences
-# (-testablauf), not by mouse clicks.
+# (-testScript), not by mouse clicks.
 #
 #   tools/wine/lan_austritt.sh [--emulator] <output folder> [rounds]
 #
@@ -19,7 +19,7 @@
 # <output folder>/rundeN/ergebnis.txt, the exit code is 0 if no round shows a difference.
 set -u
 EMU=()
-[ "${1:-}" = --emulator ] && { read -r -a EMU <<< "${AUSTRITT_EMULATOR:--netzLatenz 80 -netzSchwankung 20 -netzVerlust 2}"; shift; }
+[ "${1:-}" = --emulator ] && { read -r -a EMU <<< "${AUSTRITT_EMULATOR:--netLatency 80 -netJitter 20 -netLoss 2}"; shift; }
 OUT=$1; RUNDEN=${2:-1}
 HERE="$(cd "$(dirname "$0")" && pwd)"
 command -v ip >/dev/null || { echo "ip fehlt (Paket iproute2)"; exit 2; }
@@ -53,23 +53,23 @@ rm -rf "$DATA" && python3 "$HERE/testdaten/generate.py" "$DATA" > /dev/null || {
 # executed some 45 frames later (run-ahead), the host's orders some 25 frames after the click, so they land in the
 # frames right after the guest's leaving -- the frames a leaver runs alone before it clears the game.
 host_ablauf() {
-	printf 'hauptmenue\r\nklick MainMenu.wnd:ButtonMultiplayer 3000\r\nklick MainMenu.wnd:ButtonNetwork 3000\r\n'
-	printf 'fenster LanLobbyMenu.wnd:ButtonHost 3000\r\nwarte 60\r\nklick LanLobbyMenu.wnd:ButtonHost\r\n'
-	printf 'fenster LanGameOptionsMenu.wnd:ButtonStart 6000\r\nwarte 3200\r\nklick LanGameOptionsMenu.wnd:ButtonStart 9000\r\n'
-	printf 'partie 2000000\r\nlog SPIEL BEGINNT\r\nlogik 205\r\n'
+	printf 'mainMenu\r\nclick MainMenu.wnd:ButtonMultiplayer 3000\r\nclick MainMenu.wnd:ButtonNetwork 3000\r\n'
+	printf 'window LanLobbyMenu.wnd:ButtonHost 3000\r\nwait 60\r\nclick LanLobbyMenu.wnd:ButtonHost\r\n'
+	printf 'window LanGameOptionsMenu.wnd:ButtonStart 6000\r\nwait 3200\r\nclick LanGameOptionsMenu.wnd:ButtonStart 9000\r\n'
+	printf 'game 2000000\r\nlog SPIEL BEGINNT\r\nlogic 205\r\n'
 	for _ in $(seq 1 9); do
-		printf 'klickFalls ControlBar.wnd:ButtonCommand01 30\r\nlogik 1\r\n'
+		printf 'clickIf ControlBar.wnd:ButtonCommand01 30\r\nlogic 1\r\n'
 	done
-	printf 'logik 200\r\nspielmenue\r\nklick QuitNoSave.wnd:ButtonExit 3000\r\nklick QuitMessageBox.wnd:ButtonYes 3000\r\n'
-	printf 'keinePartie 2000000\r\nbeenden\r\n'
+	printf 'logic 200\r\ngameMenu\r\nclick QuitNoSave.wnd:ButtonExit 3000\r\nclick QuitMessageBox.wnd:ButtonYes 3000\r\n'
+	printf 'noGame 2000000\r\nquit\r\n'
 }
 gast_ablauf() {
-	printf 'hauptmenue\r\nklick MainMenu.wnd:ButtonMultiplayer 3000\r\nklick MainMenu.wnd:ButtonNetwork 3000\r\n'
-	printf 'fenster LanLobbyMenu.wnd:ListboxGames 3000\r\nwarte 600\r\nauswahl LanLobbyMenu.wnd:ListboxGames 0 6000\r\n'
-	printf 'klick LanLobbyMenu.wnd:ButtonJoin 3000\r\nfenster LanGameOptionsMenu.wnd:TextEntryChat 6000\r\nwarte 100\r\n'
-	printf 'klick LanGameOptionsMenu.wnd:ButtonStart 9000\r\npartie 2000000\r\nlog SPIEL BEGINNT\r\nlogik 200\r\n'
-	printf 'spielmenue\r\nklick QuitNoSave.wnd:ButtonExit 3000\r\nklick QuitMessageBox.wnd:ButtonYes 3000\r\n'
-	printf 'keinePartie 2000000\r\nbeenden\r\n'
+	printf 'mainMenu\r\nclick MainMenu.wnd:ButtonMultiplayer 3000\r\nclick MainMenu.wnd:ButtonNetwork 3000\r\n'
+	printf 'window LanLobbyMenu.wnd:ListboxGames 3000\r\nwait 600\r\nselect LanLobbyMenu.wnd:ListboxGames 0 6000\r\n'
+	printf 'click LanLobbyMenu.wnd:ButtonJoin 3000\r\nwindow LanGameOptionsMenu.wnd:TextEntryChat 6000\r\nwait 100\r\n'
+	printf 'click LanGameOptionsMenu.wnd:ButtonStart 9000\r\ngame 2000000\r\nlog SPIEL BEGINNT\r\nlogic 200\r\n'
+	printf 'gameMenu\r\nclick QuitNoSave.wnd:ButtonExit 3000\r\nclick QuitMessageBox.wnd:ButtonYes 3000\r\n'
+	printf 'noGame 2000000\r\nquit\r\n'
 }
 
 fehler=0
@@ -89,8 +89,8 @@ for runde in $(seq 1 "$RUNDEN"); do
 	# two software-rendered instances share the cores; without the D3D11 effects both keep up with each other
 	for i in 1 2; do
 		ip netns exec gzh-aus$i env WINEPREFIX_CNC="$BAU/wineprefix-aus$i" "$HERE/run_game.sh" --menue --zeit 3000 \
-			"$R/daten$i" -einstellungenNurLesen -d3d11Effects none -crcLog crc.log -crcLogInterval 1 \
-			-testablauf ablauf.txt "${EMU[@]}" > "$R/lauf$i.out" 2>&1 &
+			"$R/daten$i" -settingsReadOnly -d3d11Effects none -crcLog crc.log -crcLogInterval 1 \
+			-testScript ablauf.txt "${EMU[@]}" > "$R/lauf$i.out" 2>&1 &
 		eval "P$i=\$!"
 		[ $i = 1 ] && sleep 20
 	done
@@ -107,14 +107,14 @@ def verlauf(i):
             t = z.split()
             if len(t) == 2 and t[0].isdigit() and len(t[1]) == 8:
                 werte[int(t[0])] = t[1]
-            elif z.startswith('TESTABLAUF'):
+            elif z.startswith('TESTSCRIPT'):
                 ablauf.append(z.rstrip())
     return werte, ablauf
 
 (h, ah), (g, ag) = verlauf(1), verlauf(2)
 gemeinsam = sorted(set(h) & set(g))
 falsch = [f for f in gemeinsam if h[f] != g[f]]
-fehlerzeilen = [z for z in ah + ag if 'TESTABLAUF ERROR' in z]
+fehlerzeilen = [z for z in ah + ag if 'TESTSCRIPT ERROR' in z]
 text = ['Host: %d Frames (bis %s), Gast: %d Frames (bis %s)' % (len(h), max(h) if h else '-', len(g), max(g) if g else '-'),
         'gemeinsame Frames: %d, abweichend: %d%s' % (len(gemeinsam), len(falsch), (' (%s)' % ', '.join(map(str, falsch[:10]))) if falsch else ''),
         'Testablauf-Fehler: %d%s' % (len(fehlerzeilen), (' (%s)' % fehlerzeilen[0]) if fehlerzeilen else '')]

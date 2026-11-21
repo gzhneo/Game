@@ -268,6 +268,10 @@ GZH:OptionsVulkan
 "Vulkan-Renderer"
 END
 
+GZH:OptionsAdapter
+"Grafikkarte"
+END
+
 GZH:RemoveVote
 "%ls stimmt dafür, %ls aus dem Spiel zu entfernen (%d von %d Stimmen). Zustimmen mit: /remove %ls"
 END

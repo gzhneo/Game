@@ -833,7 +833,7 @@ void ScriptEngine::runScript(const AsciiString& scriptName, Team *pThisTeam)
 	
 
 	Player *savPlayer = m_currentPlayer;
-//	Team *pSavConditionTeam = m_conditionTeam;
+	Team *pSavConditionTeam = m_conditionTeam;
 	LatchRestore<Team *> latch(m_callingTeam, pThisTeam);
 
 	m_conditionTeam = nullptr;
@@ -870,7 +870,7 @@ void ScriptEngine::runScript(const AsciiString& scriptName, Team *pThisTeam)
 		}
 	}
 	// m_callingTeam is restored automatically via LatchRestore
-	m_conditionTeam = m_conditionTeam;
+	m_conditionTeam = pSavConditionTeam;
 	m_currentPlayer = savPlayer;
 }  // end runScript
 

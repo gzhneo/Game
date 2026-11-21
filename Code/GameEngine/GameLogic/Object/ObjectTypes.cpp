@@ -36,6 +36,7 @@
 #include "Common/ThingFactory.h"
 #include "Common/ThingTemplate.h"
 #include "Common/Xfer.h"
+#include "GameLogic/ScriptEngine.h"
 
 //-------------------------------------------------------------------------------------------------
 ObjectTypes::ObjectTypes()
@@ -102,15 +103,34 @@ Bool ObjectTypes::isInSet(const ThingTemplate* objectType) const
 }
 
 //-------------------------------------------------------------------------------------------------
-Int ObjectTypes::prepForPlayerCounting( std::vector<const ThingTemplate *>& templates, std::vector<Int>& counts)
+// Map scripts put list names into lists (an "all units" list made of the air, vehicle and infantry
+// lists). Such a name counts the members of that list; the visited lists guard against cycles.
+void ObjectTypes::collectTemplates(std::vector<const ObjectTypes *>& visited, std::vector<const ThingTemplate *>& templates) const
 {
-	AsciiStringVecIt it;
-	for (it = m_objectTypes.begin(); it != m_objectTypes.end(); ++it) {
-		const ThingTemplate *templ = TheThingFactory->findTemplate(*it);
-		if (templ) {
+	visited.push_back(this);
+	for (const AsciiString& name : m_objectTypes) {
+		const ThingTemplate *templ = TheThingFactory->findTemplate(name, FALSE);
+		if (!templ) {
+			const ObjectTypes *nested = TheScriptEngine ? TheScriptEngine->getObjectTypes(name) : nullptr;
+			if (nested) {
+				if (std::find(visited.begin(), visited.end(), nested) == visited.end()) {
+					nested->collectTemplates(visited, templates);
+				}
+				continue;
+			}
+			templ = TheThingFactory->findTemplate(name);	// neither a template nor a list: report it
+		}
+		if (templ && std::find(templates.begin(), templates.end(), templ) == templates.end()) {
 			templates.push_back(templ);
 		}
 	}
+}
+
+//-------------------------------------------------------------------------------------------------
+Int ObjectTypes::prepForPlayerCounting( std::vector<const ThingTemplate *>& templates, std::vector<Int>& counts)
+{
+	std::vector<const ObjectTypes *> visited;
+	collectTemplates(visited, templates);
 
 	Int retVal = static_cast<Int>(templates.size());
 	counts.resize(retVal);

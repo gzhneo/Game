@@ -272,6 +272,7 @@ bool RenderCore::Fx_Ensure_Color_Copy()
 	}
 	GpuShaderResourceView* srv = nullptr;
 	if (FAILED(M->device->CreateShaderResourceView(M->fx_color_tex, nullptr, &srv))) {
+		Gpu_Release(M->fx_color_rtv);
 		Gpu_Release(M->fx_color_tex);
 		return false;
 	}
@@ -1427,10 +1428,10 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	if (!text || !size) return;
 	text[0] = 0;
 	const RenderEffectSettings& fx = RenderDevice::Get_Effect_Settings();
-	static const char* names[FX_RANGES] = { "tiefe_ssao", "partikel", "nachbearbeitung", "schattenkarte", "schattenmaske",
-											"gelaendetiefe", "gelaende", "glanz_hitze", "hochskalieren", "szene", "bild",
-											"spiegelung", "objekte", "baeume", "wasser", "durchsichtig", "oberflaeche",
-											"projektionsschatten", "bildfilter" };
+	static const char* names[FX_RANGES] = { "depth_ssao", "particles", "post", "shadowmap", "shadowmask",
+											"terrain_depth", "terrain", "glow_heat", "upscale", "scene", "frame",
+											"reflection", "objects", "trees", "water", "transparent", "surface",
+											"projected_shadows", "screen_filter" };
 	char part[FX_RANGES][64];
 	for (unsigned r = 0; r < FX_RANGES; ++r) {
 		if (M->fx_count[r])
@@ -1442,7 +1443,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	char shadow[128];
 	shadow[0] = 0;
 	if (M->sh_stat_frames)
-		_snprintf_s(shadow, sizeof(shadow), _TRUNCATE, " schattenwerfer %.0f zeichnungen %.0f kopien %.1f kante %.0f",
+		_snprintf_s(shadow, sizeof(shadow), _TRUNCATE, " casters %.0f draws %.0f copies %.1f edge %.0f",
 			M->sh_stat_casters / M->sh_stat_frames, M->sh_stat_draws / M->sh_stat_frames, M->sh_stat_copies / M->sh_stat_frames,
 			M->sh_stat_extent / M->sh_stat_frames);
 	// Terrain detail: terrain draws and those with detail per frame, atlas cells with detail, state
@@ -1450,7 +1451,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	detail[0] = 0;
 	if (fx.flags & RENDER_EFFECT_TERRAIN_DETAIL) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(detail, sizeof(detail), _TRUNCATE, " bodendetail zeichnungen %.1f von %.1f felder %u tabelle %d texturen %d",
+		_snprintf_s(detail, sizeof(detail), _TRUNCATE, " ground_detail draws %.1f of %.1f cells %u table %d textures %d",
 			M->td_stat_draws / frames, M->td_stat_terrain / frames, M->td_stat_cells, M->td_table_valid ? 1 : 0,
 			M->td_failed ? 0 : (M->td_srv[0] ? 1 : -1));
 	}
@@ -1459,7 +1460,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	rock[0] = 0;
 	if (fx.flags & RENDER_EFFECT_TERRAIN_ROCK) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(rock, sizeof(rock), _TRUNCATE, " berge zeichnungen %.1f hoehenfeld %d x %d texturen %d",
+		_snprintf_s(rock, sizeof(rock), _TRUNCATE, " mountains draws %.1f heightfield %d x %d textures %d",
 			M->tr_stat_draws / frames, M->tr_width, M->tr_height, M->tr_failed ? 0 : (M->tr_cb ? 1 : -1));
 	}
 	// Relief: relief draws per frame, state of the relief atlas
@@ -1467,7 +1468,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	relief[0] = 0;
 	if (fx.flags & RENDER_EFFECT_TERRAIN_NORMAL) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(relief, sizeof(relief), _TRUNCATE, " relief zeichnungen %.1f atlas %d",
+		_snprintf_s(relief, sizeof(relief), _TRUNCATE, " relief draws %.1f atlas %d",
 			M->tn_stat_draws / frames, M->tn_atlas ? 1 : 0);
 	}
 	// Tessellation: patch draws and terrain sections per frame; patches, domain points and triangles per frame from
@@ -1478,7 +1479,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
 		const double per_frame = (M->tt_stat_measured > 0.0) ? (M->tt_stat_sections / frames) / M->tt_stat_measured : 0.0;
 		_snprintf_s(tess, sizeof(tess), _TRUNCATE,
-			" tessellation zeichnungen %.1f abschnitte %.2f flecken %.0f punkte %.0f dreiecke %.0f gemessen %.0f hoehen %d fels %.2f",
+			" tessellation draws %.1f sections %.2f patches %.0f points %.0f triangles %.0f measured %.0f heights %d rock %.2f",
 			M->tt_stat_draws / frames, M->tt_stat_sections / frames, M->tt_stat_patches * per_frame, M->tt_stat_points * per_frame,
 			M->tt_stat_triangles * per_frame, M->tt_stat_measured, (M->tt_atlas && M->tt_heights) ? 1 : 0, M->tt_rock_amp);
 	}
@@ -1489,19 +1490,19 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	lights[0] = 0;
 	if (M->tl_stat_draws > 0.0 || M->tb_stat_draws > 0.0) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(lights, sizeof(lights), _TRUNCATE, " gelaendelichter zeichnungen %.1f vorbeleuchtung %.1f hoechstens %u je_pixel %.1f",
+		_snprintf_s(lights, sizeof(lights), _TRUNCATE, " terrain_lights draws %.1f prelight %.1f max %u per_pixel %.1f",
 			M->tl_stat_draws / frames, M->tl_stat_static / frames, M->tl_stat_max, M->tb_stat_draws / frames);
 	}
 	if (M->ml_stat_draws > 0.0) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
 		char model[48];
-		_snprintf_s(model, sizeof(model), _TRUNCATE, " modelllicht zeichnungen %.1f normalen %.1f", M->ml_stat_draws / frames,
+		_snprintf_s(model, sizeof(model), _TRUNCATE, " model_light draws %.1f normals %.1f", M->ml_stat_draws / frames,
 			M->ml_stat_normal / frames);
 		strncat_s(lights, sizeof(lights), model, _TRUNCATE);
 	}
 	if (M->at_stat_frames > 0.0) {
 		char atmo[48];
-		_snprintf_s(atmo, sizeof(atmo), _TRUNCATE, " atmosphaere bilder %.0f", M->at_stat_frames);
+		_snprintf_s(atmo, sizeof(atmo), _TRUNCATE, " atmosphere frames %.0f", M->at_stat_frames);
 		strncat_s(lights, sizeof(lights), atmo, _TRUNCATE);
 	}
 	// Constant buffer ring: writes and wraps per frame
@@ -1509,7 +1510,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	ring[0] = 0;
 	if (M->cbr_stat_writes > 0.0) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(ring, sizeof(ring), _TRUNCATE, " cbring schreiben %.1f umlaeufe %.2f",
+		_snprintf_s(ring, sizeof(ring), _TRUNCATE, " cb_ring writes %.1f wraps %.2f",
 			M->cbr_stat_writes / frames, M->cbr_stat_wraps / frames);
 	}
 	// GPU skinning: skinned draws and uploaded palette rows (bones) per frame
@@ -1517,7 +1518,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	skin[0] = 0;
 	if (M->sk_stat_draws > 0.0) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(skin, sizeof(skin), _TRUNCATE, " skinning zeichnungen %.1f knochen %.1f",
+		_snprintf_s(skin, sizeof(skin), _TRUNCATE, " skinning draws %.1f bones %.1f",
 			M->sk_stat_draws / frames, M->sk_stat_bones / frames);
 	}
 	// Particles on the GPU: instanced draws and particles per frame
@@ -1525,7 +1526,7 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	particles[0] = 0;
 	if (M->pa_stat_draws > 0.0) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(particles, sizeof(particles), _TRUNCATE, " partikel zeichnungen %.1f anzahl %.1f",
+		_snprintf_s(particles, sizeof(particles), _TRUNCATE, " particles draws %.1f count %.1f",
 			M->pa_stat_draws / frames, M->pa_stat_particles / frames);
 	}
 	// Instanced meshes: instanced draws and the single draws they replace per frame
@@ -1533,20 +1534,20 @@ void RenderCore::Get_Effect_Statistics(char* text, unsigned size)
 	meshes[0] = 0;
 	if (M->mi_stat_draws > 0.0) {
 		const double frames = M->fx_frame ? (double)M->fx_frame : 1.0;
-		_snprintf_s(meshes, sizeof(meshes), _TRUNCATE, " meshinstanzen zeichnungen %.1f statt %.1f",
+		_snprintf_s(meshes, sizeof(meshes), _TRUNCATE, " mesh_instances draws %.1f instead_of %.1f",
 			M->mi_stat_draws / frames, M->mi_stat_instances / frames);
 	}
 	// Internal render resolution: share, filter and frames drawn scaled
 	char rscale[96];
 	rscale[0] = 0;
 	if (M->rs_stat_frames > 0.0)
-		_snprintf_s(rscale, sizeof(rscale), _TRUNCATE, " renderskalierung %.3f filter %u bilder %.0f",
+		_snprintf_s(rscale, sizeof(rscale), _TRUNCATE, " render_scaling %.3f filter %u frames %.0f",
 			fx.render_scale, fx.render_scale_filter, M->rs_stat_frames);
 	char passes[RENDER_GPU_PASS_COUNT * 64];
 	passes[0] = 0;
 	for (unsigned r = FX_RANGE_PASS_FIRST; r < FX_RANGES; ++r)
 		strncat_s(passes, sizeof(passes), part[r], _TRUNCATE);
-	_snprintf_s(text, size, _TRUNCATE, "GPUEFFEKTE flags 0x%X samples %u bilder %u%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+	_snprintf_s(text, size, _TRUNCATE, "GPUEFFECTS flags 0x%X samples %u frames %u%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
 		fx.flags, M->sample_count, M->fx_frames_measured, part[0], part[1], part[2], part[3], part[4], part[5], part[6], part[7],
 		part[8], part[9], part[10], passes, shadow, detail, rock, relief, tess, lights, ring, skin, particles, meshes, rscale);
 }

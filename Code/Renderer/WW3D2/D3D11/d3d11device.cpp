@@ -9,10 +9,16 @@
 #include "d3d11device.h"
 #include "d3d11d3d.h"
 #include "WW3D2/Common/gpulayers.h"
+#include "WW3D2/Common/gpuadapter.h"
 #include <d3dcompiler.h>
 
 #include <cstddef>
+#include <mutex>
 #include <new>
+#include <string>
+#include <unordered_set>
+#include <vector>
+#include "wwdebug.h"
 
 // --- The descriptions are the D3D11 structures ----------------------------------------------------
 
@@ -102,7 +108,8 @@ template <class T, class U> inline T* As(U* p) { return reinterpret_cast<T*>(p);
 
 // --- Objects --------------------------------------------------------------------------------------
 
-/// A device layer object around one COM interface; the wrapper owns one reference of it.
+/// A device layer object around one COM interface; the wrapper owns one reference of it. The interface is
+/// missing (nullptr) only while the device is lost, for the objects of Revivable.
 template <class Base, class Native_Type>
 class D3D11Wrap : public Base
 {
@@ -113,7 +120,7 @@ public:
 	{
 		const ULONG refs = --m_refs;
 		if (refs == 0) {
-			m_native->Release();
+			if (m_native) m_native->Release();
 			delete this;
 		}
 		return refs;
@@ -126,28 +133,199 @@ protected:
 	ULONG			m_refs;
 };
 
-class D3D11Buffer final : public D3D11Wrap<GpuBuffer, ID3D11Buffer>
+// --- Objects that survive a lost device ------------------------------------------------------------
+//
+// Buffers, shaders and input layouts remember how they were created. When the device is lost, Orphan_All
+// drops their COM objects, and after the new device exists Revive_All gives the same wrapper objects new
+// ones; everything holding a wrapper pointer stays valid. Buffers come back empty: the core fills static
+// buffers again from its own copy of the contents.
+
+class Revivable
+{
+public:
+	virtual void Orphan() = 0;
+	virtual void Revive(ID3D11Device* device) = 0;
+	virtual bool Is_View() const { return false; }	///< views are revived after the resources they look at
+
+protected:
+	Revivable()
+	{
+		std::lock_guard<std::mutex> lock(Lock());
+		if (!Registry()) Registry() = new std::unordered_set<Revivable*>;
+		Registry()->insert(this);
+	}
+	virtual ~Revivable()
+	{
+		std::lock_guard<std::mutex> lock(Lock());
+		if (!Registry()) return;
+		Registry()->erase(this);
+		if (Registry()->empty()) {
+			delete Registry();
+			Registry() = nullptr;
+		}
+	}
+
+public:
+	static void Orphan_All()
+	{
+		std::lock_guard<std::mutex> lock(Lock());
+		if (!Registry()) return;
+		for (Revivable* object : *Registry()) object->Orphan();
+	}
+	static void Revive_All(ID3D11Device* device)
+	{
+		std::lock_guard<std::mutex> lock(Lock());
+		if (!Registry()) return;
+		for (Revivable* object : *Registry()) if (!object->Is_View()) object->Revive(device);
+		for (Revivable* object : *Registry()) if (object->Is_View()) object->Revive(device);
+	}
+
+private:
+	static std::mutex& Lock() { static std::mutex mutex; return mutex; }
+	// Allocated with the first object and freed with the last, so no memory is held at shutdown.
+	static std::unordered_set<Revivable*>*& Registry() { static std::unordered_set<Revivable*>* set = nullptr; return set; }
+};
+
+class D3D11Buffer final : public D3D11Wrap<GpuBuffer, ID3D11Buffer>, public Revivable
 {
 public:
 	using D3D11Wrap::D3D11Wrap;
 	void GetDesc(GPU_BUFFER_DESC* desc) override { m_native->GetDesc(As<D3D11_BUFFER_DESC>(desc)); }
+	void Remember(const D3D11_BUFFER_DESC& desc) { m_desc = desc; m_known = true; }
+	void Orphan() override { if (m_native) { m_native->Release(); m_native = nullptr; } }
+	void Revive(ID3D11Device* device) override
+	{
+		if (m_native || !m_known) return;
+		ID3D11Buffer* created = nullptr;
+		if (SUCCEEDED(device->CreateBuffer(&m_desc, nullptr, &created))) m_native = created;
+		else { WWDEBUG_SAY(("D3D11: buffer of %u bytes could not be recreated\n", (unsigned)m_desc.ByteWidth)); }
+	}
+private:
+	D3D11_BUFFER_DESC	m_desc = {};
+	bool				m_known = false;
 };
 
-class D3D11Texture final : public D3D11Wrap<GpuTexture2D, ID3D11Texture2D>
+enum class Shader_Kind { Vertex, Pixel, Hull, Domain };
+
+template <class Base, class Native_Type, Shader_Kind Kind>
+class D3D11Shader final : public D3D11Wrap<Base, Native_Type>, public Revivable
+{
+public:
+	using D3D11Wrap<Base, Native_Type>::D3D11Wrap;
+	void Remember(const void* code, SIZE_T size)
+	{
+		const unsigned char* bytes = static_cast<const unsigned char*>(code);
+		m_code.assign(bytes, bytes + size);
+	}
+	void Orphan() override { if (this->m_native) { this->m_native->Release(); this->m_native = nullptr; } }
+	void Revive(ID3D11Device* device) override
+	{
+		if (this->m_native || m_code.empty()) return;
+		Native_Type* created = nullptr;
+		HRESULT hr;
+		if constexpr (Kind == Shader_Kind::Vertex)		hr = device->CreateVertexShader(m_code.data(), m_code.size(), nullptr, &created);
+		else if constexpr (Kind == Shader_Kind::Pixel)	hr = device->CreatePixelShader(m_code.data(), m_code.size(), nullptr, &created);
+		else if constexpr (Kind == Shader_Kind::Hull)	hr = device->CreateHullShader(m_code.data(), m_code.size(), nullptr, &created);
+		else											hr = device->CreateDomainShader(m_code.data(), m_code.size(), nullptr, &created);
+		if (SUCCEEDED(hr)) this->m_native = created;
+		else { WWDEBUG_SAY(("D3D11: shader could not be recreated (0x%08X)\n", (unsigned)hr)); }
+	}
+private:
+	std::vector<unsigned char>	m_code;
+};
+
+class D3D11Layout final : public D3D11Wrap<GpuInputLayout, ID3D11InputLayout>, public Revivable
+{
+public:
+	using D3D11Wrap::D3D11Wrap;
+	void Remember(const D3D11_INPUT_ELEMENT_DESC* elements, UINT count, const void* code, SIZE_T size)
+	{
+		m_names.assign(count, std::string());
+		m_elements.assign(elements, elements + count);
+		for (UINT i = 0; i < count; ++i) {
+			m_names[i] = elements[i].SemanticName ? elements[i].SemanticName : "";
+			m_elements[i].SemanticName = m_names[i].c_str();
+		}
+		const unsigned char* bytes = static_cast<const unsigned char*>(code);
+		m_code.assign(bytes, bytes + size);
+	}
+	void Orphan() override { if (m_native) { m_native->Release(); m_native = nullptr; } }
+	void Revive(ID3D11Device* device) override
+	{
+		if (m_native || m_code.empty()) return;
+		ID3D11InputLayout* created = nullptr;
+		const HRESULT hr = device->CreateInputLayout(m_elements.data(), static_cast<UINT>(m_elements.size()), m_code.data(), m_code.size(), &created);
+		if (SUCCEEDED(hr)) m_native = created;
+		else { WWDEBUG_SAY(("D3D11: input layout could not be recreated (0x%08X)\n", (unsigned)hr)); }
+	}
+private:
+	std::vector<D3D11_INPUT_ELEMENT_DESC>	m_elements;
+	std::vector<std::string>				m_names;
+	std::vector<unsigned char>				m_code;
+};
+
+// A texture the device created comes back empty (the swap chain buffers are not created by the device layer and
+// stay out). What it showed is the business of its owner: file textures are loaded again, procedural ones refilled.
+class D3D11Texture final : public D3D11Wrap<GpuTexture2D, ID3D11Texture2D>, public Revivable
 {
 public:
 	using D3D11Wrap::D3D11Wrap;
 	void GetDesc(GPU_TEXTURE2D_DESC* desc) override { m_native->GetDesc(As<D3D11_TEXTURE2D_DESC>(desc)); }
+	void Remember(const D3D11_TEXTURE2D_DESC& desc) { m_desc = desc; m_known = true; }
+	void Orphan() override { if (m_native && m_known) { m_native->Release(); m_native = nullptr; } }
+	void Revive(ID3D11Device* device) override
+	{
+		if (m_native || !m_known) return;
+		ID3D11Texture2D* created = nullptr;
+		if (SUCCEEDED(device->CreateTexture2D(&m_desc, nullptr, &created))) m_native = created;
+		else { WWDEBUG_SAY(("D3D11: texture %ux%u could not be recreated\n", (unsigned)m_desc.Width, (unsigned)m_desc.Height)); }
+	}
+private:
+	D3D11_TEXTURE2D_DESC	m_desc = {};
+	bool					m_known = false;
 };
 
-typedef D3D11Wrap<GpuShaderResourceView, ID3D11ShaderResourceView>	D3D11SRV;
-typedef D3D11Wrap<GpuRenderTargetView, ID3D11RenderTargetView>		D3D11RTV;
-typedef D3D11Wrap<GpuDepthStencilView, ID3D11DepthStencilView>		D3D11DSV;
-typedef D3D11Wrap<GpuVertexShader, ID3D11VertexShader>				D3D11VS;
-typedef D3D11Wrap<GpuPixelShader, ID3D11PixelShader>				D3D11PS;
-typedef D3D11Wrap<GpuHullShader, ID3D11HullShader>					D3D11HS;
-typedef D3D11Wrap<GpuDomainShader, ID3D11DomainShader>				D3D11DS;
-typedef D3D11Wrap<GpuInputLayout, ID3D11InputLayout>				D3D11Layout;
+/// A view remembers its resource (a wrapper, which keeps its native resource up to date) and its description.
+template <class Base, class Native_Type, class Desc_Type, int Kind>
+class D3D11View final : public D3D11Wrap<Base, Native_Type>, public Revivable
+{
+public:
+	using D3D11Wrap<Base, Native_Type>::D3D11Wrap;
+	~D3D11View() override { if (m_resource) m_resource->Release(); }
+	void Remember(GpuResource* resource, const Desc_Type* desc)
+	{
+		m_resource = resource;
+		if (m_resource) m_resource->AddRef();
+		m_has_desc = desc != nullptr;
+		if (desc) m_desc = *desc;
+	}
+	bool Is_View() const override { return true; }
+	void Orphan() override { if (this->m_native && m_resource) { this->m_native->Release(); this->m_native = nullptr; } }
+	void Revive(ID3D11Device* device) override
+	{
+		if (this->m_native || !m_resource) return;
+		ID3D11Resource* resource = static_cast<ID3D11Resource*>(m_resource->Native());
+		if (!resource) return;
+		Native_Type* created = nullptr;
+		HRESULT hr;
+		if constexpr (Kind == 0)		hr = device->CreateShaderResourceView(resource, m_has_desc ? &m_desc : nullptr, &created);
+		else if constexpr (Kind == 1)	hr = device->CreateRenderTargetView(resource, m_has_desc ? &m_desc : nullptr, &created);
+		else							hr = device->CreateDepthStencilView(resource, m_has_desc ? &m_desc : nullptr, &created);
+		if (SUCCEEDED(hr)) this->m_native = created;
+	}
+private:
+	GpuResource*	m_resource = nullptr;
+	Desc_Type		m_desc = {};
+	bool			m_has_desc = false;
+};
+
+typedef D3D11View<GpuShaderResourceView, ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC, 0>	D3D11SRV;
+typedef D3D11View<GpuRenderTargetView, ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC, 1>		D3D11RTV;
+typedef D3D11View<GpuDepthStencilView, ID3D11DepthStencilView, D3D11_DEPTH_STENCIL_VIEW_DESC, 2>		D3D11DSV;
+typedef D3D11Shader<GpuVertexShader, ID3D11VertexShader, Shader_Kind::Vertex>	D3D11VS;
+typedef D3D11Shader<GpuPixelShader, ID3D11PixelShader, Shader_Kind::Pixel>		D3D11PS;
+typedef D3D11Shader<GpuHullShader, ID3D11HullShader, Shader_Kind::Hull>			D3D11HS;
+typedef D3D11Shader<GpuDomainShader, ID3D11DomainShader, Shader_Kind::Domain>	D3D11DS;
 typedef D3D11Wrap<GpuBlendState, ID3D11BlendState>					D3D11Blend;
 typedef D3D11Wrap<GpuDepthStencilState, ID3D11DepthStencilState>	D3D11Depth;
 typedef D3D11Wrap<GpuRasterizerState, ID3D11RasterizerState>		D3D11Raster;
@@ -220,61 +398,81 @@ public:
 	{
 		ID3D11Buffer* p = nullptr;
 		const HRESULT hr = m_device->CreateBuffer(As<D3D11_BUFFER_DESC>(desc), As<D3D11_SUBRESOURCE_DATA>(initial), out ? &p : nullptr);
-		return Wrap<D3D11Buffer>(hr, p, out);
+		const HRESULT result = Wrap<D3D11Buffer>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11Buffer*>(*out)->Remember(*As<D3D11_BUFFER_DESC>(desc));
+		return result;
 	}
 	HRESULT CreateTexture2D(const GPU_TEXTURE2D_DESC* desc, const GPU_SUBRESOURCE_DATA* initial, GpuTexture2D** out) override
 	{
 		ID3D11Texture2D* p = nullptr;
 		const HRESULT hr = m_device->CreateTexture2D(As<D3D11_TEXTURE2D_DESC>(desc), As<D3D11_SUBRESOURCE_DATA>(initial), out ? &p : nullptr);
-		return Wrap<D3D11Texture>(hr, p, out);
+		const HRESULT result = Wrap<D3D11Texture>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11Texture*>(*out)->Remember(*As<D3D11_TEXTURE2D_DESC>(desc));
+		return result;
 	}
 	HRESULT CreateShaderResourceView(GpuResource* resource, const GPU_SHADER_RESOURCE_VIEW_DESC* desc, GpuShaderResourceView** out) override
 	{
 		ID3D11ShaderResourceView* p = nullptr;
 		const HRESULT hr = m_device->CreateShaderResourceView(N<ID3D11Resource>(resource), As<D3D11_SHADER_RESOURCE_VIEW_DESC>(desc), out ? &p : nullptr);
-		return Wrap<D3D11SRV>(hr, p, out);
+		const HRESULT result = Wrap<D3D11SRV>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11SRV*>(*out)->Remember(resource, As<D3D11_SHADER_RESOURCE_VIEW_DESC>(desc));
+		return result;
 	}
 	HRESULT CreateRenderTargetView(GpuResource* resource, const GPU_RENDER_TARGET_VIEW_DESC* desc, GpuRenderTargetView** out) override
 	{
 		ID3D11RenderTargetView* p = nullptr;
 		const HRESULT hr = m_device->CreateRenderTargetView(N<ID3D11Resource>(resource), As<D3D11_RENDER_TARGET_VIEW_DESC>(desc), out ? &p : nullptr);
-		return Wrap<D3D11RTV>(hr, p, out);
+		const HRESULT result = Wrap<D3D11RTV>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11RTV*>(*out)->Remember(resource, As<D3D11_RENDER_TARGET_VIEW_DESC>(desc));
+		return result;
 	}
 	HRESULT CreateDepthStencilView(GpuResource* resource, const GPU_DEPTH_STENCIL_VIEW_DESC* desc, GpuDepthStencilView** out) override
 	{
 		ID3D11DepthStencilView* p = nullptr;
 		const HRESULT hr = m_device->CreateDepthStencilView(N<ID3D11Resource>(resource), As<D3D11_DEPTH_STENCIL_VIEW_DESC>(desc), out ? &p : nullptr);
-		return Wrap<D3D11DSV>(hr, p, out);
+		const HRESULT result = Wrap<D3D11DSV>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11DSV*>(*out)->Remember(resource, As<D3D11_DEPTH_STENCIL_VIEW_DESC>(desc));
+		return result;
 	}
 	HRESULT CreateVertexShader(const void* code, SIZE_T size, void*, GpuVertexShader** out) override
 	{
 		ID3D11VertexShader* p = nullptr;
 		const HRESULT hr = m_device->CreateVertexShader(code, size, nullptr, out ? &p : nullptr);
-		return Wrap<D3D11VS>(hr, p, out);
+		const HRESULT result = Wrap<D3D11VS>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11VS*>(*out)->Remember(code, size);
+		return result;
 	}
 	HRESULT CreatePixelShader(const void* code, SIZE_T size, void*, GpuPixelShader** out) override
 	{
 		ID3D11PixelShader* p = nullptr;
 		const HRESULT hr = m_device->CreatePixelShader(code, size, nullptr, out ? &p : nullptr);
-		return Wrap<D3D11PS>(hr, p, out);
+		const HRESULT result = Wrap<D3D11PS>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11PS*>(*out)->Remember(code, size);
+		return result;
 	}
 	HRESULT CreateHullShader(const void* code, SIZE_T size, void*, GpuHullShader** out) override
 	{
 		ID3D11HullShader* p = nullptr;
 		const HRESULT hr = m_device->CreateHullShader(code, size, nullptr, out ? &p : nullptr);
-		return Wrap<D3D11HS>(hr, p, out);
+		const HRESULT result = Wrap<D3D11HS>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11HS*>(*out)->Remember(code, size);
+		return result;
 	}
 	HRESULT CreateDomainShader(const void* code, SIZE_T size, void*, GpuDomainShader** out) override
 	{
 		ID3D11DomainShader* p = nullptr;
 		const HRESULT hr = m_device->CreateDomainShader(code, size, nullptr, out ? &p : nullptr);
-		return Wrap<D3D11DS>(hr, p, out);
+		const HRESULT result = Wrap<D3D11DS>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11DS*>(*out)->Remember(code, size);
+		return result;
 	}
 	HRESULT CreateInputLayout(const GPU_INPUT_ELEMENT_DESC* elements, UINT count, const void* vs_code, SIZE_T vs_size, GpuInputLayout** out) override
 	{
 		ID3D11InputLayout* p = nullptr;
 		const HRESULT hr = m_device->CreateInputLayout(As<D3D11_INPUT_ELEMENT_DESC>(elements), count, vs_code, vs_size, out ? &p : nullptr);
-		return Wrap<D3D11Layout>(hr, p, out);
+		const HRESULT result = Wrap<D3D11Layout>(hr, p, out);
+		if (SUCCEEDED(result) && out && *out) static_cast<D3D11Layout*>(*out)->Remember(As<D3D11_INPUT_ELEMENT_DESC>(elements), count, vs_code, vs_size);
+		return result;
 	}
 	HRESULT CreateBlendState(const GPU_BLEND_DESC* desc, GpuBlendState** out) override
 	{
@@ -565,11 +763,15 @@ bool D3D11_Create_Gpu_Device(ID3D11Device* device, ID3D11DeviceContext* context,
 		D3D11_Destroy_Gpu_Device(*gpu_device, *gpu_context);
 		return false;
 	}
+	// After a lost device: new COM objects for the buffers, shaders and layouts that outlived it.
+	Revivable::Revive_All(device);
 	return true;
 }
 
 void D3D11_Destroy_Gpu_Device(GpuDevice*& gpu_device, GpuContext*& gpu_context)
 {
+	// The COM objects of the device go first; the wrappers outlive them (see Revivable).
+	Revivable::Orphan_All();
 	delete static_cast<D3D11GpuContext*>(gpu_context);
 	delete static_cast<D3D11GpuDevice*>(gpu_device);
 	gpu_context = nullptr;
@@ -616,27 +818,80 @@ public:
 	void Release_Interface() override { D3D11_Release(m_factory); }
 	void* Interface_Handle() override { return m_factory; }
 
+	// The adapters in the order they are tried, so the first is the one the device gets: hardware before software,
+	// the more powerful first (IDXGIFactory6 asks the system, which knows notebooks with two cards), the card the
+	// player chose (Gpu_Preferred_Adapter) in front of all. The caller releases the adapters.
+	std::vector<IDXGIAdapter1*> Ordered_Adapters()
+	{
+		std::vector<IDXGIAdapter1*> hardware, software;
+		if (!m_factory) return hardware;
+		IDXGIFactory6* factory6 = nullptr;
+		m_factory->QueryInterface(__uuidof(IDXGIFactory6), reinterpret_cast<void**>(&factory6));
+		for (UINT i = 0; ; ++i) {
+			IDXGIAdapter1* a = nullptr;
+			const HRESULT hr = factory6
+				? factory6->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, __uuidof(IDXGIAdapter1), reinterpret_cast<void**>(&a))
+				: m_factory->EnumAdapters1(i, &a);
+			if (FAILED(hr) || !a) break;
+			DXGI_ADAPTER_DESC1 desc;
+			::ZeroMemory(&desc, sizeof(desc));
+			a->GetDesc1(&desc);
+			((desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) ? software : hardware).push_back(a);
+		}
+		if (factory6) factory6->Release();
+		hardware.insert(hardware.end(), software.begin(), software.end());
+
+		const char* choice = Gpu_Preferred_Adapter();
+		if (*choice && !hardware.empty()) {
+			std::vector<std::string> names;
+			std::vector<GpuAdapter::Candidate> candidates;
+			names.reserve(hardware.size());
+			for (IDXGIAdapter1* a : hardware) {
+				DXGI_ADAPTER_DESC1 desc;
+				::ZeroMemory(&desc, sizeof(desc));
+				a->GetDesc1(&desc);
+				char name[128];
+				::WideCharToMultiByte(CP_ACP, 0, desc.Description, -1, name, sizeof(name), nullptr, nullptr);
+				names.push_back(name);
+				candidates.push_back({ desc.VendorId, desc.DeviceId, names.back().c_str() });
+			}
+			const int wanted = GpuAdapter::Choose(choice, candidates.data(), static_cast<unsigned>(candidates.size()));
+			if (wanted > 0) {
+				IDXGIAdapter1* chosen = hardware[wanted];
+				hardware.erase(hardware.begin() + wanted);
+				hardware.insert(hardware.begin(), chosen);
+			}
+			else if (wanted < 0 && !m_choice_logged) {
+				m_choice_logged = true;
+				WWRELEASE_SAY(("D3D11: graphics card '%s' not found, using the automatic choice\n", choice));
+			}
+		}
+		return hardware;
+	}
+
+	static void Release_Adapters(std::vector<IDXGIAdapter1*>& adapters)
+	{
+		for (IDXGIAdapter1* a : adapters) a->Release();
+		adapters.clear();
+	}
+
 	unsigned Get_Adapter_Count() override
 	{
-		if (!m_factory) return 0;
-		unsigned count = 0;
-		IDXGIAdapter1* a = nullptr;
-		while (m_factory->EnumAdapters1(count, &a) != DXGI_ERROR_NOT_FOUND) {
-			a->Release();
-			++count;
-		}
+		std::vector<IDXGIAdapter1*> adapters = Ordered_Adapters();
+		const unsigned count = static_cast<unsigned>(adapters.size());
+		Release_Adapters(adapters);
 		return count;
 	}
 
 	bool Get_Adapter_Info(unsigned adapter, GPU_ADAPTER_INFO* info) override
 	{
 		::ZeroMemory(info, sizeof(GPU_ADAPTER_INFO));
-		IDXGIAdapter1* a = nullptr;
-		if (!m_factory || m_factory->EnumAdapters1(adapter, &a) == DXGI_ERROR_NOT_FOUND) return false;
+		std::vector<IDXGIAdapter1*> adapters = Ordered_Adapters();
+		if (adapter >= adapters.size()) { Release_Adapters(adapters); return false; }
 		DXGI_ADAPTER_DESC1 desc;
 		::ZeroMemory(&desc, sizeof(desc));
-		a->GetDesc1(&desc);
-		a->Release();
+		adapters[adapter]->GetDesc1(&desc);
+		Release_Adapters(adapters);
 		// The description is UTF-16; the engine keeps names as 8 bit text.
 		::WideCharToMultiByte(CP_ACP, 0, desc.Description, -1, info->Description, sizeof(info->Description), nullptr, nullptr);
 		info->VendorId = desc.VendorId;
@@ -653,31 +908,35 @@ public:
 		if (!Create_Interface()) return false;
 		m_hwnd = static_cast<HWND>(hwnd);
 
-		UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#ifdef _DEBUG
-		// Only if the SDK layers are installed; otherwise silently without.
-		UINT debug_flags = flags | D3D11_CREATE_DEVICE_DEBUG;
-#endif
-		const D3D_FEATURE_LEVEL wanted[] = { D3D_FEATURE_LEVEL_11_0 };
-		D3D_FEATURE_LEVEL got = D3D_FEATURE_LEVEL_11_0;
-
+		// The first adapter that takes a device (the player's choice, else the most powerful card); the system's
+		// default as the last resort. The device and the later queries (name, free video memory) share the adapter.
 		HRESULT hr = E_FAIL;
-#ifdef _DEBUG
-		hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, debug_flags,
-							   wanted, 1, D3D11_SDK_VERSION, &m_device, &got, &m_context);
-		if (FAILED(hr)) {
-			WWDEBUG_SAY(("D3D11: debug layer not available, device without debug layer.\n"));
+		D3D_FEATURE_LEVEL got = D3D_FEATURE_LEVEL_11_0;
+		std::vector<IDXGIAdapter1*> adapters = Ordered_Adapters();
+		for (IDXGIAdapter1* a : adapters) {
+			hr = Try_Create_Device(a, &got);
+			if (SUCCEEDED(hr)) {
+				m_adapter = a;
+				m_adapter->AddRef();
+				break;
+			}
 		}
-#endif
-		if (FAILED(hr)) {
-			hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags,
-								   wanted, 1, D3D11_SDK_VERSION, &m_device, &got, &m_context);
-		}
+		Release_Adapters(adapters);
+		if (FAILED(hr)) hr = Try_Create_Device(nullptr, &got);
 		if (FAILED(hr)) {
 			WWDEBUG_SAY(("D3D11: no device with feature level 11.0 (0x%08X)\n", (unsigned)hr));
 			m_device = nullptr;
 			m_context = nullptr;
 			return false;
+		}
+		{
+			DXGI_ADAPTER_DESC1 desc;
+			::ZeroMemory(&desc, sizeof(desc));
+			if (m_adapter && SUCCEEDED(m_adapter->GetDesc1(&desc))) {
+				char name[128];
+				::WideCharToMultiByte(CP_ACP, 0, desc.Description, -1, name, sizeof(name), nullptr, nullptr);
+				WWRELEASE_SAY(("D3D11: graphics card '%s' (%04X:%04X)\n", name, desc.VendorId, desc.DeviceId));
+			}
 		}
 
 		// If the debug layer runs, grab its message queue. Without the layer the interface does not
@@ -782,6 +1041,7 @@ public:
 		D3D11_Release(m_info_queue);
 		m_reported_count = 0;
 		D3D11_Release(m_device);
+		D3D11_Release(m_adapter);
 	}
 
 	GpuTexture2D* Get_Back_Buffer() override
@@ -845,9 +1105,9 @@ public:
 						m_reported[m_reported_count++] = static_cast<unsigned>(message->ID);
 					const char* severity = "Info";
 					switch (message->Severity) {
-					case D3D11_MESSAGE_SEVERITY_CORRUPTION: severity = "KORRUPTION"; break;
-					case D3D11_MESSAGE_SEVERITY_ERROR:      severity = "FEHLER";     break;
-					case D3D11_MESSAGE_SEVERITY_WARNING:    severity = "WARNUNG";    break;
+					case D3D11_MESSAGE_SEVERITY_CORRUPTION: severity = "CORRUPTION"; break;
+					case D3D11_MESSAGE_SEVERITY_ERROR:      severity = "ERROR";     break;
+					case D3D11_MESSAGE_SEVERITY_WARNING:    severity = "WARNING";    break;
 					default: break;
 					}
 					WWDEBUG_SAY(("D3D11-Debug-Layer [%s, ID %d]: %s\n",
@@ -866,9 +1126,17 @@ public:
 	unsigned __int64 Get_Free_Video_Memory() override
 	{
 		if (!m_factory) return 0;
-		IDXGIAdapter1* a = nullptr;
+		// The adapter of the device; before there is one, the first of the list (which the device will get).
+		IDXGIAdapter1* a = m_adapter;
+		std::vector<IDXGIAdapter1*> adapters;
+		if (a) a->AddRef();
+		else {
+			adapters = Ordered_Adapters();
+			if (!adapters.empty()) { a = adapters[0]; a->AddRef(); }
+			Release_Adapters(adapters);
+		}
 		unsigned __int64 bytes = 0;
-		if (m_factory->EnumAdapters1(0, &a) != DXGI_ERROR_NOT_FOUND) {
+		if (a) {
 			IDXGIAdapter3* a3 = nullptr;
 			DXGI_QUERY_VIDEO_MEMORY_INFO info;
 			if (SUCCEEDED(a->QueryInterface(__uuidof(IDXGIAdapter3), (void**)&a3))
@@ -885,8 +1153,35 @@ public:
 	}
 
 private:
+	// One device on the adapter (nullptr: the system's default); with the debug layer first in debug builds, if the
+	// SDK layers are installed.
+	HRESULT Try_Create_Device(IDXGIAdapter1* adapter, D3D_FEATURE_LEVEL* got)
+	{
+		const UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+		const D3D_FEATURE_LEVEL wanted[] = { D3D_FEATURE_LEVEL_11_0 };
+		const D3D_DRIVER_TYPE type = adapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE;
+		HRESULT hr = E_FAIL;
+#ifdef _DEBUG
+		hr = D3D11CreateDevice(adapter, type, nullptr, flags | D3D11_CREATE_DEVICE_DEBUG,
+							   wanted, 1, D3D11_SDK_VERSION, &m_device, got, &m_context);
+		if (FAILED(hr)) {
+			WWDEBUG_SAY(("D3D11: debug layer not available, device without debug layer.\n"));
+		}
+#endif
+		if (FAILED(hr)) {
+			hr = D3D11CreateDevice(adapter, type, nullptr, flags,
+								   wanted, 1, D3D11_SDK_VERSION, &m_device, got, &m_context);
+		}
+		if (FAILED(hr)) {
+			m_device = nullptr;
+			m_context = nullptr;
+		}
+		return hr;
+	}
+
 	void Release_Native()
 	{
+		D3D11_Release(m_adapter);
 		if (m_swap_chain) { m_swap_chain->Release(); m_swap_chain = nullptr; }
 		D3D11_Release(m_info_queue);
 		D3D11_Release(m_context);
@@ -895,7 +1190,7 @@ private:
 
 	// When the device is released, the game has freed all textures, buffers, shaders and state objects
 	// (RenderDevice::Shutdown, then Release_Draw_Resources). Anything the debug layer still reports as
-	// live -- except the device itself -- is a leak. Logs one "D3D11-LEBEND" line per object.
+	// live -- except the device itself -- is a leak. Logs one "D3D11-LIVE" line per object.
 	// Only with the debug layer (debug build).
 	void Report_Live_Objects()
 	{
@@ -916,7 +1211,7 @@ private:
 			if (!message) break;
 			if (SUCCEEDED(m_info_queue->GetMessage(i, message, &length)) && message->pDescription
 				&& message->ID != D3D11_MESSAGE_ID_LIVE_DEVICE) {
-				WWDEBUG_SAY(("D3D11-LEBEND %s\n", message->pDescription));
+				WWDEBUG_SAY(("D3D11-LIVE %s\n", message->pDescription));
 				++live;
 			}
 			::free(message);
@@ -929,6 +1224,8 @@ private:
 	}
 
 	IDXGIFactory1*			m_factory = nullptr;
+	IDXGIAdapter1*			m_adapter = nullptr;		///< the adapter of the device
+	bool					m_choice_logged = false;
 	ID3D11Device*			m_device = nullptr;
 	ID3D11DeviceContext*	m_context = nullptr;
 	IDXGISwapChain1*		m_swap_chain = nullptr;

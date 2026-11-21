@@ -4,16 +4,16 @@
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
 """Zuschauen in laufenden Partien, vollautomatisch (nur Windows).
 
-Je Variante drei Instanzen auf einem Rechner (-mehrfach, -netzLokal 1 bis 3), alle im Fenster und per Testablauf
+Je Variante drei Instanzen auf einem Rechner (-multiInstance, -netLocal 1 bis 3), alle im Fenster und per Testablauf
 (tools/netz/szenen/zuschauen_*.txt) bedient:
   Instanz 1 eroeffnet ein Netzwerkspiel, Instanz 2 tritt bei, beide spielen --logik Logik-Frames.
   Instanz 3 startet erst, wenn die Partie seit --vorlauf Sekunden laeuft, waehlt die laufende Partie in der LAN-Liste
   und wird Zuschauer (nicht in der Lobby, mitten in der Partie). Sie schaut zu, bewegt die Kamera und beendet sich.
   Danach startet Instanz 3 ein zweites Mal und schaut wieder zu.
-Jede Instanz schreibt den CRC-Verlauf jedes Logik-Frames und die TESTABLAUF-Zeilen (-crcLog, -crcLogInterval 1).
+Jede Instanz schreibt den CRC-Verlauf jedes Logik-Frames und die TESTSCRIPT-Zeilen (-crcLog, -crcLogInterval 1).
 
-Varianten (--variante, mehrfach; Standard alle vier): direkt, relais (lokaler Treffpunkt-Server, -netzNurRelais),
-emulator (-netzLatenz 80 -netzSchwankung 20 -netzVerlust 2 auf allen Instanzen), relais+emulator.
+Varianten (--variante, mehrfach; Standard alle vier): direkt, relais (lokaler Treffpunkt-Server, -netRelayOnly),
+emulator (-netLatency 80 -netJitter 20 -netLoss 2 auf allen Instanzen), relais+emulator.
 
 Pruefungen je Variante, Ergebnis als Tabelle OK/FEHLER in <out>/ergebnis.txt und auf der Konsole:
   1 Spieler gleich          Instanz 1 und 2 haben in jedem gemeinsamen Frame dieselbe Logik-CRC (kein Desync)
@@ -25,7 +25,7 @@ Pruefungen je Variante, Ergebnis als Tabelle OK/FEHLER in <out>/ergebnis.txt und
                             kein "dropped a command" und kein Befehl eines fremden Platzes (nur Debug-Bau)
   6 Kein Stocken            nachdem der Zuschauer gegangen ist, rechnet der Gastgeber in --stocken Sekunden mindestens
                             15 Frames je Sekunde weiter, und sein Protokoll zeigt keinen Wartebildschirm (Debug)
-  7 Ohne Absturz            alle Exit-Codes 0, keine neuen Absturzberichte, keine TESTABLAUF ERROR-Zeile
+  7 Ohne Absturz            alle Exit-Codes 0, keine neuen Absturzberichte, keine TESTSCRIPT ERROR-Zeile
   8 Ohne Assertion          keine ASSERTION- und keine "CRC mismatch"-Zeile in den Debug-Protokollen (nur Debug-Bau;
                             im Release-Bau "n/a")
 
@@ -43,7 +43,7 @@ sys.path.insert(0, HERE)
 import lan_lokal  # noqa: E402  (maus_anstossen, finde_server, SERVER_PORT)
 
 VARIANTEN = ("direkt", "relais", "emulator", "relais+emulator")
-EMULATOR = ["-netzLatenz", "80", "-netzSchwankung", "20", "-netzVerlust", "2"]
+EMULATOR = ["-netLatency", "80", "-netJitter", "20", "-netLoss", "2"]
 
 
 def crc_verlauf(pfad):
@@ -62,7 +62,7 @@ def testablauf(pfad):
     if not os.path.isfile(pfad):
         return []
     with open(pfad, encoding="latin-1", errors="replace") as f:
-        return [z.rstrip() for z in f if z.startswith("TESTABLAUF")]
+        return [z.rstrip() for z in f if z.startswith("TESTSCRIPT")]
 
 
 def gleich(a, b):
@@ -93,12 +93,12 @@ class Lauf:
         self.ergebnis = []
 
     def befehl(self, i, crc, szene):
-        cmd = [self.a.exe, "-win", "-mehrfach", "-netzLokal", str(i), "-xres", str(self.a.xres), "-yres", str(self.a.yres),
-               "-nologo", "-ignoreAsserts", "-crcLog", crc, "-crcLogInterval", "1", "-testablauf", szene]
+        cmd = [self.a.exe, "-win", "-multiInstance", "-netLocal", str(i), "-xres", str(self.a.xres), "-yres", str(self.a.yres),
+               "-nologo", "-ignoreAsserts", "-crcLog", crc, "-crcLogInterval", "1", "-testScript", szene]
         if "emulator" in self.variante:
-            cmd += EMULATOR + ["-netzSaat", str(100 + i)]
+            cmd += EMULATOR + ["-netSeed", str(100 + i)]
         if "relais" in self.variante:
-            cmd += ["-treffpunkt", f"127.0.0.1:{lan_lokal.SERVER_PORT}", "-netzNurRelais"]
+            cmd += ["-rendezvous", f"127.0.0.1:{lan_lokal.SERVER_PORT}", "-netRelayOnly"]
         return cmd
 
     def starte(self, i, crc, szene):
@@ -224,7 +224,7 @@ class Lauf:
                         f"{rate:.1f} Frames/s in {a.stocken} s nach dem Gehen, Wartebildschirm {len(warten) if debug else 'n/a'}")
         codes = [(n, pr.returncode) for n, pr in self.procs]
         crashes = sorted(set(glob.glob(os.path.join(self.exe_dir, "Crashes", "*"))) - crash_vorher)
-        fehlerzeilen = [t for p in (crc1, crc2) + tuple(z[1] for z in (z1, z2) if z) for t in testablauf(p) if "TESTABLAUF ERROR" in t]
+        fehlerzeilen = [t for p in (crc1, crc2) + tuple(z[1] for z in (z1, z2) if z) for t in testablauf(p) if "TESTSCRIPT ERROR" in t]
         self.pruefe(7, "Ohne Absturz", all(c == 0 for _, c in codes) and not crashes and not fehlerzeilen,
                     ", ".join(f"{n}: {c}" for n, c in codes) + f"; Absturzberichte {len(crashes)}; ERROR-Zeilen {len(fehlerzeilen)}"
                     + (f" ({fehlerzeilen[0]})" if fehlerzeilen else ""))

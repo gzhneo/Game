@@ -105,6 +105,12 @@
 //-------------------------------------------------------------------------------------------------
 void Object::attemptDamage( DamageInfo *damageInfo )
 {
+	if (TheGameLogic && TheGameLogic->isDestroyingAllObjects())
+	{
+		damageInfo->out.m_noEffect = TRUE;
+		return;
+	}
+
 	BodyModuleInterface* body = getBodyModule();
 	if (body)
 		body->attemptDamage( damageInfo );
@@ -240,6 +246,10 @@ Real Object::estimateDamage( DamageInfoInput& damageInfo ) const
 //-------------------------------------------------------------------------------------------------
 void Object::kill( DamageType damageType, DeathType deathType )
 {
+	// Death modules would fire weapons and create objects for players that no longer exist.
+	if (TheGameLogic && TheGameLogic->isDestroyingAllObjects())
+		return;
+
 	DamageInfo damageInfo;
 
 	// Do unmodifiable damage equal to their max health to kill.

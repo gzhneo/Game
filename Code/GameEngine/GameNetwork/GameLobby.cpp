@@ -1073,7 +1073,7 @@ void GameLobby::SetLocalIP( AsciiString localIP )
 }
 
 // Behind a router, ask it to forward the lobby and game ports so that players on the internet reach
-// us; on the loopback (-netzLokal) and with a public address there is nothing to forward.
+// us; on the loopback (-netLocal) and with a public address there is nothing to forward.
 void GameLobby::startPortMapping( void )
 {
 	if (TheGlobalData == nullptr || TheGlobalData->m_netNoPortMapping || TheGlobalData->m_netLocalInstance > 0

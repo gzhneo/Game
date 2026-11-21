@@ -1,7 +1,7 @@
 # Building and setting up
 
 How to build both games, set up the game data and start them: Generals (`GZHNeo.exe`) and Zero Hour (`GZHNeoZH.exe`),
-64 bit (x64) only, with the current MSVC Build Tools. Written for version 2.0-alpha-2.
+64 bit (x64) only, with the current MSVC Build Tools. Written for version 2.0-alpha-3.
 
 **To just play,** use the Release build (`cmake --build --preset x64-release`); Debug builds are slower and stop at
 assertions meant for development.
@@ -298,7 +298,7 @@ level, for example `-colorgrade`), `WorkerThreads` (like `-workers`), `PrefetchA
 with fewer than four cores). With a menu entry: `[Display] RenderBackend = d3d11|vulkan` (checkbox "Vulkan renderer" on
 the Display page), `Gamma = 0..100` (brightness slider, 50 is neutral, applied as a post effect). `FramesPerSecondLimit`
 in `GameData.ini` is the tick rate of the game logic and must not be raised. Test runs do not write the files
-(`-einstellungenNurLesen` and the test switches).
+(`-settingsReadOnly` and the test switches).
 
 ### Texture tiers SD, HD, UHD: the texture package
 
@@ -326,7 +326,7 @@ only decides how many top mip levels per texture are skipped. **SD loads the ori
 only SD.** A package archive with content other than textures and its manifest is rejected. The tier is chosen with
 `[Detail] TextureQuality = Auto|SD|HD|UHD` (default `Auto`) or the switch `-textureQuality auto|sd|hd|uhd`, which takes
 precedence; it takes effect on the next start. `Auto` always picks SD on the detail level *Low*, otherwise it decides by
-output height and video memory. The line `TEXTURPAKET` (HD, UHD) or `TEXTURESTUFE` (SD) in the
+output height and video memory. The line `TEXTUREPACK` (HD, UHD) or `TEXTURETIER` (SD) in the
 runner log (or `HD_ASSETS:` in the debug log) names wish, choice, reason and the available tiers. The AI tiers in BC7
 are made with `--stage`, `--bc7` and `--ai-reuse` (see `python tools/assets/build_texture_tiers.py --help`).
 
@@ -394,7 +394,7 @@ build-x64\GeneralsMD\Code\Main\Release\GZHNeoZH.exe -win
 ```
 
 The user folder (settings, saved games, replays, maps, mods) is `Documents\GZH Neo\Generals` or
-`Documents\GZH Neo\Zero Hour`, or the folder given with `-benutzerdaten`. It is separate from EA's folder of the
+`Documents\GZH Neo\Zero Hour`, or the folder given with `-userData`. It is separate from EA's folder of the
 original game (`Documents\Command and Conquer Generals [Zero Hour ]Data`), whose saved games and replays do not work
 with GZH Neo; only on the very first start, without `Settings.ini`, the game takes over the settings of EA's
 `Options.ini` (read only). Saved games, replays, maps and mods are not copied. After a crash or a hang (watchdog) there is a group of files under
@@ -431,13 +431,13 @@ early in `Code/App/WinMain.cpp`). The ones for playing and setting up:
 | `-win` | window instead of full screen |
 | `-fullscreen` | full screen (default without `-win`): a borderless window over the monitor; the resolution from the settings is scaled into it with the right aspect ratio (black bars if it differs) |
 | `-borderless` | borderless window at desktop size and resolution (overrides the settings), implies `-win` |
-| `-bildschirm <N>` | start on monitor N (1 = primary monitor, then in Windows' order); without it on the monitor of the last run |
+| `-monitor <N>` | start on monitor N (1 = primary monitor, then in Windows' order); without it on the monitor of the last run |
 | `-nologo` | skip the logo and intro videos |
 | `-quickstart` | like `-nologo`, also without the menu background scene and window animations |
 | `-noshellmap` | without the 3D background scene of the main menu |
 | `-noaudio` | start without sound |
 | `-noVSync` | present without vertical sync, regardless of the settings |
-| `-benutzerdaten <folder>` | user folder instead of `Documents\GZH Neo\<game>` (may contain characters outside the ANSI code page); EA's `Options.ini` is then not read |
+| `-userData <folder>` | user folder instead of `Documents\GZH Neo\<game>` (may contain characters outside the ANSI code page); EA's `Options.ini` is then not read |
 | `-baseGame <folder>` | (Zero Hour) folder with the Generals base archives |
 | `-mod <folder or archive>` | load a mod on top of the game data: a folder (its loose files, all `*.big` and `*.zip` in it, from HD on its texture package `Texturstufen\Paket`) or a single `.big`/`.zip`. Several `-mod`: the last one named is on top. A relative path is relative to the user folder, otherwise to its subfolder `Mods\`. Mods can also be switched on, off and ordered in the options menu (page Game, "Mods ..."). |
 | `-freeContent <ea\|free>` | free content (terrain, roads, water from CC0 scans, `ProjectData\Inhalt`): `free` (default) or only EA's data |
@@ -450,10 +450,10 @@ early in `Code/App/WinMain.cpp`). The ones for playing and setting up:
 | `-maxZoom <1..1.25>` | how far the player camera may zoom out (`[Camera] MaxZoomFactor`) |
 | `-waterQuality <0\|1\|2>` | water level: 0 = EA's still water, 1 = turbidity and Fresnel, 2 = also refraction |
 | `-waterTexture <ea\|free>` | water colour: EA's painted tile or the free tiles from CC0 photos (default) |
-| `-treffpunkt host[:port]` | rendezvous server for games over the internet (invite code, relay), several allowed; asked before the lists in `<user folder>\Rendezvous.txt` and `ProjectData\Network\Rendezvous.txt` |
-| `-netzOhneTreffpunkt` | no rendezvous servers: no invite code, no relay; LAN and direct connection by address stay |
-| `-netzOhnePortfreigabe` | do not ask the router to forward UDP 8086 and 8088 (otherwise through NAT-PMP or UPnP) |
-| `-testhilfen` | unlock the test aids (money, power, win mission, ...; single player only) |
+| `-rendezvous host[:port]` | rendezvous server for games over the internet (invite code, relay), several allowed; asked before the lists in `<user folder>\Rendezvous.txt` and `ProjectData\Network\Rendezvous.txt` |
+| `-netNoRendezvous` | no rendezvous servers: no invite code, no relay; LAN and direct connection by address stay |
+| `-netNoPortMapping` | do not ask the router to forward UDP 8086 and 8088 (otherwise through NAT-PMP or UPnP) |
+| `-testAids` | unlock the test aids (money, power, win mission, ...; single player only) |
 | `-mission <campaign> <no>` | start a campaign mission without the menu, for example `-mission USA 3` |
 | `-ignoreAsserts` | (debug build) suppress assertion dialogs; recommended for test runs |
 

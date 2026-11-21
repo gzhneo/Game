@@ -603,6 +603,35 @@ void WaterRenderObjClass::releaseFreeWaterTextures(void)
 	}
 }
 
+/** Textures filled from code (the DDS files read here, the wave normals, the white texture) come back empty
+after a lost device; textures with a file name reload by themselves. Load or compute them again. */
+void WaterRenderObjClass::reloadCodeTextures(void)
+{
+	releaseWater2Textures();		// loaded again on first use
+	releaseFreeWaterTextures();
+	if (UseFreeWaterTextures())
+	{
+		TextureClass **const slot[3] = { &m_waterNoiseTexture, &m_riverAlphaEdge, &m_waterSparklesTexture };
+		static const char *const names[3][2] = { { "wasser_rauschen.dds", "Noise0000.tga" },
+			{ "wasser_flusskante.dds", "TWAlphaEdge.tga" }, { "wasser_glitzern.dds", "WaterSurfaceBubbles.tga" } };
+		for (Int i = 0; i < 3; i++)
+		{	TextureClass *&tex = *slot[i];
+			if (tex)
+			{	REF_PTR_RELEASE(tex);
+				tex = LoadFreeWaterTexture(names[i][0], names[i][1]);
+			}
+		}
+	}
+	if (m_waveNormalTexture)
+		createWaveNormalTexture();
+	if (m_whiteTexture && m_whiteTexture->Is_Initialized())
+	{	SurfaceClass *surface = m_whiteTexture->Get_Surface_Level();
+		if (surface)
+			surface->DrawPixel(0, 0, 0xffffffff);
+		REF_PTR_RELEASE(surface);
+	}
+}
+
 Bool WaterRenderObjClass::useShoreFoam(void)
 {
 	if (WATER2_FOAM <= 0.0f || !useDepthCodedAlpha())

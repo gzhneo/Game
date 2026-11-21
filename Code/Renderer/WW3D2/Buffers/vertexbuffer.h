@@ -50,6 +50,7 @@
 #include "wwdebug.h"
 #include "refcount.h"
 #include "WW3D2/Common/renderfvf.h"
+#include "lockscratch.h"
 
 const unsigned dynamic_fvf_type=WW3D_FVF_XYZ|WW3D_FVF_NORMAL|WW3D_FVF_TEX2|WW3D_FVF_DIFFUSE;
 
@@ -69,9 +70,10 @@ class VertexBufferLockClass
 protected:
 	VertexBufferClass* VertexBuffer;
 	void* Vertices;
+	LockScratch Scratch;		// stands in for the buffer when the device lock fails
 
 	// This class can't be used directly, so constructor as to be protected
-	VertexBufferLockClass(VertexBufferClass* vertex_buffer_) : VertexBuffer(vertex_buffer_) {}
+	VertexBufferLockClass(VertexBufferClass* vertex_buffer_) : VertexBuffer(vertex_buffer_), Vertices(nullptr) {}
 public:
 	void* Get_Vertex_Array() { return Vertices; }
 };
@@ -177,6 +179,7 @@ public:
 	{
 		DynamicVBAccessClass* DynamicVBAccess;
 		VertexFormatXYZNDUV2 * Vertices;
+		LockScratch Scratch;		// stands in for the buffer when the device lock fails
 	public:
 		WriteLockClass(DynamicVBAccessClass* vb_access);
 		~WriteLockClass();

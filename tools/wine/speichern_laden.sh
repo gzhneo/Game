@@ -46,14 +46,14 @@ lauf() {
 	local D="$OUT/$name"
 	rm -rf "$D" && cp -r "$OUT/daten" "$D"
 	if [ "$name" = ohne ] || [ "$name" = ohne-tief ]; then
-		printf 'partie 2000000\r\nlogik %d\r\nbeenden\r\n' $((SPEICHERN + NACH + 20)) > "$D/ablauf.txt"
+		printf 'game 2000000\r\nlogic %d\r\nquit\r\n' $((SPEICHERN + NACH + 20)) > "$D/ablauf.txt"
 	else
-		printf 'partie 2000000\r\nlogik %d\r\nspeichern pruefung.sav\r\nladen pruefung.sav\r\npartie 2000000\r\nlogik %d\r\nbeenden\r\n' \
+		printf 'game 2000000\r\nlogic %d\r\nsave pruefung.sav\r\nload pruefung.sav\r\ngame 2000000\r\nlogic %d\r\nquit\r\n' \
 			"$SPEICHERN" "$NACH" > "$D/ablauf.txt"
 	fi
-	"$HERE/run_game.sh" "${RUNOPT[@]}" --zeit $(( (SPEICHERN + NACH) / 4 + 600 )) "$D" -einstellungenNurLesen \
+	"$HERE/run_game.sh" "${RUNOPT[@]}" --zeit $(( (SPEICHERN + NACH) / 4 + 600 )) "$D" -settingsReadOnly \
 		-d3d11Effects none -skirmish TestSkirmish -skirmishAI "$KI" -skirmishSeed "$SEED" \
-		-crcLog run.log -crcLogInterval 1 -testablauf ablauf.txt "$@" > "$D/lauf.out" 2>&1
+		-crcLog run.log -crcLogInterval 1 -testScript ablauf.txt "$@" > "$D/lauf.out" 2>&1
 }
 
 # vergleich <run without saving> <run with saving>: prints the result, the last line is the first differing
@@ -69,7 +69,7 @@ def lesen(p):
             t = z.split()
             if len(t) == 2 and t[0].isdigit() and len(t[1]) == 8:
                 werte[int(t[0])] = t[1]
-            elif 'TESTABLAUF ERROR' in z:
+            elif 'TESTSCRIPT ERROR' in z:
                 fehler.append(z.strip())
     return werte, fehler
 

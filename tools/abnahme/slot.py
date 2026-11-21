@@ -1,31 +1,32 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Warten, bis kein Spiel und kein WorldBuilder laeuft (Parallelbetrieb mehrerer Agenten und der Haupt-Session).
+"""Wait until no game and no WorldBuilder is running (parallel work of several agents and the main session).
 
-Faire Warteschlange (2026-09-24): Jeder Wartende legt eine Marke in die Schlange (SCHLANGE unten) (Name = Ankunftszeit
-und PID). Nur die aelteste lebende Marke darf starten; Marken toter Prozesse werden entfernt. Vorher gewann, wer
-zufaellig im richtigen Augenblick nachsah -- Serienskripte, die ein Spiel nach dem anderen starten, liessen andere
-Wartende stundenlang aushungern.
+Fair queue: every waiter puts a ticket into the queue folder (QUEUE below; name = arrival time and PID). Only the
+oldest living ticket may start; tickets of dead processes are removed. Without it whoever happened to look at the
+right moment won -- serial scripts that start one game after the other starved the others for hours.
 
-Startsperre: Zwischen "frei" und dem tatsaechlichen Spielstart vergehen einige Sekunden. wait_free() nimmt deshalb
-vor der Rueckkehr eine Startsperre (spielstart_<Zeit>_<PID>.lock in der Schlange) und haelt sie STARTSPERRE_S Sekunden; in der
-Zeit muss das Spiel gestartet sein, danach sieht tasklist es.
+Start lock: some seconds pass between "free" and the actual game start. wait_free() therefore takes a start lock
+(spielstart_<time>_<PID>.lock in the queue) before it returns and keeps it for START_LOCK_S seconds; the game has
+to be started by then, afterwards tasklist sees it.
 
-Aufruf: wait_free() direkt vor dem Spielstart; aus der Shell
+The file names in the queue folder (tickets ending in .marke2, spielstart_*.lock, folder spiel_warteschlange,
+environment variable CNC_WARTESCHLANGE) are a protocol shared by all sessions on a machine and stay as they are.
+
+Usage: wait_free() right before the game start; from the shell
     python -c "import sys; sys.path.insert(0, 'tools/abnahme'); from slot import wait_free; wait_free()"
-Mit parallel=3 fuer Laeufe mit -mehrfach.
+With parallel=3 for runs with -multiInstance.
 """
 import os, subprocess, time
 
 NAMES = ("gzhneo.exe", "gzhneozh.exe")
-# Ein Ordner fuer den ganzen Rechner (2026-09-26, aus dem Sitzungs-Scratchpad nach tools/abnahme uebernommen):
-# alle Worktrees, Agenten und die Haupt-Session muessen dieselbe Schlange sehen, sonst starten sie gleichzeitig.
-# Umgebungsvariable CNC_WARTESCHLANGE ueberschreibt den Ort.
-SCHLANGE = os.environ.get("CNC_WARTESCHLANGE") or os.path.join(
+# One folder for the whole machine: all worktrees, agents and the main session must see the same queue,
+# otherwise they start at the same time. The environment variable CNC_WARTESCHLANGE overrides the place.
+QUEUE = os.environ.get("CNC_WARTESCHLANGE") or os.path.join(
     os.environ.get("LOCALAPPDATA") or os.path.expanduser("~"), "CnC_Modernisierung", "spiel_warteschlange")
-STARTSPERRE_S = 90
-MARKE_MAX_S = 3600	# aeltere Marken gelten als verwaist (2026-09-25)
+START_LOCK_S = 90
+TICKET_MAX_S = 3600	# older tickets count as orphaned
 
 
 def _tasklist():
@@ -37,32 +38,32 @@ def _tasklist():
 
 
 def busy(out=None):
-    """Laufende Fenster-Spiele und WorldBuilder. Runner-Laeufe (Kommandozeile mit -runner, Replay-Pruefung ohne
-    Fenster) zaehlen nicht (2026-09-24): Sie umgehen die Einzelinstanz-Sperre, laufen aus ihrem eigenen Exe-Ordner
-    und stoeren Bildtests nicht -- vorher hielten parallele Replay-Pruefungen die ganze Warteschlange an.
-    `out` wird nur noch aus Vertraeglichkeit angenommen."""
+    """Running windowed games and WorldBuilder. Runner runs (command line with -runner, replay checks without a
+    window) do not count: they bypass the single-instance lock, run from their own exe folder and do not disturb
+    picture tests -- parallel replay checks used to stop the whole queue. `out` is only accepted for
+    compatibility."""
     ps = ("Get-CimInstance Win32_Process -Filter \"name='GZHNeo.exe' or name='GZHNeoZH.exe' or name like 'WorldBuilder%'\" "
           "| ForEach-Object { $_.Name + '|' + $_.ProcessId + '|' + $_.CommandLine }")
     try:
         r = subprocess.run(["powershell", "-NoProfile", "-Command", ps], capture_output=True, text=True,
                            errors="replace", timeout=120)
     except (OSError, subprocess.SubprocessError):
-        return ["Prozessabfrage?"]
+        return ["process query?"]
     if r.returncode != 0:
-        return ["Prozessabfrage?"]
+        return ["process query?"]
     found = []
     for line in r.stdout.splitlines():
-        teile = line.split("|", 2)
-        if len(teile) < 2:
+        parts = line.split("|", 2)
+        if len(parts) < 2:
             continue
-        cmd = teile[2].lower() if len(teile) > 2 else ""
+        cmd = parts[2].lower() if len(parts) > 2 else ""
         if " -runner" in cmd:
             continue
-        found.append(f"{teile[0]} ({teile[1]})")
+        found.append(f"{parts[0]} ({parts[1]})")
     return found
 
 
-def _lebende_pids(out):
+def _living_pids(out):
     pids = set()
     for line in out.splitlines():
         parts = [p.strip('"') for p in line.split('","')]
@@ -71,108 +72,108 @@ def _lebende_pids(out):
     return pids
 
 
-def _marke_parallel(m):
-    """Zulaessige Zahl gleichzeitiger Spiele des Wartenden (Markenname ..._p<N>.marke2); alte Marken ohne Angabe
-    gelten als exklusiv (1)."""
+def _ticket_parallel(m):
+    """Number of simultaneous games the waiter allows (ticket name ..._p<N>.marke2); old tickets without it
+    count as exclusive (1)."""
     rest = m[:-len(".marke2")].split("_")
     if len(rest) >= 3 and rest[2].startswith("p") and rest[2][1:].isdigit():
         return int(rest[2][1:])
     return 1
 
 
-def _erste_marke(meine, out, belegt=None):
-    """Name der aeltesten lebenden Marke, die jetzt starten koennte; tote Marken werden entfernt.
-    2026-09-25: Ein Wartender, der bei der aktuellen Belegung ohnehin nicht starten kann (er will weniger
-    gleichzeitige Spiele, als gerade laufen -- etwa exklusiv), haelt die Schlange nicht mehr auf; vorher hing sie
-    ueber eine Stunde hinter einem exklusiven Wartenden, weil andere Agenten laufend parallel spielen. Wird die
-    Maschine frei genug, ist er als Aeltester wieder zuerst dran."""
-    lebend = _lebende_pids(out)
-    # Markenformat 2 (2026-09-24): nur Marken dieser Fassung zaehlen. Warter mit einer aelteren slot.py im Speicher
-    # (Marken ".marke") zaehlten Runner-Replays als belegt, kamen nie an die Reihe und hielten alle anderen auf.
-    marken = sorted(m for m in os.listdir(SCHLANGE) if m.endswith(".marke2"))
-    for m in marken:
+def _first_ticket(mine, out, occupied=None):
+    """Name of the oldest living ticket that could start now; dead tickets are removed.
+    A waiter that cannot start with the current occupancy anyway (it wants fewer simultaneous games than are
+    running -- exclusive, for instance) no longer holds the queue up; it used to hang for over an hour behind an
+    exclusive waiter because other agents keep playing in parallel. When the machine is free enough it is first
+    again as the oldest."""
+    living = _living_pids(out)
+    # Only tickets of the current format count: waiters with an older slot.py in memory (tickets ".marke")
+    # counted runner replays as busy, never got their turn and held everybody else up.
+    tickets = sorted(m for m in os.listdir(QUEUE) if m.endswith(".marke2"))
+    for m in tickets:
         try:
             pid = int(m.split("_")[1].split(".")[0])
         except (IndexError, ValueError):
             continue
-        if m != meine and lebend and pid not in lebend:
+        if m != mine and living and pid not in living:
             try:
-                os.remove(os.path.join(SCHLANGE, m))
+                os.remove(os.path.join(QUEUE, m))
             except OSError:
                 pass
             continue
-        if m != meine and belegt is not None and belegt >= _marke_parallel(m):
+        if m != mine and occupied is not None and occupied >= _ticket_parallel(m):
             continue
-        # Verwaist (2026-09-25): ein Wartender, dessen Aufrufer beendet wurde, lebt weiter, startet aber nie (seine
-        # Ausgabe-Pipe ist tot) und hielt die Schlange ueber eine Stunde auf. Marken aelter als MARKE_MAX_S zaehlen
-        # deshalb nicht mehr als Kopf; geloescht werden sie nicht (fremde Dateien, Sandbox).
+        # Orphaned: a waiter whose caller was terminated lives on but never starts (its output pipe is dead) and
+        # held the queue up for over an hour. Tickets older than TICKET_MAX_S therefore no longer count as head;
+        # they are not deleted (foreign files, sandbox).
         try:
-            if m != meine and time.time() - float(m.split("_")[0]) > MARKE_MAX_S:
+            if m != mine and time.time() - float(m.split("_")[0]) > TICKET_MAX_S:
                 continue
         except ValueError:
             pass
         return m
-    return meine
+    return mine
 
 
-def _sperre_nehmen():
-    """Startsperre ohne Loeschen fremder Dateien (2026-09-24): sandboxierte Aufrufer duerfen fremde Dateien nicht
-    loeschen, eine abgelaufene gemeinsame Sperrdatei blockierte deshalb alle. Jetzt legt jeder Starter eine eigene
-    Datei spielstart_<Zeit>_<PID>.lock an; gesperrt ist, solange eine davon juenger als STARTSPERRE_S ist. Alte
-    Dateien werden nur versuchsweise entfernt."""
-    jetzt = time.time()
-    for f in os.listdir(SCHLANGE):
+def _take_lock():
+    """Start lock without deleting foreign files: sandboxed callers must not delete foreign files, so an expired
+    shared lock file used to block everybody. Every starter now creates its own file
+    spielstart_<time>_<PID>.lock; locked is as long as one of them is younger than START_LOCK_S. Old files are
+    only removed on a best-effort basis."""
+    now = time.time()
+    for f in os.listdir(QUEUE):
         if not f.startswith("spielstart_"):
             continue
-        pfad = os.path.join(SCHLANGE, f)
+        path = os.path.join(QUEUE, f)
         try:
-            alter = jetzt - os.path.getmtime(pfad)
+            age = now - os.path.getmtime(path)
         except OSError:
             continue
-        if alter < STARTSPERRE_S:
+        if age < START_LOCK_S:
             return False
         try:
-            os.remove(pfad)
+            os.remove(path)
         except OSError:
             pass
     try:
-        with open(os.path.join(SCHLANGE, f"spielstart_{jetzt:017.3f}_{os.getpid()}.lock"), "w") as fh:
+        with open(os.path.join(QUEUE, f"spielstart_{now:017.3f}_{os.getpid()}.lock"), "w") as fh:
             fh.write(time.ctime())
     except OSError:
         return False
     return True
 
 
-def _zu_voll(b, parallel):
-    """Belegt? WorldBuilder laeuft immer allein; sonst duerfen bis zu `parallel` Spiele laufen."""
+def _too_full(b, parallel):
+    """Occupied? WorldBuilder always runs alone; otherwise up to `parallel` games may run."""
     if any(x.lower().startswith("worldbuilder") or x.endswith("?") for x in b):
         return bool(b)
     return len(b) >= parallel
 
 
 def wait_free(log=print, parallel=1):
-    """parallel > 1 (2026-09-24): nur fuer Laeufe mit -mehrfach (run_render_test.py --mehrfach), die neben
-    anderen Instanzen laufen koennen. Standard 1: wie bisher, kein anderes Spiel darf laufen."""
-    os.makedirs(SCHLANGE, exist_ok=True)
-    meine = f"{time.time():017.3f}_{os.getpid()}_p{parallel}.marke2"
-    open(os.path.join(SCHLANGE, meine), "w").close()
+    """parallel > 1: only for runs with -multiInstance (run_render_test.py --multiInstance) that can run next to
+    other instances. Default 1: no other game may run."""
+    os.makedirs(QUEUE, exist_ok=True)
+    mine = f"{time.time():017.3f}_{os.getpid()}_p{parallel}.marke2"
+    open(os.path.join(QUEUE, mine), "w").close()
     n = 0
     try:
         while True:
             out = _tasklist()
             b = busy(out)
-            vorne = _erste_marke(meine, out, len(b)) == meine
-            if not _zu_voll(b, parallel) and vorne:
+            first = _first_ticket(mine, out, len(b)) == mine
+            if not _too_full(b, parallel) and first:
                 time.sleep(15)
-                if not _zu_voll(busy(), parallel) and _sperre_nehmen():
+                if not _too_full(busy(), parallel) and _take_lock():
                     return
                 continue
             if n % 20 == 0:
-                log(f"warte auf {b if b else 'andere in der Warteschlange'}")
+                log(f"waiting for {b if b else 'others in the queue'}")
             n += 1
             time.sleep(10)
     finally:
         try:
-            os.remove(os.path.join(SCHLANGE, meine))
+            os.remove(os.path.join(QUEUE, mine))
         except OSError:
             pass

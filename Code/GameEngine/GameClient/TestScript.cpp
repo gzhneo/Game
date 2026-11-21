@@ -6,104 +6,104 @@
 
 // FILE: TestScript.cpp ///////////////////////////////////////////////////////////////////////////
 // Test script: drives the game without input through menus, games, campaign missions, save/load and
-// up to exit (-testablauf <file>).
+// up to exit (-testScript <file>).
 //
 // File format: one command per line, words separated by spaces, '#' starts a comment. Window names
 // as in the .wnd files, e.g. MainMenu.wnd:ButtonSinglePlayer. Waiting commands take a timeout in main
 // loop passes as last word (default 9000); when it expires, the game ends with exit code 4
-// (GAME_EXIT_TEST_SCRIPT) and the line "TESTABLAUF ERROR".
+// (GAME_EXIT_TEST_SCRIPT) and the line "TESTSCRIPT ERROR".
 //
-//   warte <n>                 wait n passes
-//   logik <n> [timeout]       wait for n logic frames of the running game (network games run in real
+//   wait <n>                 wait n passes
+//   logic <n> [timeout]       wait for n logic frames of the running game (network games run in real
 //                             time, runner passes are much faster; default timeout 2000000)
-//   fenster <name> [timeout]  wait until the window is visible and enabled (parents visible too, menu
+//   window <name> [timeout]  wait until the window is visible and enabled (parents visible too, menu
 //                             transitions finished) for five passes in a row
-//   klick <name> [timeout]    like fenster, then a left click (mouse down/up on the window)
-//   esc <name> [timeout]      like fenster, then the Escape key to the window (e.g. credits)
-//   klickFalls <name> [t]     like klick, but no error if the window does not become usable within
+//   click <name> [timeout]    like window, then a left click (mouse down/up on the window)
+//   esc <name> [timeout]      like window, then the Escape key to the window (e.g. credits)
+//   clickIf <name> [t]     like click, but no error if the window does not become usable within
 //                             the timeout (default 120), for menus that return differently by path
-//   auswahl <name> <index>    select an entry of a combo box or list box, like fenster; a negative index
+//   select <name> <index>    select an entry of a combo box or list box, like window; a negative index
 //                             counts from the end of a combo box (-1: last entry)
-//   auswahlText <name> <text> [t] [spalte]
+//   selectText <name> <text> [t] [column]
 //                             select the first entry of a list box whose text contains <text> ("_" stands for a
-//                             space, e.g. "(4)" or "Tournament_Desert"); without <spalte> every column is searched
-//   liste <name>              write the entries of a combo box or list box to the log, all columns separated
+//                             space, e.g. "(4)" or "Tournament_Desert"); without <column> every column is searched
+//   list <name>              write the entries of a combo box or list box to the log, all columns separated
 //                             by " | " (for writing scripts)
-//   partie [timeout]          wait until a game (not the shell map) is loaded and running
-//   keinePartie [timeout]     wait until no game is running (the shell map does not count)
-//   hauptmenue [timeout]      wait until the main menu is on top and no transition runs (after a game
+//   game [timeout]          wait until a game (not the shell map) is loaded and running
+//   noGame [timeout]     wait until no game is running (the shell map does not count)
+//   mainMenu [timeout]      wait until the main menu is on top and no transition runs (after a game
 //                             it opens with a submenu depending on the path)
-//   spielmenue                Escape in a game: open or close the quit menu
-//   sieg                      Ctrl+W: win the mission/game immediately (debug only)
-//   siegBisEnde [timeout]     Ctrl+W every 300 passes until the game ends (cutscenes at mission start
+//   gameMenu                Escape in a game: open or close the quit menu
+//   win                      Ctrl+W: win the mission/game immediately (debug only)
+//   winUntilEnd [timeout]     Ctrl+W every 300 passes until the game ends (cutscenes at mission start
 //                             swallow the key; debug only)
-//   gegnerVernichten          Ctrl+Shift+Num/: destroy all enemies (debug only)
-//   niederlage                destroy all own objects, like a loss (debug only)
-//   speichern <file>          create a save game in the save folder
-//   laden <file>              load a save game (like the load menu)
-//   merke                     memory checkpoint: count live blocks per group (debug only, GameMemory)
-//   wachstum <name>           write groups (pool, tag, call stack) that grew since the checkpoint to
-//                             the log (lines "WACHSTUM,..."; debug only)
-//   schliessen                close the window (WM_CLOSE, like Alt+F4 or the title bar X)
-//   beenden                   exit like -quitAfter (clean up a running game first)
+//   destroyEnemies          Ctrl+Shift+Num/: destroy all enemies (debug only)
+//   lose                destroy all own objects, like a loss (debug only)
+//   save <file>          create a save game in the save folder
+//   load <file>              load a save game (like the load menu)
+//   checkpoint                     memory checkpoint: count live blocks per group (debug only, GameMemory)
+//   growth <name>           write groups (pool, tag, call stack) that grew since the checkpoint to
+//                             the log (lines "GROWTH,..."; debug only)
+//   close                close the window (WM_CLOSE, like Alt+F4 or the title bar X)
+//   quit                   exit like -quitAfter (clean up a running game first)
 //   log <text>                write a line to the log
 //   meta <name>               trigger a meta command like a hotkey; name as in CommandMap.ini
 //                             (e.g. DEMO_LOD_DECREASE, DEMO_TOGGLE_METRICS)
-//   foto                      screenshot (sshotNNN.bmp in the user folder); unlike meta TAKE_SCREENSHOT also
+//   screenshot                      screenshot (sshotNNN.bmp in the user folder); unlike meta TAKE_SCREENSHOT also
 //                             while the quit menu pauses a game and swallows meta commands
-//   testhilfe <name> [target] trigger a test helper like the -testhilfenAblauf script (names there,
-//                             target = player index, none = local player); needs -testhilfen
-//   markierung <x> <y>        place a beacon of the local player at the world position, like the beacon
-//                             button; markierung basis [dx dy]: at the first own building plus (dx, dy)
-//   spezial <power> [dx dy]   fire a special power of the local player (name as in SpecialPower.ini)
+//   testAid <name> [target] trigger a test helper like the -testAidsScript script (names there,
+//                             target = player index, none = local player); needs -testAids
+//   beacon <x> <y>          place a beacon of the local player at the world position, like the beacon
+//                             button; beacon base [dx dy]: at the first own building plus (dx, dy)
+//   special <power> [dx dy]   fire a special power of the local player (name as in SpecialPower.ini)
 //                             from the first own object that has it, at its position plus (dx, dy)
 //                             (default 200 200), like a click with the power's target cursor
-//   spezialUmlenken <power> [dx dy]  move the target of a running power with overridable destination
+//   specialRedirect <power> [dx dy]  move the target of a running power with overridable destination
 //                             (Spectre gunship, particle cannon) by (dx, dy), like a click with it
-//   bildlauf <art> <dir> <ticks> [pixels]  scroll the tactical view for <ticks> logic frames with injected
+//   scroll <kind> <dir> <ticks> [pixels]  scroll the tactical view for <ticks> logic frames with injected
 //                             input, then log camera travel in world units and screen fractions (line
-//                             "TESTABLAUF BILDLAUF ..."); art = taste (Shift+arrow key: the German
-//                             command map binds the plain arrows to unit selection), rand (cursor on the
-//                             screen edge, also in a window), ziehen (right button dragged by <pixels>,
-//                             default 200); dir = rechts, links, hoch, runter
-//   bildrate <n>              cap render-only frames at n per second (0 = none) for this run, to measure
+//                             "TESTSCRIPT SCROLLRUN ..."); kind = key (Shift+arrow key: the German
+//                             command map binds the plain arrows to unit selection), edge (cursor on the
+//                             screen edge, also in a window), drag (right button dragged by <pixels>,
+//                             default 200); dir = right, left, up, down
+//   frameRate <n>              cap render-only frames at n per second (0 = none) for this run, to measure
 //                             behaviour at a low frame rate
-//   bildlaufregler <n>        set the scroll speed like the options slider (ScrollFactor n/100) for this run
+//   scrollSpeed <n>        set the scroll speed like the options slider (ScrollFactor n/100) for this run
 //                             only; nothing is saved
-//   rad <n>                   mouse wheel over the screen centre, one step per pass: n > 0 zooms in, n < 0
+//   wheel <n>                   mouse wheel over the screen centre, one step per pass: n > 0 zooms in, n < 0
 //                             out; then logs zoom and height above ground
-//   ziehenEcht <dir> [n] [px] drag with the right button through the real input path: window messages
+//   dragReal <dir> [n] [px] drag with the right button through the real input path: window messages
 //                             (WM_RBUTTONDOWN, a WM_MOUSEMOVE of px pixels from where the cursor stands every
 //                             pass for n logic frames, WM_RBUTTONUP; default 150 and 40), the real cursor put on the window centre for
-//                             the command and back afterwards, the camera on the map centre first; logs "TESTABLAUF ZIEHENECHT ..." with the camera
+//                             the command and back afterwards, the camera on the map centre first; logs "TESTSCRIPT DRAGREAL ..." with the camera
 //                             travel, the visible ground across, whether the cursor was hidden while dragging
 //                             and stands on the starting point again
-//   radEcht <delta> [n]       n WM_MOUSEWHEEL messages of <delta> (120 = one notch, less = a fine wheel);
-//                             logs "TESTABLAUF RADECHT ..." with the zoom before and after
-//   tasteEcht <dir> [n]       Shift+arrow key as WM_KEYDOWN/WM_KEYUP held for n passes (default 60); logs
-//                             "TESTABLAUF TASTEECHT ..." with the camera travel
-//                             (the three Echt commands let real input through for their duration; with
-//                             -echteEingabeAus it stays out)
-//   klickEigenes              left click on the first own selectable unit on screen (structures only if
+//   wheelReal <delta> [n]       n WM_MOUSEWHEEL messages of <delta> (120 = one notch, less = a fine wheel);
+//                             logs "TESTSCRIPT WHEELREAL ..." with the zoom before and after
+//   keyReal <dir> [n]       Shift+arrow key as WM_KEYDOWN/WM_KEYUP held for n passes (default 60); logs
+//                             "TESTSCRIPT KEYREAL ..." with the camera travel
+//                             (the three Real commands let real input through for their duration; with
+//                             -noRealInput it stays out)
+//   clickOwn              left click on the first own selectable unit on screen (structures only if
 //                             there is no unit), like a real click; logs what is selected afterwards
-//   rahmen [margin] [edge]    drag a selection box with the left button over all own selectable units
+//   box [margin] [edge]    drag a selection box with the left button over all own selectable units
 //                             on screen (their projected centres plus margin pixels, default 8), like a
-//                             real drag; logs how many of them are selected afterwards. With edge (oben,
-//                             unten, links, rechts) the box reaches 200 pixels further on the other sides,
+//                             real drag; logs how many of them are selected afterwards. With edge (top,
+//                             bottom, left, right) the box reaches 200 pixels further on the other sides,
 //                             so the units stand near that edge of a large box but not on its line
-//   streifen [mitte]          widescreen only: move the camera so the first own unit stands in the 3D view
-//                             beside the control bar (mitte: behind the bar), then select all units on
+//   strip [middle]          widescreen only: move the camera so the first own unit stands in the 3D view
+//                             beside the control bar (middle: behind the bar), then select all units on
 //                             screen like the select-all key; the unit must be selected beside the bar and
 //                             not behind it
-//   zeichenbereich            check that the ground under points along the edges of the whole 3D viewport
+//   drawRegion            check that the ground under points along the edges of the whole 3D viewport
 //                             (with a widescreen layout down to the bottom of the screen) lies in the region
 //                             whose drawables are drawn each frame; logs the largest distance outside
-//   schliessenNach <ms>       WM_CLOSE after ms milliseconds from a timer; also arrives while the main
+//   closeAfter <ms>       WM_CLOSE after ms milliseconds from a timer; also arrives while the main
 //                             loop is blocked and only the load screen pumps messages
 //
 // Log: DebugLogFileD.txt (debug) and, with -crcLog, the runner log. Every line starts with
-// "TESTABLAUF". The commands act through the message stream or window input like the hotkeys; a
-// replay of the game is no longer equivalent after sieg/niederlage/speichern.
+// "TESTSCRIPT". The commands act through the message stream or window input like the hotkeys; a
+// replay of the game is no longer equivalent after win/lose/save.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "PreRTS.h"	// This must go first in EVERY cpp file in the GameEngine
@@ -168,13 +168,13 @@ struct ScriptState
 	size_t nextIndex = 0;
 	UnsignedInt pass = 0;			///< passes since the current command started
 	UnsignedInt stable = 0;					///< consecutive passes with the condition met
-	UnsignedInt startFrame = 0;			///< logic frame when the current command started (logik)
+	UnsignedInt startFrame = 0;			///< logic frame when the current command started (logic)
 	Bool done = FALSE;
 };
 
 ScriptState *s_state = nullptr;
 Bool s_loaded = FALSE;
-HANDLE s_closeTimer = nullptr;	///< schliessenNach
+HANDLE s_closeTimer = nullptr;	///< closeAfter
 
 VOID CALLBACK closeTimerCallback( PVOID, BOOLEAN )
 {
@@ -192,7 +192,7 @@ void logLine( const char *fmt, ... )
 	vsnprintf( line, sizeof( line ), fmt, args );
 	va_end( args );
 	char full[1100];
-	WWFormat::Into(full, "TESTABLAUF {}", line);
+	WWFormat::Into(full, "TESTSCRIPT {}", line);
 	GameEngine_RunnerLog( full );
 	DEBUG_LOG(( "%s\n", full ));
 }
@@ -346,7 +346,7 @@ void findClickable( Object *obj, void *userData )
 	search->screen = screen;
 }
 
-/// Own units for the rahmen command and the box over them.
+/// Own units for the box command and the box over them.
 struct BoxSearch
 {
 	static const Int MAX_UNITS = 64;
@@ -378,7 +378,7 @@ void findBoxUnit( Object *obj, void *userData )
 	search->drawables[search->count++] = obj->getDrawable()->getID();
 }
 
-/// State of a running bildlauf command.
+/// State of a running scroll command.
 struct ScrollRun
 {
 	std::uint64_t startMicros = 0;
@@ -432,31 +432,31 @@ Real groundDistance( Int x0, Int y0, Int x1, Int y1 )
 	return static_cast<Real>( sqrt( dx * dx + dy * dy ) );
 }
 
-/// bildlauf: TRUE when done.
+/// scroll: TRUE when done.
 Bool runScrollCommand( const ScriptCommand &b, UnsignedInt d )
 {
 	const std::string art = b.words.size() > 1 ? b.words[1] : std::string();
 	const std::string dir = b.words.size() > 2 ? b.words[2] : std::string();
 	const UnsignedInt ticks = b.words.size() > 3 ? static_cast<UnsignedInt>( atoi( b.words[3].c_str() ) ) : 30u;
 	const Int drag = b.words.size() > 4 ? atoi( b.words[4].c_str() ) : 200;
-	if( ( art != "taste" && art != "rand" && art != "ziehen" ) || ticks == 0 )
+	if( ( art != "key" && art != "edge" && art != "drag" ) || ticks == 0 )
 	{
-		failCommand( b, "bildlauf <taste|rand|ziehen> <rechts|links|hoch|runter> <ticks> [pixels]" );
+		failCommand( b, "scroll <key|edge|drag> <right|left|up|down> <ticks> [pixels]" );
 		return FALSE;
 	}
 	Int sx = 0, sy = 0, key = KEY_NONE;
-	if( dir == "rechts" ) { sx = 1; key = KEY_RIGHT; }
-	else if( dir == "links" ) { sx = -1; key = KEY_LEFT; }
-	else if( dir == "hoch" ) { sy = -1; key = KEY_UP; }
-	else if( dir == "runter" ) { sy = 1; key = KEY_DOWN; }
+	if( dir == "right" ) { sx = 1; key = KEY_RIGHT; }
+	else if( dir == "left" ) { sx = -1; key = KEY_LEFT; }
+	else if( dir == "up" ) { sy = -1; key = KEY_UP; }
+	else if( dir == "down" ) { sy = 1; key = KEY_DOWN; }
 	else
 	{
-		failCommand( b, "bildlauf: unknown direction" );
+		failCommand( b, "scroll: unknown direction" );
 		return FALSE;
 	}
 	if( !inMatch() || TheTacticalView == nullptr || TheDisplay == nullptr )
 	{
-		failCommand( b, "bildlauf needs a running game" );
+		failCommand( b, "scroll needs a running game" );
 		return FALSE;
 	}
 
@@ -481,18 +481,18 @@ Bool runScrollCommand( const ScriptCommand &b, UnsignedInt d )
 		s_scrollRun.down = groundDistance( centre.x, oy, centre.x, height - 1 );
 		s_scrollRun.zoom = TheTacticalView->getZoom();
 		GameWindow *focus = TheWindowManager ? TheWindowManager->winGetFocus() : nullptr;
-		if( focus != nullptr && art == "taste" )
+		if( focus != nullptr && art == "key" )
 		{
 			// a focused window would take the arrow keys, as with a real keyboard
-			logLine( "BILDLAUF focus %s cleared", focus->winGetInstanceData()->m_decoratedNameString.str() );
+			logLine( "SCROLLRUN focus %s cleared", focus->winGetInstanceData()->m_decoratedNameString.str() );
 			TheWindowManager->winSetFocus( nullptr );
 		}
 		s_scrollRun.savedEdgeInWindow = TheGlobalData->m_edgeScrollInWindow;
-		if( art == "rand" )
+		if( art == "edge" )
 			TheWritableGlobalData->m_edgeScrollInWindow = TRUE;
-		if( art == "taste" )
+		if( art == "key" )
 			appendKey( GameMessage::MSG_RAW_KEY_DOWN, key, KEY_STATE_DOWN | KEY_STATE_SHIFT );
-		else if( art == "ziehen" )
+		else if( art == "drag" )
 		{
 			appendMousePosition( centre );
 			appendRightButton( GameMessage::MSG_RAW_MOUSE_RIGHT_BUTTON_DOWN, centre );
@@ -501,9 +501,9 @@ Bool runScrollCommand( const ScriptCommand &b, UnsignedInt d )
 	if( d < ticks )
 	{
 		// The real cursor position follows every tick after the scroll step; repeat ours before the next one.
-		if( art == "rand" )
+		if( art == "edge" )
 			appendMousePosition( edge );
-		else if( art == "ziehen" )
+		else if( art == "drag" )
 			appendMousePosition( dragged );
 		return FALSE;
 	}
@@ -511,9 +511,9 @@ Bool runScrollCommand( const ScriptCommand &b, UnsignedInt d )
 	const std::uint64_t micros = Engine::Clock::microseconds() - s_scrollRun.startMicros;
 	Coord3D pos;
 	TheTacticalView->getPosition( &pos );
-	if( art == "taste" )
+	if( art == "key" )
 		appendKey( GameMessage::MSG_RAW_KEY_UP, key, KEY_STATE_UP | KEY_STATE_SHIFT );
-	else if( art == "ziehen" )
+	else if( art == "drag" )
 		appendRightButton( GameMessage::MSG_RAW_MOUSE_RIGHT_BUTTON_UP, dragged );
 	appendMousePosition( centre );
 	TheWritableGlobalData->m_edgeScrollInWindow = s_scrollRun.savedEdgeInWindow;
@@ -528,16 +528,16 @@ Bool runScrollCommand( const ScriptCommand &b, UnsignedInt d )
 	const Int px = moved.x - centre.x, py = moved.y - centre.y;
 	const Real screenFraction = !inside ? -1.0f : sx != 0 ? static_cast<Real>( px < 0 ? -px : px ) / static_cast<Real>( width )
 		: static_cast<Real>( py < 0 ? -py : py ) / static_cast<Real>( height );
-	logLine( "BILDLAUF art=%s dir=%s res=%dx%d ticks=%u ms=%.1f world=%.2f world_s=%.1f across=%.1f down=%.1f "
+	logLine( "SCROLLRUN kind=%s dir=%s res=%dx%d ticks=%u ms=%.1f world=%.2f world_s=%.1f across=%.1f down=%.1f "
 		"view_s=%.4f screen_px=%d,%d screen_s=%.4f zoom=%.3f zoom_end=%.3f height=%.1f pitch=%.3f drag=%d factor=%.2f",
 		art.c_str(), dir.c_str(), width, height, ticks, static_cast<Real>( micros ) / 1000.0f, world, world / seconds,
 		across, down, world / seconds / ( sx != 0 ? across : down ), px, py, inside ? screenFraction / seconds : -1.0f,
 		s_scrollRun.zoom, TheTacticalView->getZoom(), TheTacticalView->getHeightAboveGround(), TheTacticalView->getPitch(),
-		art == "ziehen" ? drag : 0, TheGlobalData->m_keyboardScrollFactor );
+		art == "drag" ? drag : 0, TheGlobalData->m_keyboardScrollFactor );
 	return TRUE;
 }
 
-/// State of a running ziehenEcht, radEcht or tasteEcht command.
+/// State of a running dragReal, wheelReal or keyReal command.
 struct RealInputRun
 {
 	POINT savedCursor = {};
@@ -556,10 +556,10 @@ RealInputRun s_realRun;
 Int directionOf( const std::string &dir, Int &sx, Int &sy )
 {
 	sx = sy = 0;
-	if( dir == "rechts" ) { sx = 1; return VK_RIGHT; }
-	if( dir == "links" ) { sx = -1; return VK_LEFT; }
-	if( dir == "hoch" ) { sy = -1; return VK_UP; }
-	if( dir == "runter" ) { sy = 1; return VK_DOWN; }
+	if( dir == "right" ) { sx = 1; return VK_RIGHT; }
+	if( dir == "left" ) { sx = -1; return VK_LEFT; }
+	if( dir == "up" ) { sy = -1; return VK_UP; }
+	if( dir == "down" ) { sy = 1; return VK_DOWN; }
 	return 0;
 }
 
@@ -605,17 +605,17 @@ Bool executeCommand( const ScriptCommand &b )
 	const std::string arg1 = b.words.size() > 1 ? b.words[1] : std::string();
 	const UnsignedInt d = s_state->pass;
 
-	if( cmd == "warte" )
+	if( cmd == "wait" )
 		return d >= static_cast<UnsignedInt>( atoi( arg1.c_str() ) );
 
-	if( cmd == "logik" )
+	if( cmd == "logic" )
 	{
 		const UnsignedInt now = TheGameLogic ? TheGameLogic->getFrame() : 0;
 		if( d == 0 )
 			s_state->startFrame = now;
 		if( now >= s_state->startFrame + static_cast<UnsignedInt>( atoi( arg1.c_str() ) ) )
 		{
-			logLine( "OK line %d logik %s after %u passes, logic frame %u", b.line, arg1.c_str(), d, now );
+			logLine( "OK line %d logic %s after %u passes, logic frame %u", b.line, arg1.c_str(), d, now );
 			return TRUE;
 		}
 		if( d >= ( b.words.size() > 2 ? timeout( b, 2 ) : 2000000u ) )
@@ -623,7 +623,7 @@ Bool executeCommand( const ScriptCommand &b )
 		return FALSE;
 	}
 
-	if( cmd == "fenster" || cmd == "klick" || cmd == "klickFalls" || cmd == "esc" || cmd == "auswahl" || cmd == "auswahlText" || cmd == "liste" )
+	if( cmd == "window" || cmd == "click" || cmd == "clickIf" || cmd == "esc" || cmd == "select" || cmd == "selectText" || cmd == "list" )
 	{
 		GameWindow *win = findWindow( arg1 );
 		const char *reason = windowNotReady( win, d );
@@ -633,21 +633,21 @@ Bool executeCommand( const ScriptCommand &b )
 			s_state->stable = 0;
 		if( s_state->stable < STABLE_PASSES )
 		{
-			if( cmd == "klickFalls" )
+			if( cmd == "clickIf" )
 			{
 				const UnsignedInt f = b.words.size() > 2 ? timeout( b, 2 ) : 120;
 				if( d >= f )
 				{
-					logLine( "OK line %d klickFalls %s skipped (%s)", b.line, arg1.c_str(), reason ? reason : "not stable" );
+					logLine( "OK line %d clickIf %s skipped (%s)", b.line, arg1.c_str(), reason ? reason : "not stable" );
 					return TRUE;
 				}
 				return FALSE;
 			}
-			if( d >= timeout( b, ( cmd == "auswahl" || cmd == "auswahlText" ) ? 3 : 2 ) )
+			if( d >= timeout( b, ( cmd == "select" || cmd == "selectText" ) ? 3 : 2 ) )
 				failCommand( b, reason ? reason : "not stable" );
 			return FALSE;
 		}
-		if( cmd == "klick" || cmd == "klickFalls" )
+		if( cmd == "click" || cmd == "clickIf" )
 		{
 			Int x, y, w, h;
 			win->winGetScreenPosition( &x, &y );
@@ -667,7 +667,7 @@ Bool executeCommand( const ScriptCommand &b )
 			TheWindowManager->winSendInputMsg( win, GWM_CHAR, KEY_ESC, KEY_STATE_DOWN );
 			TheWindowManager->winSendInputMsg( win, GWM_CHAR, KEY_ESC, KEY_STATE_UP );
 		}
-		else if( cmd == "auswahl" )
+		else if( cmd == "select" )
 		{
 			Int index = b.words.size() > 2 ? atoi( b.words[2].c_str() ) : 0;
 			if( BitTest( win->winGetStyle(), GWS_COMBO_BOX ) )
@@ -685,11 +685,11 @@ Bool executeCommand( const ScriptCommand &b )
 				return FALSE;
 			}
 		}
-		else if( cmd == "auswahlText" )
+		else if( cmd == "selectText" )
 		{
 			if( !BitTest( win->winGetStyle(), GWS_SCROLL_LISTBOX ) || b.words.size() < 3 )
 			{
-				failCommand( b, "auswahlText needs a list box and a text" );
+				failCommand( b, "selectText needs a list box and a text" );
 				return FALSE;
 			}
 			std::string wanted = b.words[2];
@@ -717,7 +717,7 @@ Bool executeCommand( const ScriptCommand &b )
 			}
 			GadgetListBoxSetSelected( win, found );
 		}
-		else if( cmd == "liste" )
+		else if( cmd == "list" )
 		{
 			GameWindow *lb = nullptr;
 			if( BitTest( win->winGetStyle(), GWS_COMBO_BOX ) )
@@ -726,7 +726,7 @@ Bool executeCommand( const ScriptCommand &b )
 				lb = win;
 			const Int n = lb ? GadgetListBoxGetNumEntries( lb ) : 0;
 			const Int columns = lb ? GadgetListBoxGetNumColumns( lb ) : 0;
-			logLine( "LISTE %s %d entries, %d columns", arg1.c_str(), n, columns );
+			logLine( "LIST %s %d entries, %d columns", arg1.c_str(), n, columns );
 			for( Int i = 0; i < n; ++i )
 			{
 				std::string row;
@@ -738,31 +738,31 @@ Bool executeCommand( const ScriptCommand &b )
 						row += " | ";
 					row += text.str();
 				}
-				logLine( "LISTE %s %d %s", arg1.c_str(), i, row.c_str() );
+				logLine( "LIST %s %d %s", arg1.c_str(), i, row.c_str() );
 			}
 		}
 		logLine( "OK line %d %s %s", b.line, cmd.c_str(), arg1.c_str() );
 		return TRUE;
 	}
 
-	if( cmd == "bildlauf" )
+	if( cmd == "scroll" )
 		return runScrollCommand( b, d );
 
-	if( cmd == "bildrate" )
+	if( cmd == "frameRate" )
 	{
 		TheGameEngine->setRenderFpsLimit( atoi( arg1.c_str() ) );
-		logLine( "OK line %d bildrate %s", b.line, arg1.c_str() );
+		logLine( "OK line %d frameRate %s", b.line, arg1.c_str() );
 		return TRUE;
 	}
 
-	if( cmd == "bildlaufregler" )
+	if( cmd == "scrollSpeed" )
 	{
 		TheWritableGlobalData->m_keyboardScrollFactor = static_cast<Real>( atoi( arg1.c_str() ) ) / 100.0f;
-		logLine( "OK line %d bildlaufregler %s", b.line, arg1.c_str() );
+		logLine( "OK line %d scrollSpeed %s", b.line, arg1.c_str() );
 		return TRUE;
 	}
 
-	if( cmd == "hauptmenue" )
+	if( cmd == "mainMenu" )
 	{
 		WindowLayout *topWindow = TheShell ? TheShell->top() : nullptr;
 		const Bool ready = topWindow && topWindow->getFilename().compareNoCase( "Menus/MainMenu.wnd" ) == 0 && !inMatch()
@@ -778,13 +778,13 @@ Bool executeCommand( const ScriptCommand &b )
 				failCommand( b, "main menu not reached" );
 			return FALSE;
 		}
-		logLine( "OK line %d hauptmenue after %u passes", b.line, d );
+		logLine( "OK line %d mainMenu after %u passes", b.line, d );
 		return TRUE;
 	}
 
-	if( cmd == "partie" || cmd == "keinePartie" )
+	if( cmd == "game" || cmd == "noGame" )
 	{
-		const Bool target = ( cmd == "partie" );
+		const Bool target = ( cmd == "game" );
 		if( inMatch() == target && ( target || TheGameLogic == nullptr || !TheGameLogic->isLoadingMap() ) )
 			++s_state->stable;
 		else
@@ -800,21 +800,21 @@ Bool executeCommand( const ScriptCommand &b )
 		return TRUE;
 	}
 
-	if( cmd == "spielmenue" )
+	if( cmd == "gameMenu" )
 	{
 		TheMessageStream->appendMessage( GameMessage::MSG_META_OPTIONS );
-		logLine( "OK line %d spielmenue", b.line );
+		logLine( "OK line %d gameMenu", b.line );
 		return TRUE;
 	}
 
 #if defined(_DEBUG)
-	if( cmd == "sieg" )
+	if( cmd == "win" )
 	{
 		TheMessageStream->appendMessage( GameMessage::MSG_META_DEBUG_WIN );
-		logLine( "OK line %d sieg", b.line );
+		logLine( "OK line %d win", b.line );
 		return TRUE;
 	}
-	if( cmd == "siegBisEnde" )
+	if( cmd == "winUntilEnd" )
 	{
 		if( !inMatch() && ( TheGameLogic == nullptr || !TheGameLogic->isLoadingMap() ) )
 			++s_state->stable;
@@ -822,7 +822,7 @@ Bool executeCommand( const ScriptCommand &b )
 			s_state->stable = 0;
 		if( s_state->stable >= STABLE_PASSES )
 		{
-			logLine( "OK line %d siegBisEnde after %u passes", b.line, d );
+			logLine( "OK line %d winUntilEnd after %u passes", b.line, d );
 			return TRUE;
 		}
 		if( inMatch() && d % 300 == 0 )
@@ -831,13 +831,13 @@ Bool executeCommand( const ScriptCommand &b )
 			failCommand( b, "game does not end" );
 		return FALSE;
 	}
-	if( cmd == "gegnerVernichten" )
+	if( cmd == "destroyEnemies" )
 	{
 		TheMessageStream->appendMessage( GameMessage::MSG_META_DEMO_KILL_ALL_ENEMIES );
-		logLine( "OK line %d gegnerVernichten", b.line );
+		logLine( "OK line %d destroyEnemies", b.line );
 		return TRUE;
 	}
-	if( cmd == "niederlage" )
+	if( cmd == "lose" )
 	{
 		Player *local = ThePlayerList ? ThePlayerList->getLocalPlayer() : nullptr;
 		if( local == nullptr )
@@ -852,12 +852,12 @@ Bool executeCommand( const ScriptCommand &b )
 			GameMessage *msg = TheMessageStream->appendMessage( GameMessage::MSG_DEBUG_KILL_OBJECT );
 			msg->appendObjectIDArgument( id );
 		}
-		logLine( "OK line %d niederlage, %d objects", b.line, static_cast<Int>( ids.size() ) );
+		logLine( "OK line %d lose, %d objects", b.line, static_cast<Int>( ids.size() ) );
 		return TRUE;
 	}
 #endif
 
-	if( cmd == "speichern" )
+	if( cmd == "save" )
 	{
 		const SaveCode code = TheGameState->saveGame( AsciiString( arg1.c_str() ), UnicodeString( L"Test script" ), SAVE_FILE_TYPE_NORMAL );
 		if( code != SaveCode::SC_OK )
@@ -865,11 +865,11 @@ Bool executeCommand( const ScriptCommand &b )
 			failCommand( b, "save failed" );
 			return FALSE;
 		}
-		logLine( "OK line %d speichern %s", b.line, arg1.c_str() );
+		logLine( "OK line %d save %s", b.line, arg1.c_str() );
 		return TRUE;
 	}
 
-	if( cmd == "laden" )
+	if( cmd == "load" )
 	{
 		// like doLoadGame (PopupSaveLoad.cpp): prepare a single player game first when in the main menu
 		AvailableGameInfo info;
@@ -884,38 +884,38 @@ Bool executeCommand( const ScriptCommand &b )
 			failCommand( b, "load failed" );
 			return FALSE;
 		}
-		logLine( "OK line %d laden %s", b.line, arg1.c_str() );
+		logLine( "OK line %d load %s", b.line, arg1.c_str() );
 		return TRUE;
 	}
 
-	if( cmd == "merke" )
+	if( cmd == "checkpoint" )
 	{
 #ifdef MEMORYPOOL_DEBUG
 		debugMemorySetMark();
 #endif
-		logLine( "OK line %d merke", b.line );
+		logLine( "OK line %d checkpoint", b.line );
 		return TRUE;
 	}
 
-	if( cmd == "wachstum" )
+	if( cmd == "growth" )
 	{
 #ifdef MEMORYPOOL_DEBUG
 		debugMemoryReportGrowth( arg1.empty() ? "unnamed" : arg1.c_str() );
 #endif
-		logLine( "OK line %d wachstum %s", b.line, arg1.c_str() );
+		logLine( "OK line %d growth %s", b.line, arg1.c_str() );
 		return TRUE;
 	}
 
-	if( cmd == "schliessen" )
+	if( cmd == "close" )
 	{
-		logLine( "OK line %d schliessen", b.line );
+		logLine( "OK line %d close", b.line );
 		::PostMessage( ApplicationHWnd, WM_CLOSE, 0, 0 );
 		return TRUE;
 	}
 
-	if( cmd == "beenden" )
+	if( cmd == "quit" )
 	{
-		logLine( "OK line %d beenden", b.line );
+		logLine( "OK line %d quit", b.line );
 		if( TheGameLogic && TheGameLogic->isInGame() )
 		{
 			if( TheRecorder && TheRecorder->getMode() == RecorderModeType::RECORDERMODETYPE_RECORD )
@@ -927,11 +927,11 @@ Bool executeCommand( const ScriptCommand &b )
 	}
 
 	// Hotkeys, test helpers and exit during the load screen, for the leak check
-	if( cmd == "foto" )
+	if( cmd == "screenshot" )
 	{
 		if( TheDisplay != nullptr )
 			TheDisplay->takeScreenShot();
-		logLine( "OK line %d foto", b.line );
+		logLine( "OK line %d screenshot", b.line );
 		return TRUE;
 	}
 
@@ -948,12 +948,12 @@ Bool executeCommand( const ScriptCommand &b )
 		return TRUE;
 	}
 
-	if( cmd == "rad" )
+	if( cmd == "wheel" )
 	{
 		const Int steps = atoi( arg1.c_str() );
 		if( !inMatch() || TheTacticalView == nullptr || TheDisplay == nullptr || steps == 0 )
 		{
-			failCommand( b, "rad <n> needs a running game and n != 0" );
+			failCommand( b, "wheel <n> needs a running game and n != 0" );
 			return FALSE;
 		}
 		const UnsignedInt count = static_cast<UnsignedInt>( steps < 0 ? -steps : steps );
@@ -965,19 +965,19 @@ Bool executeCommand( const ScriptCommand &b )
 		}
 		if( d < count + 60 )
 			return FALSE;	// let the height settle
-		logLine( "OK line %d rad %d zoom %.3f height %.1f current %.1f", b.line, steps, TheTacticalView->getZoom(),
+		logLine( "OK line %d wheel %d zoom %.3f height %.1f current %.1f", b.line, steps, TheTacticalView->getZoom(),
 			TheTacticalView->getHeightAboveGround(), TheTacticalView->getCurrentHeightAboveGround() );
 		return TRUE;
 	}
 
-	if( cmd == "ziehenEcht" )
+	if( cmd == "dragReal" )
 	{
 		Int sx, sy;
 		const UnsignedInt frames = b.words.size() > 2 ? static_cast<UnsignedInt>( atoi( b.words[2].c_str() ) ) : 150u;
 		const Int step = b.words.size() > 3 ? atoi( b.words[3].c_str() ) : 40;
 		if( directionOf( arg1, sx, sy ) == 0 || frames == 0 )
 		{
-			failCommand( b, "ziehenEcht <rechts|links|hoch|runter> [frames] [pixels]" );
+			failCommand( b, "dragReal <right|left|up|down> [frames] [pixels]" );
 			return FALSE;
 		}
 		if( d == 0 )
@@ -993,7 +993,7 @@ Bool executeCommand( const ScriptCommand &b )
 				middle.z = 0.0f;
 				TheTacticalView->lookAt( &middle );
 			}
-			if( !beginRealInput( b, "ziehenEcht needs a running game" ) )
+			if( !beginRealInput( b, "dragReal needs a running game" ) )
 				return FALSE;
 			GetCursorPos( &s_realRun.savedCursor );
 			POINT screen = s_realRun.centre;
@@ -1032,7 +1032,7 @@ Bool executeCommand( const ScriptCommand &b )
 			return FALSE;	// let the release and the camera settle
 		const Int offX = cursor.x - s_realRun.centre.x, offY = cursor.y - s_realRun.centre.y;
 		const Bool back = offX >= -1 && offX <= 1 && offY >= -1 && offY <= 1;
-		logLine( "ZIEHENECHT dir=%s frames=%u step=%d focus=%d dragged=%d hidden=%d back=%d cursor=%d,%d visible=%d "
+		logLine( "DRAGREAL dir=%s frames=%u step=%d focus=%d dragged=%d hidden=%d back=%d cursor=%d,%d visible=%d "
 			"still_dragging=%d world=%.1f across=%.1f", arg1.c_str(), frames, step, s_realRun.focus ? 1 : 0,
 			s_realRun.dragged ? 1 : 0, ( s_realRun.dragged && s_realRun.hidden ) ? 1 : 0, back ? 1 : 0, offX, offY,
 			TheMouse->getVisibility() ? 1 : 0, TheMouse->isDragScrolling() ? 1 : 0, realInputTravel(), s_realRun.across );
@@ -1041,16 +1041,16 @@ Bool executeCommand( const ScriptCommand &b )
 		return TRUE;
 	}
 
-	if( cmd == "radEcht" )
+	if( cmd == "wheelReal" )
 	{
 		const Int delta = atoi( arg1.c_str() );
 		const UnsignedInt count = b.words.size() > 2 ? static_cast<UnsignedInt>( atoi( b.words[2].c_str() ) ) : 1u;
 		if( delta == 0 || count == 0 )
 		{
-			failCommand( b, "radEcht <delta> [count]" );
+			failCommand( b, "wheelReal <delta> [count]" );
 			return FALSE;
 		}
-		if( d == 0 && !beginRealInput( b, "radEcht needs a running game" ) )
+		if( d == 0 && !beginRealInput( b, "wheelReal needs a running game" ) )
 			return FALSE;
 		if( d < count )
 		{
@@ -1062,26 +1062,26 @@ Bool executeCommand( const ScriptCommand &b )
 		}
 		if( d < count + 60 )
 			return FALSE;	// let the height settle
-		logLine( "RADECHT delta=%d count=%u focus=%d fine=%d zoom_before=%.4f zoom_after=%.4f height=%.1f", delta, count,
+		logLine( "WHEELREAL delta=%d count=%u focus=%d fine=%d zoom_before=%.4f zoom_after=%.4f height=%.1f", delta, count,
 			s_realRun.focus ? 1 : 0, TheMouse->hasFineWheel() ? 1 : 0, s_realRun.zoom, TheTacticalView->getZoom(),
 			TheTacticalView->getCurrentHeightAboveGround() );
 		TheWritableGlobalData->m_testRealInput = FALSE;
 		return TRUE;
 	}
 
-	if( cmd == "tasteEcht" )
+	if( cmd == "keyReal" )
 	{
 		Int sx, sy;
 		const Int key = directionOf( arg1, sx, sy );
 		const UnsignedInt hold = b.words.size() > 2 ? static_cast<UnsignedInt>( atoi( b.words[2].c_str() ) ) : 60u;
 		if( key == 0 || hold == 0 )
 		{
-			failCommand( b, "tasteEcht <rechts|links|hoch|runter> [passes]" );
+			failCommand( b, "keyReal <right|left|up|down> [passes]" );
 			return FALSE;
 		}
 		if( d == 0 )
 		{
-			if( !beginRealInput( b, "tasteEcht needs a running game" ) )
+			if( !beginRealInput( b, "keyReal needs a running game" ) )
 				return FALSE;
 			GameWindow *focus = TheWindowManager ? TheWindowManager->winGetFocus() : nullptr;
 			if( focus != nullptr )
@@ -1103,13 +1103,13 @@ Bool executeCommand( const ScriptCommand &b )
 		}
 		if( d < hold + 30 )
 			return FALSE;
-		logLine( "TASTEECHT dir=%s passes=%u focus=%d world=%.1f across=%.1f", arg1.c_str(), hold, s_realRun.focus ? 1 : 0,
+		logLine( "KEYREAL dir=%s passes=%u focus=%d world=%.1f across=%.1f", arg1.c_str(), hold, s_realRun.focus ? 1 : 0,
 			realInputTravel(), s_realRun.across );
 		TheWritableGlobalData->m_testRealInput = FALSE;
 		return TRUE;
 	}
 
-	if( cmd == "klickEigenes" )
+	if( cmd == "clickOwn" )
 	{
 		static ClickSearch s_click;
 		if( d == 0 )
@@ -1117,7 +1117,7 @@ Bool executeCommand( const ScriptCommand &b )
 			Player *localPlayer = ThePlayerList ? ThePlayerList->getLocalPlayer() : nullptr;
 			if( !inMatch() || localPlayer == nullptr || TheTacticalView == nullptr || TheDisplay == nullptr )
 			{
-				failCommand( b, "klickEigenes needs a running game" );
+				failCommand( b, "clickOwn needs a running game" );
 				return FALSE;
 			}
 			s_click = {};
@@ -1157,13 +1157,13 @@ Bool executeCommand( const ScriptCommand &b )
 			return FALSE;
 		const Drawable *selected = TheInGameUI->getFirstSelectedDrawable();
 		const Bool hit = selected != nullptr && selected->getID() == s_click.drawable;
-		logLine( "%s line %d klickEigenes %s at %d,%d selected %d zoom %.3f height %.1f", hit ? "OK" : "MISS", b.line,
+		logLine( "%s line %d clickOwn %s at %d,%d selected %d zoom %.3f height %.1f", hit ? "OK" : "MISS", b.line,
 			s_click.name, s_click.screen.x, s_click.screen.y, TheInGameUI->getSelectCount(),
 			TheTacticalView->getZoom(), TheTacticalView->getCurrentHeightAboveGround() );
 		return TRUE;
 	}
 
-	if( cmd == "rahmen" )
+	if( cmd == "box" )
 	{
 		static BoxSearch s_box;
 		if( d == 0 )
@@ -1171,7 +1171,7 @@ Bool executeCommand( const ScriptCommand &b )
 			Player *localPlayer = ThePlayerList ? ThePlayerList->getLocalPlayer() : nullptr;
 			if( !inMatch() || localPlayer == nullptr || TheTacticalView == nullptr || TheDisplay == nullptr )
 			{
-				failCommand( b, "rahmen needs a running game" );
+				failCommand( b, "box needs a running game" );
 				return FALSE;
 			}
 			const Int margin = b.words.size() >= 2 ? atoi( arg1.c_str() ) : 8;
@@ -1187,10 +1187,10 @@ Bool executeCommand( const ScriptCommand &b )
 			}
 			const std::string edge = b.words.size() >= 3 ? b.words[2] : std::string();
 			const Int SPREAD = 200;
-			s_box.box.lo.x -= ( edge == "links" || edge.empty() ) ? 0 : SPREAD;
-			s_box.box.lo.y -= ( edge == "oben" || edge.empty() ) ? 0 : SPREAD;
-			s_box.box.hi.x += ( edge == "rechts" || edge.empty() ) ? 0 : SPREAD;
-			s_box.box.hi.y += ( edge == "unten" || edge.empty() ) ? 0 : SPREAD;
+			s_box.box.lo.x -= ( edge == "left" || edge.empty() ) ? 0 : SPREAD;
+			s_box.box.lo.y -= ( edge == "top" || edge.empty() ) ? 0 : SPREAD;
+			s_box.box.hi.x += ( edge == "right" || edge.empty() ) ? 0 : SPREAD;
+			s_box.box.hi.y += ( edge == "bottom" || edge.empty() ) ? 0 : SPREAD;
 			s_box.box.lo.x = std::max( s_box.view.lo.x, s_box.box.lo.x - margin );
 			s_box.box.lo.y = std::max( s_box.view.lo.y, s_box.box.lo.y - margin );
 			s_box.box.hi.x = std::min( s_box.view.hi.x - 1, s_box.box.hi.x + margin );
@@ -1235,31 +1235,31 @@ Bool executeCommand( const ScriptCommand &b )
 			if( draw != nullptr && draw->isSelected() )
 				++selected;
 		}
-		logLine( "%s line %d rahmen edge %s box %d,%d-%d,%d units %d selected %d of them, %d in all; display %dx%d view %d,%d %dx%d",
+		logLine( "%s line %d box edge %s box %d,%d-%d,%d units %d selected %d of them, %d in all; display %dx%d view %d,%d %dx%d",
 			selected == s_box.count ? "OK" : "MISS", b.line, b.words.size() >= 3 ? b.words[2].c_str() : "-", s_box.box.lo.x, s_box.box.lo.y, s_box.box.hi.x, s_box.box.hi.y,
 			s_box.count, selected, TheInGameUI->getSelectCount(), TheDisplay->getWidth(), TheDisplay->getHeight(),
 			s_box.view.lo.x, s_box.view.lo.y, TheTacticalView->getWidth(), TheTacticalView->getHeight() );
 		return TRUE;
 	}
 
-	if( cmd == "streifen" )
+	if( cmd == "strip" )
 	{
 		static DrawableID s_unit;
 		static ICoord2D s_target;
 		static Int s_side;
 		static UnsignedInt s_check;
-		const Bool behind = arg1 == "mitte";
+		const Bool behind = arg1 == "middle";
 		if( d == 0 )
 		{
 			Player *localPlayer = ThePlayerList ? ThePlayerList->getLocalPlayer() : nullptr;
 			if( !inMatch() || localPlayer == nullptr || TheTacticalView == nullptr || TheDisplay == nullptr )
 			{
-				failCommand( b, "streifen needs a running game" );
+				failCommand( b, "strip needs a running game" );
 				return FALSE;
 			}
 			if( !TheDisplay->isUILayoutPillarboxed() )
 			{
-				logLine( "OK line %d streifen skipped, no widescreen layout", b.line );
+				logLine( "OK line %d strip skipped, no widescreen layout", b.line );
 				return TRUE;
 			}
 			BoxSearch units = {};
@@ -1334,19 +1334,19 @@ Bool executeCommand( const ScriptCommand &b )
 		if( d < s_check + 5 )
 			return FALSE;
 		const Bool ok = placed && draw->isSelected() != behind;
-		logLine( "%s line %d streifen%s unit at %d,%d (target %d,%d) placed %d behind bar %d selected %d, %d in all; view height %d display %dx%d",
-			ok ? "OK" : "MISS", b.line, behind ? " mitte" : "", screen.x, screen.y, s_target.x, s_target.y, placed ? 1 : 0,
+		logLine( "%s line %d strip%s unit at %d,%d (target %d,%d) placed %d behind bar %d selected %d, %d in all; view height %d display %dx%d",
+			ok ? "OK" : "MISS", b.line, behind ? " middle" : "", screen.x, screen.y, s_target.x, s_target.y, placed ? 1 : 0,
 			covered ? 1 : 0, draw->isSelected() ? 1 : 0, TheInGameUI->getSelectCount(), TheTacticalView->getHeight(),
 			TheDisplay->getWidth(), TheDisplay->getHeight() );
 		return TRUE;
 	}
 
-	if( cmd == "zeichenbereich" )
+	if( cmd == "drawRegion" )
 	{
 		Region3D region;
 		if( !inMatch() || TheTacticalView == nullptr || TheDisplay == nullptr || !TheTacticalView->getDrawRegion( &region ) )
 		{
-			failCommand( b, "zeichenbereich needs a running game" );
+			failCommand( b, "drawRegion needs a running game" );
 			return FALSE;
 		}
 		Int x0, y0;
@@ -1389,23 +1389,23 @@ Bool executeCommand( const ScriptCommand &b )
 				}
 			}
 		}
-		logLine( "%s line %d zeichenbereich points %d outside %d worst %.1f at %d,%d; region %.0f,%.0f-%.0f,%.0f view %dx%d bottom %d",
+		logLine( "%s line %d drawRegion points %d outside %d worst %.1f at %d,%d; region %.0f,%.0f-%.0f,%.0f view %dx%d bottom %d",
 			outside == 0 ? "OK" : "MISS", b.line, points, outside, worst, worstAt.x, worstAt.y, region.lo.x, region.lo.y,
 			region.hi.x, region.hi.y, w, TheTacticalView->getHeight(), bottom );
 		return TRUE;
 	}
 
-	if( cmd == "markierung" )
+	if( cmd == "beacon" )
 	{
 		Player *localPlayer = ThePlayerList ? ThePlayerList->getLocalPlayer() : nullptr;
-		if( localPlayer == nullptr || TheGameLogic == nullptr || b.words.size() < 2 || ( arg1 != "basis" && b.words.size() < 3 ) )
+		if( localPlayer == nullptr || TheGameLogic == nullptr || b.words.size() < 2 || ( arg1 != "base" && b.words.size() < 3 ) )
 		{
-			failCommand( b, "needs x y or basis [dx dy], and a local player" );
+			failCommand( b, "needs x y or base [dx dy], and a local player" );
 			return FALSE;
 		}
 		Coord3D pos;
 		pos.zero();
-		if( arg1 == "basis" )
+		if( arg1 == "base" )
 		{
 			Object *home = nullptr;
 			for( Object *obj = TheGameLogic->getFirstObject(); obj && home == nullptr; obj = obj->getNextObject() )
@@ -1430,11 +1430,11 @@ Bool executeCommand( const ScriptCommand &b )
 		pos.z = TheTerrainLogic ? TheTerrainLogic->getGroundHeight( pos.x, pos.y ) : 0.0f;
 		GameMessage *msg = TheMessageStream->appendMessage( GameMessage::MSG_PLACE_BEACON );
 		msg->appendLocationArgument( pos );
-		logLine( "OK line %d markierung at %.0f %.0f", b.line, pos.x, pos.y );
+		logLine( "OK line %d beacon at %.0f %.0f", b.line, pos.x, pos.y );
 		return TRUE;
 	}
 
-	if( cmd == "spezial" )
+	if( cmd == "special" )
 	{
 		Player *localPlayer = ThePlayerList ? ThePlayerList->getLocalPlayer() : nullptr;
 		SpecialPowerSearch search = { TheSpecialPowerStore ? TheSpecialPowerStore->findSpecialPowerTemplate( AsciiString( arg1.c_str() ) ) : nullptr, nullptr };
@@ -1459,12 +1459,12 @@ Bool executeCommand( const ScriptCommand &b )
 		msg->appendObjectIDArgument( INVALID_ID );
 		msg->appendIntegerArgument( 0 );
 		msg->appendObjectIDArgument( search.source->getID() );
-		logLine( "OK line %d spezial %s from %s at %.0f %.0f", b.line, arg1.c_str(),
+		logLine( "OK line %d special %s from %s at %.0f %.0f", b.line, arg1.c_str(),
 			search.source->getTemplate()->getName().str(), targetPos.x, targetPos.y );
 		return TRUE;
 	}
 
-	if( cmd == "spezialUmlenken" )
+	if( cmd == "specialRedirect" )
 	{
 		Player *localPlayer = ThePlayerList ? ThePlayerList->getLocalPlayer() : nullptr;
 		SpecialPowerSearch search = { TheSpecialPowerStore ? TheSpecialPowerStore->findSpecialPowerTemplate( AsciiString( arg1.c_str() ) ) : nullptr, nullptr };
@@ -1486,12 +1486,12 @@ Bool executeCommand( const ScriptCommand &b )
 		msg->appendLocationArgument( targetPos );
 		msg->appendIntegerArgument( static_cast<Int>( search.power->getSpecialPowerType() ) );
 		msg->appendObjectIDArgument( search.source->getID() );
-		logLine( "OK line %d spezialUmlenken %s from %s to %.0f %.0f", b.line, arg1.c_str(),
+		logLine( "OK line %d specialRedirect %s from %s to %.0f %.0f", b.line, arg1.c_str(),
 			search.source->getTemplate()->getName().str(), targetPos.x, targetPos.y );
 		return TRUE;
 	}
 
-	if( cmd == "testhilfe" )
+	if( cmd == "testAid" )
 	{
 		const Int command = TestAids_CommandByName( arg1.c_str() );
 		if( command == TA_NONE )
@@ -1501,15 +1501,15 @@ Bool executeCommand( const ScriptCommand &b )
 		}
 		if( !TestAids_ClientAllowed() )
 		{
-			failCommand( b, "test aids not allowed (needs -testhilfen and a single-player game)" );
+			failCommand( b, "test aids not allowed (needs -testAids and a single-player game)" );
 			return FALSE;
 		}
 		TestAids_Command( command, b.words.size() > 2 ? atoi( b.words[2].c_str() ) : -1 );
-		logLine( "OK line %d testhilfe %s", b.line, arg1.c_str() );
+		logLine( "OK line %d testAid %s", b.line, arg1.c_str() );
 		return TRUE;
 	}
 
-	if( cmd == "schliessenNach" )
+	if( cmd == "closeAfter" )
 	{
 		const Int ms = atoi( arg1.c_str() );
 		if( s_closeTimer != nullptr || ms <= 0
@@ -1518,7 +1518,7 @@ Bool executeCommand( const ScriptCommand &b )
 			failCommand( b, "timer not created" );
 			return FALSE;
 		}
-		logLine( "OK line %d schliessenNach %d ms", b.line, ms );
+		logLine( "OK line %d closeAfter %d ms", b.line, ms );
 		return TRUE;
 	}
 
@@ -1545,7 +1545,7 @@ void TestScript_Update( void )
 		return;
 	if( s_state->nextIndex >= s_state->commands.size() )
 	{
-		logLine( "ENDE" );
+		logLine( "END" );
 		s_state->done = TRUE;
 		return;
 	}

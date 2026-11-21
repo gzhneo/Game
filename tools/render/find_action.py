@@ -44,7 +44,7 @@ def aktionen(exe, replay, timeout):
     os.close(fd)
     try:
         exe = os.path.abspath(exe)
-        cmd = [exe, "-win", "-xres", "800", "-yres", "600", "-nologo", "-noaudio", "-ignoreAsserts", "-mehrfach",
+        cmd = [exe, "-win", "-xres", "800", "-yres", "600", "-nologo", "-noaudio", "-ignoreAsserts", "-multiInstance",
                "-runner", "-replay", os.path.abspath(replay), "-crcLog", log, "-logActions"]
         subprocess.run(cmd, cwd=os.path.dirname(exe), timeout=timeout)
         return einlesen(log)

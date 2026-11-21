@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <cfloat>
+#include "Engine/Watchdog.h"
 #include <cstdio>
 #include <cstring>
 
@@ -175,16 +176,16 @@ size_t PipelineKeyHash::operator()(const PipelineKey& k) const
 // Layouts and defaults
 // ==================================================================================================
 
-/// Pipeline cache file beside the shader cache of the render core (%LOCALAPPDATA%\CnCGenerals\ShaderCache).
+/// Pipeline cache file beside the shader cache of the render core (%LOCALAPPDATA%\GZHNeo\ShaderCache).
 bool Gpu::Pipeline_Cache_Path(char* path, size_t size) const
 {
 	char base[MAX_PATH];
 	const DWORD length = GetEnvironmentVariableA("LOCALAPPDATA", base, sizeof(base));
 	if (length == 0 || length >= sizeof(base)) return false;
 	char folder[MAX_PATH];
-	std::snprintf(folder, sizeof(folder), "%s\\CnCGenerals", base);
+	std::snprintf(folder, sizeof(folder), "%s\\GZHNeo", base);
 	CreateDirectoryA(folder, nullptr);
-	std::snprintf(folder, sizeof(folder), "%s\\CnCGenerals\\ShaderCache", base);
+	std::snprintf(folder, sizeof(folder), "%s\\GZHNeo\\ShaderCache", base);
 	CreateDirectoryA(folder, nullptr);
 	const int n = std::snprintf(path, size, "%s\\vulkan_pipelines_%04x_%04x.bin", folder, m_properties.vendorID, m_properties.deviceID);
 	return n > 0 && static_cast<size_t>(n) < size;
@@ -347,6 +348,24 @@ Shader<Interface>::Shader(Gpu* gpu, unsigned s) : Object<Interface>(gpu)
 	id = this->m_id;
 	memset(&reflection, 0, sizeof(reflection));
 	module = VK_NULL_HANDLE;
+}
+
+template <class Interface>
+void Shader<Interface>::Drop_Handles()
+{
+	VkDevice device = this->m_gpu->Vk();
+	if (module) vkDestroyShaderModule(device, module, nullptr);
+	module = VK_NULL_HANDLE;
+	for (const Linked& l : linked) {
+		if (l.module) vkDestroyShaderModule(device, l.module, nullptr);
+	}
+	linked.clear();
+}
+
+template <class Interface>
+bool Shader<Interface>::Recreate_Handles()
+{
+	return this->m_gpu->Create_Shader_Module(words, &module);
 }
 
 template <class Interface>
@@ -544,6 +563,18 @@ SamplerState::~SamplerState()
 	m_gpu->Retire(VK_OBJECT_TYPE_SAMPLER, reinterpret_cast<uint64_t>(m_sampler));
 }
 
+void SamplerState::Drop_Handles()
+{
+	if (m_sampler) vkDestroySampler(m_gpu->Vk(), m_sampler, nullptr);
+	m_sampler = VK_NULL_HANDLE;
+}
+
+bool SamplerState::Recreate_Handles()
+{
+	m_sampler = m_gpu->Create_Sampler(m_desc);
+	return m_sampler != VK_NULL_HANDLE;
+}
+
 HRESULT Gpu::CreateSamplerState(const GPU_SAMPLER_DESC* desc, GpuSamplerState** out)
 {
 	if (!desc) return E_INVALIDARG;
@@ -565,24 +596,47 @@ Query::~Query()
 	m_gpu->Retire(VK_OBJECT_TYPE_QUERY_POOL, reinterpret_cast<uint64_t>(m_pool));
 }
 
+VkQueryPool Query::Create_Pool()
+{
+	VkQueryPoolCreateInfo create = {};
+	create.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+	create.queryCount = 1;
+	if (m_desc.Query == GPU_QUERY_TIMESTAMP) {
+		create.queryType = VK_QUERY_TYPE_TIMESTAMP;
+	}
+	else if (m_desc.Query == GPU_QUERY_PIPELINE_STATISTICS && m_gpu->m_pipeline_statistics) {
+		create.queryType = VK_QUERY_TYPE_PIPELINE_STATISTICS;
+		create.pipelineStatistics = PIPELINE_STATISTICS;
+	}
+	else {
+		return VK_NULL_HANDLE;
+	}
+	VkQueryPool pool = VK_NULL_HANDLE;
+	if (vkCreateQueryPool(m_gpu->Vk(), &create, nullptr, &pool) != VK_SUCCESS) return VK_NULL_HANDLE;
+	return pool;
+}
+
+void Query::Drop_Handles()
+{
+	if (m_pool) vkDestroyQueryPool(m_gpu->Vk(), m_pool, nullptr);
+	m_pool = VK_NULL_HANDLE;
+	m_active = false;
+	m_written = false;
+}
+
+bool Query::Recreate_Handles()
+{
+	m_pool = Create_Pool();
+	return true;		// kinds without a pool stay without, as at creation
+}
+
 HRESULT Gpu::CreateQuery(const GPU_QUERY_DESC* desc, GpuQuery** out)
 {
 	if (!desc) return E_INVALIDARG;
 	if (!out) return S_FALSE;
 	*out = nullptr;
 	Query* q = new Query(this, *desc);
-	VkQueryPoolCreateInfo create = {};
-	create.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-	create.queryCount = 1;
-	if (desc->Query == GPU_QUERY_TIMESTAMP) {
-		create.queryType = VK_QUERY_TYPE_TIMESTAMP;
-		if (vkCreateQueryPool(m_device, &create, nullptr, &q->m_pool) != VK_SUCCESS) q->m_pool = VK_NULL_HANDLE;
-	}
-	else if (desc->Query == GPU_QUERY_PIPELINE_STATISTICS && m_pipeline_statistics) {
-		create.queryType = VK_QUERY_TYPE_PIPELINE_STATISTICS;
-		create.pipelineStatistics = PIPELINE_STATISTICS;
-		if (vkCreateQueryPool(m_device, &create, nullptr, &q->m_pool) != VK_SUCCESS) q->m_pool = VK_NULL_HANDLE;
-	}
+	q->m_pool = q->Create_Pool();
 	*out = q;
 	return S_OK;
 }
@@ -895,7 +949,12 @@ VkPipeline Gpu::Create_Pipeline(const PipelineKey& key)
 	create.pDynamicState = &dynamic;
 	create.layout = m_pipeline_layout;
 	VkPipeline pipeline = VK_NULL_HANDLE;
+	// Building a pipeline without a cache entry can take long; keep the watchdog informed.
+	Engine::Watchdog::get().heartbeat(Engine::WATCHDOG_MAIN);
+	Engine::Watchdog::get().heartbeat(Engine::WATCHDOG_SIM);
 	const VkResult result = vkCreateGraphicsPipelines(m_device, m_pipeline_cache, 1, &create, nullptr, &pipeline);
+	Engine::Watchdog::get().heartbeat(Engine::WATCHDOG_MAIN);
+	Engine::Watchdog::get().heartbeat(Engine::WATCHDOG_SIM);
 	if (result != VK_SUCCESS) {
 		WWDEBUG_SAY(("Vulkan: vkCreateGraphicsPipelines failed (%d)\n", static_cast<int>(result)));
 		return VK_NULL_HANDLE;

@@ -23,7 +23,7 @@
 #ifdef PIXEL_LIGHT
 #include "ffplight.hlsli"
 #include "slots.hlsli"
-// Normal map of the stage 0 texture (<texture>_n.dds) when o_teamColor.w is 1; read with the coordinates and
+// Normal map of the stage 0 texture (<texture>_nrm.dds) when o_teamColor.w is 1; read with the coordinates and
 // sampler of stage 0. B = gloss: scales the highlight (byte 128 = as without the map).
 Texture2D    ffp_normal : register(SLOT_T_MODEL_NORMAL);
 #endif

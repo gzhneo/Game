@@ -1,12 +1,17 @@
-TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
-MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
-FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
-MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
-FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
-TEXTURPAKET ersetzt 0 texturen 63
-VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+TEXTURETIER SD wanted Auto (Settings.ini) reason output height below 900 height 600 budget 15419 MB uma nein available SD,HD,UHD package 5 rejected 0
+MOD folder ProjectData\Inhalt\BaeumeFrei\ files 217
+FREE CONTENT ProjectData\Inhalt\BaeumeFrei\ files 217 tier SD manifest 101
+MOD folder ProjectData\Inhalt\FreierBoden\ files 723
+FREE CONTENT ProjectData\Inhalt\FreierBoden\ files 723 tier SD manifest -1
+MOD folder ProjectData\Inhalt\FreieStrassen\ files 63
+FREE CONTENT ProjectData\Inhalt\FreieStrassen\ files 63 tier SD manifest 63
+TEXTUREPACK replaced 0 textures 164
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15419 MB (used 0 MB), dedicated 16191 MB, shared 48862 MB
 WORKERS 30
-D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+PREFETCH plan files 1013 mb 1087
+D3D11EFFECTS flags 0xC7DDFFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 terrain 0.50 ground_detail 1.00 mountains 1.00 relief 2.00 tessellation 2.00 factor 16 pixel 8 probe 0 rock_tess 1.00
+GRAPHICSCARD 1002:7550 AMD Radeon RX 9070 by 2
+PREFETCH files 1013 mb 1087 ms 250
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
 STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
 SLOTS mode 2 seed 7 localSlot 0
@@ -30,22 +35,30 @@ TERRAINTILES dds Art/Terrain/TMCliff02a.dds tiles 16 extent 128
 TERRAINTILES dds Art/Terrain/TMCliff13a.dds tiles 16 extent 128
 TERRAINTILES dds Art/Terrain/TMCliff15b.dds tiles 16 extent 128
 TERRAINTILES dds Art/Terrain/TMCliff16a.dds tiles 16 extent 128
-BODENDETAIL klassen 15 mit_detail 15 zuordnungen 253 raster 28 x 15 atlas 1024
-TERRAINRELIEF kacheln 216 von 216 stufe 2 atlas 4096 x 2048
-TERRAINTESS kacheln 216 von 216 stufe 1 klassen 15 von 15 gitter 420 x 420 abweichend 0
-KIOHNE 0 spieler 3 teile 14336
-KIOHNE 0 spieler 4 teile 14336
+GROUNDDETAIL classes 15 with_detail 15 mappings 253 grid 28 x 15 atlas 1024
+TERRAINRELIEF tiles 216 of 216 level 2 atlas 4096 x 2048
+TERRAINTESS tiles 216 of 216 level 1 classes 15 of 15 grid 420 x 420 deviating 0
+AIOFF 0 player 3 parts 134232064
+AIOFF 0 player 4 parts 134232064
 0 18FBE9CC
 STATE frame 0 mode 2 players 8 objects 803 recorder 0 particles 4/0
 STATE frame 1 mode 2 players 8 objects 807 recorder 0 particles 4/0
 30 071E750E
 60 2F949368
-KIEROEFFNUNG 63 spieler 3 startkapital 10000 klasse standard geldfaktor 1.00
-KIHAUSHALT 63 spieler 3 geld 13500 basis 500 frei 13000 vorrang_offen 1
-KIWIRTSCHAFT 63 spieler 3 lage vorrat 30000 zentren 1 geld 13500 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
-KIEROEFFNUNG 64 spieler 4 startkapital 10000 klasse standard geldfaktor 1.00
-KIHAUSHALT 64 spieler 4 geld 14300 basis 500 frei 13800 vorrang_offen 1
-KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 14300 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+AIOPENING 63 player 3 start_money 10000 class standard money_factor 1.00
+AIPOWER 63 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 0
+AITHREAT 63 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 63 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 0 gather_s 0 attack_s 0
+AIPOSTS 63 player 3 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+AIBUDGET 63 player 3 money 13500 base 500 free 13000 priority_open 1
+AIECONOMY 63 player 3 situation reserve 30000 centres 1 money 13500 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
+AIOPENING 64 player 4 start_money 10000 class standard money_factor 1.00
+AIPOWER 64 player 4 production 0 consumption 0 underpowered_s 0 power_plants 1 defence 0
+AITHREAT 64 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 64 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 0 gather_s 0 attack_s 0
+AIPOSTS 64 player 4 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+AIBUDGET 64 player 4 money 14300 base 500 free 13800 priority_open 1
+AIECONOMY 64 player 4 situation reserve 0 centres 0 money 14300 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
 90 35E3BD8F
 120 6804E26D
 150 D003EB5B
@@ -56,6 +69,8 @@ KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 14300 hacker 0 sammler 0 
 300 A10E1936
 330 91962A8A
 360 83F10E02
+AIPOWER 363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 0
+AIPOWER 364 player 4 production 0 consumption 0 underpowered_s 0 power_plants 1 defence 0
 390 5712DF78
 420 E9DE0693
 450 DDC28EA7
@@ -66,6 +81,8 @@ KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 14300 hacker 0 sammler 0 
 600 21A65999
 630 BF033AB9
 660 0E9F8272
+AIPOWER 663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 0
+AIPOWER 664 player 4 production 0 consumption 0 underpowered_s 0 power_plants 1 defence 0
 690 CE9909CC
 720 7B2B48F7
 750 CF8A02B6
@@ -77,6 +94,12 @@ KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 14300 hacker 0 sammler 0 
 STATE frame 900 mode 2 players 8 objects 816 recorder 0 particles 8/0
 930 55270871
 960 A2CF1B1A
+AIPOWER 963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 0
+AITHREAT 963 player 3 threat 0 emergency 0 held_seconds 0
+AIPOSTS 963 player 3 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+AIPOWER 964 player 4 production 0 consumption 0 underpowered_s 0 power_plants 1 defence 0
+AITHREAT 964 player 4 threat 0 emergency 0 held_seconds 0
+AIPOSTS 964 player 4 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
 990 0755DDD1
 1020 0D48C48D
 1050 D4B21F01
@@ -87,6 +110,8 @@ STATE frame 900 mode 2 players 8 objects 816 recorder 0 particles 8/0
 1200 BC5E9C40
 1230 DE37EA2B
 1260 413249E7
+AIPOWER 1263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 1
+AIPOWER 1264 player 4 production 10 consumption 0 underpowered_s 0 power_plants 1 defence 0
 1290 049897BD
 1320 7FA30FDD
 1350 B6F5BA71
@@ -97,1124 +122,1701 @@ STATE frame 900 mode 2 players 8 objects 816 recorder 0 particles 8/0
 1500 5AA35677
 1530 34AA35D0
 1560 6062102D
-1590 BD88F5E7
-1620 BB0F5D8C
-1650 BF7C4BE6
-1680 CC338627
-1710 713EB348
-1740 9C82BDE6
-1770 E4BADC79
-1800 9B07C45C
+AIPOWER 1563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 1
+AIPOWER 1564 player 4 production 10 consumption 0 underpowered_s 0 power_plants 1 defence 0
+1590 2230B20E
+1620 7D24B316
+1650 80A2FA69
+1680 13DB6723
+1710 31AEC60B
+1740 9ACD924A
+1770 A3CAED06
+1800 3D8CB60A
 STATE frame 1800 mode 2 players 8 objects 834 recorder 0 particles 8/0
-1830 F137A23A
-1860 622E93B9
-KIHAUSHALT 1863 spieler 3 geld 8150 basis 0 frei 8150 vorrang_offen 0
-KIWIRTSCHAFT 1863 spieler 3 lage vorrat 29700 zentren 1 geld 8150 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 300 restzeit_min 99.0 investieren 1
-KIHAUSHALT 1864 spieler 4 geld 7900 basis 0 frei 7900 vorrang_offen 0
-KIWIRTSCHAFT 1864 spieler 4 lage vorrat 30000 zentren 1 geld 7900 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
-1890 CF29152C
-1920 5AE94D31
-1950 283E896B
-1980 06C0E937
-2010 1D608769
-2040 A6B24628
-2070 011A9CD6
-2100 BE7C795E
-2130 05FD591A
-2160 6654EF56
-2190 3AAAF64C
-2220 B47D4595
-2250 E9466A86
-2280 2B0187D3
-2310 1E215C20
-2340 8A3BAC77
-2370 1072733F
-2400 DAA0926C
-2430 00C0E814
-2460 D936C024
-2490 F5CE3E32
-2520 ACBA6207
-2550 8D81E6EF
-2580 0665C350
-KIWIRTSCHAFT 2584 spieler 4 technik TechOilDerrick einheit ChinaInfantryRedguard ort 2437 1335
-2610 F14002CE
-2640 F348DFCD
-2670 F02FF270
-2700 3B45D04D
+1830 24D37E83
+1860 7DDDCBE1
+AIPOWER 1863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 1
+AITHREAT 1863 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 1863 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 30 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 1863 player 3 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+AIBUDGET 1863 player 3 money 8150 base 0 free 8150 priority_open 0
+AIECONOMY 1863 player 3 situation reserve 29700 centres 1 money 8150 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 300 minutes_left 99.0 invest 1
+AIPOWER 1864 player 4 production 10 consumption 1 underpowered_s 0 power_plants 1 defence 0
+AIMIX 1864 player 4 front 500/449 anti_vehicle 0/200 anti_infantry 500/150 anti_air 0/100 siege 0/100 distance 800
+AITHREAT 1864 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 1864 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 30 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 1864 player 4 posts 3 army 600 posted 0 idle_home 0 idle_field 0 script_team 600 mission 0
+AIBUDGET 1864 player 4 money 7900 base 0 free 7900 priority_open 0
+AIECONOMY 1864 player 4 situation reserve 30000 centres 1 money 7900 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
+1890 770AFC5B
+1920 5DE8C7CB
+1950 30A89BF6
+1980 072EE6E1
+2010 47B351F8
+2040 59FDB7E7
+2070 5C927A3F
+2100 DAD06D90
+2130 9D9C39E3
+2160 AF8E7B15
+AIPOWER 2163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 1
+AIPOWER 2164 player 4 production 10 consumption 1 underpowered_s 0 power_plants 1 defence 0
+2190 72F358A4
+2220 6F1B3D80
+2250 83230A07
+2280 89A2A80D
+2310 1DA1E814
+2340 9EB6DFE1
+2370 49822466
+2400 C8FD41C7
+2430 591AC48E
+2460 0978939F
+AIPOWER 2463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 1
+AIPOWER 2464 player 4 production 10 consumption 2 underpowered_s 0 power_plants 1 defence 0
+2490 46FED950
+2520 A389CEA7
+2550 7150CB44
+2580 C2ED8D54
+AIECONOMY 2584 player 4 tech TechOilDerrick unit ChinaInfantryRedguard pos 2437 1335
+2610 9A78D8F4
+2640 32D241D3
+2670 5A3C72FC
+2700 89A95E5E
 STATE frame 2700 mode 2 players 8 objects 849 recorder 0 particles 8/0
-2730 F902C998
-2760 78F8BA03
-KIWIRTSCHAFT 2763 spieler 3 technik TechOilDerrick einheit GLAInfantryRebel ort 383 1349
-KIWIRTSCHAFT 2764 spieler 4 ausbau ChinaSupplyCenter vorrat 29025 zentren 1 grund wachstum
-2790 FB1D8D81
-2820 03ECAA43
-2850 2A532D4F
-2880 66011BAE
-2910 713E70F4
-2940 20A1E396
-2970 802FB058
-3000 5DE4911E
-3030 B46103E7
-3060 C11F8969
-3090 7C3AA685
-3120 28044B85
-3150 F023369C
-3180 138E4ECB
-3210 30EECA7F
-3240 97B72CA9
-3270 6B8ADA6E
-3300 0C5564C6
-KIWIRTSCHAFT 3303 spieler 3 ausbau GLASupplyStash vorrat 28050 zentren 1 grund wachstum
-3330 240FB9A8
-3360 7B7C3304
-3390 645DD7C7
-3420 C1663010
-3450 233E9BBE
-3480 4DAA0D3C
-3510 72184118
-3540 E58E166E
-3570 671D21F0
-3600 038B1D0B
-STATE frame 3600 mode 2 players 8 objects 877 recorder 0 particles 22/0
-3630 A9106FA2
-3660 42796FEF
-KIHAUSHALT 3663 spieler 3 geld 5250 basis 0 frei 5250 vorrang_offen 1
-KIWIRTSCHAFT 3663 spieler 3 lage vorrat 27525 zentren 1 geld 5250 hacker 0 sammler 9 bedarf 1500 einnahmebauten 0 technik 0 frei 6 sammelrate 1238 restzeit_min 22.2 investieren 1
-KIWIRTSCHAFT 3664 spieler 4 sammler ChinaVehicleSupplyTruck bestand 3 ziel 6
-KIHAUSHALT 3664 spieler 4 geld 5500 basis 0 frei 4900 vorrang_offen 0
-KIWIRTSCHAFT 3664 spieler 4 lage vorrat 106350 zentren 2 geld 5500 hacker 0 sammler 3 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
-3690 D2912F9A
-3720 6F6AF32F
-3750 703F3165
-3780 46B20A59
-3810 1D9223D8
-3840 D2A0B10B
-3870 D17D8B48
-3900 218167FD
-3930 C8AD5A76
-3960 DEB321D3
-3990 EABC2419
-4020 D78BA650
-KIWIRTSCHAFT 4024 spieler 4 sammler ChinaVehicleSupplyTruck bestand 4 ziel 6
-4050 09F842BB
-4080 BC000AD2
-4110 22E288FC
-4140 5EF399B9
-4170 2478DE6F
-4200 FA11CB9D
-KIWIRTSCHAFT 4204 spieler 4 ausbau ChinaSupplyCenter vorrat 105600 zentren 2 grund wachstum
-KIWIRTSCHAFT 4204 spieler 4 technik_ende eingenommen dauer 54
-4230 0EE7F819
-4260 A6DC6594
-4290 62B68D09
-4320 610314E5
-4350 CA708AA5
-4380 FE74A108
-KIAUFKLAERUNG 4383 spieler 3 spaeher GLAInfantryRebel ziel 423 2377
-KIWIRTSCHAFT 4384 spieler 4 technik TechOilDerrick einheit ChinaInfantryRedguard ort 1727 1203
-4410 0A7B231A
-4440 C462CABD
-4470 A1ECA91E
-KIFOKUS 4500 spieler 3 gegner 5 vorher -1 grund wahl kosten 1481
-KIFOKUS 4500 spieler 4 gegner 5 vorher -1 grund buendnis kosten 0
-4500 EA55756D
-STATE frame 4500 mode 2 players 8 objects 895 recorder 0 particles 38/0
-4530 365F49FD
-4560 04B87B28
-4590 5211151E
-4620 54016FCC
-4650 766718AD
-4680 D8C79581
-4710 8FFB6C4C
-4740 95876289
-KIWIRTSCHAFT 4743 spieler 3 ausbau GLASupplyStash vorrat 97050 zentren 2 grund wachstum
-4770 DFC31F58
-4800 D24EC366
-4830 88FF8C51
-4860 BA717A00
-4890 A3C5E4C5
-4920 F029D8EA
-4950 0430AA17
-4980 3428048A
-5010 024EFE87
-5040 6B425D54
-5070 D7FCF479
-5100 E99B0F6C
-5130 86E4AC6C
-5160 C7FBD7DB
-5190 B02D7878
-5220 47DDB514
-5250 B430427E
-5280 8D9FB1E1
-KIWIRTSCHAFT 5283 spieler 3 technik_ende eingenommen dauer 84
-5310 5530F9AE
-5340 B3F6BDE5
-KIGEGNERMODELL 5343 spieler 3 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 3750 luftwert 0 abwehr 0 getarnt 0
-KIVERTEIDIGUNG 5343 spieler 3 bedrohung 900 einheiten 3 wert 250 ort 830 1163
-5370 AEF67799
-5400 3859CA37
-STATE frame 5400 mode 2 players 8 objects 928 recorder 0 particles 50/37
-5430 94E53F60
-5460 A0227181
-KIHAUSHALT 5463 spieler 3 geld 3400 basis 0 frei 3400 vorrang_offen 1
-KIWIRTSCHAFT 5463 spieler 3 lage vorrat 95925 zentren 2 geld 3400 hacker 0 sammler 9 bedarf 1500 einnahmebauten 0 technik 1 frei 2 sammelrate 1238 restzeit_min 77.5 investieren 0
-KIHAUSHALT 5464 spieler 4 geld 200 basis 0 frei 200 vorrang_offen 1
-KIWIRTSCHAFT 5464 spieler 4 lage vorrat 102450 zentren 2 geld 200 hacker 0 sammler 7 bedarf 1500 einnahmebauten 0 technik 1 frei 2 sammelrate 3000 restzeit_min 34.2 investieren 1
-5490 08393DB7
-5520 58FE80E5
-5550 87B09E1E
-5580 2AEED5D6
-5610 44022089
-5640 B861AF51
-5670 E0D76671
-5700 9889B668
-KIHILFE 5704 spieler 4 start verbuendeter 3 bedrohung 2750 einheiten 8 wert 2400 ort 582 1343 armee 8000 einsetzbar 5600 kandidaten 8 wert 2400
-KIGEFECHT 5715 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 8 feinde 4
-5730 9458B83D
-5760 E0B6E549
-5790 FD0989C4
-5820 65016B0C
-5850 54D03602
-5880 FB1436D8
-5910 11413FF2
-5940 EC16FEEF
-5970 6E8C9456
-6000 5AB23B79
-KIWIRTSCHAFT 6004 spieler 4 technik_ende eingenommen dauer 54
-6030 4D75A46B
-6060 8E1B3AA4
-6090 C07BD9B5
-6120 45674F7F
-6150 45A59603
-6180 0D26D106
-6210 E9FEB304
-6240 8C919DBF
-6270 80DF5F91
-6300 8F86FB8E
-STATE frame 6300 mode 2 players 8 objects 947 recorder 0 particles 185/932
-6330 71B7F364
-6360 577803DC
-6390 045B1351
-6420 B39447C0
-6450 CDF04D41
-6480 0BCB9E50
-6510 8B52D6D0
-6540 0780A11A
-KIHILFE 6543 spieler 3 verworfen verbuendeter 4 bedrohung 4800 armee 5250 einsetzbar 2625 kandidaten 12 wert 2850
-6570 FEBD84DA
-6600 51C99647
-KIWIRTSCHAFT 6603 spieler 3 auftrag_abgebrochen GLASupplyStash ort 84 2454
-6630 DEB6CB4C
-6660 CB0DE4C1
-6690 50FCC0DB
-6720 B754C5D5
-6750 A9685F3B
-6780 0358B6F5
-6810 6D59C4F3
-6840 6FAC0B8F
-6870 BE8D0C8E
-6900 6AFAA872
-KIWIRTSCHAFT 6904 spieler 4 sammler ChinaVehicleSupplyTruck bestand 5 ziel 6
-6930 887F5751
-6960 6E13F12F
-6990 1C36C576
-7020 9F5DA111
-7050 CC57A6C9
-KIGEFECHT 7065 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 7 feinde 10
-7080 D5F652F9
-7110 22CFC062
-7140 F3B972D6
-KIVERTEIDIGUNG 7143 spieler 3 bedrohung 1125 einheiten 2 wert 300 ort 973 845
-7170 41B444FA
-7200 4C82985D
-STATE frame 7200 mode 2 players 8 objects 923 recorder 0 particles 106/260
-7230 4B96E498
-7260 5D63ECA3
-KIHAUSHALT 7263 spieler 3 geld 3120 basis 800 frei 2320 vorrang_offen 1
-KIWIRTSCHAFT 7263 spieler 3 lage vorrat 92250 zentren 2 geld 3120 hacker 0 sammler 14 bedarf 0 einnahmebauten 0 technik 0 frei 1 sammelrate 2081 restzeit_min 44.3 investieren 0
-KIHILFE 7264 spieler 4 ende abgewehrt dauer 52 verbleibend 7
-KIHAUSHALT 7264 spieler 4 geld 800 basis 0 frei 800 vorrang_offen 1
-KIWIRTSCHAFT 7264 spieler 4 lage vorrat 97050 zentren 2 geld 800 hacker 0 sammler 6 bedarf 1500 einnahmebauten 0 technik 3 frei 1 sammelrate 4162 restzeit_min 23.3 investieren 1
-7290 6425C1DF
-7320 71CFFF67
-7350 D11B30E5
-7380 CE1A2C86
-7410 FA97B127
-7440 5FEC649C
-KIWIRTSCHAFT 7444 spieler 4 technik TechOilDerrick einheit ChinaInfantryRedguard ort 1165 1659
-7470 5160D3C5
-7500 FEC7711A
-7530 6A1D7305
-7560 A4196474
-7590 867E9985
-7620 82E75894
-7650 529453D8
-7680 B4FB4AE1
-7710 E955ADF3
-7740 236836FB
-7770 719C65A0
-7800 DACAD15C
-7830 BE730477
-7860 8407A698
-7890 FC4F350F
-7920 0CD8FE46
-7950 CCA2D1CD
-7980 ED85C75B
-8010 836091F0
-8040 281FB7A9
-8070 A043B7B1
-8100 D790E695
-STATE frame 8100 mode 2 players 8 objects 924 recorder 0 particles 149/399
-KIHILFE 8103 spieler 3 start verbuendeter 4 bedrohung 600 einheiten 3 wert 1250 ort 2438 1376 armee 4700 einsetzbar 2350 kandidaten 9 wert 3650
-8130 5C4BD63D
-8160 73E8B643
-KIWIRTSCHAFT 8163 spieler 3 technik TechOilDerrick einheit GLAInfantryRebel ort 1165 1659
-8190 957A923F
-8220 C1DF265F
-KIVERTEIDIGUNG 8223 spieler 3 bedrohung 900 einheiten 1 wert 150 ort 734 435
-KIHILFE 8223 spieler 3 ende eigene_basis dauer 4 verbleibend 3
-8250 ADF4096D
-8280 0EBC895C
-8310 F7E11097
-8340 D67C753C
-8370 4D4F5B0C
-8400 8FA030A0
-8430 D97F77A2
-8460 FEC96F4C
-KIHILFE 8464 spieler 4 start verbuendeter 3 bedrohung 900 einheiten 5 wert 1500 ort 759 315 armee 19400 einsetzbar 13580 kandidaten 21 wert 11300
-KIGEFECHT 8475 spieler 4 lage fokus 13 abstand 0 verteilt 0 eigene 5 feinde 6
-8490 C0ED2C90
-8520 C05AC6ED
-8550 7B5E82C6
-8580 39113236
-8610 F6D83FDD
-8640 6C456182
-8670 A06B627A
-8700 6BED674E
-8730 93C29DB4
-8760 DDD28B6D
-8790 1D160A8A
-8820 D591C8A5
-KIHILFE 8823 spieler 3 start verbuendeter 4 bedrohung 600 einheiten 2 wert 1200 ort 2438 1376 armee 4850 einsetzbar 2425 kandidaten 7 wert 3300
-KIGEFECHT 8835 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 2 feinde 29
-KIFOKUS 8850 spieler 3 gegner 6 vorher 5 grund wechsel kosten 1464
-KIFOKUS 8850 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-8850 270FBD77
-8880 4F1B5DA1
-8910 910AFCCE
-8940 44209C8D
-8970 AFFD4DA3
-9000 43C26F69
-STATE frame 9000 mode 2 players 8 objects 897 recorder 0 particles 172/527
-9030 0D3AC594
-9060 FC6728E5
-KIAUFKLAERUNG 9063 spieler 3 spaeher GLAVehicleTechnicalChassisThree ziel 423 2377
-KIHAUSHALT 9063 spieler 3 geld 16345 basis 900 frei 15445 vorrang_offen 1
-KIWIRTSCHAFT 9063 spieler 3 lage vorrat 86925 zentren 2 geld 16345 hacker 0 sammler 17 bedarf 0 einnahmebauten 0 technik 0 frei 1 sammelrate 3178 restzeit_min 27.4 investieren 0
-KIHAUSHALT 9064 spieler 4 geld 800 basis 0 frei 800 vorrang_offen 0
-KIWIRTSCHAFT 9064 spieler 4 lage vorrat 138075 zentren 3 geld 800 hacker 0 sammler 6 bedarf 0 einnahmebauten 0 technik 2 frei 1 sammelrate 4331 restzeit_min 31.9 investieren 1
-9090 740F5EB2
-9120 63CF037D
-KIAUFKLAERUNG 9124 spieler 4 spaeher ChinaInfantryRedguard ziel 2371 2377
-KIHILFE 9124 spieler 4 verstaerkung einheiten 6 wert 1800 bedrohung 2100
-KIGEFECHT 9135 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 2 feinde 25
-KIGEFECHT 9135 spieler 4 lage fokus 1 abstand 3 verteilt 0 eigene 11 feinde 12
-9150 9EC4C468
-9180 5460E204
-9210 D7DA1B90
-9240 8DDB1491
-KIWIRTSCHAFT 9244 spieler 4 sammler ChinaVehicleSupplyTruck bestand 6 ziel 9
-9270 ED26482F
-9300 C45968B6
-9330 CE0D1C1E
-9360 0DB358DB
-KIAUFKLAERUNG 9364 spieler 4 spaeher ChinaInfantryRedguard ziel 423 2377
-9390 D9FDDC6B
-9420 8279065A
-KIWIRTSCHAFT 9424 spieler 4 sammler ChinaVehicleSupplyTruck bestand 6 ziel 9
-KIGEFECHT 9435 spieler 4 lage fokus 3 abstand 75 verteilt 0 eigene 11 feinde 12
-9450 F1E63916
-9480 A3B0B78E
-9510 29774383
-9540 5FE331A5
-9570 469C066F
-KIGEFECHT 9570 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 2 feinde 7
-9600 D8598965
-9630 7DA4F949
-9660 6F033689
-9690 065261EF
-9720 BDF58072
-KIGEFECHT 9735 spieler 4 lage fokus 0 abstand 78 verteilt 0 eigene 10 feinde 8
-9750 30EB7347
-9780 2C42F8B7
-9810 4936AFF1
-9840 8D100E98
-9870 55B7C497
-KIGEFECHT 9870 spieler 3 lage fokus 0 abstand 17 verteilt 0 eigene 2 feinde 1
-9900 78105F9E
-STATE frame 9900 mode 2 players 8 objects 877 recorder 0 particles 253/1146
-9930 DD3FAE91
-9960 2257BC0E
-9990 E7070276
-10020 AC0FA664
-KIGEFECHT 10035 spieler 4 lage fokus 0 abstand 60 verteilt 0 eigene 10 feinde 7
-10050 AB08E704
-10080 7E6563CC
-10110 89E16C7D
-10140 9E96D84D
-KIWIRTSCHAFT 10143 spieler 3 technik_ende eingenommen dauer 66
-10170 C482D15A
-KIGEFECHT 10170 spieler 3 lage fokus 1 abstand 15 verteilt 0 eigene 2 feinde 0
-10200 FF45E581
-KIVERTEIDIGUNG 10203 spieler 3 bedrohung 700 einheiten 2 wert 750 ort 834 1137
-KIHILFE 10203 spieler 3 ende eigene_basis dauer 46 verbleibend 2
-10230 AF093D40
-10260 E2201819
-KIVERTEIDIGUNG 10263 spieler 3 bedrohung 1625 einheiten 1 wert 150 ort 867 1101
-10290 25E3EEC8
-10320 AD151A52
-KIWIRTSCHAFT 10324 spieler 4 technik_ende zeit dauer 96
-KIGEFECHT 10335 spieler 4 lage fokus 5 abstand 39 verteilt 0 eigene 6 feinde 9
-10350 3BC9663B
-10380 4269267F
-10410 CF097EA3
-10440 158700F6
-10470 3489406E
-10500 5600CC74
-KIHILFE 10504 spieler 4 verstaerkung einheiten 5 wert 3000 bedrohung 2725
-KIWIRTSCHAFT 10504 spieler 4 vorlauf restzeit_min 3.2 sammelrate 27891 elite_min 10.5 ertrag_elite 240 bedarf 14
-10530 8C2C7643
-10560 492F5F03
-10590 3BBBB51A
-10620 4919B626
-KIGEFECHT 10635 spieler 4 lage fokus 18 abstand 18 verteilt 0 eigene 11 feinde 35
-10650 0513FEC2
-10680 8EDCF84E
-10710 F797DC0B
-10740 8DBADEEA
-10770 7D2BA154
-10800 5C8502AE
-STATE frame 10800 mode 2 players 8 objects 900 recorder 0 particles 261/676
-KIBAU 10804 spieler 4 upgrade Upgrade_ChinaAircraftArmor kosten 1000 geld 7000
-10830 6220D29D
-10860 219B040E
-KIHAUSHALT 10863 spieler 3 geld 15895 basis 900 frei 14995 vorrang_offen 1
-KIWIRTSCHAFT 10863 spieler 3 lage vorrat 83400 zentren 2 geld 15895 hacker 0 sammler 11 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 4139 restzeit_min 20.1 investieren 0
-KIHAUSHALT 10864 spieler 4 geld 8300 basis 2000 frei 6300 vorrang_offen 1
-KIWIRTSCHAFT 10864 spieler 4 lage vorrat 87225 zentren 2 geld 8300 hacker 0 sammler 8 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 27891 restzeit_min 3.1 investieren 1
-10890 2F5B9442
-10920 FCCF7CF6
-KIHILFE 10924 spieler 4 verstaerkung einheiten 6 wert 1800 bedrohung 2925
-KIGEFECHT 10935 spieler 4 lage fokus 15 abstand 19 verteilt 0 eigene 12 feinde 12
-10950 B2E6A52C
-10980 4C364DB3
-11010 EB11E6E0
-11040 93E65AB1
-11070 EB4A0DD6
-11100 9B397F42
-11130 E59CA1E4
-11160 72E022D5
-11190 5D263EDE
-11220 F347A374
-KIGEFECHT 11235 spieler 4 lage fokus 12 abstand 0 verteilt 0 eigene 12 feinde 17
-11250 4759425C
-11280 D3BE11CA
-11310 2EDDDA4A
-11340 C3213F03
-11370 1B5F68A7
-11400 87E2A257
-11430 88FAC7B9
-11460 8F5AAFBB
-KIHILFE 11464 spieler 4 verstaerkung einheiten 11 wert 3300 bedrohung 5400
-11490 6AB4889A
-11520 39617F43
-KIGEFECHT 11535 spieler 4 lage fokus 46 abstand 0 verteilt 0 eigene 21 feinde 15
-11550 C0DD092F
-11580 3EA9D5C4
-KIWIRTSCHAFT 11584 spieler 4 sammler ChinaVehicleSupplyTruck bestand 8 ziel 9
-11610 2BBF712E
-11640 724262BE
-11670 D3A52D7A
-11700 434C4C76
-STATE frame 11700 mode 2 players 8 objects 837 recorder 0 particles 266/869
-11730 CA788A60
-11760 476E9120
-KIWIRTSCHAFT 11764 spieler 4 sammler ChinaVehicleSupplyTruck bestand 8 ziel 9
-11790 ED378468
-11820 BCD46851
-KIGEFECHT 11835 spieler 4 lage fokus 38 abstand 0 verteilt 0 eigene 18 feinde 17
-11850 7695F133
-11880 8DE0B956
-11910 EC92A776
-11940 92923369
-11970 008EC40C
-12000 CE68070A
-KIGEGNERMODELL 12004 spieler 4 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 17525 luftwert 0 abwehr 2050 getarnt 0
-KIHILFE 12004 spieler 4 ende eigene_basis dauer 118 verbleibend 16
-12030 638834D3
-12060 03E51239
-12090 9D556432
-12120 A7CA302C
-KIBAU 12124 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 5200 wahl konter
-12150 6F178D04
-12180 A8CD5F36
-12210 6C8EB94F
-12240 AF0D0090
-KIHILFE 12244 spieler 4 start verbuendeter 3 bedrohung 4500 einheiten 12 wert 3600 ort 777 945 armee 15900 einsetzbar 7950 kandidaten 12 wert 3600
-KIGEFECHT 12255 spieler 4 lage fokus 16 abstand 1 verteilt 0 eigene 12 feinde 15
-12270 D6A0229D
-KISUPERWAFFE 12300 spieler 3 macht SuperweaponRebelAmbush gegner 6 ziel_id 1971 wert 3372 radius 50
-12300 8C32F451
-KIHILFE 12304 spieler 4 ende eigene_basis dauer 2 verbleibend 12
-12330 F7E449D6
-12360 6D8FA002
-KIVERTEIDIGUNG 12364 spieler 4 bedrohung 600 einheiten 2 wert 600 ort 1708 958
-12390 E6311686
-12420 EBF62DBF
-KIBAU 12424 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 4400 wahl konter
-12450 359E23E5
-12480 B4C998E2
-KIVERTEIDIGUNG 12484 spieler 4 bedrohung 600 einheiten 2 wert 600 ort 1745 863
-12510 A9D7A719
-12540 B7D24314
-12570 A87D7387
-12600 08B27EEC
-STATE frame 12600 mode 2 players 8 objects 877 recorder 0 particles 324/761
-KIHILFE 12604 spieler 4 start verbuendeter 3 bedrohung 2500 einheiten 13 wert 3900 ort 1179 1380 armee 16500 einsetzbar 8250 kandidaten 13 wert 3900
-KIBAU 12604 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 4400 wahl konter
-KIGEFECHT 12615 spieler 4 lage fokus 0 abstand 4 verteilt 0 eigene 13 feinde 7
-12630 A8637223
-12660 D7AC7DAE
-KIHAUSHALT 12663 spieler 3 geld 6932 basis 900 frei 6032 vorrang_offen 1
-KIWIRTSCHAFT 12663 spieler 3 lage vorrat 80475 zentren 2 geld 6932 hacker 0 sammler 14 bedarf 2500 einnahmebauten 0 technik 0 frei 0 sammelrate 3645 restzeit_min 22.1 investieren 0
-KIHAUSHALT 12664 spieler 4 geld 4600 basis 1000 frei 3600 vorrang_offen 1
-KIWIRTSCHAFT 12664 spieler 4 lage vorrat 94575 zentren 3 geld 4600 hacker 0 sammler 10 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 27891 restzeit_min 3.4 investieren 0
-12690 46AAE258
-12720 3824F109
-12750 4B360865
-12780 17091922
-12810 4A158F15
-12840 4C693485
-12870 BC662870
-12900 1C578BCB
-KIGEFECHT 12915 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 13 feinde 3
-12930 D49EED21
-12960 AD0381A8
-12990 1CA99940
-13020 688E3CCE
-13050 7911566F
-13080 E90D0EF7
-13110 D9C667A6
-13140 E1F9C8C4
-13170 46DCA2D6
-13200 3FA83506
-KIGEFECHT 13215 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 13 feinde 2
-13230 4E5341EF
-13260 D3797595
-13290 EEBAF506
-13320 CDF1E1CA
-KIAUFKLAERUNG 13324 spieler 4 spaeher ChinaInfantryTankHunter ziel 423 2377
-13350 D2F623BA
-13380 E317167C
-KIBAU 13384 spieler 4 einheit ChinaInfantryTankHunter kosten 300 geld 5100 wahl konter
-13410 A5AA21D3
-13440 E509E53D
-13470 3379205C
-13500 5EBF8033
-STATE frame 13500 mode 2 players 8 objects 861 recorder 0 particles 184/518
-KIGEFECHT 13515 spieler 4 lage fokus 24 abstand 0 verteilt 0 eigene 11 feinde 7
-13530 30059CD1
-13560 B25B2860
-KIHILFE 13563 spieler 3 start verbuendeter 4 bedrohung 1800 einheiten 5 wert 2750 ort 1563 1099 armee 9200 einsetzbar 4600 kandidaten 18 wert 7400
-KIBAU 13564 spieler 4 einheit ChinaInfantryRedguard kosten 300 geld 4700 wahl konter
-KIGEFECHT 13575 spieler 3 lage fokus 1 abstand 1 verteilt 0 eigene 5 feinde 7
-13590 9BC9BCD8
-13620 0D477FBA
-13650 EBA59617
-13680 5A2A2318
-13710 8454CD1A
-13740 BF2BC91F
-13770 79D99269
-KISUPERWAFFE 13800 spieler 4 macht SuperweaponArtilleryBarrage gegner 6 ziel_id 807 wert 2000 radius 125
-13800 84248717
-KIAUFKLAERUNG 13804 spieler 4 fertig einheit ChinaInfantryTankHunter
-KIGEFECHT 13815 spieler 4 lage fokus 3 abstand 0 verteilt 0 eigene 9 feinde 7
-13830 E498D10F
-13860 33C111F8
-KIGEGNERMODELL 13863 spieler 3 ansturm 1 einigeln 0 luft 0 tarnung 1 armee 10500 luftwert 0 abwehr 2050 getarnt 600
-KIGEGNERMODELL 13864 spieler 4 ansturm 1 einigeln 0 luft 0 tarnung 1 armee 10500 luftwert 0 abwehr 2050 getarnt 600
-KIGEFECHT 13875 spieler 3 lage fokus 3 abstand 1 verteilt 0 eigene 5 feinde 8
-13890 A8F9931D
-13920 4681F033
-KIBAU 13924 spieler 4 einheit ChinaInfantryRedguard kosten 300 geld 4900 wahl konter
-13950 33F208EE
-13980 647B3888
-14010 357DEF5D
-14040 98292892
-KIHILFE 14043 spieler 3 ende abgewehrt dauer 16 verbleibend 5
-14070 17FFAD4B
-14100 0299543A
-KIGEFECHT 14115 spieler 4 lage fokus 4 abstand 0 verteilt 0 eigene 9 feinde 7
-14130 507F4663
-14160 5623AD97
-14190 568036A2
-14220 C85901FB
-14250 561A9C92
-14280 6ADC5335
-14310 958A81AE
-14340 605D99F1
-14370 ABE6235E
-KIFOKUS 14400 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2621
-KIFOKUS 14400 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-14400 70E5FC57
-STATE frame 14400 mode 2 players 8 objects 880 recorder 0 particles 204/594
-KIGEFECHT 14415 spieler 4 lage fokus 16 abstand 2 verteilt 0 eigene 9 feinde 4
-14430 E3711485
-14460 9FB37E4B
-KIWIRTSCHAFT 14463 spieler 3 ausbau GLASupplyStash vorrat 10125 zentren 1 grund knapp
-KIHAUSHALT 14463 spieler 3 geld 131 basis 800 frei -669 vorrang_offen 1
-KIWIRTSCHAFT 14463 spieler 3 lage vorrat 10125 zentren 1 geld 131 hacker 0 sammler 15 bedarf 1500 einnahmebauten 1 technik 0 frei 0 sammelrate 3360 restzeit_min 3.0 investieren 0
-KIHAUSHALT 14464 spieler 4 geld 1100 basis 5000 frei -3900 vorrang_offen 1
-KIWIRTSCHAFT 14464 spieler 4 lage vorrat 85875 zentren 3 geld 1100 hacker 0 sammler 11 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 18220 restzeit_min 4.7 investieren 0
-14490 A82DF14C
-14520 EF8FCEF7
-14550 65B06899
-14580 6D492C0D
-14610 D096AFCE
-14640 EE73714A
-14670 FC3B5448
-14700 5C8DA3EB
-KIGEFECHT 14715 spieler 4 lage fokus 16 abstand 0 verteilt 0 eigene 9 feinde 2
-14730 B980D0F8
-14760 8D0F04D1
-14790 078C87EB
-14820 10FB39CC
-14850 B21F80FC
-14880 F1AE5558
-14910 B1FECDF6
-14940 41F053E8
-14970 CEA96866
-15000 F2ACC47A
-KIGEFECHT 15015 spieler 4 lage fokus 2 abstand 1 verteilt 0 eigene 8 feinde 3
-15030 94795D6E
-15060 7348BA08
-15090 59C5B831
-15120 AB022159
-15150 30CD5DCA
-15180 72EECC14
-15210 A472119F
-15240 5CBA1905
-15270 4A534FD2
-15300 B529DDE0
-STATE frame 15300 mode 2 players 8 objects 885 recorder 0 particles 272/1210
-KIGEFECHT 15315 spieler 4 lage fokus 11 abstand 0 verteilt 0 eigene 3 feinde 3
-15330 C72B129C
-15360 4006EDAF
-15390 97CB021E
-15420 F626DA60
-15450 5D6B2136
-15480 6AC121E8
-KIHILFE 15484 spieler 4 ende verloren dauer 96 verbleibend 0
-15510 6C5086BA
-15540 49AF486D
-15570 90ABDFF6
-15600 99C08CD1
-15630 E96B0BBD
-15660 D0652D60
-KIHILFE 15663 spieler 3 start verbuendeter 4 bedrohung 600 einheiten 2 wert 1300 ort 1920 1644 armee 14450 einsetzbar 7225 kandidaten 20 wert 10850
-15690 3D471642
-15720 FD3D28D4
-15750 824D9897
-15780 30526613
-15810 737FD613
-15840 4DC4DACB
-15870 672FFC86
-KIFOKUS 15900 spieler 3 gegner 6 vorher 5 grund wechsel kosten 1917
-KIFOKUS 15900 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-15900 B842D5EF
-15930 D26ACFD9
-15960 6E19A042
-KIHILFE 15963 spieler 3 verstaerkung einheiten 5 wert 2500 bedrohung 2300
-KIGEFECHT 15975 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 7 feinde 12
-15990 BA070028
-16020 B67FCC96
-16050 E25E9840
-16080 E8A94632
-KIWIRTSCHAFT 16084 spieler 4 hacker ChinaInfantryHacker bestand 0 ziel 14
-16110 9A2ED2AC
-16140 5E83D380
-16170 0404A766
-16200 814B88AF
-STATE frame 16200 mode 2 players 8 objects 864 recorder 0 particles 133/307
-16230 7EBEBF2D
-16260 373A732A
-KIHILFE 16263 spieler 3 verstaerkung einheiten 5 wert 2700 bedrohung 5900
-KIHAUSHALT 16263 spieler 3 geld 306 basis 800 frei -494 vorrang_offen 1
-KIWIRTSCHAFT 16263 spieler 3 lage vorrat 73350 zentren 2 geld 306 hacker 0 sammler 14 bedarf 1500 einnahmebauten 1 technik 0 frei 0 sammelrate 3667 restzeit_min 20.0 investieren 0
-KIHAUSHALT 16264 spieler 4 geld 75 basis 0 frei 75 vorrang_offen 0
-KIWIRTSCHAFT 16264 spieler 4 lage vorrat 77400 zentren 3 geld 75 hacker 0 sammler 11 bedarf 0 einnahmebauten 0 technik 2 frei 0 sammelrate 13385 restzeit_min 5.8 investieren 0
-KIGEFECHT 16275 spieler 3 lage fokus 5 abstand 0 verteilt 0 eigene 12 feinde 23
-16290 BD1FE1C9
-16320 28249805
-16350 57D4A6D7
-16380 ADF0F112
-16410 674BDC53
-16440 E6743244
-16470 8EEA5477
-16500 B8D95A6D
-16530 587F3901
-16560 1FF8C3A6
-KIVERTEIDIGUNG 16564 spieler 4 bedrohung 1400 einheiten 10 wert 3000 ort 2028 1208
-KIGEFECHT 16575 spieler 3 lage fokus 18 abstand 0 verteilt 0 eigene 10 feinde 41
-16590 59E4675A
-16620 BE23EC99
-16650 4E4D847A
-16680 D69CB09C
-16710 0B651A0D
-16740 10466A2A
-16770 A21710BE
-16800 E3D7B202
-16830 DAB273BA
-16860 1A6C53AD
-KIGEFECHT 16875 spieler 3 lage fokus 6 abstand 12 verteilt 0 eigene 9 feinde 41
-16890 70B02F83
-16920 7A40983E
-16950 25824584
-16980 BDE84BFA
-17010 F6DA9BD8
-17040 D436B6A6
-17070 8CCC15A5
-17100 E3B29502
-STATE frame 17100 mode 2 players 8 objects 885 recorder 0 particles 282/1009
-17130 0051482C
-17160 8DFCC645
-KIGEFECHT 17175 spieler 3 lage fokus 21 abstand 25 verteilt 0 eigene 8 feinde 41
-17190 56AA0CCE
-17220 AFAD10C9
-17250 60692C2C
-17280 843B97D0
-17310 545322CC
-17340 FC6C6BA2
-17370 17E08527
-17400 F6EDAB7B
-17430 4B508ED4
-17460 28CADBFA
-KIGEFECHT 17475 spieler 3 lage fokus 11 abstand 35 verteilt 0 eigene 7 feinde 33
-17490 B2BC0688
-17520 A7FEE9C1
-17550 5796431F
-17580 FD1FF5D9
-17610 CA882D37
-17640 F39A14E3
-KIHILFE 17644 spieler 4 start verbuendeter 3 bedrohung 7575 einheiten 17 wert 9100 ort 1026 1290 armee 19100 einsetzbar 9550 kandidaten 19 wert 11300
-KIGEFECHT 17655 spieler 4 lage fokus 9 abstand 0 verteilt 0 eigene 17 feinde 20
-17670 3754D911
-17700 DCA77682
-KIWIRTSCHAFT 17703 spieler 3 bau GLABlackMarket bestand 1 ziel 2 vorrat 4800 grund knapp
-17730 5400B25E
-17760 AFA66349
-KIGEFECHT 17775 spieler 3 lage fokus 2 abstand 24 verteilt 0 eigene 5 feinde 9
-17790 C51E7331
-17820 62DD2186
-17850 AE8BAD8F
-17880 D093AB72
-KIHILFE 17883 spieler 3 ende abgewehrt dauer 74 verbleibend 5
-17910 5C1F4B98
-17940 55D823BC
-KIHILFE 17944 spieler 4 verstaerkung einheiten 3 wert 1900 bedrohung 7575
-KIGEFECHT 17955 spieler 4 lage fokus 2 abstand 14 verteilt 0 eigene 18 feinde 20
-17970 FFE14CA5
-18000 0CD35283
-STATE frame 18000 mode 2 players 8 objects 852 recorder 0 particles 137/452
-KIGEGNERMODELL 18004 spieler 4 ansturm 0 einigeln 0 luft 0 tarnung 1 armee 18075 luftwert 0 abwehr 3000 getarnt 0
-18030 9BD2A78A
-18060 4F69DF14
-KIHAUSHALT 18063 spieler 3 geld 109 basis 800 frei -691 vorrang_offen 1
-KIWIRTSCHAFT 18063 spieler 3 lage vorrat 4200 zentren 1 geld 109 hacker 0 sammler 12 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 3334 restzeit_min 1.3 investieren 0
-KIHAUSHALT 18064 spieler 4 geld 935 basis 1200 frei -265 vorrang_offen 1
-KIWIRTSCHAFT 18064 spieler 4 lage vorrat 68700 zentren 3 geld 935 hacker 1 sammler 11 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 11005 restzeit_min 6.2 investieren 1
-18090 2717EFE1
-18120 E147849C
-18150 7BD5D43D
-18180 C5685B5C
-KIGEGNERMODELL 18183 spieler 3 ansturm 0 einigeln 0 luft 0 tarnung 1 armee 17175 luftwert 0 abwehr 3000 getarnt 0
-18210 C455B1C8
-18240 BF4ADB49
-KIGEFECHT 18255 spieler 4 lage fokus 20 abstand 13 verteilt 0 eigene 16 feinde 10
-18270 EA0D076B
-18300 102AFE07
-18330 11262978
-18360 A40DD27D
-18390 75C7A7DA
-18420 0BD52619
-18450 99685BB5
-18480 3AC3B3D2
-18510 141E9CB2
-18540 3C9B1795
-KIGEFECHT 18555 spieler 4 lage fokus 58 abstand 0 verteilt 0 eigene 14 feinde 7
-18570 13BE5C09
-18600 AD16AABC
-KIHILFE 18603 spieler 3 start verbuendeter 4 bedrohung 800 einheiten 3 wert 1300 ort 1821 1526 armee 8800 einsetzbar 6160 kandidaten 10 wert 3400
-KIGEFECHT 18615 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 3 feinde 6
-18630 4ED3E8A1
-18660 F95016BD
-18690 E2B5CE80
-18720 4DDAE251
-18750 F31E0497
-18780 3CEB9C6E
-18810 B39429F0
-18840 E25EE41A
-KIGEFECHT 18855 spieler 4 lage fokus 44 abstand 15 verteilt 0 eigene 11 feinde 2
-18870 BC788B23
-18900 A69980BB
-STATE frame 18900 mode 2 players 8 objects 858 recorder 0 particles 165/532
-KIBAU 18904 spieler 4 upgrade Upgrade_ChinaSubliminalMessaging kosten 500 geld 2120
-KIGEFECHT 18915 spieler 3 lage fokus 6 abstand 0 verteilt 0 eigene 3 feinde 2
-18930 81FED7FB
-18960 BB1A9D7C
-18990 2822FEBE
-19020 CCF010A5
-KIHILFE 19023 spieler 3 verstaerkung einheiten 7 wert 2100 bedrohung 2400
-19050 787DC5A6
-19080 47E2003C
-19110 9299D79F
-19140 227BE4D1
-KIGEFECHT 19155 spieler 4 lage fokus 5 abstand 7 verteilt 0 eigene 9 feinde 5
-19170 11BB3C25
-19200 81C1BA0C
-KIGEFECHT 19215 spieler 3 lage fokus 4 abstand 0 verteilt 0 eigene 10 feinde 10
-19230 2B0ACA92
-19260 66F3E070
-19290 7E677B38
-19320 2A194B04
-19350 F9B9D114
-19380 77CA6E28
-19410 EE74585F
-19440 1691DB6F
-KIHILFE 19444 spieler 4 ende eigene_basis dauer 60 verbleibend 9
-19470 F48A8024
-KISUPERWAFFE 19500 spieler 3 macht SuperweaponRebelAmbush gegner 6 ziel_id 807 wert 2000 radius 50
-19500 75802B2F
-KIWIRTSCHAFT 19504 spieler 4 sammler ChinaVehicleSupplyTruck bestand 11 ziel 12
-KIGEFECHT 19515 spieler 3 lage fokus 3 abstand 18 verteilt 0 eigene 10 feinde 8
-19530 77C42A0D
-19560 54F99D40
-19590 D694BB97
-19620 54D99DF2
-KIFOKUS 19650 spieler 3 gegner 5 vorher 6 grund druck kosten 1434
-KIFOKUS 19650 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-19650 0DA2245C
-19680 F53EB4D6
-19710 7329F69A
-19740 9359F90C
-19770 2F8E8664
-19800 E22ADB9F
-STATE frame 19800 mode 2 players 8 objects 878 recorder 0 particles 290/1035
-KIVERTEIDIGUNG 19804 spieler 4 bedrohung 4200 einheiten 1 wert 300 ort 2215 1182
-KIGEFECHT 19815 spieler 3 lage fokus 11 abstand 13 verteilt 0 eigene 9 feinde 3
-19830 3AD35B60
-19860 C01FD865
-KIHAUSHALT 19863 spieler 3 geld 287 basis 800 frei -513 vorrang_offen 1
-KIWIRTSCHAFT 19863 spieler 3 lage vorrat 1275 zentren 1 geld 287 hacker 0 sammler 18 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 36204 restzeit_min 0.0 investieren 1
-KIHAUSHALT 19864 spieler 4 geld 830 basis 0 frei 830 vorrang_offen 0
-KIWIRTSCHAFT 19864 spieler 4 lage vorrat 60225 zentren 4 geld 830 hacker 4 sammler 9 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 9928 restzeit_min 6.1 investieren 0
-19890 EA2E4216
-19920 71961C74
-19950 74940B75
-19980 81CD575A
-20010 A50D63A3
-20040 00F3405C
-KIWIRTSCHAFT 20044 spieler 4 sammler ChinaVehicleSupplyTruck bestand 9 ziel 12
-20070 5ACB3B34
-20100 0CF5B017
-KIGEFECHT 20115 spieler 3 lage fokus 5 abstand 1 verteilt 0 eigene 9 feinde 17
-20130 0C435645
-20160 2C022F6E
-20190 9BB1D2E1
-20220 1E009B24
-20250 E6BB32D3
-20280 C0D75487
-20310 E0E1755C
-20340 D1855E58
-KIVERTEIDIGUNG 20344 spieler 4 bedrohung 3500 einheiten 1 wert 800 ort 2120 1085
-20370 1886E990
-20400 7FBD1B58
-KIGEFECHT 20415 spieler 3 lage fokus 15 abstand 0 verteilt 0 eigene 9 feinde 14
-20430 D476AC7B
-20460 5035E8CC
-20490 D95ACA7C
-20520 BCFCF8B6
-20550 4B07EE2F
-20580 275B9699
-KIHILFE 20583 spieler 3 ende aussichtslos dauer 66 verbleibend 9
-20610 FB9DAE66
-20640 9BDCAC0F
-20670 04FDB8CF
-20700 63A572F9
-STATE frame 20700 mode 2 players 8 objects 801 recorder 0 particles 134/584
-20730 D3424C14
-20760 E748BB02
-20790 756231ED
-20820 9777B4C1
-20850 CFB9F865
-20880 28CFE7D8
-20910 6E9D3BFE
-20940 9F72B775
-20970 D0DB4FB1
-21000 06173CB9
-21030 2413C59A
-21060 9EC1348F
-KIVERTEIDIGUNG 21064 spieler 4 bedrohung 1400 einheiten 1 wert 300 ort 1977 1043
-21090 26DA3A68
-21120 FF20F967
-21150 394E67C2
-21180 F71E0E03
-KIVERTEIDIGUNG 21184 spieler 4 bedrohung 1100 einheiten 1 wert 300 ort 2046 1045
-21210 8B360FAD
-21240 2DD34806
-KIHILFE 21243 spieler 3 start verbuendeter 4 bedrohung 2000 einheiten 9 wert 3100 ort 1896 1127 armee 9400 einsetzbar 6580 kandidaten 9 wert 3100
-KIVERTEIDIGUNG 21244 spieler 4 bedrohung 1700 einheiten 1 wert 300 ort 1885 993
-KIGEFECHT 21255 spieler 3 lage fokus 5 abstand 0 verteilt 0 eigene 9 feinde 6
-21270 89D3E5F1
-21300 D17C7C70
-21330 0238F1D7
-21360 B7FDB28D
-21390 B4168432
-21420 0AE2B3BA
-21450 C87673D3
-21480 3C5A144D
-21510 B26D52F0
-21540 991AE351
-KIGEFECHT 21555 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 2
-21570 EA81622E
-21600 C63AA060
-STATE frame 21600 mode 2 players 8 objects 789 recorder 0 particles 63/337
-21630 B7978042
-21660 7A5F0391
-KIHAUSHALT 21663 spieler 3 geld 37 basis 800 frei -763 vorrang_offen 1
-KIWIRTSCHAFT 21663 spieler 3 lage vorrat 0 zentren 1 geld 37 hacker 0 sammler 21 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 19602 restzeit_min 0.0 investieren 1
-KIHAUSHALT 21664 spieler 4 geld 510 basis 0 frei 510 vorrang_offen 0
-KIWIRTSCHAFT 21664 spieler 4 lage vorrat 56175 zentren 4 geld 510 hacker 1 sammler 10 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 8676 restzeit_min 6.5 investieren 1
-21690 788C9179
-21720 609225F0
-21750 FEA070B5
-21780 FCAF0161
-21810 5637919E
-21840 BE9AB35C
-KIGEFECHT 21855 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 1
-21870 29031CF2
-21900 DA713E16
-21930 4F5F0BA1
-21960 230B1B00
-21990 0A7B0EB5
-22020 72AF8C8A
-22050 792A5263
-22080 1FD0A37E
-KIHILFE 22083 spieler 3 ende eigene_basis dauer 28 verbleibend 9
-KIHILFE 22084 spieler 4 start verbuendeter 3 bedrohung 1600 einheiten 6 wert 3000 ort 588 979 armee 15200 einsetzbar 10640 kandidaten 13 wert 7200
-KIGEFECHT 22095 spieler 4 lage fokus 15 abstand 23 verteilt 0 eigene 6 feinde 6
-22110 2270904C
-22140 EFAA2D0A
-22170 77B9E211
-22200 AB13E115
-22230 EF4D6E93
-22260 6AC22233
-22290 6CCD0002
-22320 C422D29B
-22350 FA9C4DA8
-22380 8C9638F2
-KIGEFECHT 22395 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 5 feinde 6
-22410 2F8204DB
-22440 7FC97947
-22470 13799B25
-22500 2E3EAFCC
-STATE frame 22500 mode 2 players 8 objects 799 recorder 0 particles 127/499
-22530 0047503E
-22560 F3F170AB
-22590 8A106BA7
-22620 02C9AD45
-22650 1CCB2272
-22680 B353F2C2
-KIGEFECHT 22695 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 5 feinde 10
-22710 90D2EB58
-22740 362F1097
-22770 84FB7A07
-KISUPERWAFFE 22800 spieler 4 macht SuperweaponArtilleryBarrage gegner 5 ziel_id 6429 wert 4770 radius 125
-22800 71E9A29A
-KIHILFE 22804 spieler 4 ende eigene_basis dauer 24 verbleibend 4
-22830 345A75B7
-22860 B0940983
-22890 BF6F4FEF
-22920 07C735F0
-22950 387DC65E
-22980 AA349EAE
-23010 897F8305
-23040 B81D2188
-23070 75250775
-KIFOKUS 23100 spieler 3 gegner 6 vorher 5 grund druck kosten 2166
-KIFOKUS 23100 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-23100 5A603B1A
-23130 CC55F5F6
-23160 A3296CDA
-KIVERTEIDIGUNG 23163 spieler 3 bedrohung 600 einheiten 2 wert 1300 ort 812 922
-23190 CC552F06
-23220 787C7E55
-23250 46998D03
-23280 0D13C344
-KIVERTEIDIGUNG 23283 spieler 3 bedrohung 600 einheiten 1 wert 150 ort 830 816
-KIWIRTSCHAFT 23284 spieler 4 sammler ChinaVehicleSupplyTruck bestand 10 ziel 12
-23310 F21EFBC4
-23340 8EEC61F7
-23370 F0161C4B
-23400 851632DE
-STATE frame 23400 mode 2 players 8 objects 802 recorder 0 particles 190/844
-23430 BDB11049
-23460 FC4A264F
-KIHAUSHALT 23463 spieler 3 geld 192 basis 800 frei -608 vorrang_offen 1
-KIWIRTSCHAFT 23463 spieler 3 lage vorrat 0 zentren 1 geld 192 hacker 0 sammler 12 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 9989 restzeit_min 0.0 investieren 1
-KIHAUSHALT 23464 spieler 4 geld 390 basis 0 frei 390 vorrang_offen 0
-KIWIRTSCHAFT 23464 spieler 4 lage vorrat 53775 zentren 4 geld 390 hacker 3 sammler 10 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 5876 restzeit_min 9.2 investieren 1
-23490 E42F08A6
-23520 EF354F43
-23550 F7ECCA74
-23580 C9243361
-23610 57DCFCC2
-23640 4BB197A9
-23670 3DF50ACB
-23700 0782FE53
-23730 67EB814F
-23760 296C487C
-23790 85190CB4
-23820 10AA9174
-23850 7E404A2D
-23880 B5AF7BFF
-23910 43AA9FB0
-23940 DBA4C7C9
-23970 5DAE97AD
-24000 94282694
-24030 C0C988BB
-24060 3E8383D5
-24090 EFC81B88
-24120 4509F4D4
-24150 9D15E8F8
-24180 4DA38F81
-24210 D597D450
-24240 0AE3CCF1
-24270 D66039F2
-24300 DBCECC43
-STATE frame 24300 mode 2 players 8 objects 737 recorder 0 particles 70/319
-24330 948A5082
-24360 3819DE62
-24390 DC1543EC
-24420 4013313B
-24450 09A36747
-24480 B83FCFD4
-24510 D7AD416C
-24540 62802FDF
-24570 45D57E51
-24600 FD47DADE
-24630 42E3EAAF
-24660 F1A45BD9
-24690 BA5967EE
-24720 D021F3EA
-KIWIRTSCHAFT 24724 spieler 4 sammler ChinaVehicleSupplyTruck bestand 11 ziel 12
-24750 930E4A1A
-24780 BEB1D9D4
-24810 7D7196B6
-24840 7EA2C65F
-24870 3B05E54B
-24900 87975800
-24930 00F3C90E
-24960 DA0875A8
-24990 8303C27C
-25020 268857CD
-25050 CB1305C6
-25080 BBD9A3AC
-25110 311C7869
-25140 F138E2C9
-25170 CD0498FB
-25200 72C2A31B
-STATE frame 25200 mode 2 players 8 objects 797 recorder 0 particles 155/723
-25230 D1D58D84
-25260 9FF5DDE4
-KIHAUSHALT 25263 spieler 3 geld 167 basis 800 frei -633 vorrang_offen 1
-KIWIRTSCHAFT 25263 spieler 3 lage vorrat 0 zentren 1 geld 167 hacker 0 sammler 16 bedarf 4000 einnahmebauten 1 technik 0 frei 0 sammelrate 4994 restzeit_min 0.0 investieren 1
-KIHAUSHALT 25264 spieler 4 geld 840 basis 0 frei 840 vorrang_offen 0
-KIWIRTSCHAFT 25264 spieler 4 lage vorrat 50700 zentren 4 geld 840 hacker 3 sammler 12 bedarf 0 einnahmebauten 0 technik 1 frei 0 sammelrate 3913 restzeit_min 13.0 investieren 1
-25290 7D79A9F3
-25320 A46EFD06
-25350 BA303449
-25380 28487E87
-25410 C1B9D2B3
-25440 6E9416B4
-25470 51B78A9B
-25500 91279E89
-25530 1348B002
-25560 CC265BFF
-25590 5051FA27
-25620 F862B440
-25650 41CA5EF6
-25680 36CE9A57
-25710 B3BA59AB
-25740 68C697D0
-25770 B1C3ACBF
-25800 3168763E
-25830 5FA51AEB
-25860 A0DF6F77
-25890 AE660B02
-25920 106FDB62
-25950 FA43FFB2
-25980 5A6CF238
-26010 BAFE3777
-26040 8695B1A3
-26070 5191CAF6
-26100 C23644E7
-STATE frame 26100 mode 2 players 8 objects 738 recorder 0 particles 118/373
-26130 9FE6AD75
-26160 5BA5EA0E
-26190 F4F0E3CD
-26220 ED5092E0
-26250 E4C1480C
-26280 FFC40F49
-KIVERTEIDIGUNG 26283 spieler 3 bedrohung 675 einheiten 6 wert 2350 ort 563 1186
-26310 2D26FACB
-26340 77D3FED6
-KIWIRTSCHAFT 26344 spieler 4 vorlauf restzeit_min 12.4 sammelrate 3869 elite_min 10.5 ertrag_elite 240 bedarf 14
-26370 94796CC4
-26400 3DC3208E
-26430 4D405A00
-26460 B72A13E3
-26490 C97E7DA4
-26520 F31BA9E0
-26550 D088CFD2
-26580 894B4BC2
-26610 346CB2C9
-26640 6A1083A2
-26670 07AE1EF6
-KISUPERWAFFE 26700 spieler 3 macht SuperweaponRebelAmbush gegner 6 ziel_id 807 wert 2000 radius 50
-26700 FBED46B2
-KIWIRTSCHAFT 26704 spieler 4 hacker ChinaInfantryHacker bestand 3 ziel 15
-26730 227B7F71
-26760 B84AE906
-26790 C1A828D1
-26820 E6CD1BB7
-KIFOKUS 26850 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2740
-KIFOKUS 26850 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-26850 74AAAC7D
-26880 95F3B726
-26910 BFF6B08D
-26940 9DD78BE0
-26970 4E1F5DFC
+2730 A2FAEAF1
+2760 4F01DA11
+AIPOWER 2763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 2
+AIMIX 2763 player 3 front 500/449 anti_vehicle 0/200 anti_infantry 500/150 anti_air 0/100 siege 0/100 distance 800
+AITHREAT 2763 player 3 threat 0 emergency 0 held_seconds 0
+AISCRIPT 2763 player 3 teams 1 value 300 top GLA Tech Building Capture3=300;
+AIPOSTS 2763 player 3 posts 3 army 300 posted 0 idle_home 0 idle_field 0 script_team 300 mission 0
+AIPOWER 2764 player 4 production 10 consumption 2 underpowered_s 0 power_plants 1 defence 0
+AIMIX 2764 player 4 front 500/449 anti_vehicle 0/200 anti_infantry 500/150 anti_air 0/100 siege 0/100 distance 800
+AITHREAT 2764 player 4 threat 0 emergency 0 held_seconds 0
+AISCRIPT 2764 player 4 teams 1 value 600 top China Tech Building Capture2=600;
+AIPOSTS 2764 player 4 posts 3 army 600 posted 0 idle_home 0 idle_field 0 script_team 600 mission 0
+AIECONOMY 2764 player 4 expansion ChinaSupplyCenter reserve 28800 centres 1 reason growth
+2790 681AA9ED
+2820 A41835F3
+2850 1CA030EB
+2880 D435C83B
+2910 15E802D2
+2940 F2D4EA84
+AIECONOMY 2943 player 3 tech TechOilDerrick unit GLAInfantryRebel pos 383 1349
+2970 07204453
+3000 480E2638
+3030 91DFFB5B
+3060 63CAEE01
+AIPOWER 3063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 2
+AIPOWER 3064 player 4 production 10 consumption 2 underpowered_s 0 power_plants 1 defence 0
+3090 7EBA9A21
+3120 0C9BE92C
+3150 9C3E6A68
+3180 6CD79B02
+3210 14EBCAA2
+3240 286D0FBC
+3270 AD2E4598
+3300 40C54486
+AIECONOMY 3303 player 3 expansion GLASupplyStash reserve 27975 centres 1 reason growth
+3330 E42059BA
+3360 3CAADFA8
+AIPOWER 3363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIPOWER 3364 player 4 production 10 consumption 2 underpowered_s 0 power_plants 1 defence 0
+3390 A5EB9611
+3420 0546ADC0
+3450 36D2337E
+3480 506B5193
+3510 546ABFFE
+3540 4ADE0377
+3570 7913F1AE
+3600 40D0604A
+STATE frame 3600 mode 2 players 8 objects 875 recorder 0 particles 26/0
+3630 83B6911B
+3660 7567A7D8
+AIPOWER 3663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIMIX 3663 player 3 front 456/449 anti_vehicle 403/200 anti_infantry 140/150 anti_air 0/100 siege 0/100 distance 419
+AITHREAT 3663 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 3663 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 30 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 3663 player 3 posts 3 army 2600 posted 0 idle_home 0 idle_field 0 script_team 2300 mission 0
+AIBUDGET 3663 player 3 money 5100 base 0 free 5100 priority_open 1
+AIECONOMY 3663 player 3 situation reserve 27375 centres 1 money 5100 hackers 0 harvesters 9 need 1500 income_buildings 0 tech 0 free 6 gather_rate 1312 minutes_left 20.9 invest 1
+AIPOWER 3664 player 4 production 10 consumption 2 underpowered_s 0 power_plants 1 defence 0
+AIMIX 3664 player 4 front 214/449 anti_vehicle 0/200 anti_infantry 785/150 anti_air 0/100 siege 0/100 distance 1271
+AITHREAT 3664 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 3664 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 30 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 3664 player 4 posts 4 army 2200 posted 0 idle_home 0 idle_field 0 script_team 2200 mission 0
+AIECONOMY 3664 player 4 harvester ChinaVehicleSupplyTruck have 3 target 6
+AIBUDGET 3664 player 4 money 5800 base 0 free 5200 priority_open 0
+AIECONOMY 3664 player 4 situation reserve 106125 centres 2 money 5800 hackers 0 harvesters 3 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
+3690 ADB4CC2A
+3720 4FA23A57
+3750 F96BDCA9
+3780 299438C1
+3810 AEF91820
+3840 180E8B5D
+AIECONOMY 3844 player 4 tech_end captured duration 42
+3870 28051FAE
+3900 E64A5F64
+3930 67FAF551
+3960 BD801A3F
+AIPOWER 3963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIPOWER 3964 player 4 production 10 consumption 2 underpowered_s 0 power_plants 1 defence 0
+3990 35CAEF07
+4020 E08915C8
+AIECONOMY 4024 player 4 harvester ChinaVehicleSupplyTruck have 4 target 6
+AIECONOMY 4024 player 4 tech TechOilDerrick unit ChinaInfantryRedguard pos 1727 1203
+4050 83225900
+4080 A2E7639A
+4110 4B072F4C
+4140 64CAC125
+AIECONOMY 4144 player 4 build ChinaPowerPlant have 3 target 5 reserve 0 reason power
+4170 7420A9C4
+AIFOCUS 4200 player 3 enemy 6 before -1 reason choice cost 4644
+AIFOCUS 4200 player 4 enemy 6 before -1 reason alliance cost 0
+4200 54745026
+AISQUAD 4203 player 3 picked 1 of 1 value 150 ratio 0.17 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 0 missing 1
+AISQUAD 4204 player 4 picked 1 of 1 value 300 ratio 0.17 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 0 missing 1
+4230 9BC3741D
+4260 5C2423D9
+AIPOWER 4263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIPOWER 4264 player 4 production 10 consumption 3 underpowered_s 0 power_plants 1 defence 1
+4290 7AA8BB84
+4320 A1977E73
+AISCOUT 4323 player 3 scout GLAInfantryRebel target 423 2377
+4350 06EAC10D
+4380 4A312317
+4410 DE2AD026
+4440 A0B14E3E
+4470 A68F31A7
+4500 BF2E5E7D
+STATE frame 4500 mode 2 players 8 objects 898 recorder 0 particles 38/0
+4530 99D62AE4
+4560 D4EC28CA
+AIPOWER 4563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIMIX 4563 player 3 front 388/192 anti_vehicle 422/48 anti_infantry 188/384 anti_air 0/96 siege 0/279 distance 1142
+AITHREAT 4563 player 3 threat 0 emergency 0 held_seconds 0
+AISCRIPT 4563 player 3 teams 3 value 2850 top GLA D5H Combat Zone3=1900;GLA D5H Terror+Technical3=800;GLA Tech Building Capture3=150;
+AIPOSTS 4563 player 3 posts 2 army 4200 posted 600 idle_home 600 idle_field 0 script_team 2850 mission 150
+AIPOWER 4564 player 4 production 10 consumption 3 underpowered_s 0 power_plants 1 defence 1
+AIMIX 4564 player 4 front 349/192 anti_vehicle 301/48 anti_infantry 349/384 anti_air 0/96 siege 0/279 distance 821
+AITHREAT 4564 player 4 threat 0 emergency 0 held_seconds 0
+AISCRIPT 4564 player 4 teams 3 value 4100 top China D5H Tank RushB - F2=3200;China Tech Building Capture2=600;China Alert Tanks2=300;
+AIPOSTS 4564 player 4 posts 2 army 4100 posted 0 idle_home 0 idle_field 0 script_team 4100 mission 0
+4590 F39730BB
+4620 09935C33
+4650 2063DA32
+4680 ED1428F6
+4710 BD10A16B
+4740 7DE14B20
+4770 BB4549B8
+4800 8B12A842
+4830 A47A07AE
+4860 4E26E8FB
+AIPOWER 4863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIPOWER 4864 player 4 production 10 consumption 3 underpowered_s 0 power_plants 1 defence 1
+4890 AC78FD45
+4920 A36308F7
+AIECONOMY 4923 player 3 tech_end captured duration 66
+4950 D254B2C6
+4980 2D4CE18C
+5010 DFAB90DA
+5040 60E1D495
+5070 62977953
+5100 12360C91
+AISQUAD 5103 player 3 picked 3 of 3 value 750 ratio 0.67 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 200 anti_air 0 siege 0 ok 0 missing 1
+AIECONOMY 5103 player 3 tech TechOilDerrick unit GLAInfantryRebel pos 1727 1203
+AISQUAD 5104 player 4 picked 2 of 2 value 600 ratio 0.15 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 0 missing 1
+5130 7E775C0D
+5160 610AC419
+AIPOWER 5163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIPOWER 5164 player 4 production 10 consumption 3 underpowered_s 0 power_plants 1 defence 1
+5190 4A63453E
+5220 39BE93C4
+5250 8D0176B1
+5280 83A272A5
+AIHELP 5283 player 3 start ally 4 threat 600 units 3 value 1200 pos 2438 1376 armee 4850 einsetzbar 3245 kandidaten 7 wert 2600
+AIMICRO 5295 player 3 situation focus 0 spacing 1 spread 0 own 3 enemies 12
+5310 8D6BBC35
+5340 DC0B55D6
+AIENEMYMODEL 5343 player 3 rush 1 turtle 0 air 0 stealth 0 army 6950 air_value 0 defence 0 stealthed 0
+5370 1848C7C9
+5400 485709A0
+STATE frame 5400 mode 2 players 8 objects 931 recorder 0 particles 144/251
+5430 6C60AFD9
+5460 82333DC0
+AIPOWER 5463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIMIX 5463 player 3 front 379/300 anti_vehicle 407/400 anti_infantry 212/95 anti_air 0/100 siege 0/104 distance 408
+AITHREAT 5463 player 3 threat 1800 emergency 0 held_seconds 0
+AIGATE 5463 player 3 cooldown 0 assist 3 grace 0 threat 0 no_enemy 9 no_target 0 squad_ratio 18 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 5463 player 3 posts 2 army 4850 posted 0 idle_home 0 idle_field 0 script_team 2900 mission 1350
+AIBUDGET 5463 player 3 money 4425 base 0 free 4425 priority_open 0
+AIECONOMY 5463 player 3 situation reserve 95700 centres 2 money 4425 hackers 0 harvesters 9 need 0 income_buildings 0 tech 1 free 2 gather_rate 1312 minutes_left 72.9 invest 0
+AIPOWER 5464 player 4 production 10 consumption 7 underpowered_s 0 power_plants 2 defence 1
+AIMIX 5464 player 4 front 345/300 anti_vehicle 454/400 anti_infantry 200/95 anti_air 0/100 siege 0/104 distance 408
+AITHREAT 5464 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 5464 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 9 no_target 0 squad_ratio 15 squad_shares 0 small_force 6 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 5464 player 4 posts 2 army 7200 posted 0 idle_home 0 idle_field 0 script_team 7200 mission 0
+AIBUDGET 5464 player 4 money 750 base 1200 free -450 priority_open 1
+AIECONOMY 5464 player 4 situation reserve 102375 centres 2 money 750 hackers 0 harvesters 7 need 0 income_buildings 0 tech 2 free 2 gather_rate 2850 minutes_left 35.9 invest 1
+5490 361232A0
+5520 4BAF360B
+AIHELP 5524 player 4 rejected ally 3 threat 2750 armee 8000 einsetzbar 5600 kandidaten 2 wert 600
+5550 8F998C5B
+5580 8CA1676C
+AIDEFENCE 5583 player 3 threat 2700 units 2 value 100 pos 906 1029
+AIMICRO 5595 player 3 situation focus 3 spacing 5 spread 0 own 2 enemies 3
+5610 BE745D90
+5640 BD8979E5
+AIDEFENCE 5643 player 3 threat 2700 units 1 value 200 pos 917 980
+AIECONOMY 5644 player 4 tech_end captured duration 54
+5670 3CFC9DB8
+5700 E877EBB2
+AIHELP 5704 player 4 start ally 3 threat 1150 units 6 value 1800 pos 445 1460 armee 8000 einsetzbar 5600 kandidaten 8 wert 2400
+5730 EABAF33D
+5760 0511854B
+AIPOWER 5763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 3
+AIPOWER 5764 player 4 production 10 consumption 7 underpowered_s 0 power_plants 2 defence 2
+5790 E4743F1D
+5820 8F5A6738
+5850 341A2F3F
+5880 A584955E
+AIMICRO 5895 player 3 situation focus 3 spacing 0 spread 0 own 2 enemies 5
+5910 5D0578F1
+5940 E4FF3C1F
+AIHELP 5943 player 3 end lost duration 22 remaining 0
+5970 84B6DFD0
+6000 43795227
+6030 0BF68479
+6060 FBAEDD65
+AIPOWER 6063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 5
+AIPOWER 6064 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 2
+6090 BDAF0838
+6120 17D18B1C
+6150 2375D68D
+6180 1FFC0F2D
+6210 3D7A3D7C
+6240 044E0C2F
+6270 66F4C719
+6300 B256B473
+STATE frame 6300 mode 2 players 8 objects 902 recorder 0 particles 123/195
+6330 E2F653CE
+AIMICRO 6345 player 4 situation focus 1 spacing 0 spread 0 own 6 enemies 5
+6360 9F0BB3BA
+AIPOWER 6363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 5
+AIMIX 6363 player 3 front 393/187 anti_vehicle 213/240 anti_infantry 393/369 anti_air 0/93 siege 0/108 distance 459
+AITHREAT 6363 player 3 threat 2500 emergency 0 held_seconds 0
+AISCRIPT 6363 player 3 teams 4 value 3050 top GLA Alert Infantry3=1800;GLA Alert Tanks3=600;GLA D5H Terror+Technical3=500;GLA Tech Building Capture3=150;
+AIPOSTS 6363 player 3 posts 2 army 3650 posted 0 idle_home 0 idle_field 0 script_team 3050 mission 0
+AIPOWER 6364 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 2
+AIMIX 6364 player 4 front 400/187 anti_vehicle 435/239 anti_infantry 164/369 anti_air 0/93 siege 0/108 distance 815
+AITHREAT 6364 player 4 threat 0 emergency 0 held_seconds 0
+AISCRIPT 6364 player 4 teams 3 value 8100 top China D5H Tank RushB - F2=7200;China Alert Tanks2=600;China Tech Building Capture2=300;
+AIPOSTS 6364 player 4 posts 2 army 10200 posted 0 idle_home 0 idle_field 0 script_team 8100 mission 1800
+AIECONOMY 6364 player 4 expansion ChinaSupplyCenter reserve 99675 centres 2 reason growth
+6390 B3A7A4DF
+6420 B1BAA982
+6450 60B370B4
+6480 A1B50468
+6510 08E4BF1E
+6540 F35EEAE0
+AIECONOMY 6544 player 4 harvester ChinaVehicleSupplyTruck have 7 target 9
+6570 86D8E6BF
+6600 D0366E77
+AIHELP 6603 player 3 start ally 4 threat 800 units 7 value 1350 pos 1805 1545 armee 4850 einsetzbar 2425 kandidaten 8 wert 1550
+6630 A019975E
+6660 B99AB2B1
+AIPOWER 6663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 6
+AIPOWER 6664 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 2
+AISCOUT 6664 player 4 scout ChinaInfantryRedguard target 2371 2377
+6690 5D9F2EA6
+6720 8D52C327
+AIECONOMY 6724 player 4 harvester ChinaVehicleSupplyTruck have 7 target 9
+AIECONOMY 6724 player 4 tech TechOilDerrick unit ChinaInfantryRedguard pos 1165 1659
+6750 749256DA
+6780 87D9344F
+AITAKEOVER 6782 player 4 team China D5H Tank RushB - F2 units 10 value 8000
+6810 6F830E36
+6840 C63CC417
+AIHELP 6844 player 4 end repelled duration 38 remaining 6
+AISQUAD 6844 player 4 picked 7 of 7 value 2100 ratio 0.23 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 0 missing 1
+6870 DEEA8856
+6900 E76672EA
+AIPOSTS 6904 player 4 posts 3 army 11600 posted 1500 idle_home 1500 idle_field 0 script_team 900 mission 300
+6930 FCFBBD31
+6960 012D6B30
+AIPOWER 6963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 6
+AIPOWER 6964 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 2
+6990 CF055A35
+7020 EDA08DAD
+AIHELP 7024 player 4 start ally 3 threat 1825 units 10 value 3500 pos 313 1051 armee 11600 einsetzbar 7820 kandidaten 21 wert 11300
+7050 B4404EAF
+7080 A22C3D6C
+7110 8BF1718A
+7140 925ACF0E
+7170 8E24A8F8
+7200 CBB05E5E
+STATE frame 7200 mode 2 players 8 objects 897 recorder 0 particles 117/176
+7230 952957EC
+7260 918C1C4F
+AIPOWER 7263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 6
+AIMIX 7263 player 3 front 361/190 anti_vehicle 325/47 anti_infantry 313/380 anti_air 0/95 siege 0/285 distance 896
+AITHREAT 7263 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 7263 player 3 cooldown 0 assist 19 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 11 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 7263 player 3 posts 2 army 6050 posted 0 idle_home 0 idle_field 0 script_team 4100 mission 1350
+AIBUDGET 7263 player 3 money 5218 base 800 free 4418 priority_open 1
+AIECONOMY 7263 player 3 situation reserve 92175 centres 2 money 5218 hackers 0 harvesters 14 need 0 income_buildings 0 tech 0 free 1 gather_rate 2081 minutes_left 44.3 invest 0
+AIPOWER 7264 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 2
+AIMIX 7264 player 4 front 391/190 anti_vehicle 422/47 anti_infantry 185/380 anti_air 0/95 siege 0/285 distance 1152
+AITHREAT 7264 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 7264 player 4 cooldown 0 assist 23 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 4 squad_shares 0 small_force 3 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 7264 player 4 money 1450 base 0 free 1450 priority_open 0
+AIECONOMY 7264 player 4 situation reserve 118500 centres 3 money 1450 hackers 0 harvesters 9 need 0 income_buildings 0 tech 3 free 1 gather_rate 2850 minutes_left 41.6 invest 1
+7290 573B03D5
+7320 CB4C6CB8
+7350 79887EA4
+7380 0EE3A406
+7410 EC2216B0
+7440 555DB34B
+AIECONOMY 7443 player 3 tech_end unit_gone duration 78
+7470 704BD8C7
+7500 6DD93CC7
+7530 92573A96
+AITAKEOVER 7555 player 3 team GLA D4H Tunnel Vehicles3 units 2 value 1200
+7560 D1567EDB
+AIPOWER 7563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 7
+AIPOWER 7564 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 2
+7590 756E7B25
+7620 94985E41
+AIHELP 7624 player 4 end repelled duration 20 remaining 8
+AISQUAD 7624 player 4 picked 1 of 8 value 800 ratio 13.87 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+7650 394C65A7
+7680 1DFFFB84
+AISCOUT 7683 player 3 scout GLATankScorpion target 423 2377
+AISCRIPT 7684 player 4 teams 2 value 2200 top China Alert Infantry2=1600;China Alert Tanks2=600;
+AIPOSTS 7684 player 4 posts 3 army 12600 posted 3400 idle_home 1900 idle_field 0 script_team 2200 mission 300
+AISQUAD 7684 player 4 picked 1 of 8 value 800 ratio 13.87 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+7710 EB2E2D66
+7740 0DF69F5E
+AISQUAD 7744 player 4 picked 1 of 8 value 800 ratio 13.87 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+7770 45376B98
+7800 C90EF4CD
+AIHELP 7803 player 3 reinforcement units 4 value 2000 threat 4000
+AISQUAD 7804 player 4 picked 8 of 8 value 3400 ratio 1.05 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 647 anti_air 0 siege 0 ok 1 missing 16
+AIECONOMY 7804 player 4 expansion ChinaSupplyCenter reserve 116100 centres 3 reason growth
+AIMICRO 7815 player 3 situation focus 1 spacing 0 spread 0 own 9 enemies 25
+7830 99CD90E6
+7860 764C41A5
+AIPOWER 7863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 7
+AIPOWER 7864 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 1
+AIENEMYMODEL 7864 player 4 rush 1 turtle 0 air 0 stealth 0 army 6300 air_value 0 defence 1000 stealthed 0
+AISCOUT 7864 player 4 scout ChinaTankBattleMaster target 2371 2377
+AIDEFENCE 7864 player 4 threat 800 units 7 value 2600 pos 2236 1274
+7890 D146DB1D
+7920 1A97C0FB
+7950 08737008
+7980 4ABD8D79
+8010 981558BE
+8040 DF2061FA
+8070 5B95FAFD
+8100 635C7D53
+STATE frame 8100 mode 2 players 8 objects 906 recorder 0 particles 90/175
+8130 82933AD7
+8160 C24BF098
+AIPOWER 8163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 7
+AIMIX 8163 player 3 front 346/190 anti_vehicle 386/47 anti_infantry 266/380 anti_air 0/95 siege 0/285 distance 990
+AITHREAT 8163 player 3 threat 0 emergency 0 held_seconds 0
+AISCRIPT 8163 player 3 teams 3 value 3600 top GLA Alert Tanks3=1800;GLA D5H Base Expander3=1200;GLA D4H Tunnel Vehicles3=600;
+AIPOSTS 8163 player 3 posts 2 army 8200 posted 600 idle_home 600 idle_field 0 script_team 3600 mission 3400
+AIPOWER 8164 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 1
+AIMIX 8164 player 4 front 357/190 anti_vehicle 401/47 anti_infantry 240/380 anti_air 0/95 siege 0/285 distance 1043
+AITHREAT 8164 player 4 threat 2400 emergency 0 held_seconds 0
+8190 F86E98DE
+8220 E8282044
+8250 4C9FD169
+8280 FBF552FA
+8310 49EE683B
+8340 2CC8793F
+AIMICRO 8355 player 3 situation focus 1 spacing 0 spread 0 own 8 enemies 20
+8370 B661CB0E
+AITAKEOVER 8385 player 3 team GLA D4H Tunnel Vehicles3 units 2 value 1200
+8400 D4262F35
+8430 55F24C97
+8460 11A512A0
+AIPOWER 8463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 7
+AIPOWER 8464 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 1
+8490 B001FD2D
+8520 8BDE4BD4
+AIFOCUS 8550 player 3 enemy 5 before 6 reason pressure cost 1196
+AIFOCUS 8550 player 4 enemy 5 before 6 reason alliance cost 0
+8550 872D55FC
+8580 97784892
+AIPOSTS 8584 player 4 posts 3 army 13700 posted 0 idle_home 0 idle_field 0 script_team 4900 mission 0
+8610 ED1039F9
+8640 FE285BC6
+AISCOUT 8643 player 3 scout GLATankScorpion target 2371 2377
+AIDEFENCE 8644 player 4 threat 4800 units 1 value 300 pos 2128 1161
+AIMICRO 8655 player 3 situation focus 2 spacing 0 spread 0 own 8 enemies 19
+8670 FA7D03CE
+8700 03E29D29
+AIHELP 8703 player 3 reinforcement units 4 value 1500 threat 4800
+8730 A30405B3
+8760 90BA7E82
+AIPOWER 8763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 8
+AIPOWER 8764 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 1
+8790 6C64FE99
+8820 EC0AC319
+8850 42DB1ABC
+8880 6A90E776
+8910 8BAD000E
+8940 3734A7B0
+AIMICRO 8955 player 3 situation focus 1 spacing 0 spread 0 own 11 enemies 16
+8970 024BFE8C
+9000 927652AE
+STATE frame 9000 mode 2 players 8 objects 895 recorder 0 particles 238/364
+9030 2C8868AD
+9060 FD904EA9
+AIPOWER 9063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 8
+AIMIX 9063 player 3 front 353/247 anti_vehicle 327/400 anti_infantry 318/50 anti_air 0/100 siege 0/202 distance 749
+AITHREAT 9063 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 9063 player 3 cooldown 0 assist 30 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 9063 player 3 posts 2 army 9650 posted 0 idle_home 0 idle_field 0 script_team 4350 mission 4100
+AIBUDGET 9063 player 3 money 9489 base 800 free 8689 priority_open 1
+AIECONOMY 9063 player 3 situation reserve 86700 centres 2 money 9489 hackers 0 harvesters 17 need 0 income_buildings 0 tech 0 free 0 gather_rate 3216 minutes_left 27.0 invest 0
+AIPOWER 9064 player 4 production 20 consumption 7 underpowered_s 0 power_plants 2 defence 1
+AIMIX 9064 player 4 front 348/247 anti_vehicle 303/400 anti_infantry 348/50 anti_air 0/100 siege 0/202 distance 796
+AITHREAT 9064 player 4 threat 4000 emergency 0 held_seconds 0
+AIGATE 9064 player 4 cooldown 0 assist 6 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 24 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 9064 player 4 money 6350 base 0 free 6350 priority_open 1
+AIECONOMY 9064 player 4 situation reserve 109950 centres 3 money 6350 hackers 0 harvesters 9 need 1500 income_buildings 0 tech 3 free 0 gather_rate 5588 minutes_left 19.7 invest 0
+9090 A0694518
+9120 61BA002B
+9150 36C608AA
+9180 C97E4BC6
+AISCOUT 9184 player 4 scout ChinaInfantryRedguard target 2371 2377
+AIDEFENCE 9184 player 4 threat 1600 units 2 value 600 pos 1849 1134
+9210 4C099873
+9240 2F67AD4F
+AIECONOMY 9244 player 4 tech_end captured duration 84
+AIMICRO 9255 player 3 situation focus 13 spacing 0 spread 0 own 9 enemies 19
+9270 A403EF0D
+9300 1DCFD3DE
+AIHELP 9303 player 3 end repelled duration 90 remaining 9
+AISQUAD 9303 player 3 picked 1 of 7 value 200 ratio 36.18 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AISQUAD 9304 player 4 picked 1 of 1 value 300 ratio 0.00 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 0 missing 1
+9330 E7F9853A
+9360 57035AA1
+AIPOWER 9363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 8
+AISCRIPT 9363 player 3 teams 3 value 4500 top GLA D5H Base Expander3=1800;GLA Alert Tanks3=1500;GLA Alert Infantry3=1200;
+AIPOSTS 9363 player 3 posts 2 army 9600 posted 3100 idle_home 2100 idle_field 1000 script_team 4500 mission 600
+AISQUAD 9363 player 3 picked 1 of 8 value 200 ratio 36.18 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AIPOWER 9364 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+9390 146D2E9C
+9420 D79AFE91
+AISQUAD 9423 player 3 picked 1 of 8 value 200 ratio 36.18 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+9450 2E6E9AA8
+9480 A7CB0E8A
+AISQUAD 9483 player 3 picked 1 of 9 value 200 ratio 36.51 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AISCRIPT 9484 player 4 teams 4 value 6500 top China D5H Tank Rush2=3200;China Alert Infantry2=2400;China Alert Tanks2=600;China Tech Building Capture2=300;
+AIPOSTS 9484 player 4 posts 3 army 14100 posted 300 idle_home 300 idle_field 0 script_team 6500 mission 300
+9510 15860E9E
+9540 A5D21DC5
+AIHELP 9543 player 3 start ally 4 threat 1600 units 7 value 2500 pos 1863 1484 armee 9550 einsetzbar 4175 kandidaten 13 wert 4600
+AIMICRO 9555 player 3 situation focus 1 spacing 0 spread 0 own 7 enemies 17
+9570 697A45FD
+9600 7C27AA16
+9630 0AE6149C
+9660 3B972B20
+AIPOWER 9663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 8
+AIDEFENCE 9663 player 3 threat 1150 units 1 value 600 pos 872 1095
+AIPOWER 9664 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIECONOMY 9664 player 4 order_cancelled ChinaSupplyCenter pos 2480 2696
+9690 23107527
+9720 83C8B483
+9750 5BA1CF90
+9780 B333E822
+AIECONOMY 9784 player 4 harvester ChinaVehicleSupplyTruck have 7 target 9
+AIECONOMY 9784 player 4 harvester ChinaVehicleSupplyTruck have 8 target 9
+9810 3B69004F
+9840 96834062
+AIMICRO 9855 player 3 situation focus 6 spacing 0 spread 0 own 7 enemies 16
+9870 C644372F
+9900 2541F5F2
+STATE frame 9900 mode 2 players 8 objects 886 recorder 0 particles 86/125
+9930 4C840E55
+9960 66399A6E
+AIPOWER 9963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 9963 player 3 front 361/170 anti_vehicle 311/340 anti_infantry 327/193 anti_air 0/85 siege 0/210 distance 649
+AITHREAT 9963 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 9964 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIMIX 9964 player 4 front 365/170 anti_vehicle 339/340 anti_infantry 295/193 anti_air 0/85 siege 0/210 distance 593
+AITHREAT 9964 player 4 threat 0 emergency 0 held_seconds 0
+9990 03B6BA74
+10020 786AA5A5
+10050 22BDBD28
+10080 4FD9DE01
+10110 4F40CB19
+10140 DB01DB22
+10170 4A3DF67C
+AIFOCUS 10200 player 3 enemy 6 before 5 reason pressure cost 1122
+AISUPERWEAPON 10200 player 3 special_power SuperweaponRebelAmbush enemy 6 target_id 2422 value 3000 radius 50
+AIFOCUS 10200 player 4 enemy 6 before 5 reason alliance cost 0
+10200 98A1D643
+AIMICRO 10200 player 3 situation focus 1 spacing 0 spread 0 own 5 enemies 13
+AISQUAD 10204 player 4 picked 1 of 1 value 300 ratio 0.00 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 0 missing 17
+AITAKEOVER 10210 player 4 team China D5H Tank Rush2 units 6 value 4800
+10230 680FC51B
+10260 1EAAEA49
+AIPOWER 10263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOSTS 10263 player 3 posts 3 army 10500 posted 0 idle_home 0 idle_field 0 script_team 5400 mission 2700
+AISCOUT 10263 player 3 done unit GLATankScorpion
+AIPOWER 10264 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AISCOUT 10264 player 4 done unit ChinaInfantryRedguard
+10290 31F87CD6
+10320 B715093C
+10350 37A9E719
+10380 C93111FE
+AIPOSTS 10384 player 4 posts 4 army 16000 posted 800 idle_home 800 idle_field 0 script_team 4800 mission 0
+10410 12018029
+10440 8421679F
+AIHELP 10443 player 3 reinforcement units 4 value 1950 threat 2400
+10470 7051182C
+10500 B4EC234B
+AIMICRO 10500 player 3 situation focus 4 spacing 0 spread 0 own 8 enemies 28
+10530 9D6F50B4
+10560 CF61589B
+AIPOWER 10563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOWER 10564 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+10590 B5C007A6
+10620 051F9848
+10650 DCCA59E2
+10680 66D244DB
+10710 7E774195
+10740 1F2CBD1B
+10770 EA317448
+10800 8C6EAA38
+AIMICRO 10800 player 3 situation focus 9 spacing 0 spread 0 own 7 enemies 19
+STATE frame 10800 mode 2 players 8 objects 901 recorder 0 particles 324/713
+AIROLES 10803 player 3 template GLAInfantryRebel roles front anti_infantry 
+AIROLES 10803 player 3 template GLAInfantryTunnelDefender roles anti_vehicle 
+AIROLES 10803 player 3 template GLAInfantryTerrorist roles front anti_vehicle anti_infantry 
+AIBUILD 10803 player 3 unit GLAInfantryTerrorist cost 200 money 7664 choice role
+AIBUILD 10804 player 4 upgrade Upgrade_ChinaAircraftArmor cost 1000 money 8150
+AIROLES 10804 player 4 template ChinaInfantryRedguard roles front anti_infantry 
+AIROLES 10804 player 4 template ChinaInfantryTankHunter roles anti_vehicle 
+AIBUILD 10804 player 4 unit ChinaInfantryTankHunter cost 300 money 7150 choice role
+10830 81333375
+10860 2692B08F
+AIPOWER 10863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIMIX 10863 player 3 front 351/194 anti_vehicle 257/389 anti_infantry 391/151 anti_air 0/97 siege 0/166 distance 792
+AITHREAT 10863 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 10863 player 3 cooldown 0 assist 26 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 4 regrow 0 started 0 force 200/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 10863 player 3 money 8514 base 900 free 7614 priority_open 1
+AIECONOMY 10863 player 3 situation reserve 81075 centres 2 money 8514 hackers 0 harvesters 17 need 0 income_buildings 0 tech 0 free 0 gather_rate 4495 minutes_left 18.0 invest 0
+AIPOWER 10864 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIMIX 10864 player 4 front 391/194 anti_vehicle 328/389 anti_infantry 279/151 anti_air 0/97 siege 0/166 distance 649
+AITHREAT 10864 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 10864 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 26 squad_shares 0 small_force 4 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AISQUAD 10864 player 4 picked 3 of 3 value 1900 ratio 0.89 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUDGET 10864 player 4 money 7450 base 0 free 7450 priority_open 0
+AIECONOMY 10864 player 4 situation reserve 103275 centres 3 money 7450 hackers 0 harvesters 10 need 0 income_buildings 0 tech 4 free 0 gather_rate 6656 minutes_left 15.5 invest 0
+10890 96652C98
+10920 C3BA3D0D
+AISQUAD 10924 player 4 picked 4 of 4 value 2200 ratio 1.19 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+10950 359CB2E6
+10980 25DBCE1B
+AIHELP 10983 player 3 reinforcement units 7 value 1800 threat 4200
+AISQUAD 10984 player 4 picked 4 of 4 value 2200 ratio 1.26 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUILD 10984 player 4 unit ChinaInfantryTankHunter cost 300 money 8050 choice role
+11010 CD1ED33C
+11040 BF8A0A27
+AISQUAD 11044 player 4 picked 4 of 4 value 2200 ratio 1.51 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+11070 A049B5A4
+11100 B9BA796C
+AIMICRO 11100 player 3 situation focus 6 spacing 0 spread 0 own 12 enemies 10
+AIBUILD 11103 player 3 unit GLAInfantryTerrorist cost 200 money 8096 choice role
+AISQUAD 11104 player 4 picked 4 of 4 value 2200 ratio 1.61 min_ratio 0.80 invited 0 covered 1 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+11130 A7C6CC5B
+11160 79587261
+AIPOWER 11163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AISCRIPT 11163 player 3 teams 3 value 3800 top GLA Alert Tanks3=1500;GLA D2H Combat Zone3=1400;GLA D5H Base Expander3=900;
+AIPOSTS 11163 player 3 posts 3 army 9850 posted 0 idle_home 0 idle_field 0 script_team 3800 mission 4350
+AIPOWER 11164 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AISQUAD 11164 player 4 picked 4 of 4 value 2200 ratio 1.61 min_ratio 0.80 invited 0 covered 1 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUILD 11164 player 4 unit ChinaInfantryTankHunter cost 300 money 7750 choice role
+11190 8F0580E6
+11220 30E90337
+AISQUAD 11224 player 4 picked 3 of 5 value 2400 ratio 2.23 min_ratio 0.80 invited 0 covered 1 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+11250 80D7843D
+11280 DC6C8BBE
+AISCRIPT 11284 player 4 teams 4 value 6700 top China Alert RocketGuy2=3100;China Alert Infantry2=2400;China Tech Building Capture2=600;China Alert Tanks2=600;
+AIPOSTS 11284 player 4 posts 4 army 18800 posted 2700 idle_home 1900 idle_field 0 script_team 6700 mission 0
+AISQUAD 11284 player 4 picked 3 of 5 value 2400 ratio 2.23 min_ratio 0.80 invited 0 covered 1 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+11310 190EEFF0
+11340 05CD14AE
+AISQUAD 11344 player 4 picked 3 of 5 value 2400 ratio 2.23 min_ratio 0.80 invited 0 covered 1 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUILD 11344 player 4 unit ChinaInfantryTankHunter cost 300 money 8650 choice role
+11370 18FFA719
+11400 497D8D0D
+AIMICRO 11400 player 3 situation focus 2 spacing 0 spread 0 own 11 enemies 6
+AIBUILD 11403 player 3 unit GLAInfantryTerrorist cost 200 money 8271 choice role
+AISQUAD 11404 player 4 picked 4 of 4 value 2700 ratio 0.98 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+11430 7F3061A8
+11460 1638D6B8
+AIPOWER 11463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOWER 11464 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+11490 26F5551A
+11520 34902D4A
+AIBUILD 11524 player 4 unit ChinaInfantryRedguard cost 300 money 8350 choice role
+11550 C8CD88E5
+11580 61B19F9E
+11610 20F40DAA
+11640 F4445104
+11670 D8C58EC3
+11700 16D90ACD
+AIMICRO 11700 player 3 situation focus 8 spacing 0 spread 0 own 9 enemies 7
+STATE frame 11700 mode 2 players 8 objects 888 recorder 0 particles 287/648
+AIBUILD 11703 player 3 unit GLAInfantryTerrorist cost 200 money 8221 choice role
+11730 ACE4F6B2
+11760 08EA18B8
+AIPOWER 11763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIMIX 11763 player 3 front 305/184 anti_vehicle 335/247 anti_infantry 358/351 anti_air 0/92 siege 0/124 distance 432
+AITHREAT 11763 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 11764 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIMIX 11764 player 4 front 387/184 anti_vehicle 369/247 anti_infantry 242/351 anti_air 0/92 siege 0/124 distance 651
+AITHREAT 11764 player 4 threat 0 emergency 0 held_seconds 0
+11790 778B499D
+11820 324FB29B
+11850 B3636272
+11880 1D925477
+AIBUILD 11884 player 4 unit ChinaInfantryRedguard cost 300 money 10050 choice role
+11910 EA22E644
+11940 05EC7727
+11970 2F2B9F4A
+12000 3180680C
+AIMICRO 12000 player 3 situation focus 3 spacing 0 spread 0 own 7 enemies 12
+AIBUILD 12003 player 3 unit GLAInfantryTerrorist cost 200 money 8171 choice role
+12030 D4F9B3CC
+12060 025D0E76
+AIPOWER 12063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOSTS 12063 player 3 posts 3 army 8200 posted 200 idle_home 200 idle_field 0 script_team 4100 mission 1800
+AIPOWER 12064 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+12090 AFF92668
+12120 69194B79
+12150 63DE8514
+12180 D7ABC283
+AIPOSTS 12184 player 4 posts 4 army 21600 posted 3900 idle_home 1200 idle_field 0 script_team 8000 mission 0
+12210 D616172A
+12240 50B719E4
+AIBUILD 12244 player 4 unit ChinaInfantryRedguard cost 300 money 11250 choice role
+12270 ED70BB17
+12300 E837055C
+AIMICRO 12300 player 3 situation focus 2 spacing 0 spread 0 own 6 enemies 4
+AISQUAD 12304 player 4 picked 9 of 9 value 4200 ratio 0.09 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 714 anti_air 0 siege 0 ok 0 missing 17
+12330 DB41E20F
+12360 D615EEAD
+AIPOWER 12363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 11
+AIPOWER 12364 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIBUILD 12364 player 4 upgrade Upgrade_ChinaBlackNapalm cost 2000 money 11450
+12390 6A9A07E3
+12420 398B4171
+12450 3EE258C9
+12480 DC000D7B
+12510 54751FC8
+12540 83C682B5
+12570 A213CA6A
+12600 DF7506E8
+STATE frame 12600 mode 2 players 8 objects 888 recorder 0 particles 149/384
+AIBUILD 12604 player 4 unit ChinaInfantryRedguard cost 300 money 10950 choice role
+12630 5EF4CF10
+12660 71526D75
+AIPOWER 12663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 11
+AIMIX 12663 player 3 front 302/191 anti_vehicle 450/160 anti_infantry 247/382 anti_air 0/95 siege 0/170 distance 802
+AITHREAT 12663 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 12663 player 3 cooldown 0 assist 30 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 200/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 12663 player 3 money 7253 base 0 free 7253 priority_open 0
+AIECONOMY 12663 player 3 situation reserve 75000 centres 2 money 7253 hackers 0 harvesters 17 need 0 income_buildings 0 tech 0 free 0 gather_rate 5173 minutes_left 14.5 invest 0
+AIPOWER 12664 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIMIX 12664 player 4 front 380/191 anti_vehicle 324/160 anti_infantry 295/382 anti_air 0/95 siege 0/170 distance 706
+AITHREAT 12664 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 12664 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 20 squad_shares 0 small_force 10 regrow 0 started 0 force 2700/5000 units 4/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 12664 player 4 money 10650 base 0 free 10650 priority_open 0
+AIECONOMY 12664 player 4 situation reserve 95250 centres 3 money 10650 hackers 0 harvesters 10 need 0 income_buildings 0 tech 4 free 0 gather_rate 6816 minutes_left 14.0 invest 0
+12690 D45B86BE
+12720 01E380D7
+12750 264B0885
+12780 52D8F233
+12810 A7B35E6C
+12840 4B6FBE8F
+AIHELP 12844 player 4 start ally 3 threat 3625 units 14 value 6200 pos 926 1848 armee 23300 einsetzbar 11650 kandidaten 41 wert 23300
+12870 BFE0917C
+12900 0D4D0E69
+12930 949AB862
+12960 4B257D89
+AIPOWER 12963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 11
+AISCRIPT 12963 player 3 teams 3 value 6200 top GLA D2H Combat Zone3=3800;GLA Alert Tanks3=1500;GLA D5H Base Expander3=900;
+AIPOSTS 12963 player 3 posts 3 army 9900 posted 600 idle_home 400 idle_field 0 script_team 6200 mission 900
+AIPOWER 12964 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+12990 427218C6
+13020 2424E15D
+AIDEFENCE 13024 player 4 threat 1100 units 2 value 600 pos 2248 1256
+13050 709A5B7C
+AIMICRO 13065 player 4 situation focus 1 spacing 0 spread 0 own 13 enemies 13
+13080 2AD4EB69
+AISCRIPT 13084 player 4 teams 3 value 7700 top China Alert RocketGuy2=4700;China Alert Infantry2=2400;China Alert Tanks2=600;
+AIPOSTS 13084 player 4 posts 4 army 23600 posted 0 idle_home 0 idle_field 0 script_team 7700 mission 5900
+AIMICRO 13095 player 3 situation focus 4 spacing 0 spread 0 own 4 enemies 13
+13110 1D6BBB2F
+13140 A46D123A
+13170 5D11299F
+13200 316D75FE
+13230 33C9FC02
+13260 E3DCBD4D
+AIPOWER 13263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 11
+AIHELP 13263 player 3 reinforcement units 10 value 2500 threat 3000
+AIPOWER 13264 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+13290 0EA068F1
+13320 EDEAAB64
+13350 23DCE4D3
+AIMICRO 13365 player 4 situation focus 37 spacing 0 spread 0 own 11 enemies 14
+13380 EB515CCF
+AIDEFENCE 13384 player 4 threat 4200 units 1 value 300 pos 2191 1116
+13410 895D1451
+13440 89790567
+AIDEFENCE 13444 player 4 threat 4200 units 1 value 300 pos 2184 1110
+13470 5CB37EC0
+13500 BB85C50D
+STATE frame 13500 mode 2 players 8 objects 904 recorder 0 particles 187/670
+13530 704407CF
+13560 78E0F6E9
+AIPOWER 13563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 11
+AIMIX 13563 player 3 front 317/180 anti_vehicle 421/360 anti_infantry 260/206 anti_air 0/90 siege 0/163 distance 506
+AITHREAT 13563 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 13564 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIMIX 13564 player 4 front 390/180 anti_vehicle 303/360 anti_infantry 306/206 anti_air 0/90 siege 0/163 distance 619
+AITHREAT 13564 player 4 threat 2500 emergency 0 held_seconds 0
+AIBUILD 13564 player 4 unit ChinaInfantryTankHunter cost 300 money 16650 choice role
+13590 2C7D09AF
+13620 440A4237
+AIHELP 13624 player 4 reinforcement units 10 value 5000 threat 5675
+13650 24D031AC
+AIMICRO 13665 player 4 situation focus 11 spacing 0 spread 0 own 17 enemies 19
+13680 7B444A64
+AIDEFENCE 13684 player 4 threat 2200 units 3 value 900 pos 2162 1121
+13710 B0691FC0
+13740 E7924634
+AIECONOMY 13744 player 4 lead minutes_left 11.7 gather_rate 7683 elite_min 10.5 yield_elite 240 need 14
+13770 B9C8048C
+13800 2BADF228
+13830 7CF3965D
+13860 1A497CDA
+AIPOWER 13863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOSTS 13863 player 3 posts 3 army 9000 posted 0 idle_home 0 idle_field 0 script_team 4700 mission 2500
+AIPOWER 13864 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 2
+13890 CEEE4DF4
+13920 7592DBAE
+AIHELP 13924 player 4 reinforcement units 6 value 3300 threat 7900
+13950 963CF20C
+AIMICRO 13965 player 4 situation focus 18 spacing 0 spread 0 own 22 enemies 30
+13980 9D7800D1
+AIPOSTS 13984 player 4 posts 4 army 22300 posted 0 idle_home 0 idle_field 0 script_team 3200 mission 11100
+14010 DAB4F73C
+14040 18958595
+14070 C47F5D2D
+14100 4C402E29
+AIHELP 14103 player 3 end time duration 152 remaining 10
+AISQUAD 14103 player 3 picked 1 of 10 value 200 ratio 11.19 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14130 17033454
+14160 31E10016
+AIPOWER 14163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AISCRIPT 14163 player 3 teams 2 value 5450 top GLA D2H Combat Zone3=4400;GLA D5H Base Expander3=1050;
+AIPOSTS 14163 player 3 posts 3 army 9750 posted 2500 idle_home 2500 idle_field 0 script_team 5450 mission 0
+AISQUAD 14163 player 3 picked 1 of 10 value 200 ratio 11.72 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIPOWER 14164 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 3
+14190 53F90406
+14220 DC449971
+AISQUAD 14223 player 3 picked 1 of 10 value 200 ratio 13.36 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14250 E83E63C5
+AIMICRO 14265 player 4 situation focus 62 spacing 0 spread 0 own 17 enemies 31
+14280 EDD89C53
+AISQUAD 14283 player 3 picked 1 of 10 value 200 ratio 19.91 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14310 5F2E4C22
+14340 77A895B6
+AISQUAD 14343 player 3 picked 1 of 10 value 200 ratio 24.96 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14370 518D13E0
+14400 7622FDEF
+STATE frame 14400 mode 2 players 8 objects 882 recorder 0 particles 215/678
+AISQUAD 14403 player 3 picked 1 of 10 value 200 ratio 29.42 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14430 E4FE4890
+14460 FDC64A21
+AIPOWER 14463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIMIX 14463 player 3 front 335/169 anti_vehicle 413/255 anti_infantry 251/296 anti_air 0/84 siege 0/192 distance 646
+AITHREAT 14463 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 14463 player 3 cooldown 0 assist 24 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 6 regrow 0 started 0 force 200/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AISQUAD 14463 player 3 picked 1 of 10 value 200 ratio 29.58 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUDGET 14463 player 3 money 103 base 5000 free -4897 priority_open 1
+AIECONOMY 14463 player 3 situation reserve 70800 centres 2 money 103 hackers 0 harvesters 10 need 0 income_buildings 1 tech 0 free 0 gather_rate 5624 minutes_left 12.6 invest 0
+AIPOWER 14464 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 3
+AIMIX 14464 player 4 front 370/169 anti_vehicle 333/255 anti_infantry 296/296 anti_air 0/84 siege 0/193 distance 555
+AITHREAT 14464 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 14464 player 4 cooldown 0 assist 27 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 3 squad_shares 0 small_force 0 regrow 0 started 0 force 2700/5000 units 4/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 14464 player 4 money 22250 base 0 free 22250 priority_open 0
+AIECONOMY 14464 player 4 situation reserve 86700 centres 3 money 22250 hackers 0 harvesters 10 need 0 income_buildings 0 tech 4 free 0 gather_rate 7683 minutes_left 11.3 invest 0
+14490 AE235F16
+14520 E6004133
+AISQUAD 14523 player 3 picked 1 of 10 value 200 ratio 29.74 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUILD 14524 player 4 unit ChinaInfantryRedguard cost 300 money 22450 choice role
+14550 D6A5829C
+AIMICRO 14565 player 4 situation focus 21 spacing 0 spread 0 own 13 enemies 25
+14580 BBECD4A1
+AISQUAD 14583 player 3 picked 1 of 10 value 200 ratio 29.91 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14610 3B7D59A9
+14640 5AF5C466
+AISQUAD 14643 player 3 picked 1 of 10 value 200 ratio 25.70 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14670 6C26BE35
+14700 E184219A
+AISQUAD 14703 player 3 picked 1 of 10 value 200 ratio 26.59 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14730 D5A90F19
+14760 5BB8C8A6
+AIPOWER 14763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AISQUAD 14763 player 3 picked 1 of 10 value 200 ratio 31.40 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIPOWER 14764 player 4 production 20 consumption 8 underpowered_s 0 power_plants 2 defence 3
+14790 CD0CFCDB
+14820 36192270
+AISQUAD 14823 player 3 picked 1 of 10 value 200 ratio 31.48 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14850 42EC0033
+AIMICRO 14865 player 4 situation focus 8 spacing 0 spread 0 own 12 enemies 18
+14880 8CD14977
+AISQUAD 14883 player 3 picked 1 of 10 value 200 ratio 31.58 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AISCRIPT 14884 player 4 teams 3 value 4100 top China D5H Base Expanders2=3000;China Alert Infantry2=800;China Alert Tanks2=300;
+AIPOSTS 14884 player 4 posts 4 army 19600 posted 0 idle_home 0 idle_field 0 script_team 4100 mission 6600
+AIBUILD 14884 player 4 unit ChinaInfantryRedguard cost 300 money 23850 choice role
+14910 860BBAA0
+14940 67A5E40C
+AISQUAD 14943 player 3 picked 1 of 10 value 200 ratio 31.67 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+14970 13E9385E
+AISUPERWEAPON 15000 player 4 special_power SuperweaponArtilleryBarrage enemy 6 target_id 1498 value 3859 radius 125
+15000 B1C44FAD
+AISQUAD 15003 player 3 picked 1 of 5 value 200 ratio 13.93 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+15030 850C4F90
+15060 D15DE9CE
+AIPOWER 15063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOSTS 15063 player 3 posts 3 army 10200 posted 1000 idle_home 0 idle_field 0 script_team 7400 mission 0
+AISQUAD 15063 player 3 picked 1 of 5 value 200 ratio 13.71 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIPOWER 15064 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIROLES 15064 player 4 template ChinaTankBattleMaster roles front anti_vehicle 
+AIROLES 15064 player 4 template ChinaTankDragon roles anti_infantry 
+AIROLES 15064 player 4 template ChinaTankGattling roles anti_infantry 
+AIBUILD 15064 player 4 unit ChinaTankGattling cost 800 money 25050 choice role
+15090 9A702B8D
+15120 703F9D53
+AISQUAD 15123 player 3 picked 1 of 5 value 200 ratio 12.02 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+15150 8E2FCB32
+AIMICRO 15165 player 4 situation focus 9 spacing 0 spread 0 own 10 enemies 16
+15180 C93A97C2
+AIENEMYMODEL 15183 player 3 rush 0 turtle 0 air 0 stealth 0 army 8425 air_value 0 defence 6800 stealthed 0
+AISQUAD 15183 player 3 picked 1 of 5 value 200 ratio 13.72 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+15210 DA539837
+15240 C9F60D05
+AISQUAD 15243 player 3 picked 1 of 5 value 200 ratio 14.43 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+15270 5C1D9FE5
+15300 3CE2EE41
+STATE frame 15300 mode 2 players 8 objects 871 recorder 0 particles 92/193
+AISQUAD 15303 player 3 picked 1 of 5 value 200 ratio 13.60 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+15330 D8084D3C
+15360 C460D1D6
+AIPOWER 15363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 15363 player 3 front 340/190 anti_vehicle 401/380 anti_infantry 258/47 anti_air 0/95 siege 0/285 distance 761
+AITHREAT 15363 player 3 threat 0 emergency 0 held_seconds 0
+AIHELP 15363 player 3 start ally 4 threat 1600 units 13 value 2500 pos 1796 1428 armee 10200 einsetzbar 7140 kandidaten 13 wert 2500
+AIPOWER 15364 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIMIX 15364 player 4 front 338/190 anti_vehicle 311/380 anti_infantry 350/47 anti_air 0/95 siege 0/285 distance 900
+AITHREAT 15364 player 4 threat 0 emergency 0 held_seconds 0
+15390 60322FAD
+15420 F0CEDFDD
+15450 0E336A4B
+AIMICRO 15465 player 4 situation focus 3 spacing 0 spread 0 own 10 enemies 20
+15480 2FAB1B61
+15510 17DAF180
+15540 F1AF5F44
+AIECONOMY 15544 player 4 harvester ChinaVehicleSupplyTruck have 8 target 9
+AIBUILD 15544 player 4 unit ChinaTankBattleMaster cost 800 money 24900 choice role
+15570 1033ABB9
+15600 E6D30B96
+15630 4F9F7A0C
+15660 98353B03
+AIPOWER 15663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOWER 15664 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AIBUILD 15664 player 4 unit ChinaInfantryTankHunter cost 300 money 24400 choice role
+AIMICRO 15675 player 3 situation focus 1 spacing 0 spread 0 own 13 enemies 2
+15690 B41EDF66
+AITAKEOVER 15696 player 3 team GLA Garrison Palace3 units 5 value 1500
+15720 75D77954
+AIFOCUS 15750 player 3 enemy 5 before 6 reason pressure cost 1832
+AIFOCUS 15750 player 4 enemy 5 before 6 reason alliance cost 0
+15750 0F7B3CCF
+AIMICRO 15765 player 4 situation focus 3 spacing 0 spread 0 own 9 enemies 29
+AITAKEOVER 15768 player 4 team China Bunker Team 12 units 5 value 1500
+15780 653D62BA
+AIPOSTS 15784 player 4 posts 3 army 20500 posted 1200 idle_home 1200 idle_field 0 script_team 4100 mission 5200
+15810 3D3BBC84
+15840 53B56EBB
+15870 36068A54
+15900 8199C63F
+15930 F7DE7FEF
+15960 1A632447
+AIPOWER 15963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AISCRIPT 15963 player 3 teams 1 value 4400 top GLA D2H Combat Zone3=4400;
+AIPOSTS 15963 player 3 posts 3 army 10200 posted 1500 idle_home 1500 idle_field 0 script_team 4400 mission 2500
+AIPOWER 15964 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AIMICRO 15975 player 3 situation focus 4 spacing 0 spread 0 own 13 enemies 4
+15990 EE48CDF8
+16020 6E3162A6
+AIBUILD 16024 player 4 unit ChinaTankDragon cost 800 money 24900 choice role
+16050 5F8D92CF
+AIMICRO 16065 player 4 situation focus 11 spacing 0 spread 0 own 7 enemies 15
+16080 5D2694A6
+16110 19B0929E
+16140 62B11287
+AIBUILD 16144 player 4 unit ChinaInfantryRedguard cost 300 money 24600 choice role
+16170 6A11C13B
+16200 7693E5D0
+STATE frame 16200 mode 2 players 8 objects 872 recorder 0 particles 197/646
+16230 1146915D
+16260 9625BBC5
+AIPOWER 16263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIMIX 16263 player 3 front 335/170 anti_vehicle 410/195 anti_infantry 255/341 anti_air 0/85 siege 0/207 distance 758
+AITHREAT 16263 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 16263 player 3 cooldown 0 assist 15 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 15 regrow 0 started 0 force 200/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 16263 player 3 money 533 base 5000 free -4467 priority_open 1
+AIECONOMY 16263 player 3 situation reserve 66900 centres 2 money 533 hackers 0 harvesters 15 need 1500 income_buildings 1 tech 0 free 0 gather_rate 4387 minutes_left 15.2 invest 1
+AIPOWER 16264 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AIMIX 16264 player 4 front 316/170 anti_vehicle 333/195 anti_infantry 350/341 anti_air 0/85 siege 0/207 distance 585
+AITHREAT 16264 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 16264 player 4 cooldown 0 assist 30 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 2700/5000 units 4/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 16264 player 4 money 24600 base 0 free 24600 priority_open 0
+AIECONOMY 16264 player 4 situation reserve 14850 centres 2 money 24600 hackers 0 harvesters 10 need 0 income_buildings 0 tech 4 free 0 gather_rate 8116 minutes_left 1.8 invest 0
+AIMICRO 16275 player 3 situation focus 3 spacing 0 spread 0 own 13 enemies 1
+16290 4EFAD349
+16320 7D88554A
+16350 9E5D45A2
+AIMICRO 16365 player 4 situation focus 2 spacing 0 spread 0 own 7 enemies 17
+16380 0A93D9B7
+16410 4E69F85A
+16440 8EC090E6
+AITAKEOVER 16460 player 4 team China Bunker Team 12 units 5 value 1500
+16470 432F7955
+16500 A9C72781
+AIHELP 16504 player 4 reinforcement units 7 value 2600 threat 4600
+AIBUILD 16504 player 4 unit ChinaTankDragon cost 800 money 26000 choice role
+AIBUILD 16504 player 4 unit ChinaInfantryRedguard cost 300 money 25200 choice role
+16530 1DF5F953
+16560 C0F6AAC8
+AIPOWER 16563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOWER 16564 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AIMICRO 16575 player 3 situation focus 4 spacing 0 spread 0 own 11 enemies 5
+16590 ED71213A
+16620 139F306E
+16650 8976343E
+AIMICRO 16665 player 4 situation focus 25 spacing 0 spread 0 own 12 enemies 38
+16680 7FD97204
+AISCRIPT 16684 player 4 teams 3 value 2900 top China D5H Base Expanders2=1800;China Alert Infantry2=800;China Alert Tanks2=300;
+AIPOSTS 16684 player 4 posts 3 army 19900 posted 1200 idle_home 600 idle_field 0 script_team 2900 mission 5300
+16710 ECBBB6B6
+16740 C5315ECF
+16770 9D3C6C9D
+16800 02F2D5EC
+AIHELP 16804 player 4 reinforcement units 5 value 2000 threat 4200
+16830 84B206A1
+16860 C0DD1512
+AIPOWER 16863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIPOSTS 16863 player 3 posts 3 army 10750 posted 1500 idle_home 0 idle_field 0 script_team 5300 mission 2150
+AIHELP 16863 player 3 end repelled duration 50 remaining 11
+AISQUAD 16863 player 3 picked 1 of 14 value 200 ratio 4.43 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIPOWER 16864 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+16890 EA5F4FED
+16920 10F5FE76
+AISCRIPT 16923 player 3 teams 2 value 5300 top GLA D2H Combat Zone3=4400;GLA Garrison Palace3=900;
+AIPOSTS 16923 player 3 posts 3 army 10750 posted 3650 idle_home 1750 idle_field 400 script_team 5300 mission 0
+AISQUAD 16923 player 3 picked 1 of 16 value 200 ratio 4.43 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AITAKEOVER 16939 player 3 team GLA D2H Combat Zone3 units 8 value 5000
+16950 EACC3133
+AIMICRO 16965 player 4 situation focus 4 spacing 0 spread 0 own 15 enemies 35
+16980 94378E93
+AISQUAD 16983 player 3 picked 1 of 15 value 200 ratio 4.43 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUILD 16984 player 4 unit ChinaTankDragon cost 800 money 26400 choice role
+17010 47C86825
+17040 0CE72E4B
+AISQUAD 17043 player 3 picked 1 of 15 value 200 ratio 4.48 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+17070 8ADB62D2
+17100 89923E63
+STATE frame 17100 mode 2 players 8 objects 858 recorder 0 particles 235/723
+AISQUAD 17103 player 3 picked 1 of 14 value 200 ratio 4.53 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+17130 F7F39486
+17160 55A74BB4
+AIPOWER 17163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 10
+AIMIX 17163 player 3 front 327/170 anti_vehicle 448/245 anti_infantry 224/308 anti_air 0/85 siege 0/190 distance 719
+AITHREAT 17163 player 3 threat 0 emergency 0 held_seconds 0
+AISQUAD 17163 player 3 picked 1 of 14 value 200 ratio 3.66 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIPOWER 17164 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AIMIX 17164 player 4 front 307/170 anti_vehicle 346/245 anti_infantry 346/308 anti_air 0/85 siege 0/190 distance 550
+AITHREAT 17164 player 4 threat 0 emergency 0 held_seconds 0
+17190 842E73BA
+AITAKEOVER 17196 player 3 team GLA Garrison Palace3 units 5 value 1500
+17220 96C1322F
+AISQUAD 17223 player 3 picked 1 of 16 value 200 ratio 3.66 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIFOCUS 17250 player 3 enemy 6 before 5 reason pressure cost 1307
+AIFOCUS 17250 player 4 enemy 6 before 5 reason alliance cost 0
+17250 9F5C5999
+AIMICRO 17265 player 4 situation focus 3 spacing 17 spread 0 own 13 enemies 33
+17280 57E46E67
+AISQUAD 17283 player 3 picked 1 of 16 value 200 ratio 11.08 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUILD 17284 player 4 unit ChinaInfantryRedguard cost 300 money 26500 choice role
+17310 12993500
+17340 1F2737B4
+AISQUAD 17343 player 3 picked 1 of 17 value 200 ratio 11.13 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIECONOMY 17344 player 4 expansion ChinaSupplyCenter reserve 11550 centres 2 reason scarce
+17370 9A22FAA6
+AITAKEOVER 17393 player 4 team China Bunker Team 12 units 5 value 1500
+AISUPERWEAPON 17400 player 3 special_power SuperweaponRebelAmbush enemy 6 target_id 807 value 2000 radius 50
+17400 701A8198
+AISQUAD 17403 player 3 picked 1 of 17 value 200 ratio 5.94 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIHELP 17404 player 4 end time duration 152 remaining 13
+AISQUAD 17404 player 4 picked 16 of 17 value 5800 ratio 0.19 min_ratio 0.80 invited 0 covered 1 defenders 6 second_wave 0 front 551 anti_air 0 siege 0 ok 0 missing 17
+17430 0DBC2E4B
+17460 54614348
+AIPOWER 17463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AISQUAD 17463 player 3 picked 1 of 17 value 200 ratio 5.45 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIPOWER 17464 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AIPOSTS 17464 player 4 posts 3 army 19600 posted 6100 idle_home 4900 idle_field 0 script_team 1400 mission 0
+AIBUILD 17464 player 4 unit ChinaTankGattling cost 800 money 25700 choice role
+17490 214C6EB7
+17520 90EA9A42
+AISQUAD 17523 player 3 picked 1 of 17 value 200 ratio 4.88 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+17550 E5490A42
+17580 37B12989
+AISQUAD 17583 player 3 picked 1 of 18 value 200 ratio 4.69 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+17610 A2E4E800
+17640 8F881D40
+AISQUAD 17643 player 3 picked 1 of 18 value 200 ratio 4.66 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIBUILD 17644 player 4 unit ChinaInfantryRedguard cost 300 money 25400 choice role
+17670 79160FEF
+17700 73A08989
+AISQUAD 17703 player 3 picked 1 of 18 value 200 ratio 4.96 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+17730 A4A32BD3
+17760 2CBF900D
+AIPOWER 17763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AISQUAD 17763 player 3 picked 1 of 18 value 200 ratio 5.76 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIPOWER 17764 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+17790 15667D55
+17820 47A1A180
+AIPOSTS 17823 player 3 posts 3 army 13750 posted 4550 idle_home 1200 idle_field 0 script_team 2100 mission 0
+AISQUAD 17823 player 3 picked 1 of 18 value 200 ratio 5.73 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 16
+AIHELP 17824 player 4 start ally 3 threat 4500 units 18 value 6900 pos 1115 1622 armee 19800 einsetzbar 9900 kandidaten 32 wert 17100
+AIMICRO 17835 player 4 situation focus 0 spacing 9 spread 0 own 18 enemies 3
+17850 7BAF0304
+17880 6550CCF3
+AIHELP 17883 player 3 start ally 4 threat 4800 units 25 value 7250 pos 1111 1648 armee 13750 einsetzbar 9625 kandidaten 29 wert 9850
+AIMICRO 17895 player 3 situation focus 2 spacing 0 spread 0 own 25 enemies 43
+17910 DCFABAE1
+17940 7605E6BE
+AIBUILD 17944 player 4 unit ChinaTankGattling cost 800 money 26900 choice role
+17970 454B1949
+18000 69AF5DC4
+STATE frame 18000 mode 2 players 8 objects 865 recorder 0 particles 193/590
+AIBUILD 18004 player 4 unit ChinaInfantryRedguard cost 300 money 26100 choice role
+18030 DFE7461E
+18060 23706F78
+AIPOWER 18063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 18063 player 3 front 336/182 anti_vehicle 417/173 anti_infantry 245/364 anti_air 0/91 siege 0/188 distance 796
+AITHREAT 18063 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 18063 player 3 cooldown 0 assist 13 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 17 regrow 0 started 0 force 200/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 18063 player 3 money 551 base 5000 free -4449 priority_open 1
+AIECONOMY 18063 player 3 situation reserve 61425 centres 2 money 551 hackers 0 harvesters 16 need 1500 income_buildings 1 tech 0 free 0 gather_rate 4443 minutes_left 13.8 invest 1
+AIPOWER 18064 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AIMIX 18064 player 4 front 300/182 anti_vehicle 310/173 anti_infantry 389/364 anti_air 0/91 siege 0/188 distance 558
+AITHREAT 18064 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 18064 player 4 cooldown 0 assist 23 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 7 squad_shares 0 small_force 0 regrow 0 started 0 force 2700/5000 units 4/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 18064 player 4 money 25800 base 0 free 25800 priority_open 0
+AIECONOMY 18064 player 4 situation reserve 73425 centres 3 money 25800 hackers 0 harvesters 10 need 0 income_buildings 0 tech 3 free 0 gather_rate 39121 minutes_left 1.9 invest 0
+18090 711F5040
+18120 3AAEB2EB
+AITAKEOVER 18128 player 4 team China Bunker Team 12 units 5 value 1500
+18150 F9493FEB
+18180 60F884D6
+18210 155A2367
+18240 DF4985BE
+18270 D4D8BB87
+18300 D4DBA4F6
+AIMICRO 18315 player 3 situation focus 1 spacing 0 spread 0 own 23 enemies 3
+18330 E87A4267
+18360 6F663C0B
+AIPOWER 18363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 18364 player 4 production 20 consumption 10 underpowered_s 0 power_plants 2 defence 3
+AISCRIPT 18364 player 4 teams 3 value 1700 top China Alert Infantry2=800;China Bunker Team 12=600;China Alert Tanks2=300;
+AIPOSTS 18364 player 4 posts 3 army 20300 posted 2300 idle_home 1400 idle_field 0 script_team 1700 mission 6900
+18390 6564B3A3
+AIMICRO 18390 player 4 situation focus 1 spacing 0 spread 0 own 18 enemies 2
+18420 A1F24430
+AIBUILD 18424 player 4 unit ChinaTankGattling cost 800 money 25800 choice role
+18450 460D541F
+18480 015E5816
+18510 7935CA07
+18540 BE5CC6A7
+18570 2F31D211
+18600 804A9248
+AIMICRO 18615 player 3 situation focus 10 spacing 0 spread 0 own 19 enemies 1
+18630 F61A09AE
+18660 E5F7FBE3
+AIPOWER 18663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 18664 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+18690 D83DB1D6
+AIMICRO 18690 player 4 situation focus 4 spacing 0 spread 0 own 18 enemies 7
+18720 68149290
+AISCRIPT 18723 player 3 teams 2 value 3600 top GLA Alert Tanks3=1800;GLA Alert Infantry3=1800;
+AIPOSTS 18723 player 3 posts 3 army 14150 posted 0 idle_home 0 idle_field 0 script_team 3600 mission 6150
+18750 CDAFBA9B
+18780 3D8197E0
+AIBUILD 18784 player 4 unit ChinaInfantryRedguard cost 300 money 25700 choice role
+18810 B0879D52
+18840 644E05F5
+18870 BFC3678A
+18900 775EE5DC
+STATE frame 18900 mode 2 players 8 objects 875 recorder 0 particles 145/337
+AIBUILD 18904 player 4 unit ChinaTankGattling cost 800 money 26100 choice role
+AITAKEOVER 18907 player 4 team China Bunker Team 12 units 5 value 1500
+AIMICRO 18915 player 3 situation focus 3 spacing 0 spread 0 own 18 enemies 7
+18930 A6E00987
+18960 4D5A8C16
+AIPOWER 18963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 18963 player 3 front 332/214 anti_vehicle 426/50 anti_infantry 240/400 anti_air 0/100 siege 0/235 distance 989
+AITHREAT 18963 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 18964 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIMIX 18964 player 4 front 264/214 anti_vehicle 320/50 anti_infantry 415/400 anti_air 0/100 siege 0/235 distance 671
+AITHREAT 18964 player 4 threat 0 emergency 0 held_seconds 0
+18990 D07CFA60
+AIMICRO 18990 player 4 situation focus 3 spacing 0 spread 0 own 17 enemies 19
+19020 82571F64
+19050 A37EFAE0
+19080 8814A289
+19110 D73B7D5E
+19140 CE842A16
+19170 272F395C
+19200 299F5BD5
+AIMICRO 19215 player 3 situation focus 1 spacing 0 spread 0 own 12 enemies 16
+19230 588C7645
+19260 6DA89DD6
+AIPOWER 19263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIENEMYMODEL 19263 player 3 rush 0 turtle 0 air 0 stealth 1 army 14450 air_value 1600 defence 8050 stealthed 1600
+AIPOWER 19264 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIENEMYMODEL 19264 player 4 rush 1 turtle 0 air 0 stealth 1 army 14450 air_value 1600 defence 8050 stealthed 1600
+AIPOSTS 19264 player 4 posts 3 army 23100 posted 5700 idle_home 3400 idle_field 0 script_team 2000 mission 6300
+19290 6E070137
+AIMICRO 19290 player 4 situation focus 5 spacing 0 spread 0 own 16 enemies 26
+19320 93B54476
+19350 AC2E94E8
+19380 69240389
+AIHELP 19383 player 3 reinforcement units 3 value 1800 threat 3900
+AIBUILD 19384 player 4 unit ChinaTankDragon cost 800 money 26900 choice role
+19410 C5CD86BF
+19440 58572E5B
+19470 FA1CD9C3
+19500 08357424
+AIMICRO 19515 player 3 situation focus 12 spacing 0 spread 0 own 15 enemies 23
+19530 4C622A37
+19560 8834DD91
+AIPOWER 19563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 19564 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIENEMYMODEL 19564 player 4 rush 0 turtle 0 air 0 stealth 1 army 11925 air_value 0 defence 8050 stealthed 0
+19590 772EAFB7
+AIMICRO 19590 player 4 situation focus 14 spacing 0 spread 0 own 16 enemies 31
+19620 F8EB84A2
+AIPOSTS 19623 player 3 posts 3 army 14300 posted 0 idle_home 0 idle_field 0 script_team 3900 mission 6000
+19650 29E3B970
+AITAKEOVER 19650 player 4 team China Bunker Team 12 units 5 value 1500
+19680 01C66116
+19710 8CA0B8A8
+19740 96B127A2
+19770 82EF6A84
+19800 7C00E12F
+STATE frame 19800 mode 2 players 8 objects 858 recorder 0 particles 202/694
+AIMICRO 19815 player 3 situation focus 24 spacing 0 spread 0 own 13 enemies 13
+19830 B26006D0
+19860 0F4D0E25
+AIPOWER 19863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 19863 player 3 front 306/190 anti_vehicle 440/47 anti_infantry 253/380 anti_air 0/95 siege 0/285 distance 1017
+AITHREAT 19863 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 19863 player 3 cooldown 0 assist 30 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 200/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 19863 player 3 money 103 base 5000 free -4897 priority_open 1
+AIECONOMY 19863 player 3 situation reserve 55800 centres 2 money 103 hackers 0 harvesters 16 need 1500 income_buildings 1 tech 0 free 0 gather_rate 5034 minutes_left 11.1 invest 1
+AIPOWER 19864 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIMIX 19864 player 4 front 256/190 anti_vehicle 324/47 anti_infantry 418/380 anti_air 0/95 siege 0/285 distance 761
+AITHREAT 19864 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 19864 player 4 cooldown 0 assist 30 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 2700/5000 units 4/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 19864 player 4 money 26000 base 0 free 26000 priority_open 0
+AIECONOMY 19864 player 4 situation reserve 66600 centres 3 money 26000 hackers 0 harvesters 11 need 0 income_buildings 0 tech 2 free 0 gather_rate 22560 minutes_left 3.0 invest 1
+19890 384B5912
+AIMICRO 19890 player 4 situation focus 8 spacing 0 spread 0 own 13 enemies 13
+19920 E11F9739
+19950 F264FC3B
+19980 04799BC8
+20010 C4F8C489
+20040 A2A67A52
+20070 D4641BB0
+20100 F9512DB4
+AIMICRO 20115 player 3 situation focus 18 spacing 0 spread 0 own 13 enemies 18
+20130 81F52E38
+20160 D2871F55
+AIPOWER 20163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 20164 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AISCRIPT 20164 player 4 teams 4 value 4500 top China D4H Tank Rush - C2=2800;China Alert Infantry2=800;China Bunker Team 12=600;China Alert Tanks2=300;
+AIPOSTS 20164 player 4 posts 3 army 24300 posted 6900 idle_home 2600 idle_field 0 script_team 4500 mission 4100
+20190 9A8B997C
+AIMICRO 20190 player 4 situation focus 3 spacing 0 spread 0 own 12 enemies 13
+20220 CB13D32D
+AITAKEOVER 20224 player 3 team GLA Garrison Palace3 units 5 value 1500
+20250 89D786B5
+20280 4E1BA9A1
+20310 609B1511
+20340 697A06CD
+20370 D6E52F51
+20400 FAA89DC9
+AIENEMYMODEL 20403 player 3 rush 0 turtle 1 air 0 stealth 1 army 4100 air_value 0 defence 8050 stealthed 0
+AIENEMYMODEL 20404 player 4 rush 0 turtle 1 air 0 stealth 1 army 4100 air_value 0 defence 8050 stealthed 0
+AIMICRO 20415 player 3 situation focus 36 spacing 4 spread 0 own 13 enemies 12
+20430 2B38C33B
+20460 6E8B937C
+AIPOWER 20463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 20464 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+20490 6A923E94
+AIMICRO 20490 player 4 situation focus 6 spacing 0 spread 0 own 12 enemies 10
+20520 3102000E
+AISCRIPT 20523 player 3 teams 2 value 3900 top GLA D2H Tunnel Vehicles3=2100;GLA Alert Tanks3=1800;
+AIPOSTS 20523 player 3 posts 3 army 14750 posted 0 idle_home 0 idle_field 0 script_team 3900 mission 4950
+20550 6C7BCCD1
+20580 01C4A440
+20610 0D1F479B
+20640 2CDA018D
+AIBUILD 20644 player 4 unit ChinaInfantryRedguard cost 300 money 28100 choice role
+20670 D59CD34D
+20700 849A5936
+STATE frame 20700 mode 2 players 8 objects 830 recorder 0 particles 139/386
+AIMICRO 20715 player 3 situation focus 3 spacing 8 spread 0 own 12 enemies 11
+20730 0675AA67
+20760 F8B208A9
+AIPOWER 20763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 20763 player 3 front 296/190 anti_vehicle 459/47 anti_infantry 243/380 anti_air 0/95 siege 0/285 distance 1035
+AITHREAT 20763 player 3 threat 1125 emergency 0 held_seconds 0
+AIPOWER 20764 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIMIX 20764 player 4 front 256/190 anti_vehicle 355/47 anti_infantry 388/380 anti_air 0/95 siege 0/285 distance 761
+AITHREAT 20764 player 4 threat 0 emergency 0 held_seconds 0
+20790 C55474AE
+20820 34F32C80
+20850 4DC02A2B
+20880 3EC33AA3
+AIHELP 20884 player 4 end repelled duration 102 remaining 12
+AISQUAD 20884 player 4 picked 23 of 27 value 9400 ratio 1.37 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 319 anti_air 0 siege 0 ok 1 missing 17
+AIATTACK 20884 player 4 gather enemy 6 units 23 value 9400 usable 20440 pos 1332 1456
+20910 61AFB174
+AITAKEOVER 20922 player 4 team China Bunker Team 12 units 5 value 1500
+20940 ABE5D320
+AIPOSTS 20944 player 4 posts 3 army 27100 posted 2700 idle_home 1200 idle_field 1200 script_team 5500 mission 9400
+20970 89DF3036
+21000 2CCD15FA
+AIMICRO 21015 player 3 situation focus 7 spacing 0 spread 0 own 9 enemies 14
+21030 BDEAEE7C
+21060 770A9ED2
+AIPOWER 21063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 21064 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+21090 B7C915E9
+21120 084E164C
+21150 98748C00
+21180 E0C86AA6
+21210 47B7EF74
+21240 625C2FB1
+21270 F4EAC5A9
+21300 020B0A41
+AIMICRO 21315 player 3 situation focus 10 spacing 0 spread 0 own 2 enemies 12
+21330 8B62B982
+21360 06F8BF32
+AIPOWER 21363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIHELP 21363 player 3 end lost duration 116 remaining 0
+AISQUAD 21363 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 4 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+AIPOWER 21364 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+21390 B9EC26E4
+21420 B29C6E0F
+AIPOSTS 21423 player 3 posts 4 army 10850 posted 600 idle_home 600 idle_field 0 script_team 5250 mission 0
+AISQUAD 21423 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 4 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+AIBUILD 21424 player 4 unit ChinaInfantryRedguard cost 300 money 29050 choice role
+21450 390FA1BC
+21480 B4DDFC3B
+AISQUAD 21483 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 4 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+21510 D78EA4F8
+21540 FCC0095D
+AISQUAD 21543 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 5 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+AITAKEOVER 21547 player 4 team China Bunker Team 12 units 5 value 1500
+21570 50AD0A07
+21600 A14CBB9C
+STATE frame 21600 mode 2 players 8 objects 814 recorder 0 particles 109/311
+AISQUAD 21603 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 5 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+21630 AE1961E5
+21660 19660D32
+AIPOWER 21663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 21663 player 3 front 187/190 anti_vehicle 494/47 anti_infantry 318/380 anti_air 0/95 siege 0/285 distance 893
+AITHREAT 21663 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 21663 player 3 cooldown 0 assist 25 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 5 regrow 0 started 0 force 600/3000 units 2/3 idle_s 60 gather_s 0 attack_s 0
+AISQUAD 21663 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 5 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+AIBUDGET 21663 player 3 money 560 base 5000 free -4440 priority_open 1
+AIECONOMY 21663 player 3 situation reserve 96300 centres 3 money 560 hackers 0 harvesters 16 need 0 income_buildings 1 tech 0 free 0 gather_rate 5292 minutes_left 18.2 invest 1
+AIPOWER 21664 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIMIX 21664 player 4 front 274/190 anti_vehicle 368/47 anti_infantry 357/380 anti_air 0/95 siege 0/285 distance 808
+AITHREAT 21664 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 21664 player 4 cooldown 0 assist 17 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 1 force 9400/7500 units 23/6 idle_s 34 gather_s 26 attack_s 0
+AIBUDGET 21664 player 4 money 28550 base 0 free 28550 priority_open 0
+AIECONOMY 21664 player 4 situation reserve 60600 centres 3 money 28550 hackers 0 harvesters 11 need 0 income_buildings 0 tech 2 free 0 gather_rate 15143 minutes_left 4.0 invest 1
+21690 805D10E4
+21720 BAB9FCDA
+AISQUAD 21723 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 4 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+21750 1035B330
+21780 7C79C433
+AISQUAD 21783 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+21810 FB7863DC
+21840 39995435
+AISQUAD 21843 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+AISCRIPT 21844 player 4 teams 4 value 7700 top China D4H Tank Rush - C2=6000;China Alert Infantry2=800;China Bunker Team 12=600;China Alert Tanks2=300;
+AIPOSTS 21844 player 4 posts 3 army 30500 posted 900 idle_home 300 idle_field 0 script_team 7700 mission 13000
+21870 CCB38FF3
+21900 B4AB0071
+AISQUAD 21903 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 4 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+21930 C41173FA
+21960 3E3BBA94
+AIPOWER 21963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AISQUAD 21963 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 5 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+AIPOWER 21964 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+21990 5E0F8B72
+22020 40A6E2B4
+AISQUAD 22023 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 5 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+22050 434A8D2E
+22080 2365E71F
+AISQUAD 22083 player 3 picked 2 of 2 value 600 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 5 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+AIATTACK 22084 player 4 launch alone enemy 6 units 37 value 13600 target 697 2161
+22110 1F6B4884
+AIMICRO 22125 player 4 situation focus 1 spacing 0 spread 0 own 37 enemies 19
+22140 4A7DE567
+AITARGET 22144 player 4 target AmericaPatriotBattery id 1498 winner 0 ratio 1.72 path_threat 63
+22170 91D0893E
+22200 0E353DDF
+AIBUILD 22204 player 4 unit ChinaInfantryRedguard cost 300 money 28250 choice role
+22230 D3E9E389
+22260 16C55DFE
+AIPOWER 22263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 22264 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+22290 BF67C376
+AITAKEOVER 22306 player 4 team China Bunker Team 12 units 5 value 1500
+22320 06D5A724
+AISCRIPT 22323 player 3 teams 4 value 4200 top GLA Garrison Palace3=1200;GLA D2H Artillery Defense3=1200;GLA Alert Invasion Infantry3=900;GLA D2H Tunnel Vehicles3=900;
+AIPOSTS 22323 player 3 posts 4 army 9100 posted 600 idle_home 0 idle_field 0 script_team 4200 mission 0
+22350 E9A7AEC5
+22380 1F5D710F
+22410 DE2D176C
+AIMICRO 22425 player 4 situation focus 7 spacing 5 spread 0 own 37 enemies 20
+22440 448BA408
+22470 EA25E699
+AITAKEOVER 22475 player 3 team GLA Garrison Palace3 units 5 value 1500
+22500 F057D915
+STATE frame 22500 mode 2 players 8 objects 809 recorder 0 particles 221/832
+22530 F61AB3C6
+22560 9133C74C
+AIPOWER 22563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 22563 player 3 front 206/191 anti_vehicle 450/47 anti_infantry 343/382 anti_air 0/95 siege 0/281 distance 833
+AITHREAT 22563 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 22564 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AIMIX 22564 player 4 front 292/191 anti_vehicle 370/47 anti_infantry 337/382 anti_air 0/95 siege 0/281 distance 847
+AITHREAT 22564 player 4 threat 0 emergency 0 held_seconds 0
+AITARGET 22564 player 4 target AmericaPatriotBattery id 843 winner 0 ratio 3.14 path_threat 0
+22590 F02CA531
+22620 564CEEEC
+22650 67B0A389
+22680 F90EF3FF
+22710 664253C8
+AIMICRO 22725 player 4 situation focus 15 spacing 0 spread 0 own 37 enemies 31
+22740 441516E8
+AIPOSTS 22744 player 4 posts 3 army 33900 posted 2100 idle_home 1500 idle_field 0 script_team 9600 mission 13600
+22770 EF1F2158
+22800 A36BDB5A
+22830 B7997091
+22860 4CD3BE22
+AIPOWER 22863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 22864 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+22890 B3BA6D78
+22920 EA473E8F
+22950 960641A0
+22980 155AC060
+AISQUAD 22983 player 3 picked 3 of 3 value 900 ratio 0.00 min_ratio 0.80 invited 0 covered 1 defenders 5 second_wave 0 front 0 anti_air 0 siege 0 ok 0 missing 17
+AIBUILD 22984 player 4 unit ChinaInfantryRedguard cost 300 money 28350 choice role
+23010 00172379
+AIMICRO 23025 player 4 situation focus 75 spacing 0 spread 0 own 36 enemies 36
+23040 24E5F658
+23070 85A60BF8
+AITAKEOVER 23081 player 4 team China Bunker Team 12 units 5 value 1500
+23100 27280C9D
+23130 EFFD1474
+23160 3229CB06
+AIPOWER 23163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 23164 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 3
+AITARGET 23164 player 4 target AmericaStrategyCenter id 4855 winner 0 ratio 2.43 path_threat 0
+23190 23DED58C
+23220 D5C322A8
+AIPOSTS 23223 player 3 posts 4 army 6900 posted 1200 idle_home 600 idle_field 0 script_team 3000 mission 0
+23250 E33FFB1E
+23280 D49C366C
+23310 4D341DE1
+AIMICRO 23325 player 4 situation focus 93 spacing 0 spread 0 own 34 enemies 31
+23340 DF8687A3
+AIATTACK 23344 player 4 resupply units 9 value 2700
+23370 F3F31ED2
+23400 D943651B
+STATE frame 23400 mode 2 players 8 objects 833 recorder 0 particles 338/1532
+23430 2368E758
+23460 8F8BEDC0
+AIPOWER 23463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 23463 player 3 front 270/190 anti_vehicle 375/47 anti_infantry 354/380 anti_air 0/95 siege 0/285 distance 815
+AITHREAT 23463 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 23463 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 22 squad_shares 0 small_force 8 regrow 0 started 0 force 600/3000 units 2/3 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 23463 player 3 money 435 base 5000 free -4565 priority_open 1
+AIECONOMY 23463 player 3 situation reserve 84525 centres 3 money 435 hackers 0 harvesters 18 need 0 income_buildings 1 tech 0 free 0 gather_rate 7484 minutes_left 11.3 invest 1
+AIPOWER 23464 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 5
+AIMIX 23464 player 4 front 317/190 anti_vehicle 387/47 anti_infantry 295/380 anti_air 0/95 siege 0/285 distance 933
+AITHREAT 23464 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 23464 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 9400/7500 units 23/6 idle_s 0 gather_s 14 attack_s 46
+AIBUDGET 23464 player 4 money 31950 base 1000 free 30950 priority_open 1
+AIECONOMY 23464 player 4 situation reserve 55575 centres 3 money 31950 hackers 0 harvesters 11 need 0 income_buildings 0 tech 2 free 0 gather_rate 9896 minutes_left 5.6 invest 1
+23490 0944BA28
+23520 8E8F266D
+23550 BFA41B2B
+23580 5450E951
+23610 96096E5F
+AIMICRO 23625 player 4 situation focus 34 spacing 0 spread 0 own 42 enemies 34
+23640 56D403A7
+AISCRIPT 23644 player 4 teams 4 value 12900 top China D4H Tank Rush - C2=9200;China Alert RocketGuy2=2600;China Alert Infantry2=800;China Alert Tanks2=300;
+AIPOSTS 23644 player 4 posts 3 army 35900 posted 300 idle_home 300 idle_field 0 script_team 12900 mission 14100
+23670 B343F502
+23700 7D615975
+23730 BB297F98
+23760 7EDA3220
+AIPOWER 23763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 23764 player 4 production 20 consumption 11 underpowered_s 0 power_plants 2 defence 5
+23790 6CE3ACEE
+23820 B8CD22F3
+23850 546A4DAF
+23880 8FF27591
+AISQUAD 23883 player 3 picked 5 of 5 value 1500 ratio 0.08 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 0 anti_air 0 siege 0 ok 0 missing 17
+23910 6F2765B2
+AIMICRO 23925 player 4 situation focus 121 spacing 7 spread 0 own 42 enemies 29
+23940 BB8ECFCC
+23970 9AFB6B19
+AISUPERWEAPON 24000 player 4 special_power SuperweaponArtilleryBarrage enemy 6 target_id 4494 value 3248 radius 125
+24000 C7D68E37
+24030 4C1331DA
+24060 32D0D14B
+AIPOWER 24063 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 24064 player 4 production 20 consumption 11 underpowered_s 0 power_plants 3 defence 5
+24090 25D454B8
+24120 A08316D3
+AISCRIPT 24123 player 3 teams 4 value 4500 top GLA Alert Invasion Infantry3=1500;GLA Alert Sabotage3=1200;GLA D2H Artillery Defense3=1200;GLA Garrison Palace3=600;
+AIPOSTS 24123 player 3 posts 4 army 8400 posted 1500 idle_home 300 idle_field 0 script_team 4500 mission 0
+AITARGET 24124 player 4 target AmericaPowerPlant id 811 winner 0 ratio 8.90 path_threat 0
+24150 5A64B1D9
+24180 5902DAA6
+24210 4028EB50
+AIMICRO 24225 player 4 situation focus 57 spacing 0 spread 0 own 42 enemies 27
+24240 5CA4773B
+AIENEMYMODEL 24243 player 3 rush 0 turtle 0 air 0 stealth 1 army 9425 air_value 0 defence 4450 stealthed 0
+AIENEMYMODEL 24244 player 4 rush 0 turtle 0 air 0 stealth 1 army 9425 air_value 0 defence 4450 stealthed 0
+24270 CF9F3E64
+24300 4369A271
+STATE frame 24300 mode 2 players 8 objects 871 recorder 0 particles 340/1157
+24330 E1F82BCE
+24360 1A675203
+AIPOWER 24363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 24363 player 3 front 277/449 anti_vehicle 370/200 anti_infantry 351/150 anti_air 0/100 siege 0/100 distance 744
+AITHREAT 24363 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 24364 player 4 production 20 consumption 11 underpowered_s 0 power_plants 3 defence 5
+AIMIX 24364 player 4 front 333/449 anti_vehicle 392/200 anti_infantry 274/150 anti_air 0/100 siege 0/100 distance 633
+AITHREAT 24364 player 4 threat 0 emergency 0 held_seconds 0
+AIBUILD 24364 player 4 unit ChinaInfantryRedguard cost 300 money 31750 choice role
+24390 BBD605B4
+24420 C194D1C2
+24450 FA749367
+24480 73DA6704
+24510 10CE0275
+AIMICRO 24525 player 4 situation focus 65 spacing 0 spread 0 own 42 enemies 26
+24540 7F22BFDF
+AIPOSTS 24544 player 4 posts 3 army 39000 posted 300 idle_home 0 idle_field 0 script_team 16000 mission 14100
+24570 1C8778D1
+AISUPERWEAPON 24600 player 3 special_power SuperweaponRebelAmbush enemy 6 target_id 820 value 2000 radius 50
+24600 46046628
+24630 A1B07523
+24660 E115513F
+AIPOWER 24663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 24664 player 4 production 20 consumption 11 underpowered_s 0 power_plants 3 defence 5
+24690 1E72012A
+24720 4210C6A0
+AIBUILD 24724 player 4 unit ChinaInfantryRedguard cost 300 money 35050 choice role
+24750 FA238589
+24780 336ED58C
+AISQUAD 24783 player 3 picked 5 of 5 value 1500 ratio 0.18 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 0 missing 17
+AITAKEOVER 24786 player 3 team GLA Garrison Palace3 units 5 value 1500
+24810 820A7440
+AIMICRO 24825 player 4 situation focus 57 spacing 9 spread 0 own 41 enemies 22
+24840 4D36B966
+AIHELP 24844 player 4 start ally 3 threat 1200 units 3 value 1900 pos 1981 1743 armee 40000 einsetzbar 14700 kandidaten 36 wert 21300
+24870 15992E90
+24900 F38B9D23
+AITARGET 24904 player 4 target AmericaPowerPlant id 4957 winner 0 ratio 15.29 path_threat 11
+24930 430A5CAF
+24960 C0824AFA
+AIPOWER 24963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 24964 player 4 production 30 consumption 11 underpowered_s 0 power_plants 3 defence 6
+24990 FD64BB56
+25020 70F4EE1A
+AIPOSTS 25023 player 3 posts 4 army 10800 posted 1650 idle_home 0 idle_field 150 script_team 4500 mission 0
+25050 3B980DCD
+25080 D250A707
+AISQUAD 25083 player 3 picked 7 of 7 value 1950 ratio 1.10 min_ratio 0.80 invited 0 covered 1 defenders 1 second_wave 0 front 76 anti_air 0 siege 0 ok 1 missing 17
+25110 30D8488F
+AIMICRO 25125 player 4 situation focus 13 spacing 0 spread 0 own 43 enemies 28
+25140 7A9BEB45
+25170 094434B0
+AISUPERWEAPON 25200 player 4 special_power SuperweaponEMPPulse enemy 6 target_id 815 value 2043 radius 200
+25200 7524579F
+STATE frame 25200 mode 2 players 8 objects 880 recorder 0 particles 227/779
+AIHELP 25203 player 3 start ally 4 threat 1200 units 6 value 1800 pos 1935 1636 armee 11700 einsetzbar 8190 kandidaten 25 wert 8400
+25230 C25CA694
+25260 38BDEEC3
+AIPOWER 25263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 25263 player 3 front 309/399 anti_vehicle 380/50 anti_infantry 309/400 anti_air 0/100 siege 0/50 distance 660
+AITHREAT 25263 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 25263 player 3 cooldown 0 assist 1 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 28 squad_shares 0 small_force 1 regrow 0 started 0 force 1950/5000 units 7/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 25263 player 3 money 335 base 5000 free -4665 priority_open 1
+AIECONOMY 25263 player 3 situation reserve 75450 centres 3 money 335 hackers 0 harvesters 20 need 0 income_buildings 1 tech 0 free 0 gather_rate 9292 minutes_left 8.1 invest 1
+AIPOWER 25264 player 4 production 30 consumption 11 underpowered_s 0 power_plants 3 defence 6
+AIMIX 25264 player 4 front 332/399 anti_vehicle 395/50 anti_infantry 271/400 anti_air 0/100 siege 0/50 distance 691
+AITHREAT 25264 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 25264 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 9400/7500 units 23/6 idle_s 0 gather_s 0 attack_s 60
+AIBUDGET 25264 player 4 money 32550 base 2000 free 30550 priority_open 1
+AIECONOMY 25264 player 4 situation reserve 51225 centres 3 money 32550 hackers 0 harvesters 11 need 0 income_buildings 0 tech 2 free 0 gather_rate 7236 minutes_left 7.1 invest 1
+25290 F8071627
+25320 B45BF729
+AIBUILD 25324 player 4 unit ChinaTankGattling cost 800 money 30550 choice role
+25350 D3E0F4A6
+25380 5D700456
+25410 6AA2176D
+AIMICRO 25425 player 4 situation focus 119 spacing 0 spread 0 own 42 enemies 27
+25440 49BCB601
+AISCRIPT 25444 player 4 teams 6 value 17200 top China D4H Tank Rush - C2=7600;China Alert RocketGuy2=5800;China Bunker Team 12=1500;China Bunker Team 22=1200;China Alert Infantry2=800;
+AIPOSTS 25444 player 4 posts 3 army 40500 posted 600 idle_home 600 idle_field 0 script_team 17200 mission 14100
+25470 FB27C0C9
+25500 BE79CE82
+AIHELP 25503 player 3 reinforcement units 13 value 4200 threat 4000
+AIBUILD 25504 player 4 unit ChinaInfantryRedguard cost 300 money 29250 choice role
+AIMICRO 25515 player 3 situation focus 4 spacing 0 spread 0 own 19 enemies 7
+25530 2A45A4B4
+25560 19388316
+AIPOWER 25563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 25564 player 4 production 30 consumption 11 underpowered_s 0 power_plants 3 defence 6
+25590 AEE69E75
+25620 D1CA7840
+AIHELP 25624 player 4 reinforcement units 3 value 2400 threat 2600
+AITARGET 25624 player 4 target AmericaBarracks id 815 winner 0 ratio 12.72 path_threat 0
+25650 F227B916
+25680 82F33F3A
+25710 862CB360
+AIMICRO 25725 player 4 situation focus 112 spacing 0 spread 0 own 40 enemies 36
+25740 CF096855
+AIDEFENCE 25744 player 4 threat 1600 units 2 value 600 pos 2496 960
+25770 97D03A5A
+25800 D86CCE14
+AIBUILD 25804 player 4 unit ChinaTankGattling cost 800 money 29950 choice role
+AIMICRO 25815 player 3 situation focus 11 spacing 0 spread 0 own 18 enemies 16
+25830 5CB1F32B
+25860 74A058FD
+AIPOWER 25863 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 25864 player 4 production 30 consumption 11 underpowered_s 0 power_plants 3 defence 5
+25890 B0186824
+25920 AB99091D
+AISCRIPT 25923 player 3 teams 3 value 4000 top GLA D5H Base Expander 23=1900;GLA Alert Sabotage3=1200;GLA Garrison Palace3=900;
+AIPOSTS 25923 player 3 posts 4 army 12850 posted 0 idle_home 0 idle_field 0 script_team 4000 mission 5850
+25950 4C891821
+25980 F3C754E3
+26010 3EFC1903
+AIMICRO 26025 player 4 situation focus 39 spacing 0 spread 0 own 37 enemies 15
+26040 AA561DFA
+26070 E423F9F3
+26100 B5D0F0A2
+STATE frame 26100 mode 2 players 8 objects 886 recorder 0 particles 450/1820
+AIMICRO 26115 player 3 situation focus 1 spacing 0 spread 0 own 18 enemies 5
+26130 F31DAB27
+26160 8AD214B5
+AIPOWER 26163 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIMIX 26163 player 3 front 296/449 anti_vehicle 378/200 anti_infantry 325/150 anti_air 0/100 siege 0/100 distance 707
+AITHREAT 26163 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 26164 player 4 production 30 consumption 11 underpowered_s 0 power_plants 3 defence 5
+AIMIX 26164 player 4 front 308/449 anti_vehicle 407/200 anti_infantry 284/150 anti_air 0/100 siege 0/100 distance 683
+AITHREAT 26164 player 4 threat 0 emergency 0 held_seconds 0
+26190 9521A731
+26220 4DE30063
+26250 252965D0
+26280 EEAF26BD
+AIATTACK 26284 player 4 end enemy_defeated phase 2 duration 140 value 10400 start 16300
+AIBUILD 26284 player 4 unit ChinaTankBattleMaster cost 800 money 29550 choice role
+AIBUILD 26284 player 4 unit ChinaInfantryRedguard cost 300 money 28750 choice role
+26310 B790676B
+AIMICRO 26325 player 4 situation focus 1 spacing 0 spread 0 own 3 enemies 3
+26340 998392FD
+AIPOSTS 26344 player 4 posts 3 army 37400 posted 10200 idle_home 600 idle_field 9600 script_team 16000 mission 2400
+26370 3E3F3AE2
+AIFOCUS 26400 player 3 enemy 5 before 6 reason choice cost 3352
+AIFOCUS 26400 player 4 enemy 5 before 6 reason alliance cost 0
+26400 A70F3763
+26430 5C0081AE
+AITAKEOVER 26459 player 4 team China Bunker Team 32 units 4 value 1200
+26460 1C98AF9B
+AIPOWER 26463 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 26464 player 4 production 30 consumption 11 underpowered_s 0 power_plants 3 defence 5
+26490 56E0D99B
+26520 31FF89F9
+26550 2F074D0F
+26580 1233AEDE
+26610 AAFDA657
+26640 1B3A51D1
+AIBUILD 26644 player 4 unit ChinaInfantryRedguard cost 300 money 29450 choice role
+AITAKEOVER 26646 player 3 team GLA Garrison Palace3 units 5 value 1500
+26670 951D940D
+AIMICRO 26685 player 4 situation focus 1 spacing 0 spread 0 own 3 enemies 9
+26700 4DCD7A51
+26730 27473C1D
+26760 A0FAF031
+AIPOWER 26763 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 9
+AIPOWER 26764 player 4 production 30 consumption 11 underpowered_s 0 power_plants 3 defence 5
+AIBUILD 26764 player 4 unit ChinaTankDragon cost 800 money 29450 choice role
+26790 E9400C8A
+26820 E7357C74
+AIPOSTS 26823 player 3 posts 3 army 14650 posted 0 idle_home 0 idle_field 0 script_team 4300 mission 5850
+26850 07110F4D
+26880 9010675D
+26910 D93F7B01
+26940 07D0D3EE
+26970 BAC9222A
+AIMICRO 26985 player 4 situation focus 3 spacing 0 spread 0 own 1 enemies 26
 END maxFrames 27000
-27000 3DA1827F
+27000 361DF8CE
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
-BENCH ticks 26998 mean 1.529 p50 1.380 p95 3.312 p99 5.285 max 35.206 total 41271 ms
-FRAMES frames 26940 mean 1.534 p50 1.384 p95 3.317 p99 5.301 max 35.207 total 41318 ms
-PFADSUCHE 0.3432 ms je Tick mit Anfragen (14658 Ticks, hoechstens 31.736 ms) anfragen 32922 zellen 10237321 warteschlange 2.3 hoechstens 26 rest 0.04 anfragen_je_tick 6949 5334 1979 396 einzeln_hoechstens 31.528 ms
-PFADSUCHE_ARTEN pfad 26660 zellen 2297499 ms 2025.5 hoechstens 29.25 naechster 1592 zellen 2930779 ms 1263.9 hoechstens 9.07 angriff 5021 zellen 4997332 ms 1609.4 hoechstens 2.52 flicken 1 zellen 0 ms 0.0 hoechstens 0.00 kosten 8 zellen 74 ms 0.0 hoechstens 0.00 boden 14 zellen 14905 ms 28.7 hoechstens 7.69 ausweichen 7118 zellen 28208 ms 30.0 hoechstens 0.35 sichtlinie 4161837 schritte 27818298 abbrueche 4148226 vorrat_leer 417 pfad_fehlschlaege 6 davon_vorrat_leer 1 wiederholt 0 frei_beim_start mittel 24042 kleinste 22873 frei_bei_vorrat_leer 23650
-LOGIKPHASEN 27001 Ticks, 1.1717 ms je Tick (Mittel/hoechstens ms): skript 0.0830/27.170 gelaende 0.0001/0.187 befehle 0.0014/23.424 updates 0.7044/31.749 ki 0.2654/229.456 bau 0.0002/0.216 partition 0.1017/8.577 tickende 0.0155/0.505
-LOGIKMODULE 62 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): AIUpdateInterface 0.3906 54.2 8.065 PhysicsBehavior 0.0522 72.1 1.176 WorkerAIUpdate 0.0312 13.4 0.552 ProductionUpdate 0.0252 50.2 31.699 SupplyTruckAIUpdate 0.0249 10.4 0.549 TransportAIUpdate 0.0184 1.1 0.558 ObjectWeaponStatusHelper 0.0146 99.0 0.403 StealthDetectorUpdate 0.0113 3.4 0.383 JetAIUpdate 0.0104 2.7 0.820 DozerAIUpdate 0.0092 4.6 0.579 SlowDeathBehavior 0.0054 10.9 2.406 MissileAIUpdate 0.0043 2.0 0.883
-LOGIKSPITZE ab Tick 31: laengster Tick 1443 34.807 ms: skript 0.019 gelaende 0.000 befehle 0.000 updates 31.749 ki 3.001 bau 0.001 partition 0.034 tickende 0.004; laengstes Update 31.699 ms Tick 1443 ProductionUpdate an ChinaBarracks
-GPUEFFEKTE flags 0x1FFFF samples 8 bilder 53 bild 14.8713 ms (53) bodendetail zeichnungen 0.0 von 0.0 felder 216 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 324.8 umlaeufe 0.11
-PARTIKELZEIT simulation 0.0003 ms je Tick (57 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+BENCH ticks 26998 mean 1.249 p50 1.139 p95 2.564 p99 4.648 max 30.797 total 33725 ms
+FRAMES frames 26940 mean 1.254 p50 1.143 p95 2.568 p99 4.649 max 38.183 total 33786 ms
+PATHFINDING 0.2503 ms per tick with requests (14690 ticks, max 28.658 ms) requests 28310 cells 7960154 queue 2.0 max 38 rest 0.07 requests_per_tick 7833 5284 1438 135 single_max 28.658 ms
+PATHFINDING_KINDS path 22881 cells 1783159 ms 1356.5 max 27.37 nearest 1119 cells 2403513 ms 1061.2 max 7.52 attack 4187 cells 3764161 ms 1185.7 max 1.54 cost 6 cells 60 ms 0.0 max 0.00 ground 8 cells 2861 ms 11.8 max 3.11 evade 3701 cells 84719 ms 29.7 max 0.23 line_of_sight 3882112 steps 32129814 aborts 3871345 pool_empty 602 path_failures 4 of_pool_empty 1 repeated 0 free_at_start mean 23657 smallest 22725 free_when_pool_empty 22936
+LOGICPHASES 27001 ticks, 0.9672 ms per tick (mean/max ms): script 0.0652/14.480 terrain 0.0001/0.036 commands 0.0018/35.432 updates 0.5843/6.718 ai 0.2053/28.957 build 0.0002/0.240 partition 0.0933/5.941 tick_end 0.0171/1.721
+LOGICMODULES 62 types (ms per tick, calls per tick, longest call ms): AIUpdateInterface 0.3197 61.6 1.893 PhysicsBehavior 0.0482 79.6 1.579 WorkerAIUpdate 0.0267 14.0 0.622 SupplyTruckAIUpdate 0.0240 12.2 0.329 ProductionUpdate 0.0200 50.2 6.320 ObjectWeaponStatusHelper 0.0128 116.0 0.272 StealthDetectorUpdate 0.0096 3.5 0.279 DozerAIUpdate 0.0077 5.3 0.420 MissileAIUpdate 0.0069 4.2 0.709 TransportAIUpdate 0.0060 0.6 0.391 HordeUpdate 0.0053 11.1 0.225 SlowDeathBehavior 0.0040 11.2 2.522
+LOGICPEAK from tick 31: longest tick 27000 35.534 ms: script 0.097 terrain 0.000 commands 35.432 updates 0.000 ai 0.002 build 0.000 partition 0.002 tick_end 0.001; longest update 6.320 ms tick 2130 ProductionUpdate on AmericaBarracks
+GPUEFFECTS flags 0xC7DDFFFF samples 8 frames 53 frame 11.6673 ms (53) ground_detail draws 0.0 of 0.0 cells 216 table 1 textures -1 mountains draws 0.0 heightfield 0 x 0 textures -1 relief draws 0.0 atlas 1 tessellation draws 0.0 sections 0.00 patches 0 points 0 triangles 0 measured 0 heights 1 rock 0.00 cb_ring writes 324.8 wraps 0.11
+PARTICLETIME simulation 0.0003 ms per tick (57 ticks, 0.0 particles) prepare 0.0000 ms per frame (0 frames, 0.0 particles visible)
 EXIT code 0

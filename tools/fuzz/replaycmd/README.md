@@ -19,7 +19,7 @@ geht es um das Ausführen, und das braucht eine laufende Partie mit den Spieldat
   Zahlen, Objektnummern bis 3000, Orte auf der Karte) und Grenzwerten (-1, `INT_MIN`, NaN, unendlich,
   1e9). Dazu werden vorhandene Befehle verändert (Argumentwert, Spielernummer, Argumentliste gekürzt,
   verlängert, Typ getauscht). `manifest.txt` nennt je Variante, was geändert ist.
-- **play** (Windows): spielt jede Variante mit `-runner -replay -mehrfach` ab (Fenster, `tools/determinism/runner.py`
+- **play** (Windows): spielt jede Variante mit `-runner -replay -multiInstance` ab (Fenster, `tools/determinism/runner.py`
   `run_game`, mit `--parallel N` mehrere Spiele gleichzeitig) und schreibt `bericht.txt`: OK, Abweichung (erwartet, Exit-Code 2: die
   veränderten Befehle ändern die Partie), ABSTURZ (anderer Exit-Code; bei `--parallel 1` mit Absturzbericht unter `Crashes\`, darin
   `Stack.txt` mit der Aufrufkette), HAENGER (Zeitlimit). Debug-Build mit `--extra -ignoreAsserts` laufen lassen: jede Assertion

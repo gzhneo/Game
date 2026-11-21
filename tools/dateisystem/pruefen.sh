@@ -9,7 +9,7 @@
 #   tools/dateisystem/pruefen.sh [Arbeitsordner]
 #
 # Für den Vergleich mit dem Spiel (Wine oder Windows) dieselben Aufrufe wie unten mit
-# -dateiIndexAusgeben im Spiel wiederholen; die Listen müssen gleich sein.
+# -dumpFileIndex im Spiel wiederholen; die Listen müssen gleich sein.
 set -u
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"

@@ -53,10 +53,8 @@ add_library(GameEngineDevice STATIC
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/GUI/W3DGameWindow.cpp
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/GUI/W3DGameWindowManager.cpp
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Terrain/HeightMap.cpp
-	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Shadow/W3DBufferManager.cpp
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Shadow/W3DProjectedShadow.cpp
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Shadow/W3DShadow.cpp
-	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Shadow/W3DVolumetricShadow.cpp
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Terrain/TerrainTessMask.cpp
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Terrain/TerrainTex.cpp
 	${SHARED_PLATFORM_DIR}/W3DDevice/GameClient/Terrain/TerrainTileImage.cpp

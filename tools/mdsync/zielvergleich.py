@@ -144,7 +144,7 @@ def lies_projekt(pfad, norm, konfigs):
             text = ";".join(absolut(x) for x in text.split(";"))
         text = norm.text(text)
         if einstellung in LISTEN:
-            werte[schluessel] = ("LISTE", [pfad_schluessel(x) for x in liste(text)])
+            werte[schluessel] = ("LIST", [pfad_schluessel(x) for x in liste(text)])
         else:
             werte[schluessel] = ("TEXT", pfad_schluessel(text))
 
@@ -303,7 +303,7 @@ def vergleiche_projekt(pa, pb):
         elif k not in wa:
             befunde.append("neu in B:   %s = %s" % (k, zeige(wb[k])))
         elif wa[k] != wb[k]:
-            if wa[k][0] == "LISTE" and wb[k][0] == "LISTE":
+            if wa[k][0] == "LIST" and wb[k][0] == "LIST":
                 befunde.append("anders:     %s -- %s" % (k, vergleiche_liste(wa[k][1], wb[k][1])))
             else:
                 befunde.append("anders:     %s\n              A: %s\n              B: %s" % (k, zeige(wa[k]), zeige(wb[k])))
@@ -321,7 +321,7 @@ def vergleiche_projekt(pa, pb):
 
 
 def zeige(w):
-    return ";".join(w[1]) if w[0] == "LISTE" else w[1]
+    return ";".join(w[1]) if w[0] == "LIST" else w[1]
 
 
 def vergleiche(a_dir, b_dir, pfade, ziele, konfigs, nur, einseitig, aus=sys.stdout, quelle_a=None, quelle_b=None):

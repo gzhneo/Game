@@ -664,10 +664,12 @@ void RenderCore::Sh_Release_Terrain()
 	Gpu_Release(M->sh_ter_depth_tex);
 }
 
-void RenderCore::Sh_Record(bool indexed, unsigned count, unsigned start, int base_vertex,
+void RenderCore::Sh_Record(unsigned primitive_type, bool indexed, unsigned count, unsigned start, int base_vertex,
 							 unsigned min_index, unsigned num_vertices, unsigned up_offset, unsigned up_stride)
 {
 	if (M->current_render_target || !count || !M->sh_casters) return;
+	const GPU_PRIMITIVE_TOPOLOGY topology = Render_Primitive_Topology(primitive_type);
+	if (topology == GPU_PRIMITIVE_TOPOLOGY_UNDEFINED) return;
 	const unsigned* rs = M->render_states;
 	if (!rs[WW3D_RS_ZENABLE] || !rs[WW3D_RS_ZWRITEENABLE] || !rs[WW3D_RS_COLORWRITEENABLE]) return;
 	bool alpha_test = rs[WW3D_RS_ALPHATESTENABLE] != 0;
@@ -825,9 +827,8 @@ void RenderCore::Sh_Record(bool indexed, unsigned count, unsigned start, int bas
 	if (r.alpha_srv) r.alpha_srv->AddRef();
 	r.vb_offset = vb_offset;
 	r.vb_stride = vb_stride;
-	// patch draws of the terrain are replayed as their triangles (the caster stays untessellated)
-	r.topology = (M->bound_topology == static_cast<unsigned>(GPU_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST)) ?
-		static_cast<unsigned>(GPU_PRIMITIVE_TOPOLOGY_TRIANGLELIST) : M->bound_topology;
+	// taken from the draw, not from the bound state: terrain patch draws replay as their plain triangles
+	r.topology = static_cast<unsigned>(topology);
 	r.count = count;
 	r.start = start;
 	r.base_vertex = base_vertex;

@@ -17,6 +17,7 @@
 #include "Common/PlayerTemplate.h"
 #include "Common/ScoreKeeper.h"
 #include "Common/ThingTemplate.h"
+#include "GameLogic/AICommanderPlayer.h"
 #include "GameLogic/AIPlayer.h"
 #include "GameLogic/AIStats.h"
 #include "GameLogic/GameLogic.h"
@@ -77,11 +78,11 @@ namespace
 		UnsignedInt id;
 		Real x, y;
 		UnsignedInt since;	///< frame at which the unit was last seen at (x, y)
-		Bool reported;		///< STECKT line already written for this episode
+		Bool reported;		///< STUCK line already written for this episode
 	};
 	StuckTrack s_stuckTrack[STUCK_TRACK_MAX];
 
-	// Last blocker per unit (AIStats_noteBlocker), shown in the STECKT line.
+	// Last blocker per unit (AIStats_noteBlocker), shown in the STUCK line.
 	struct BlockerNote
 	{
 		UnsignedInt frame;		///< 0: none
@@ -128,7 +129,7 @@ void AIStats_logPathFailure( const Object *obj, const Coord3D *destination, Bool
 	}
 	const Player *owner = obj->getControllingPlayer();
 	char line[320];
-	WWFormat::Into(line, "WEGFEHL {:d} id {:d} vorlage {} spieler {:d} seite {} von {:d} {:d} nach {:d} {:d} ziel_gueltig {:d} erreichbar {:d} ende_abstand {:d}", frame, id, obj->getTemplate()->getName().str(), owner ? owner->getPlayerIndex() : -1, owner ? owner->getSide().str() : "-", static_cast<Int>( pos->x ), static_cast<Int>( pos->y ), static_cast<Int>( destination->x ), static_cast<Int>( destination->y ), destinationValid ? 1 : 0, reachable ? 1 : 0, endDistance);
+	WWFormat::Into(line, "PATHFAIL {:d} id {:d} template {} player {:d} side {} from {:d} {:d} to {:d} {:d} target_valid {:d} reachable {:d} end_distance {:d}", frame, id, obj->getTemplate()->getName().str(), owner ? owner->getPlayerIndex() : -1, owner ? owner->getSide().str() : "-", static_cast<Int>( pos->x ), static_cast<Int>( pos->y ), static_cast<Int>( destination->x ), static_cast<Int>( destination->y ), destinationValid ? 1 : 0, reachable ? 1 : 0, endDistance);
 	GameEngine_RunnerLog( line );
 }
 
@@ -152,9 +153,13 @@ void AIStats_logKill( const Object *killer, const Object *victim )
 		const Real dx = victim->getPosition()->x - c.x, dy = victim->getPosition()->y - c.y;
 		return dx * dx + dy * dy <= BASE_ZONE * BASE_ZONE;
 	};
-	const char *zone = nearBase( vp ) ? "eigene_basis" : (nearBase( kp ) ? "feindbasis" : "feld");
-	char line[256];
-	WWFormat::Into(line, "KIVERLUST {:d} spieler {:d} vorlage {} wert {:d} gebaeude {:d} von_spieler {:d} von_vorlage {} von_gebaeude {:d} ort {}", TheGameLogic->getFrame(), vp->getPlayerIndex(), victim->getTemplate()->getName().str(), victim->getTemplate()->friend_getBuildCost(), victim->isKindOf( KINDOF_STRUCTURE ) ? 1 : 0, kp->getPlayerIndex(), killer->getTemplate()->getName().str(), killer->isKindOf( KINDOF_STRUCTURE ) ? 1 : 0, zone);
+	const char *zone = nearBase( vp ) ? "own_base" : (nearBase( kp ) ? "enemy_base" : "field");
+	// Was the victim on a mission of the command layer, or in a team of the classic AI's scripts?
+	const AICommanderPlayer *commander = AICommanderPlayer::commanderOf( const_cast<Player *>( vp ) );
+	const Bool inMission = commander != nullptr && commander->isInMission( victim->getID() );
+	const Bool inScriptTeam = !victim->isKindOf( KINDOF_STRUCTURE ) && vp->getDefaultTeam() != nullptr && victim->getTeam() != vp->getDefaultTeam();
+	char line[288];
+	WWFormat::Into(line, "AILOSS {:d} player {:d} template {} value {:d} buildings {:d} from_player {:d} from_template {} from_building {:d} pos {} in_mission {:d} script_team {:d}", TheGameLogic->getFrame(), vp->getPlayerIndex(), victim->getTemplate()->getName().str(), victim->getTemplate()->friend_getBuildCost(), victim->isKindOf( KINDOF_STRUCTURE ) ? 1 : 0, kp->getPlayerIndex(), killer->getTemplate()->getName().str(), killer->isKindOf( KINDOF_STRUCTURE ) ? 1 : 0, zone, inMission ? 1 : 0, inScriptTeam ? 1 : 0);
 	GameEngine_RunnerLog( line );
 }
 
@@ -164,7 +169,7 @@ void AIStats_logOrder( const Player *player, Bool structure, const ThingTemplate
 		|| TheGameLogic == nullptr || player->getPlayerType() != PLAYER_COMPUTER)
 		return;
 	char line[224];
-	WWFormat::Into(line, "KIAUFTRAG {:d} spieler {:d} art {} vorlage {} kosten {:d}", TheGameLogic->getFrame(), player->getPlayerIndex(), structure ? "gebaeude" : "einheit", thing->getName().str(), thing->calcCostToBuild( player ));
+	WWFormat::Into(line, "AIORDER {:d} player {:d} kind {} template {} cost {:d}", TheGameLogic->getFrame(), player->getPlayerIndex(), structure ? "building" : "unit", thing->getName().str(), thing->calcCostToBuild( player ));
 	GameEngine_RunnerLog( line );
 }
 
@@ -206,7 +211,7 @@ void AIStats_logFrame( UnsignedInt frame )
 		if (ai && ai->isIdle())
 			++c.idle;
 
-		// Stuck units: wants to move, but the position does not change (STECKT line once per episode)
+		// Stuck units: wants to move, but the position does not change (STUCK line once per episode)
 		const UnsignedInt id = static_cast<UnsignedInt>( obj->getID() );
 		if (ai && id < STUCK_TRACK_MAX)
 		{
@@ -233,7 +238,7 @@ void AIStats_logFrame( UnsignedInt frame )
 					const Real gx = goal ? goal->x - pos->x : 0.0f;
 					const Real gy = goal ? goal->y - pos->y : 0.0f;
 					const BlockerNote &bn = s_blockerNote[id];
-					WWFormat::Into(stuckLine, "STECKT {:d} id {:d} vorlage {} spieler {:d} seite {} x {:d} y {:d} seit {:d} blockiert {:d} haengt {:d} ziel {:d} {:d} abstand_ziel {:d} zustand {:d} blockierer {:d} faehrt {:d} gegenseitig {:d} prioritaet {:d} vor_frames {:d}", frame, id, obj->getTemplate()->getName().str(), idx, owner->getSide().str(), static_cast<Int>( pos->x ), static_cast<Int>( pos->y ), tr.since, ai->getNumFramesBlocked(), ai->isBlockedAndStuck() ? 1 : 0, goal ? static_cast<Int>( goal->x ) : -1, goal ? static_cast<Int>( goal->y ) : -1, static_cast<Int>( sqrtf( gx * gx + gy * gy ) ), static_cast<UnsignedInt>( ai->getCurrentStateID() ), bn.frame ? bn.blockerId : 0, bn.blockerMoving ? 1 : 0, bn.mutual ? 1 : 0, bn.higherPriority ? 1 : 0, bn.frame ? static_cast<Int>( frame - bn.frame ) : -1);
+					WWFormat::Into(stuckLine, "STUCK {:d} id {:d} template {} player {:d} side {} x {:d} y {:d} since {:d} blocked {:d} hangs {:d} target {:d} {:d} target_distance {:d} state {:d} blocker {:d} moving {:d} mutual {:d} priority {:d} before_frames {:d}", frame, id, obj->getTemplate()->getName().str(), idx, owner->getSide().str(), static_cast<Int>( pos->x ), static_cast<Int>( pos->y ), tr.since, ai->getNumFramesBlocked(), ai->isBlockedAndStuck() ? 1 : 0, goal ? static_cast<Int>( goal->x ) : -1, goal ? static_cast<Int>( goal->y ) : -1, static_cast<Int>( sqrtf( gx * gx + gy * gy ) ), static_cast<UnsignedInt>( ai->getCurrentStateID() ), bn.frame ? bn.blockerId : 0, bn.blockerMoving ? 1 : 0, bn.mutual ? 1 : 0, bn.higherPriority ? 1 : 0, bn.frame ? static_cast<Int>( frame - bn.frame ) : -1);
 					GameEngine_RunnerLog( stuckLine );
 				}
 			}
@@ -253,7 +258,7 @@ void AIStats_logFrame( UnsignedInt frame )
 		const PlayerCounts &c = counts[p->getPlayerIndex()];
 		Bool defeated = TheVictoryConditions ? TheVictoryConditions->hasSinglePlayerBeenDefeated( p ) : FALSE;
 		char line[512];
-		WWFormat::Into(line, "KISTAT {:d} spieler {:d} platz {:d} seite {} art {:d} team {:d} besiegt {:d} geld {:d} einnahmen {:d} ausgaben {:d} einheiten {:d} armeewert {:d} leerlauf {:d} arbeiter {:d} gebaeude {:d} gebaut_e {:d} gebaut_g {:d} verloren_e {:d} verloren_g {:d} zerstoert_e {:d} zerstoert_g {:d} punkte {:d} rang {:d} gegner {:d} steckt {:d}", frame, p->getPlayerIndex(), slot, p->getSide().str(), kind, team, defeated ? 1 : 0, p->getMoney()->countMoney(), sk->getTotalMoneyEarned(), sk->getTotalMoneySpent(), c.units, c.armyValue, c.idle, c.workers, c.structures, sk->getTotalUnitsBuilt(), sk->getTotalBuildingsBuilt(), sk->getTotalUnitsLost(), sk->getTotalBuildingsLost(), sk->getTotalUnitsDestroyed(), sk->getTotalBuildingsDestroyed(), p->getSciencePurchasePoints(), p->getRankLevel(), p->peekCurrentEnemy() ? p->peekCurrentEnemy()->getPlayerIndex() : -1, c.stuck);
+		WWFormat::Into(line, "AISTAT {:d} player {:d} place {:d} side {} kind {:d} team {:d} defeated {:d} money {:d} income {:d} spending {:d} units {:d} army_value {:d} idle {:d} workers {:d} buildings {:d} built_u {:d} built_b {:d} lost_u {:d} lost_b {:d} destroyed_u {:d} destroyed_b {:d} points {:d} rank {:d} enemy {:d} stuck {:d}", frame, p->getPlayerIndex(), slot, p->getSide().str(), kind, team, defeated ? 1 : 0, p->getMoney()->countMoney(), sk->getTotalMoneyEarned(), sk->getTotalMoneySpent(), c.units, c.armyValue, c.idle, c.workers, c.structures, sk->getTotalUnitsBuilt(), sk->getTotalBuildingsBuilt(), sk->getTotalUnitsLost(), sk->getTotalBuildingsLost(), sk->getTotalUnitsDestroyed(), sk->getTotalBuildingsDestroyed(), p->getSciencePurchasePoints(), p->getRankLevel(), p->peekCurrentEnemy() ? p->peekCurrentEnemy()->getPlayerIndex() : -1, c.stuck);
 		GameEngine_RunnerLog( line );
 	}
 }
@@ -280,7 +285,7 @@ Bool AIStats_logVictoryIfDecided( UnsignedInt frame )
 			winnerTeam = gs->getTeamNumber();
 	}
 	char line[256];
-	WWFormat::Into(line, "KISIEG {:d} ende {:d} team {:d} sieger(spieler/platz/art){}", frame, TheVictoryConditions->getEndFrame(), winnerTeam, winners.isEmpty() ? " keiner" : winners.str());
+	WWFormat::Into(line, "AIVICTORY {:d} end {:d} team {:d} winner(player/place/kind){}", frame, TheVictoryConditions->getEndFrame(), winnerTeam, winners.isEmpty() ? " none" : winners.str());
 	GameEngine_RunnerLog( line );
 	return TRUE;
 }

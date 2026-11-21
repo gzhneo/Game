@@ -1217,7 +1217,7 @@ def ablegen(ziel, staemme, stufe='hd'):
     der höchsten Stufe unter Art/Textures, dazu texturpaket.txt (Kopf mit der Stufe, je Textur Pfad und SD-Größe; die Engine
     lässt in kleineren Stufen Mip-Stufen aus). Setzt 'paket' für diese Stufe voraus."""
     import shutil
-    zeilen = ['TEXTURPAKET 1 ' + stufe.upper(),
+    zeilen = ['TEXTUREPACK 1 ' + stufe.upper(),
               '; free trees and plants (baum_frei.py), textures in %s size, sizes are the SD tier' % stufe.upper()]
     sd = int(V['stufen']['sd'])
     n = 0

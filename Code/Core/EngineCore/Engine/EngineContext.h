@@ -111,11 +111,9 @@ class Version;
 class VictoryConditionsInterface;
 class VideoPlayerInterface;
 class View;
-class W3DBufferManager;
 class W3DFileSystem;
 class W3DProjectedShadowManager;
 class W3DShadowManager;
-class W3DVolumetricShadowManager;
 class WaterRenderObjClass;
 class WeaponStore;
 class Win32Keyboard;
@@ -222,11 +220,9 @@ struct EngineContext
 	Version *version = nullptr;
 	VictoryConditionsInterface *victoryConditions = nullptr;
 	VideoPlayerInterface *videoPlayer = nullptr;
-	W3DBufferManager *w3DBufferManager = nullptr;
 	W3DFileSystem *w3DFileSystem = nullptr;
 	W3DProjectedShadowManager *w3DProjectedShadowManager = nullptr;
 	W3DShadowManager *w3DShadowManager = nullptr;
-	W3DVolumetricShadowManager *w3DVolumetricShadowManager = nullptr;
 	WaterRenderObjClass *waterRenderObj = nullptr;
 	WeaponStore *weaponStore = nullptr;
 	Win32Keyboard *win32Keyboard = nullptr;
@@ -349,11 +345,9 @@ inline UpgradeCenter *upgradeCenter() { return context().upgradeCenter; }
 inline Version *version() { return context().version; }
 inline VictoryConditionsInterface *victoryConditions() { return context().victoryConditions; }
 inline VideoPlayerInterface *videoPlayer() { return context().videoPlayer; }
-inline W3DBufferManager *w3DBufferManager() { return context().w3DBufferManager; }
 inline W3DFileSystem *w3DFileSystem() { return context().w3DFileSystem; }
 inline W3DProjectedShadowManager *w3DProjectedShadowManager() { return context().w3DProjectedShadowManager; }
 inline W3DShadowManager *w3DShadowManager() { return context().w3DShadowManager; }
-inline W3DVolumetricShadowManager *w3DVolumetricShadowManager() { return context().w3DVolumetricShadowManager; }
 inline WaterRenderObjClass *waterRenderObj() { return context().waterRenderObj; }
 inline WeaponStore *weaponStore() { return context().weaponStore; }
 inline Win32Keyboard *win32Keyboard() { return context().win32Keyboard; }
@@ -459,11 +453,9 @@ inline GlobalData *writableGlobalData() { return context().writableGlobalData; }
 #define TheVersion (::Engine::version())
 #define TheVictoryConditions (::Engine::victoryConditions())
 #define TheVideoPlayer (::Engine::videoPlayer())
-#define TheW3DBufferManager (::Engine::w3DBufferManager())
 #define TheW3DFileSystem (::Engine::w3DFileSystem())
 #define TheW3DProjectedShadowManager (::Engine::w3DProjectedShadowManager())
 #define TheW3DShadowManager (::Engine::w3DShadowManager())
-#define TheW3DVolumetricShadowManager (::Engine::w3DVolumetricShadowManager())
 #define TheWaterRenderObj (::Engine::waterRenderObj())
 #define TheWeaponStore (::Engine::weaponStore())
 #define TheWin32Keyboard (::Engine::win32Keyboard())

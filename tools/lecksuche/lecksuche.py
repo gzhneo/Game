@@ -7,16 +7,16 @@
 Jede Szene ist ein eigener Programmlauf bis zum sauberen Beenden; danach steht im DebugLogFileD.txt
 der Leckbericht der Speicherpools (Zeilen "Leaked a block ...") und, ueber die Umgebungsvariable
 GENERALS_CRT_LEAKFILE, der CRT-Leckbericht (malloc ausserhalb der Pools) in einer eigenen Datei.
-Szenen mit Wachstumsmessung (Testablauf-Befehle merke/wachstum) schreiben zusaetzlich, was zwischen
+Szenen mit Wachstumsmessung (test script commands checkpoint/growth) schreiben zusaetzlich, was zwischen
 zwei Zeitpunkten angelegt und nicht wieder freigegeben wurde -- etwa je Partie oder je Mission.
 Unter Direct3D 11 (Debug-Build mit Debug-Layer) meldet das Spiel beim Beenden die noch lebenden
-D3D11-Objekte (Zeilen "D3D11-LEBEND", R-140) und die Befunde des Debug-Layers ("D3D11-Debug-Layer").
+D3D11-Objekte (Zeilen "D3D11-LIVE") und die Befunde des Debug-Layers ("D3D11-Debug-Layer").
 
-Die Szenen fahren das Spiel ohne Eingabe: -testablauf <Datei> (Befehle: Kopf von
+Die Szenen fahren das Spiel ohne Eingabe: -testScript <Datei> (Befehle: Kopf von
 Code/GameEngine/GameClient/TestScript.cpp), Replays mit -replay. Szenen mit -runner zeichnen
 in Partien nicht und haben keinen Ton, laufen dafuer schnell und neben anderen Spielen (--parallel);
 Szenen ohne -runner laufen im Fenster und warten vorher auf eine freie Maschine (--warteschlange).
-Jeder Lauf startet mit -mehrfach: keine Einzelinstanz-Sperre, Protokoll m<PID>_DebugLogFileD.txt.
+Jeder Lauf startet mit -multiInstance: keine Einzelinstanz-Sperre, Protokoll m<PID>_DebugLogFileD.txt.
 
 Beispiele:
   python tools/lecksuche/lecksuche.py --build build-leak --parallel 4
@@ -64,8 +64,8 @@ LOGNAME = {"Debug": "DebugLogFileD.txt", "Internal": "DebugLogFileI.txt"}
 
 # -fixedTimeStep: ohne Wartezeit, fester Client-Seed; zeigt das Hauptmenue ohne Mausbewegung (MainMenu.cpp).
 # -noVSync: die Menues werden auch im Runner gezeichnet, ohne Bildsynchronisation laufen sie schneller.
-# -mehrfach: keine Einzelinstanz-Sperre, Protokolle je Instanz (m<PID>_...), damit Laeufe nebeneinander gehen.
-FENSTER = ["-win", "-xres", "800", "-yres", "600", "-fixedTimeStep", "-noVSync", "-mehrfach"]
+# -multiInstance: keine Einzelinstanz-Sperre, Protokolle je Instanz (m<PID>_...), damit Laeufe nebeneinander gehen.
+FENSTER = ["-win", "-xres", "800", "-yres", "600", "-fixedTimeStep", "-noVSync", "-multiInstance"]
 
 
 class Szene:
@@ -119,8 +119,8 @@ SZENEN = [
           "verlassen, Punkteanzeige, LAN-Lobby, Hauptmenue", "lan_partie.txt", frist=2400, lan=True),
     Szene("spielmenue", "Skirmish: Spielmenue mit Optionen, Speichern/Laden-Fenster, Neustart der Partie, "
           "Aufgeben", "spielmenue.txt", frist=2400),
-    Szene("testhilfen_mission", "-mission USA 1 mit -testhilfen: Schnellspeichern, Schnellladen, Sieg, "
-          "zweite Mission", "testhilfen_mission.txt", extra=["-testhilfen", "-mission", "USA", "1"], frist=3600),
+    Szene("testhilfen_mission", "-mission USA 1 mit -testAids: Schnellspeichern, Schnellladen, Sieg, "
+          "zweite Mission", "testhilfen_mission.txt", extra=["-testAids", "-mission", "USA", "1"], frist=3600),
     Szene("kampagne_usa", "Kampagne USA: drei Missionen hintereinander (zwei Missionswechsel)",
           "kampagne_usa.txt", frist=5400),
     Szene("kampagne_china", "Kampagne China: drei Missionen hintereinander (zwei Missionswechsel)",
@@ -158,9 +158,9 @@ SZENEN = [
           "replay_fenster.txt", replay={"generals": "x64/e0-alpine-assault-2ai-seed1.rep",
                                         "zh": "zh/x64/e0zh-green-pastures-2ai-seed1.rep"},
           runner=False, frist=3600),
-    Szene("testhilfen", "Skirmish mit -testhilfen im Fenster: Seitenleiste, Anzeige, alle Logik-Testhilfen, "
+    Szene("testhilfen", "Skirmish mit -testAids im Fenster: Seitenleiste, Anzeige, alle Logik-Testhilfen, "
           "Zeitraffer, EA-Diagnosekuerzel und Tageszeit; drei Partien, Wachstum ueber die dritte", "testhilfen.txt",
-          extra=["-testhilfen"], runner=False, frist=3600),
+          extra=["-testAids"], runner=False, frist=3600),
     Szene("kampagne_fenster", "Kampagne USA mit Zeichnen, Ton und Videos: zwei Missionen, Sieg, Beenden",
           "kampagne_fenster.txt", runner=False, frist=3600),
 ]
@@ -180,7 +180,7 @@ RAW_RE = re.compile(r"Leaked a total of (\d+) raw bytes")
 UNFREED_RE = re.compile(r"^\*\*Unfreed")
 CRT_BLOCK_RE = re.compile(r"^(?:(.*)\(\d+\) : )?\{(\d+)\} (\w+) block at 0x[0-9A-Fa-f]+, (\d+) bytes long\.")
 D3D_MELDUNG_RE = re.compile(r"D3D11-Debug-Layer \[(\w+), ID (-?\d+)\]: (.*)$")
-D3D_LEBEND_RE = re.compile(r"D3D11-LEBEND (.*)$")
+D3D_LEBEND_RE = re.compile(r"D3D11-LIVE (.*)$")
 STACK_SUFFIX = ",    STACKTRACE"
 
 
@@ -248,13 +248,13 @@ def lies_log(pfad):
                 i += 1
             lecks.append((int(m.group(1)), pfad_kurz(m.group(2)), m.group(3), rahmen))
             continue
-        if z.startswith("WACHSTUM,"):
+        if z.startswith("GROWTH,"):
             teile = z.split(",", 6)
             label = teile[1]
             w = wachstum.setdefault(label, {"gesamt": None, "gruppen": []})
-            if teile[2] == "gesamt":
+            if teile[2] == "total":
                 w["gesamt"] = tuple(int(x) for x in teile[3:6] if x)
-            elif teile[2] == "gruppe":
+            elif teile[2] == "group":
                 rahmen = []
                 i += 1
                 while i < n:
@@ -268,11 +268,11 @@ def lies_log(pfad):
                 continue
             i += 1
             continue
-        if "TESTABLAUF ERROR" in z or "TESTABLAUF FEHLER" in z:  # FEHLER: Protokolle vor Nr. 75
-            fehler.append(z[z.find("TESTABLAUF"):])
+        if "TESTSCRIPT ERROR" in z:
+            fehler.append(z[z.find("TESTSCRIPT"):])
         if "EXCEPTION DUMP" in z and "END EXCEPTION" not in z:
             fehler.append("Absturz (EXCEPTION DUMP im Protokoll, Crashes-Ordner neben der Exe)")
-        if z.startswith(("ABORT:", "ABBRUCH:")):  # ABBRUCH: Protokolle vor Nr. 75
+        if z.startswith(("ABORT:",)):
             fehler.append("Abbruch (abort(), Stapel im Protokoll)")
         m = D3D_MELDUNG_RE.search(z)
         if m:
@@ -405,7 +405,7 @@ def laeuft_spiel():
 
 def warte_frei(slot):
     """Vor Fensterlaeufen: faire Warteschlange (slot.py mit wait_free()) oder einfaches Warten. Die Laeufe haben
-    -mehrfach, neben einem Spiel des Nutzers oder eines anderen Agenten darf also eines laufen (parallel=2)."""
+    -multiInstance, neben einem Spiel des Nutzers oder eines anderen Agenten darf also eines laufen (parallel=2)."""
     if slot:
         import importlib.util
         spec = importlib.util.spec_from_file_location("lecksuche_slot", os.path.abspath(slot))
@@ -445,10 +445,10 @@ def plane(szene, spiel, a):
                                                       if r.lower().endswith(".rep")]
         for rep in reps:
             name = f"{spiel}-{szene.name}" + ("" if os.path.isfile(pfad) else f"-{os.path.splitext(os.path.basename(rep))[0]}")
-            args = modus + ["-replay", rep] + (["-testablauf", skript] if skript else []) + extra
+            args = modus + ["-replay", rep] + (["-testScript", skript] if skript else []) + extra
             laeufe.append(Lauf(szene, spiel, name, args))
     else:
-        laeufe.append(Lauf(szene, spiel, f"{spiel}-{szene.name}", modus + ["-testablauf", skript] + extra))
+        laeufe.append(Lauf(szene, spiel, f"{spiel}-{szene.name}", modus + ["-testScript", skript] + extra))
     return laeufe
 
 
@@ -493,9 +493,9 @@ def fuehre_aus(lauf, w):
     env = dict(os.environ, GENERALS_CRT_LEAKFILE=crt_log)
     ton = [] if a.mit_ton else ["-noaudio"]
     cmd = [exe] + FENSTER + ton + lauf.args + ["-ignoreAsserts", "-crcLog", runner_log] + a.extra
-    if a.benutzerdaten:
+    if a.userData:
         # je Spiel ein Unterordner, damit Spielstaende und Replays der beiden Spiele getrennt bleiben
-        cmd += ["-benutzerdaten", os.path.join(a.benutzerdaten, "ZeroHour" if lauf.spiel == "zh" else "Generals")]
+        cmd += ["-userData", os.path.join(a.userData, "ZeroHour" if lauf.spiel == "zh" else "Generals")]
     w.protokoll(f"  {lauf.name}: {' '.join(os.path.basename(c) if c == exe else c for c in cmd[1:])}")
     start = time.time()
     proc = subprocess.Popen(cmd, cwd=exe_dir, env=env)
@@ -508,7 +508,7 @@ def fuehre_aus(lauf, w):
     dauer = time.time() - start
     with w.sperre:
         benutzer_ini_zurueck(w.ini[lauf.spiel])
-    # -mehrfach: Protokolle mit Vorsatz m<PID>_
+    # -multiInstance: Protokolle mit Vorsatz m<PID>_
     vorsatz = f"m{proc.pid}_"
     quelle = os.path.join(exe_dir, vorsatz + LOGNAME.get(a.konfig, "DebugLogFile.txt"))
     log_ziel = os.path.join(out, lauf.name + ".log")
@@ -689,7 +689,7 @@ def befund(erg, wachstum_schwelle):
     if (erg.get("fehler") or erg.get("lecks") or erg.get("crt") or erg.get("raw") or erg.get("unfreed")
             or erg.get("d3d_lebend")):
         return True
-    if any(m[0] in ("FEHLER", "KORRUPTION") for m in erg.get("d3d_meldungen", [])):
+    if any(m[0] in ("ERROR", "CORRUPTION") for m in erg.get("d3d_meldungen", [])):
         return True
     for v in erg.get("wachstum", {}).values():
         # ohne Aufrufketten nur gezaehlt, kein Befund (Zwischenspeicher nicht erkennbar; build-leak verwenden)
@@ -720,7 +720,7 @@ def main():
     ap.add_argument("--skript-fenster", action="store_true", help="--skript im Fenster statt im Runner")
     ap.add_argument("--skript-extra", default="", help="weitere Parameter fuer --skript (durch Leerzeichen getrennt)")
     ap.add_argument("--auswerten", nargs="+", help="nur vorhandene Protokolle auswerten")
-    ap.add_argument("--benutzerdaten", help="eigener Benutzerordner (Unterordner Generals und ZeroHour), etwa fuer eine andere Sprache")
+    ap.add_argument("--userData", help="eigener Benutzerordner (Unterordner Generals und ZeroHour), etwa fuer eine andere Sprache")
     ap.add_argument("--extra", nargs=argparse.REMAINDER, default=[], help="weitere Spielparameter (am Ende)")
     a = ap.parse_args()
 

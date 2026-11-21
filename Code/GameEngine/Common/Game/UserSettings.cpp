@@ -217,6 +217,11 @@ Bool isYes(const std::string &value)
 namespace UserSettings
 {
 
+Bool isAutomatedRun()
+{
+	return TheGlobalData != nullptr && !settingsWritable();
+}
+
 Engine::Settings::Store &store()
 {
 	return files().store;
@@ -548,11 +553,6 @@ Bool getFPSLimitEnabled()
 	return getBool("Detail.FPSLimit", TheGlobalData->m_useFpsLimit);
 }
 
-Bool get3DShadowsEnabled()
-{
-	return getBool("Detail.UseShadowVolumes", TheGlobalData->m_useShadowVolumes);
-}
-
 Bool get2DShadowsEnabled()
 {
 	return getBool("Detail.UseShadowDecals", TheGlobalData->m_useShadowDecals);
@@ -569,6 +569,8 @@ Int getParticleCap()
 	if (value == nullptr)
 		return TheGlobalData->m_maxParticleCount;
 	const Int factor = atoi(value->c_str());
+	if (factor > 1000000)
+		return 1000000;		// an absurd value from a hand-edited file would only allocate memory
 	return factor < 100 ? 100 : factor;	// at least 100 particles
 }
 
@@ -675,6 +677,11 @@ Int getTextureQuality()
 		return ::Engine::TEXTURE_TIER_AUTO;
 	const Int tier = ::Engine::parseTextureTier(value->c_str());
 	return (tier == ::Engine::TEXTURE_TIER_INVALID) ? ::Engine::TEXTURE_TIER_AUTO : tier;
+}
+
+AsciiString getAdapter()
+{
+	return get("Display.Adapter");	// with -adapter
 }
 
 AsciiString getD3D11Effects()

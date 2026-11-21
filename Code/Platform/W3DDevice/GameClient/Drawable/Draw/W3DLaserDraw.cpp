@@ -354,6 +354,9 @@ void W3DLaserDraw::doDrawModule(const Matrix3D* transformMtx)
 				//The half length is used to scale with the distance from middle to 
 				//get our cos( 0 to 0.25 PI) cos value
 				Real halfLength = lineLength * 0.5f;
+				// Start and target coincide: dividing by zero would put NaN into the beam points.
+				if( halfLength < 0.01f )
+					halfLength = 0.01f;
 
 				//Now calculate which segment we will use.
 				Real startSegmentRatio = segment / (static_cast<Real>(data->m_segments));

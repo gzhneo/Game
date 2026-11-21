@@ -104,6 +104,9 @@ public:
 	virtual Int getDisplayModeCount(void) {return 0;}	///<return number of display modes/resolutions supported by video card.
 	virtual void getDisplayModeDescription(Int modeIndex, Int *xres, Int *yres, Int *bitDepth) {}	///<return description of mode
 	virtual Bool offersRendererChoice( void ) { return TRUE; }	///< more than one renderer built in (options menu)
+	virtual Int getGraphicsCardCount( void ) { return 0; }	///< graphics cards the renderer sees (options menu)
+	/// The stored choice ("VVVV:DDDD name") and the name of a graphics card
+	virtual Bool getGraphicsCard( Int index, AsciiString *choice, AsciiString *name ) { return FALSE; }
  	virtual void setGamma(Real gamma, Real bright, Real contrast, Bool calibrate) {};
 	virtual Bool testMinSpecRequirements(Bool *videoPassed, Bool *cpuPassed, Bool *memPassed,StaticGameLODLevel *idealVideoLevel=nullptr, Real *cpuTime=nullptr) {*videoPassed=*cpuPassed=*memPassed=true; return true;}
 	virtual void doSmartAssetPurgeAndPreload(const char* usageFileName) = 0;

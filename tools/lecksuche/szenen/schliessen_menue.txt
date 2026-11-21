@@ -1,8 +1,8 @@
 # Im Hauptmenue das Fenster schliessen (WM_CLOSE, wie Alt+F4 oder das X der Titelleiste).
-fenster MainMenu.wnd:ButtonSinglePlayer
-warte 60
-schliessen
-warte 600
+window MainMenu.wnd:ButtonSinglePlayer
+wait 60
+close
+wait 600
 # kommt der Ablauf hier an, hat WM_CLOSE nicht gewirkt
 log WM_CLOSE ohne Wirkung
-beenden
+quit

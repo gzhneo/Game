@@ -46,20 +46,20 @@ rm -rf "$DATA" && python3 "$HERE/testdaten/generate.py" "$DATA" > /dev/null || {
 # The host opens the game with the user map (the only map besides the data set's, which the lobby takes as its default;
 # checked below in the host's log); it waits for the guest, who accepts right after joining.
 host_ablauf() {
-	printf 'hauptmenue\r\nklick MainMenu.wnd:ButtonMultiplayer 3000\r\nklick MainMenu.wnd:ButtonNetwork 3000\r\n'
-	printf 'fenster LanLobbyMenu.wnd:ButtonHost 3000\r\nwarte 60\r\nklick LanLobbyMenu.wnd:ButtonHost\r\n'
-	printf 'fenster LanGameOptionsMenu.wnd:ButtonStart 6000\r\nwarte 3200\r\nklick LanGameOptionsMenu.wnd:ButtonStart 9000\r\n'
-	printf 'partie 2000000\r\nlog SPIEL BEGINNT\r\nlogik 200\r\n'
-	printf 'spielmenue\r\nklick QuitNoSave.wnd:ButtonExit 3000\r\nklick QuitMessageBox.wnd:ButtonYes 3000\r\n'
-	printf 'keinePartie 2000000\r\nbeenden\r\n'
+	printf 'mainMenu\r\nclick MainMenu.wnd:ButtonMultiplayer 3000\r\nclick MainMenu.wnd:ButtonNetwork 3000\r\n'
+	printf 'window LanLobbyMenu.wnd:ButtonHost 3000\r\nwait 60\r\nclick LanLobbyMenu.wnd:ButtonHost\r\n'
+	printf 'window LanGameOptionsMenu.wnd:ButtonStart 6000\r\nwait 3200\r\nclick LanGameOptionsMenu.wnd:ButtonStart 9000\r\n'
+	printf 'game 2000000\r\nlog SPIEL BEGINNT\r\nlogic 200\r\n'
+	printf 'gameMenu\r\nclick QuitNoSave.wnd:ButtonExit 3000\r\nclick QuitMessageBox.wnd:ButtonYes 3000\r\n'
+	printf 'noGame 2000000\r\nquit\r\n'
 }
 gast_ablauf() {
-	printf 'hauptmenue\r\nklick MainMenu.wnd:ButtonMultiplayer 3000\r\nklick MainMenu.wnd:ButtonNetwork 3000\r\n'
-	printf 'fenster LanLobbyMenu.wnd:ListboxGames 3000\r\nwarte 900\r\nauswahl LanLobbyMenu.wnd:ListboxGames 0 6000\r\n'
-	printf 'klick LanLobbyMenu.wnd:ButtonJoin 3000\r\nfenster LanGameOptionsMenu.wnd:TextEntryChat 6000\r\nwarte 100\r\n'
-	printf 'klick LanGameOptionsMenu.wnd:ButtonStart 9000\r\npartie 2000000\r\nlog SPIEL BEGINNT\r\nlogik 200\r\n'
-	printf 'spielmenue\r\nklick QuitNoSave.wnd:ButtonExit 3000\r\nklick QuitMessageBox.wnd:ButtonYes 3000\r\n'
-	printf 'keinePartie 2000000\r\nbeenden\r\n'
+	printf 'mainMenu\r\nclick MainMenu.wnd:ButtonMultiplayer 3000\r\nclick MainMenu.wnd:ButtonNetwork 3000\r\n'
+	printf 'window LanLobbyMenu.wnd:ListboxGames 3000\r\nwait 900\r\nselect LanLobbyMenu.wnd:ListboxGames 0 6000\r\n'
+	printf 'click LanLobbyMenu.wnd:ButtonJoin 3000\r\nwindow LanGameOptionsMenu.wnd:TextEntryChat 6000\r\nwait 100\r\n'
+	printf 'click LanGameOptionsMenu.wnd:ButtonStart 9000\r\ngame 2000000\r\nlog SPIEL BEGINNT\r\nlogic 200\r\n'
+	printf 'gameMenu\r\nclick QuitNoSave.wnd:ButtonExit 3000\r\nclick QuitMessageBox.wnd:ButtonYes 3000\r\n'
+	printf 'noGame 2000000\r\nquit\r\n'
 }
 
 for i in 1 2; do
@@ -80,7 +80,7 @@ host_ablauf > "$OUT/daten1/ablauf.txt"
 gast_ablauf > "$OUT/daten2/ablauf.txt"
 for i in 1 2; do
 	ip netns exec gzh-kt$i env WINEPREFIX_CNC="$BAU/wineprefix-kt$i" "$HERE/run_game.sh" --menue --zeit 3000 \
-		"$OUT/daten$i" -einstellungenNurLesen -mehrfach -d3d11Effects none -crcLog crc.log -testablauf ablauf.txt \
+		"$OUT/daten$i" -settingsReadOnly -multiInstance -d3d11Effects none -crcLog crc.log -testScript ablauf.txt \
 		> "$OUT/lauf$i.out" 2>&1 &
 	eval "P$i=\$!"
 	[ $i = 1 ] && sleep 20
@@ -112,7 +112,7 @@ for i in 1 2; do
 		continue
 	fi
 	n=$(grep -ac "Leaked a block" "$L")
-	e=$(grep -a "TESTABLAUF ERROR" "$OUT/daten$i/crc.log" 2>/dev/null | head -1)
+	e=$(grep -a "TESTSCRIPT ERROR" "$OUT/daten$i/crc.log" 2>/dev/null | head -1)
 	echo "$name: Exit ${!rc}, $n Lecks${e:+, $e}"
 	grep -a "Leaked a block" "$L" | head -10 | sed 's/^/  /'
 	[ "$n" -eq 0 ] && [ "${!rc}" -eq 0 ] && [ -z "$e" ] || fehler=$((fehler + 1))

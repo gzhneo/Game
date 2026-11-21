@@ -21,6 +21,7 @@
 #include "Common/ThingTemplate.h"
 #include "Common/Xfer.h"
 #include "GameLogic/AIPlanner.h"
+#include "GameLogic/AIRoles.h"
 #include "GameLogic/Armor.h"
 #include "GameLogic/ArmorSet.h"
 #include "GameLogic/Damage.h"
@@ -35,8 +36,8 @@
 
 namespace
 {
-	constexpr Int TIME_REPORT_PLANS = 30;		///< KIZEIT after this many plans (30 s)
-	constexpr Int FORECAST_REPORT_PLANS = 10;	///< KIPROGNOSE and KIKONTER every this many plans (10 s)
+	constexpr Int TIME_REPORT_PLANS = 30;		///< AITIMING after this many plans (30 s)
+	constexpr Int FORECAST_REPORT_PLANS = 10;	///< AIFORECAST and AICOUNTER every this many plans (10 s)
 	constexpr Real SUICIDE_SECONDS = 10.0f;	///< a weapon that destroys its carrier counts as one hit in this time
 	constexpr Real MAP_CELL = 250.0f;				///< cell size of the influence maps (world units)
 	constexpr Real SITE_RADIUS = 700.0f;		///< enemies this close to the attack force fight it
@@ -324,14 +325,28 @@ AIPlanResult AIPlanner_compute( const AIPlanInput &input, const AICombat::Table 
 				{
 					++r.enemyStructuresKnown;
 					if (focus && hasWeapon( table, o.profile ))
+					{
 						addToForce( &enemyDefence, o.profile, objectHealth( table, o ) );
+						r.enemyDefenceValue += static_cast<Real>( o.cost ) * static_cast<Real>( o.health ) / 1000.0f;
+					}
 				}
 				else if (mobile)
 				{
 					++r.enemyUnitsSeen;
+					if (o.flags & AIPlanObject::REMEMBERED)
+						++r.enemyUnitsRemembered;
 					r.enemyValueSeen += o.cost;
 					if (focus)
+					{
 						addToForce( &enemyField, o.profile, objectHealth( table, o ) );
+						const Real value = static_cast<Real>( o.cost ) * static_cast<Real>( o.health ) / 1000.0f;
+						if (o.flags & AIPlanObject::AIRCRAFT)
+							r.enemyAirValue += value;
+						else if (o.flags & AIPlanObject::INFANTRY)
+							r.enemyInfantryValue += value;
+						else
+							r.enemyVehicleValue += value;
+					}
 				}
 				break;
 			}
@@ -354,15 +369,16 @@ AIPlanResult AIPlanner_compute( const AIPlanInput &input, const AICombat::Table 
 	r.baseSurvivors = (base.winner == 0) ? base.survivorsA : ((base.winner == 1) ? base.survivorsB : 0.0f);
 	r.baseRatio = base.strengthRatio;
 
-	// Counter production against the enemy mix (field army and defences).
-	r.enemyHealthSeen = static_cast<Int>( AICombat::totalHealth( enemyBase ) );
-	if (!enemyBase.empty())
+	// Counter production against the enemy field army (seen and remembered units); the buildings do not count, they
+	// would draw the answer towards the defence of the enemy instead of his army.
+	r.enemyHealthSeen = static_cast<Int>( AICombat::totalHealth( enemyField ) );
+	if (!enemyField.empty())
 	{
 		for (const AIPlanCandidate &c : input.candidates)
 		{
 			AIPlanChoice choice;
 			choice.profile = c.profile;
-			choice.score = AICombat::counterScore( table, c.profile, enemyBase );
+			choice.score = AICombat::counterScore( table, c.profile, enemyField );
 			if (c.cost > 0 && c.profile >= 0)
 			{
 				// The table holds the base build cost; the player may pay another price.
@@ -442,6 +458,7 @@ void AIPlanner_buildCombatTable( AICombat::Table *table, std::vector<Int> *profi
 		profile.cost = static_cast<Real>( t->friend_getBuildCost() );
 		profile.air = t->isKindOf( KINDOF_AIRCRAFT );
 		profile.structure = t->isKindOf( KINDOF_STRUCTURE );
+		profile.kind = t->isKindOf( KINDOF_INFANTRY ) ? AICombat::KIND_INFANTRY : (t->isKindOf( KINDOF_VEHICLE ) ? AICombat::KIND_VEHICLE : AICombat::KIND_OTHER);
 		const ArmorTemplate *armor = defaultArmor( t );
 		profile.armor = armor ? static_cast<Int>( std::find( armors.begin(), armors.end(), armor ) - armors.begin() ) : -1;
 
@@ -505,6 +522,13 @@ void AIPlanner::init( Player *self )
 	m_nextSnapshotFrame = TheGameLogic->getFrame() + PLAN_INTERVAL
 		+ static_cast<UnsignedInt>( self->getPlayerIndex() ) % PLAN_INTERVAL;
 	AIPlanner_buildCombatTable( &m_table, &m_profileOfTemplate, &m_templateOfProfile );
+	const AIRoles::Context ctx = AIRoles::makeContext( m_table );
+	m_roleOfProfile.assign( m_table.profiles.size(), 0u );
+	for (size_t p = 0; p < m_roleOfProfile.size(); ++p)
+	{
+		if (!m_table.profiles[p].structure)
+			m_roleOfProfile[p] = AIRoles::classifyRole( m_table, ctx, static_cast<int>( p ), FALSE );
+	}
 }
 
 Bool AIPlanner::isSnapshotDue( void ) const
@@ -515,8 +539,9 @@ Bool AIPlanner::isSnapshotDue( void ) const
 }
 
 void AIPlanner::setInputs( const std::vector<AIPlanCandidate> &candidates, Int focusEnemy, const std::vector<UnsignedInt> &mission,
-	const std::vector<UnsignedInt> &raid )
+	const std::vector<UnsignedInt> &raid, const std::vector<AIPlanObject> &memory )
 {
+	m_nextMemory = memory;
 	m_nextRaid = raid;
 	m_nextCandidates = candidates;
 	m_nextFocusEnemy = focusEnemy;
@@ -633,6 +658,23 @@ void AIPlanner::takeSnapshot( Player *self, UnsignedInt frame )
 		m_input.objects.push_back( o );
 	}
 
+	// Enemy units out of sight, from the memory of the command layer, unless the unit is in the list already.
+	if (!m_nextMemory.empty())
+	{
+		std::vector<UnsignedInt> present;
+		for (const AIPlanObject &o : m_input.objects)
+		{
+			if (o.relation == AI_PLAN_ENEMY && (o.flags & AIPlanObject::STRUCTURE) == 0)
+				present.push_back( o.id );
+		}
+		std::sort( present.begin(), present.end() );
+		for (const AIPlanObject &o : m_nextMemory)
+		{
+			if (!std::binary_search( present.begin(), present.end(), o.id ))
+				m_input.objects.push_back( o );
+		}
+	}
+
 	const long long micros = microsSince( start );
 	m_snapshotSum += micros;
 	if (micros > m_snapshotMax)
@@ -674,15 +716,15 @@ void AIPlanner::takeOver( Player *self, UnsignedInt frame )
 	if (TheGlobalData->m_aiStatsInterval > 0)
 	{
 		char line[320];
-		WWFormat::Into( line, "KIPLAN {:d} spieler {:d} eingabe {:d} objekte {:d} pruefsumme {:08X} eigene {:d} wert {:d} gebaeude {:d} verbuendet_wert {:d} feind_gesehen {:d} feind_wert {:d} feind_gebaeude {:d} lager {:d}",
+		WWFormat::Into( line, "AIPLAN {:d} player {:d} input {:d} objects {:d} checksum {:08X} own {:d} value {:d} buildings {:d} ally_value {:d} enemy_seen {:d} enemy_remembered {:d} enemy_value {:d} enemy_buildings {:d} supplies {:d}",
 			frame, self->getPlayerIndex(), m_last.frame, static_cast<Int>( m_input.objects.size() ), m_last.checksum,
-			m_last.ownUnits, m_last.ownValue, m_last.ownStructures, m_last.allyValue, m_last.enemyUnitsSeen,
+			m_last.ownUnits, m_last.ownValue, m_last.ownStructures, m_last.allyValue, m_last.enemyUnitsSeen, m_last.enemyUnitsRemembered,
 			m_last.enemyValueSeen, m_last.enemyStructuresKnown, m_last.suppliesKnown );
 		GameEngine_RunnerLog( line );
 		if (m_plans % FORECAST_REPORT_PLANS == 0)
 		{
 			char forecast[320];
-			WWFormat::Into( forecast, "KIPROGNOSE {:d} spieler {:d} gegner {:d} feld_sieger {:d} feld_rest {:.2f} feld_verhaeltnis {:.2f} basis_sieger {:d} basis_rest {:.2f} basis_verhaeltnis {:.2f} feind_leben {:d} bedrohung_max {:.0f} trupp {:d} ziel {:d} ziel_sieger {:d} ziel_verhaeltnis {:.2f} ort_sieger {:d} ort_verhaeltnis {:.2f}",
+			WWFormat::Into( forecast, "AIFORECAST {:d} player {:d} enemy {:d} field_winner {:d} field_left {:.2f} field_ratio {:.2f} base_winner {:d} base_left {:.2f} base_ratio {:.2f} enemy_health {:d} threat_max {:.0f} squad {:d} target {:d} target_winner {:d} target_ratio {:.2f} site_winner {:d} site_ratio {:.2f}",
 				frame, self->getPlayerIndex(), m_input.focusEnemy, m_last.fieldWinner, m_last.fieldSurvivors, m_last.fieldRatio,
 				m_last.baseWinner, m_last.baseSurvivors, m_last.baseRatio, m_last.enemyHealthSeen, m_last.maxThreat,
 				static_cast<Int>( m_input.mission.size() ), m_last.objectiveId, m_last.objectiveWinner, m_last.objectiveRatio,
@@ -698,7 +740,7 @@ void AIPlanner::takeOver( Player *self, UnsignedInt frame )
 				best.concat( entry );
 			}
 			char counters[512];
-			WWFormat::Into( counters, "KIKONTER {:d} spieler {:d} kandidaten {:d} bewertet {:d}{}", frame, self->getPlayerIndex(),
+			WWFormat::Into( counters, "AICOUNTER {:d} player {:d} candidates {:d} rated {:d}{}", frame, self->getPlayerIndex(),
 				static_cast<Int>( m_input.candidates.size() ), static_cast<Int>( m_last.counters.size() ), best.str() );
 			GameEngine_RunnerLog( counters );
 		}
@@ -712,12 +754,12 @@ void AIPlanner::takeOver( Player *self, UnsignedInt frame )
 	}
 }
 
-// Real-time figures, therefore in their own line: KIPLAN must be equal between runs, KIZEIT is not.
+// Real-time figures, therefore in their own line: AIPLAN must be equal between runs, AITIMING is not.
 void AIPlanner::logTimes( Player *self, UnsignedInt frame )
 {
 	const long long n = m_timedPlans;
 	char line[320];
-	WWFormat::Into( line, "KIZEIT {:d} spieler {:d} plaene {:d} worker {:d} objekte {:d} schnappschuss_us {:d} schnappschuss_max {:d} rechnen_us {:d} rechnen_max {:d} warten_us {:d} warten_max {:d}",
+	WWFormat::Into( line, "AITIMING {:d} player {:d} plans {:d} threads {:d} objects {:d} snapshot_us {:d} snapshot_max {:d} compute_us {:d} compute_max {:d} wait_us {:d} wait_max {:d}",
 		frame, self->getPlayerIndex(), static_cast<Int>( n ), ::Engine::JobSystem::get().workerCount(),
 		static_cast<Int>( m_objectSum / n ), static_cast<Int>( m_snapshotSum / n ), static_cast<Int>( m_snapshotMax ),
 		static_cast<Int>( m_jobSum / n ), static_cast<Int>( m_jobMax ), static_cast<Int>( m_waitSum / n ),

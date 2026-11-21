@@ -26,6 +26,7 @@
 #include "WW3D2/Common/renderstates.h"
 #include "WW3D2/Common/renderfvf.h"
 #include "presentlayout.h"
+#include "WW3D2/Common/gpuadapter.h"
 #include "WW3D2/Vulkan/vulkanrequirements.h"
 #include "WW3D2/Vulkan/vulkanspirv.h"
 #include "W3DDevice/GameClient/TerrainTileImage.h"
@@ -881,6 +882,50 @@ static bool test_Vulkan_Describe_Missing(void)
 	return true;
 }
 
+static bool test_Gpu_Adapter_Choose(void)
+{
+	const GpuAdapter::Candidate cards[3] = {
+		{ 0x10DE, 0x2204, "NVIDIA GeForce RTX 3090" },
+		{ 0x8086, 0x9BC5, "Intel(R) UHD Graphics 630" },
+		{ 0x1002, 0x73BF, "AMD Radeon RX 6800 XT" },
+	};
+	CHECK(GpuAdapter::Choose(nullptr, cards, 3) == -1, "no choice");
+	CHECK(GpuAdapter::Choose("", cards, 3) == -1, "empty choice is automatic");
+	CHECK(GpuAdapter::Choose("   ", cards, 3) == -1, "blanks are automatic");
+	CHECK(GpuAdapter::Choose("8086:9BC5", cards, 3) == 1, "identifiers");
+	CHECK(GpuAdapter::Choose("8086:9bc5", cards, 3) == 1, "identifiers in lower case");
+	CHECK(GpuAdapter::Choose("1002:73BF AMD Radeon RX 6800 XT", cards, 3) == 2, "identifiers with the stored name");
+	// the identifiers decide: a renamed driver entry still matches, another card with that name does not
+	CHECK(GpuAdapter::Choose("10DE:2204 old driver name", cards, 3) == 0, "name after the identifiers is only for the reader");
+	CHECK(GpuAdapter::Choose("10DE:9999 NVIDIA GeForce RTX 3090", cards, 3) == -1, "card gone: automatic, not the name");
+	CHECK(GpuAdapter::Choose("1", cards, 3) == 1, "number");
+	CHECK(GpuAdapter::Choose("3", cards, 3) == -1, "number past the list");
+	CHECK(GpuAdapter::Choose("radeon", cards, 3) == 2, "part of the name");
+	CHECK(GpuAdapter::Choose("uhd graphics", cards, 3) == 1, "part of the name, any case");
+	CHECK(GpuAdapter::Choose("voodoo", cards, 3) == -1, "unknown name");
+	CHECK(GpuAdapter::Choose("8086:9BC5", cards, 0) == -1, "empty list");
+	CHECK(GpuAdapter::Spec(0x10DE, 0x2204, "NVIDIA GeForce RTX 3090") == "10DE:2204 NVIDIA GeForce RTX 3090", "stored form");
+	CHECK(GpuAdapter::Choose(GpuAdapter::Spec(0x8086, 0x9BC5, "Intel(R) UHD Graphics 630").c_str(), cards, 3) == 1, "the stored form finds its card");
+	return true;
+}
+
+static bool test_Vulkan_Choose_Device_Preferred(void)
+{
+	VulkanDeviceInfo two[2] = {
+		Vk_Usable_Device("igpu", VULKAN_DEVICE_INTEGRATED, 1ull << 31),
+		Vk_Usable_Device("dgpu", VULKAN_DEVICE_DISCRETE, 1ull << 30),
+	};
+	two[0].vendor_id = 0x8086; two[0].device_id = 0x9BC5;
+	two[1].vendor_id = 0x10DE; two[1].device_id = 0x2204;
+	CHECK(Vulkan_Choose_Device_Preferred(two, 2, "") == 1, "automatic: the discrete card");
+	CHECK(Vulkan_Choose_Device_Preferred(two, 2, nullptr) == 1, "no choice: the discrete card");
+	CHECK(Vulkan_Choose_Device_Preferred(two, 2, "8086:9BC5") == 0, "the player's card");
+	CHECK(Vulkan_Choose_Device_Preferred(two, 2, "dead:beef") == 1, "card gone: automatic");
+	two[0].swapchain = false;
+	CHECK(Vulkan_Choose_Device_Preferred(two, 2, "8086:9BC5") == 1, "chosen card unusable: automatic");
+	return true;
+}
+
 static bool test_Vulkan_Choose_Device(void)
 {
 	CHECK(Vulkan_Choose_Device(nullptr, 0) == -1, "no devices");
@@ -1094,6 +1139,8 @@ int main(void)
 		{ "Vulkan_Requirements",          test_Vulkan_Requirements },
 		{ "Vulkan_Describe_Missing",      test_Vulkan_Describe_Missing },
 		{ "Vulkan_Choose_Device",         test_Vulkan_Choose_Device },
+		{ "Gpu_Adapter_Choose",           test_Gpu_Adapter_Choose },
+		{ "Vulkan_Choose_Device_Preferred", test_Vulkan_Choose_Device_Preferred },
 		{ "Spirv_Prepare",                test_Spirv_Prepare },
 		{ "Spirv_Link_Inputs",            test_Spirv_Link_Inputs },
 	};

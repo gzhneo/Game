@@ -1,4 +1,4 @@
-# Strassen frei, Abziehbilder zh thefrontline (Nr. 83)
+# Strassen frei, Abziehbilder zh thefrontline
 # frame   x      y      zoom       drehung   neigung
 # helipad, wordcaution
 60        0.864  0.227  0.30       0         standard

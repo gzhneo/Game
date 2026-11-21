@@ -374,7 +374,8 @@ DEBUG_LOG(( "%d: GetGameAudioRandomValueReal = %f, %s line %d\n",
 */
 void GameClientRandomVariable::setRange( Real low, Real high, DistributionType type )
 {
-	DEBUG_ASSERTCRASH(!(m_type == CONSTANT && m_low != m_high), ("CONSTANT GameClientRandomVariables should have low == high"));
+	// checks the new range; the members may still be unset when a template is built
+	DEBUG_ASSERTCRASH(!(type == CONSTANT && low != high), ("CONSTANT GameClientRandomVariables should have low == high"));
 	m_low = low;
 	m_high = high;
 	m_type = type;
@@ -419,7 +420,8 @@ Real GameClientRandomVariable::getValue( void ) const
 */
 void GameLogicRandomVariable::setRange( Real low, Real high, DistributionType type )
 {
-	DEBUG_ASSERTCRASH(!(m_type == CONSTANT && m_low != m_high), ("CONSTANT GameLogicRandomVariables should have low == high"));
+	// checks the new range; the members may still be unset when a template is built
+	DEBUG_ASSERTCRASH(!(type == CONSTANT && low != high), ("CONSTANT GameLogicRandomVariables should have low == high"));
 	m_low = low;
 	m_high = high;
 	m_type = type;

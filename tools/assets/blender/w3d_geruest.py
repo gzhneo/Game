@@ -46,9 +46,7 @@ MESH_FLAG_TWO_SIDED = 0x00002000      # W3D_MESH_FLAG_TWO_SIDED -> MeshGeometryC
                                       # Nur der Baum: seine Karten und Astschichten sind einfache Flächen, die man von
                                       # beiden Seiten sieht. Felsen und Fass sind geschlossene Körper, die Kappung spart
                                       # dort die Hälfte der Pixel.
-# W3D_MESH_FLAG_CAST_SHADOW (0x8000) bleibt aus: W3DVolumetricShadow fragt es nur bei Netzen mit Alpha oder
-# Durchsichtigkeit ab. Deckende Netze werfen ihr Schattenvolumen ohnehin (wenn die INI eines verlangt); beim Baum
-# ergäben die Alphatest-Karten rechteckige Schattenvolumen -- sein Schatten kommt aus dem Baum-Puffer (DoShadow) bzw.
+# W3D_MESH_FLAG_CAST_SHADOW (0x8000) bleibt aus: der Schatten des Baums kommt aus dem Baum-Puffer (DoShadow) bzw.
 # der Shadow Map.
 SORT_LEVEL = 0                        # SORT_LEVEL_NONE: deckend bzw. Alphatest schreibt Tiefe, braucht keine Sortierung
 PRELIT_VERSION = 0                    # kein Lightmap-Werkzeug beteiligt

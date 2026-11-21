@@ -2,53 +2,51 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Bildpruefung fuer Render-Tests.
+"""Picture inspection for render tests.
 
-Prueft jedes Bild eines Ordners fuer sich auf typische Darstellungsfehler -- ohne Referenzbild.
-Das findet Fehler, die schon in einer Referenz stecken, und Fehler, fuer die es noch keine gibt.
+Checks every picture of a folder on its own for typical rendering errors -- without a reference picture. This
+finds errors that already sit in a reference and errors for which there is none yet.
 
-Pruefungen (Kennung in Klammern):
-  schwarz   grosse schwarze Flaeche in der Szene mit harter Kante (fehlender Gelaende-Nachschub,
-            TODO Nr. 31). Der verhuellte Bereich ausserhalb der Karte ist ebenfalls schwarz, laeuft
-            aber mit weichem Verlauf aus -- er wird an der Kante erkannt und nicht gemeldet.
-  naht      scharfe senkrechte oder waagrechte Spruenge ueber grosse Teile des Bildes, einzeln sehr
-            lang oder in festem Abstand wiederholt (Texturkoordinaten, Halbpixel-Versatz; die
-            Striche im Hauptmenue lagen alle 10 Pixel)
-  magenta   Flaeche in der Ersatzfarbe fuer fehlende Texturen
-  schach    kleinteiliges Zweifarben-Schachbrett (Ersatztextur)
-  leer      einfarbiges oder fast leeres Bild (Zeichnen abgebrochen, falscher Renderzustand)
-  sprung    ein Bild weicht stark von beiden Nachbarn ab, die einander aehneln (Flackern,
-            verlorene Objekte) -- nur ueber die Bildfolge eines Ordners, erst ab drei Bildern
+Checks (identifier in brackets):
+  black     large black area in the scene with a hard edge (missing terrain supply). The shrouded area outside
+            the map is black too, but fades out softly -- it is recognised at the edge and not reported.
+  seam      sharp vertical or horizontal jumps over large parts of the picture, single and very long or repeated
+            at a fixed distance (texture coordinates, half-pixel offset; the lines in the main menu were 10
+            pixels apart)
+  magenta   area in the replacement colour for missing textures
+  checker   small two-colour checkerboard (replacement texture)
+  empty     single-coloured or almost empty picture (drawing aborted, wrong render state)
+  jump      a picture differs strongly from both neighbours that resemble each other (flicker, lost objects) --
+            only over the picture sequence of a folder, from three pictures on
 
-Nicht Szene ist die 2D-Leiste unten -- nur die Leiste selbst, nicht die ganze Bildbreite: links und
-rechts daneben ist 3D-Szene und wird mitgeprueft. Die Leiste ist so breit wie ein 4:3-Bild der
-Bildhoehe und steht mittig (1280x720: x 160 bis 1117, 1024x768: volle Breite); die Vorgabe sind zwei
-Rechtecke, der Radarteil links mit dem hoeheren Aufsatz und der Rest (DEFAULT_HUD). --hud X,Y,B,H
-ersetzt die Vorgabe, mehrfach angebbar, in Pixeln oder Prozent des Bildes wie --ignore in
-compare_shots.py. In der Leiste wird nur auf Magenta, Schachbrett und leeres Bild geprueft.
+The 2D bar at the bottom is not scene -- only the bar itself, not the whole picture width: left and right of it
+is 3D scene and is checked too. The bar is as wide as a 4:3 picture of the picture height and stands in the
+middle (1280x720: x 160 to 1117, 1024x768: full width); the default is two rectangles, the radar part on the left
+with the higher top and the rest (DEFAULT_HUD). --hud X,Y,W,H replaces the default, may be given several times,
+in pixels or percent of the picture like --ignore in compare_shots.py. In the bar only magenta, checkerboard and
+an empty picture are checked.
 
-Jeder Befund nennt den Bildausschnitt (x, y, Breite, Hoehe in Pixeln). Mit --crops ORDNER wird er
-zusaetzlich als vergroesserter Ausschnitt gespeichert (nie in den gepruften Ordner schreiben).
+Every finding names the picture section (x, y, width, height in pixels). With --crops FOLDER it is also saved as
+an enlarged section (never write into the checked folder).
 
-Aufruf:
+Usage:
     python tools/render/inspect_shots.py render-out/cam-zoom-g-x86
-    python tools/render/inspect_shots.py ordner1 ordner2 --json
-    python tools/render/inspect_shots.py bild.bmp --crops C:/tmp/ausschnitte
-    python tools/render/inspect_shots.py ordner --only schwarz,naht --stats
-    python tools/render/inspect_shots.py ordner --hud 12%,68%,76%,32%       # eigene Leistenmaske
+    python tools/render/inspect_shots.py folder1 folder2 --json
+    python tools/render/inspect_shots.py picture.bmp --crops C:/tmp/sections
+    python tools/render/inspect_shots.py folder --only black,seam --stats
+    python tools/render/inspect_shots.py folder --hud 12%,68%,76%,32%       # own bar mask
     python tools/render/inspect_shots.py --selftest
 
-Rueckgabewert: 0 = keine Befunde, 1 = mindestens ein Befund, 2 = Fehler (Datei nicht lesbar u. a.).
+Exit code: 0 = no findings, 1 = at least one finding, 2 = error (file not readable etc.).
 
-Nur Standardbibliothek; BMP-Lesen aus compare_shots.py. Gerechnet wird auf einem Raster von 8x8
-Pixeln, damit ein 1280x720-Bild in rund einer Sekunde durch ist.
+Standard library only; BMP reading from compare_shots.py. It computes on a grid of 8x8 pixels so a 1280x720
+picture takes about one second.
 
-Eichung (2026-09-18, Generals x86, 1280x720; mit der Leistenmaske wiederholt): render-out/cam-zoom-g-x86
-Bilder 720 bis 960 melden "schwarz", die uebrigen Bilder dieser Fahrt, cam-quer-g-x86 (schwarze Ecken
-ausserhalb der Karte) und alle ref-*-Ordner melden nichts. Neu dazu, weil die Ecken neben der Leiste
-jetzt Szene sind: cam-rundum-g-x86 Bild 360 (schwarzes Dreieck unten rechts, fehlendes nahes Gelaende
-vor der Korrektur zu TODO 31 (a); t31-rundum zeigt dort Gelaende). Nachtkarten koennen eigene
-Schwellen brauchen (--black).
+Calibration (Generals x86, 1280x720; repeated with the bar mask): in render-out/cam-zoom-g-x86 the pictures 720
+to 960 report "black", the other pictures of that path, cam-quer-g-x86 (black corners outside the map) and all
+ref-* folders report nothing. New, because the corners next to the bar are scene now: cam-rundum-g-x86 picture
+360 (black triangle at the bottom right, missing near terrain before the terrain supply was fixed). Night maps
+may need their own thresholds (--black).
 """
 import argparse
 import glob
@@ -60,42 +58,41 @@ import tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import compare_shots  # noqa: E402
 
-CHECKS = ("schwarz", "naht", "magenta", "schach", "leer", "sprung")
+CHECKS = ("black", "seam", "magenta", "checker", "empty", "jump")
 
-BLOCK = 8                   # Rasterweite in Pixeln
-# 2D-Leiste unten (2026-09-18 gemessen an cam-quer-g-x86, cam-rand-g-x86, cam-rundum-zh-x86 und
-# cam-zoom-g-x86-4zu3: Pixel, die ueber alle 30 Bilder einer Fahrt gleich bleiben). Die Leiste ist
-# ein 4:3-Bild der Bildhoehe, mittig: 1280x720 x 160 bis 1117, 1024x768 x 0 bis 1023. Oberkante
-# Radarteil mit Aufsatz 494 von 720 (68,6 %) bzw. 528 von 768 (68,8 %), bis 22,1 % der Leistenbreite;
-# rechts davon hoechstens 519 von 720 (72,1 %) bzw. 553 von 768 (72,0 %), die Knoepfe oben rechts.
-# Je Rechteck: x und Breite in Prozent der Leistenbreite ab ihrem linken Rand, y und Hoehe in Prozent
-# der Bildhoehe; je rund einen halben Prozentpunkt Rand, damit nichts von der Leiste in die Szene ragt.
-DEFAULT_HUD = ((-0.5, 68.0, 23.0, 32.0),    # Radar mit Aufsatz
-               (22.5, 71.5, 78.0, 28.5))    # Mitte und rechter Teil bis zu den Knoepfen
-HUD_ASPECT = 4.0 / 3.0      # Seitenverhaeltnis der Leiste
-BLACK_LEVEL = 12            # Pixel mit max(R,G,B) <= BLACK_LEVEL gelten als schwarz
-BLACK_BLOCK_SHARE = 0.90    # Block ist schwarz, wenn so viele seiner Pixel schwarz sind
-BLACK_MIN_AREA = 0.01       # Mindestgroesse einer schwarzen Flaeche (Anteil der Szene)
-DIM_LEVEL = 40              # "gedaempft": ueber BLACK_LEVEL, hoechstens DIM_LEVEL (max-Kanal)
-SOFT_EDGE_MAX = 0.20        # Anteil gedaempfter Pixel am Rand (zwei Blockreihen breit), bis zu dem
-                            # die Kante als hart gilt. Geeicht: fehlendes Gelaende 0,02 bis 0,13 je
-                            # Bild (mind. eine Flaeche), Bereich ausserhalb der Karte ab 0,25
-SEAM_JUMP = 28              # Helligkeitssprung zwischen zwei Nachbarpixeln, der als Sprung zaehlt
-SEAM_SINGLE = 0.85          # eine einzelne Naht muss so viel der Szenenhoehe/-breite abdecken
-SEAM_REPEAT = 0.30          # wiederholte Naehte: Abdeckung je Linie
-SEAM_REPEAT_MIN = 4         # ... und mindestens so viele Linien in festem Abstand
-MAGENTA_MIN_BLOCKS = 4      # zusammenhaengende Magenta-Bloecke fuer einen Befund
+BLOCK = 8                   # grid width in pixels
+# 2D bar at the bottom (measured on pixels that stay the same over all 30 pictures of a path). The bar is a 4:3
+# picture of the picture height, centred: 1280x720 x 160 to 1117, 1024x768 x 0 to 1023. Top edge of the radar
+# part with its top piece 494 of 720 (68.6 %) or 528 of 768 (68.8 %), up to 22.1 % of the bar width; right of
+# it at most 519 of 720 (72.1 %) or 553 of 768 (72.0 %), the buttons at the top right.
+# Per rectangle: x and width in percent of the bar width from its left edge, y and height in percent of the
+# picture height; about half a percentage point of margin each so nothing of the bar reaches into the scene.
+DEFAULT_HUD = ((-0.5, 68.0, 23.0, 32.0),    # radar with top piece
+               (22.5, 71.5, 78.0, 28.5))    # middle and right part up to the buttons
+HUD_ASPECT = 4.0 / 3.0      # aspect ratio of the bar
+BLACK_LEVEL = 12            # pixels with max(R,G,B) <= BLACK_LEVEL count as black
+BLACK_BLOCK_SHARE = 0.90    # a block is black when this share of its pixels is black
+BLACK_MIN_AREA = 0.01       # minimum size of a black area (share of the scene)
+DIM_LEVEL = 40              # "dimmed": above BLACK_LEVEL, at most DIM_LEVEL (max channel)
+SOFT_EDGE_MAX = 0.20        # share of dimmed pixels at the edge (two block rows wide) up to which
+                            # the edge counts as hard. Calibrated: missing terrain 0.02 to 0.13 per
+                            # picture (at least one area), area outside the map from 0.25
+SEAM_JUMP = 28              # brightness jump between two neighbouring pixels that counts as a jump
+SEAM_SINGLE = 0.85          # a single seam must cover this much of the scene height/width
+SEAM_REPEAT = 0.30          # repeated seams: coverage per line
+SEAM_REPEAT_MIN = 4         # ... and at least this many lines at a fixed distance
+MAGENTA_MIN_BLOCKS = 4      # connected magenta blocks for a finding
 CHECKER_MIN_BLOCKS = 4
-EMPTY_SHARE = 0.97          # Anteil der Bloecke mit fast derselben Farbe fuer "leer"
-JUMP_RATIO = 3.0            # Abweichung zu den Nachbarn / Abweichung der Nachbarn untereinander
-JUMP_MIN = 20.0             # ... und mindestens diese mittlere Abweichung (0..255)
+EMPTY_SHARE = 0.97          # share of blocks with almost the same colour for "empty"
+JUMP_RATIO = 3.0            # difference to the neighbours / difference of the neighbours among themselves
+JUMP_MIN = 20.0             # ... and at least this mean difference (0..255)
 
 
 # --- Vorverarbeitung --------------------------------------------------------------------------------
 def hud_boxes(hud, w, h):
-    """Rechtecke der 2D-Leiste in Pixeln, (x0, y0, x1, y1) mit x1/y1 exklusiv.
-    hud: None fuer die Vorgabe (DEFAULT_HUD, an der Leistenbreite ausgerichtet) oder eine Liste von
-    compare_shots.Rect (Pixel oder Prozent des Bildes)."""
+    """Rectangles of the 2D bar in pixels, (x0, y0, x1, y1) with x1/y1 exclusive.
+    hud: None for the default (DEFAULT_HUD, aligned to the bar width) or a list of
+    compare_shots.Rect (pixels or percent of the picture)."""
     boxes = []
     if hud is None:
         bar_w = min(w, h * HUD_ASPECT)
@@ -117,7 +114,7 @@ def hud_boxes(hud, w, h):
 
 
 def _free_runs(cuts, n):
-    """Abschnitte (a, b) von 0..n, die von keinem der Intervalle in cuts bedeckt sind."""
+    """Sections (a, b) of 0..n that none of the intervals in cuts covers."""
     out = []
     pos = 0
     for a, b in sorted(cuts):
@@ -130,16 +127,15 @@ def _free_runs(cuts, n):
 
 
 class Prepared:
-    """Helligkeit (max-Kanal und Luma) je Pixel, Blockstatistik und Maske der 2D-Leiste."""
+    """Brightness (max channel and luma) per pixel, block statistics and mask of the 2D bar."""
 
     def __init__(self, img, hud, black_level):
         self.img = img
         w, h = img.width, img.height
         self.w, self.h = w, h
         self.bw, self.bh = w // BLOCK, h // BLOCK
-        # 2D-Leiste: pixelgenau fuer die Nahtpruefung, blockweise fuer die uebrigen. Ein Block gehoert
-        # zur Leiste, sobald er sie beruehrt -- sonst zaehlte ein halb bedeckter Block mit dunklem
-        # Leistenrand als Szene.
+        # 2D bar: pixel-exact for the seam check, block-wise for the others. A block belongs to the bar as
+        # soon as it touches it -- otherwise a half-covered block with the dark bar edge would count as scene.
         self.hud = hud_boxes(hud, w, h)
         self.bmask = [[False] * self.bw for _ in range(self.bh)]
         for x0, y0, x1, y1 in self.hud:
@@ -150,15 +146,15 @@ class Prepared:
                              if not self.bmask[by][bx]]
         black_table = bytes(1 if v <= black_level else 0 for v in range(256))
         dim_table = bytes(1 if black_level < v <= DIM_LEVEL else 0 for v in range(256))
-        self.mx = []        # je Zeile: bytes mit max(R,G,B)
-        self.luma = []      # je Zeile: bytes mit Luma
+        self.mx = []        # per row: bytes with max(R,G,B)
+        self.luma = []      # per row: bytes with luma
         bgr = img.bgr
         for y in range(h):
             s = y * w * 3
             b, g, r = bgr[s:s + w * 3:3], bgr[s + 1:s + w * 3:3], bgr[s + 2:s + w * 3:3]
             self.mx.append(bytes(map(max, b, g, r)))
             self.luma.append(bytes(map(_luma, r, g, b)))
-        # Blockstatistik: Summe max-Kanal, Anzahl schwarzer und gedaempfter Pixel
+        # block statistics: sum of the max channel, number of black and dimmed pixels
         bw, bh = self.bw, self.bh
         self.bsum = [[0] * bw for _ in range(bh)]
         self.bblack = [[0] * bw for _ in range(bh)]
@@ -179,11 +175,11 @@ class Prepared:
         return BLOCK * BLOCK
 
     def row_runs(self, y):
-        """Szenenabschnitte (x0, x1) der Zeile y, x1 exklusiv."""
+        """Scene sections (x0, x1) of row y, x1 exclusive."""
         return _free_runs([(x0, x1) for x0, y0, x1, y1 in self.hud if y0 <= y < y1], self.w)
 
     def col_runs(self, x):
-        """Szenenabschnitte (y0, y1) der Spalte x, y1 exklusiv."""
+        """Scene sections (y0, y1) of column x, y1 exclusive."""
         return _free_runs([(y0, y1) for x0, y0, x1, y1 in self.hud if x0 <= x < x1], self.h)
 
 
@@ -197,7 +193,7 @@ def rect_of_blocks(bx0, by0, bx1, by1):
 
 
 def components(cells, bw, bh):
-    """4-zusammenhaengende Komponenten einer Menge von (bx, by)."""
+    """4-connected components of a set of (bx, by)."""
     seen = set()
     out = []
     for start in cells:
@@ -218,11 +214,11 @@ def components(cells, bw, bh):
     return out
 
 
-# --- Pruefungen -------------------------------------------------------------------------------------
+# --- Checks -------------------------------------------------------------------------------------
 def check_black(p, stats):
     npix = p.block_pixels()
     black = set()
-    for bx, by in p.scene_blocks:              # Bloecke der Leiste sind nie schwarze Szene
+    for bx, by in p.scene_blocks:              # blocks of the bar are never black scene
         if p.bblack[by][bx] >= BLACK_BLOCK_SHARE * npix:
             black.add((bx, by))
     scene_blocks = len(p.scene_blocks) or 1
@@ -231,11 +227,10 @@ def check_black(p, stats):
         area = len(comp) / scene_blocks
         if area < BLACK_MIN_AREA:
             continue
-        # Rand: zwei Blockreihen um die Flaeche. Ausserhalb der Karte laeuft das Bild mit einem
-        # Verlauf ins Schwarze aus -- dort ist der Rand voller gedaempfter Pixel. Fehlt Gelaende,
-        # grenzt Schwarz hart an Gras, Strasse oder Haus; gedaempfte Pixel sind selten.
-        # (Silhouetten vor dem Kartenrand sind ebenfalls hart; der Verlauf daneben ueberwiegt.)
-        # Bloecke der Leiste zaehlen nicht zum Rand: ihre Kante ist immer hart.
+        # Edge: two block rows around the area. Outside the map the picture fades into black -- there the
+        # edge is full of dimmed pixels. When terrain is missing, black borders directly on grass, road or
+        # house; dimmed pixels are rare. (Silhouettes in front of the map edge are hard as well; the
+        # gradient next to them outweighs.) Blocks of the bar do not count as edge: their edge is always hard.
         cs = set(comp)
         ring = set()
         frontier = cs
@@ -256,29 +251,28 @@ def check_black(p, stats):
         xs = [c[0] for c in comp]
         ys = [c[1] for c in comp]
         rect = rect_of_blocks(min(xs), min(ys), max(xs), max(ys))
-        info = {"flaeche": round(area, 4), "weicher_rand": round(soft, 3), "ausschnitt": rect}
+        info = {"area": round(area, 4), "soft_edge": round(soft, 3), "crop": rect}
         if stats is not None:
-            stats.append(("schwarz", info))
+            stats.append(("black", info))
         if soft <= SOFT_EDGE_MAX:
             findings.append({
-                "pruefung": "schwarz",
-                "text": f"schwarze Flaeche im Bild, {area * 100:.1f} % der Szene, harte Kante "
-                        f"({soft * 100:.0f} % gedaempfte Randpixel)",
-                "ausschnitt": list(rect),
-                "werte": info,
+                "check": "black",
+                "text": f"black area in the picture, {area * 100:.1f} % of the scene, hard edge "
+                        f"({soft * 100:.0f} % softened edge pixels)",
+                "crop": list(rect),
+                "values": info,
             })
     return findings
 
 
 def _seam_profile(segments, n):
-    """Naht-Profile ueber eine Achse. Liefert (hoch, runter, linie), je Position i der Anteil der
-    Linien mit
-      hoch/runter: isolierter Stufe zwischen i und i+1 (Nachbarschritte klein), nach Richtung;
-      linie:       duenner Linie genau auf Pixel i (zwei gegenlaeufige Spruenge, aussen ruhig).
-    segments: Liste von (Anfang, Folge) -- Szenenabschnitte der Zeilen (senkrechte Naehte) bzw.
-    Spalten (waagrechte Naehte); die 2D-Leiste teilt eine Linie in mehrere Abschnitte.
-    Der Anteil bezieht sich auf die Linien, die Position i als Szene sehen, mindestens aber auf die
-    Haelfte der meisten -- sonst reichten neben der Leiste schon wenige Linien fuer eine Naht."""
+    """Seam profiles along one axis. Returns (up, down, line), per position i the share of the lines with
+      up/down: an isolated step between i and i+1 (neighbouring steps small), by direction;
+      line:    a thin line exactly on pixel i (two opposite jumps, calm outside).
+    segments: list of (start, run) -- scene sections of the rows (vertical seams) or columns (horizontal
+    seams); the 2D bar splits a line into several sections.
+    The share refers to the lines that see position i as scene, but at least to half of the most -- otherwise a
+    few lines next to the bar would be enough for a seam."""
     up = [0] * n
     down = [0] * n
     spike = [0] * n
@@ -308,8 +302,8 @@ def _seam_profile(segments, n):
 
 
 def _single_seams(up, down):
-    """Lange Einzelnaht: eine Stufe ueber fast die ganze Szene, ohne Gegenkante in bis zu 6 Pixeln
-    Abstand. Mit Gegenkante ist es ein schmaler Balken -- der Rahmen eines Menues o. ae."""
+    """Long single seam: a step over almost the whole scene without an opposite edge within 6 pixels. With an
+    opposite edge it is a narrow bar -- the frame of a menu or the like."""
     out = []
     n = len(up)
     for prof, other in ((up, down), (down, up)):
@@ -324,18 +318,17 @@ def _single_seams(up, down):
 
 
 def _is_thin_bar(p, axis, i, samples=64):
-    """True, wenn die Stufe bei i nur der Rand eines schmalen hellen oder dunklen Balkens ist (Rahmenlinie
-    eines Menues, weich skaliert: mehrere Schritte statt einer Gegenkante): die Helligkeit acht bis
-    vier Pixel vor der Stufe entspricht der vier bis acht Pixel danach. Bei einer echten Naht liegen die
-    beiden Seiten mindestens einen Sprung auseinander."""
-    n = p.w if axis == "senkrecht" else p.h
-    lines = p.h if axis == "senkrecht" else p.w
+    """True when the step at i is only the edge of a narrow light or dark bar (frame line of a menu, scaled
+    softly: several steps instead of an opposite edge): the brightness eight to four pixels before the step
+    equals that four to eight pixels after it. At a real seam the two sides are at least one jump apart."""
+    n = p.w if axis == "vertical" else p.h
+    lines = p.h if axis == "vertical" else p.w
     if i - 8 < 0 or i + 9 >= n:
         return False
     step = max(1, lines // samples)
     same = tested = 0
     for k in range(0, lines, step):
-        if axis == "senkrecht":
+        if axis == "vertical":
             row = p.luma[k]
             before, after = row[i - 8:i - 3], row[i + 5:i + 10]
         else:
@@ -349,13 +342,13 @@ def _is_thin_bar(p, axis, i, samples=64):
 
 def check_seams(p, stats):
     findings = []
-    # senkrechte Naehte: ueber die Zeilen der Szene (jede zweite Zeile genuegt), ohne die Leiste
+    # vertical seams: over the rows of the scene (every second row is enough), without the bar
     rows = []
     for y in range(0, p.h, 2):
         row = p.luma[y]
         rows += [(a, row[a:b]) for a, b in p.row_runs(y)]
     prof_v = _seam_profile(rows, p.w)
-    # waagrechte Naehte: ueber die Spalten der Szene (jede zweite Spalte)
+    # horizontal seams: over the columns of the scene (every second column)
     cols = []
     for x in range(0, p.w, 2):
         for a, b in p.col_runs(x):
@@ -363,38 +356,38 @@ def check_seams(p, stats):
     prof_h = _seam_profile(cols, p.h)
 
     def col_extent(x0, x1):
-        """Unterste Szenenzeile ueber den Spalten x0..x1 -- fuer den gemeldeten Ausschnitt."""
+        """Lowest scene row over the columns x0..x1 -- for the reported section."""
         return max((b for x in range(x0, min(p.w, x1 + 1)) for _, b in p.col_runs(x)), default=p.h)
-    for axis, (up, down, spike) in (("senkrecht", prof_v), ("waagrecht", prof_h)):
+    for axis, (up, down, spike) in (("vertical", prof_v), ("horizontal", prof_h)):
         combined = [u + d_ + s for u, d_, s in zip(up, down, spike)]
         peaks = [i for i, v in enumerate(combined) if v >= SEAM_REPEAT]
         single = [(i, v) for i, v in _single_seams(up, down) if not _is_thin_bar(p, axis, i)]
         if stats is not None:
-            stats.append(("naht", {"achse": axis,
+            stats.append(("seam", {"achse": axis,
                                    "max": [round(v, 3) for v in sorted(combined, reverse=True)[:3]],
                                    "linien_ueber_wiederholschwelle": len(peaks),
                                    "einzelnaehte": len(single)}))
         for i, v in single:
-            rect = (i, 0, 2, col_extent(i, i + 1)) if axis == "senkrecht" else (0, i, p.w, 2)
-            findings.append({"pruefung": "naht",
-                             "text": f"{axis}e Naht bei {i + 1}, ueber {v * 100:.0f} % der Szene",
-                             "ausschnitt": list(rect), "werte": {"abdeckung": round(v, 3)}})
+            rect = (i, 0, 2, col_extent(i, i + 1)) if axis == "vertical" else (0, i, p.w, 2)
+            findings.append({"check": "seam",
+                             "text": f"{axis} seam at {i + 1}, over {v * 100:.0f} % of the scene",
+                             "crop": list(rect), "values": {"coverage": round(v, 3)}})
         run = _periodic_run(peaks)
         if len(run) >= SEAM_REPEAT_MIN:
             step = run[1] - run[0]
-            if axis == "senkrecht":
+            if axis == "vertical":
                 rect = (run[0], 0, run[-1] - run[0] + 2, col_extent(run[0], run[-1] + 1))
             else:
                 rect = (0, run[0], p.w, run[-1] - run[0] + 2)
-            findings.append({"pruefung": "naht",
-                             "text": f"{len(run)} {axis}e Naehte im Abstand {step} Pixel",
-                             "ausschnitt": list(rect),
-                             "werte": {"linien": len(run), "abstand": step}})
+            findings.append({"check": "seam",
+                             "text": f"{len(run)} {axis} seams at a distance of {step} pixels",
+                             "crop": list(rect),
+                             "values": {"linien": len(run), "abstand": step}})
     return findings
 
 
 def _periodic_run(positions):
-    """Laengste Folge von Positionen mit gleichem Abstand (Abstand >= 3, Toleranz 1 Pixel)."""
+    """Longest run of positions with the same distance (distance >= 3, tolerance 1 pixel)."""
     best = []
     pos = sorted(set(positions))
     for a in range(len(pos)):
@@ -418,7 +411,7 @@ def _periodic_run(positions):
 
 
 def _block_colors(p):
-    """Mittlere Farbe je Block (B, G, R)."""
+    """Mean colour per block (B, G, R)."""
     w = p.w
     bgr = p.img.bgr
     out = [[None] * p.bw for _ in range(p.bh)]
@@ -450,16 +443,16 @@ def check_magenta(p, colors, stats):
         xs = [c[0] for c in comp]
         ys = [c[1] for c in comp]
         rect = rect_of_blocks(min(xs), min(ys), max(xs), max(ys))
-        findings.append({"pruefung": "magenta",
-                         "text": f"Ersatzfarbe Magenta, {len(comp)} Bloecke",
-                         "ausschnitt": list(rect), "werte": {"bloecke": len(comp)}})
+        findings.append({"check": "magenta",
+                         "text": f"replacement colour magenta, {len(comp)} blocks",
+                         "crop": list(rect), "values": {"blocks": len(comp)}})
     if stats is not None:
-        stats.append(("magenta", {"bloecke": len(cells)}))
+        stats.append(("magenta", {"blocks": len(cells)}))
     return findings
 
 
 def _checker_block(p, bx, by):
-    """Block zeigt ein Zweifarben-Schachbrett mit Feldern von 1 bis 4 Pixeln."""
+    """The block shows a two-colour checkerboard with squares of 1 to 4 pixels."""
     x0, y0 = bx * BLOCK, by * BLOCK
     vals = [p.luma[y][x0:x0 + BLOCK] for y in range(y0, y0 + BLOCK)]
     flat = [v for row in vals for v in row]
@@ -493,10 +486,10 @@ def check_checker(p, stats):
         xs = [c[0] for c in comp]
         ys = [c[1] for c in comp]
         rect = rect_of_blocks(min(xs), min(ys), max(xs), max(ys))
-        findings.append({"pruefung": "schach", "text": f"Schachbrettmuster, {len(comp)} Bloecke",
-                         "ausschnitt": list(rect), "werte": {"bloecke": len(comp)}})
+        findings.append({"check": "checker", "text": f"checkerboard pattern, {len(comp)} blocks",
+                         "crop": list(rect), "values": {"blocks": len(comp)}})
     if stats is not None:
-        stats.append(("schach", {"bloecke": len(cells)}))
+        stats.append(("checker", {"blocks": len(cells)}))
     return findings
 
 
@@ -508,15 +501,15 @@ def check_empty(p, colors, stats):
         buckets[key] = buckets.get(key, 0) + 1
     share = max(buckets.values()) / len(blocks)
     if stats is not None:
-        stats.append(("leer", {"groesste_farbe": round(share, 3)}))
+        stats.append(("empty", {"groesste_farbe": round(share, 3)}))
     if share >= EMPTY_SHARE:
-        return [{"pruefung": "leer", "text": f"fast einfarbiges Bild ({share * 100:.0f} % eine Farbe)",
-                 "ausschnitt": [0, 0, p.w, p.h], "werte": {"anteil": round(share, 3)}}]
+        return [{"check": "empty", "text": f"almost single-coloured picture ({share * 100:.0f} % one colour)",
+                 "crop": [0, 0, p.w, p.h], "values": {"share": round(share, 3)}}]
     return []
 
 
 def thumb(p):
-    """Verkleinerte Helligkeit der Szene (je Block ein Wert, ohne Leiste) fuer den Folgenvergleich."""
+    """Reduced brightness of the scene (one value per block, without the bar) for the sequence comparison."""
     n = p.block_pixels()
     return [p.bsum[by][bx] / n for bx, by in p.scene_blocks]
 
@@ -532,17 +525,17 @@ def inspect_image(path, args, stats=None):
     only = args.only
     findings = []
     colors = None
-    if "schwarz" in only:
+    if "black" in only:
         findings += check_black(p, stats)
-    if "naht" in only:
+    if "seam" in only:
         findings += check_seams(p, stats)
-    if "magenta" in only or "leer" in only:
+    if "magenta" in only or "empty" in only:
         colors = _block_colors(p)
     if "magenta" in only:
         findings += check_magenta(p, colors, stats)
-    if "schach" in only:
+    if "checker" in only:
         findings += check_checker(p, stats)
-    if "leer" in only:
+    if "empty" in only:
         findings += check_empty(p, colors, stats)
     return p, findings
 
@@ -558,22 +551,22 @@ def check_sequence(entries):
         near = min(d_ab, d_bc)
         if near >= JUMP_MIN and near >= JUMP_RATIO * max(d_ac, 1.0):
             out.setdefault(pb, []).append({
-                "pruefung": "sprung",
-                "text": f"Bild weicht von beiden Nachbarn ab ({d_ab:.1f}/{d_bc:.1f}), "
-                        f"die Nachbarn untereinander nur {d_ac:.1f}",
-                "ausschnitt": None,
-                "werte": {"zum_vorigen": round(d_ab, 2), "zum_naechsten": round(d_bc, 2),
+                "check": "jump",
+                "text": f"picture differs from both neighbours ({d_ab:.1f}/{d_bc:.1f}), "
+                        f"the neighbours among themselves only {d_ac:.1f}",
+                "crop": None,
+                "values": {"zum_vorigen": round(d_ab, 2), "zum_naechsten": round(d_bc, 2),
                           "nachbarn": round(d_ac, 2)}})
     return out
 
 
 def save_crop(img, rect, path, scale=2):
-    """Ausschnitt (mit etwas Rand) vergroessert als BMP speichern."""
+    """Save a section (with a little margin) enlarged as a BMP."""
     x, y, w, h = rect
     pad = 16
     x0, y0 = max(0, x - pad), max(0, y - pad)
     x1, y1 = min(img.width, x + w + pad), min(img.height, y + h + pad)
-    # grosse Ausschnitte nicht vergroessern
+    # do not enlarge large sections
     if (x1 - x0) * scale > 1600 or (y1 - y0) * scale > 1200:
         scale = 1
     cw, ch = (x1 - x0) * scale, (y1 - y0) * scale
@@ -589,7 +582,7 @@ def save_crop(img, rect, path, scale=2):
 
 
 def collect(inputs):
-    """Liefert Liste von (gruppe, [pfade]) -- je Ordner eine Gruppe in Bildfolge."""
+    """Returns a list of (group, [paths]) -- one group per folder in picture order."""
     groups = []
     for inp in inputs:
         if os.path.isdir(inp):
@@ -610,7 +603,7 @@ def run(args):
     crop_root = os.path.abspath(args.crops) if args.crops else None
     for group, files in groups:
         if crop_root and os.path.abspath(group) == crop_root:
-            raise ValueError("--crops darf nicht der gepruefte Ordner sein")
+            raise ValueError("--crops must not be the checked folder")
         seq = []
         results = []
         for path in files:
@@ -619,57 +612,57 @@ def run(args):
                 p, findings = inspect_image(path, args, stats)
             except (OSError, ValueError) as e:
                 errors += 1
-                results.append({"bild": path, "fehler": str(e), "befunde": []})
+                results.append({"image": path, "error": str(e), "findings": []})
                 continue
             seq.append((path, thumb(p)))
-            results.append({"bild": path, "breite": p.w, "hoehe": p.h, "befunde": findings,
+            results.append({"image": path, "width": p.w, "height": p.h, "findings": findings,
                             "_img": p.img, "_stats": stats})
-        if "sprung" in args.only and len(seq) >= 3:
+        if "jump" in args.only and len(seq) >= 3:
             jumps = check_sequence(seq)
             for r in results:
-                r["befunde"] += jumps.get(r["bild"], [])
+                r["findings"] += jumps.get(r["image"], [])
         for r in results:
-            if crop_root and r["befunde"]:
-                base = os.path.splitext(os.path.basename(r["bild"]))[0]
+            if crop_root and r["findings"]:
+                base = os.path.splitext(os.path.basename(r["image"]))[0]
                 sub = os.path.join(crop_root, os.path.basename(os.path.normpath(group)))
-                for k, f in enumerate(r["befunde"]):
-                    if f.get("ausschnitt"):
-                        cp = os.path.join(sub, f"{base}_{f['pruefung']}_{k}.bmp")
-                        save_crop(r["_img"], f["ausschnitt"], cp)
-                        f["ausschnitt_datei"] = cp
-            total += len(r["befunde"])
+                for k, f in enumerate(r["findings"]):
+                    if f.get("crop"):
+                        cp = os.path.join(sub, f"{base}_{f['check']}_{k}.bmp")
+                        save_crop(r["_img"], f["crop"], cp)
+                        f["crop_file"] = cp
+            total += len(r["findings"])
             report.append(r)
     if args.json:
         clean = []
         for r in report:
             c = {k: v for k, v in r.items() if not k.startswith("_")}
             if args.stats and r.get("_stats") is not None:
-                c["statistik"] = [{"pruefung": n, **v} for n, v in r["_stats"]]
+                c["statistics"] = [{"check": n, **v} for n, v in r["_stats"]]
             clean.append(c)
-        json.dump({"befunde": total, "fehler": errors, "bilder": clean}, sys.stdout, indent=1,
+        json.dump({"findings": total, "error": errors, "images": clean}, sys.stdout, indent=1,
                   ensure_ascii=False)
         print()
     else:
         for r in report:
-            if "fehler" in r:
-                print(f"FEHLER  {r['bild']}: {r['fehler']}")
+            if "error" in r:
+                print(f"ERROR  {r['image']}: {r['error']}")
                 continue
-            if r["befunde"]:
-                print(f"BEFUND  {r['bild']}")
-                for f in r["befunde"]:
-                    rect = f.get("ausschnitt")
+            if r["findings"]:
+                print(f"FINDING  {r['image']}")
+                for f in r["findings"]:
+                    rect = f.get("crop")
                     where = f"  [x={rect[0]} y={rect[1]} {rect[2]}x{rect[3]}]" if rect else ""
-                    print(f"        {f['pruefung']:8s} {f['text']}{where}")
-                    if f.get("ausschnitt_datei"):
-                        print(f"                 Ausschnitt: {f['ausschnitt_datei']}")
+                    print(f"        {f['check']:8s} {f['text']}{where}")
+                    if f.get("crop_file"):
+                        print(f"                 Crop: {f['crop_file']}")
             elif not args.quiet:
-                print(f"ok      {r['bild']}")
+                print(f"ok      {r['image']}")
             if args.stats and r.get("_stats"):
                 for name, v in r["_stats"]:
                     print(f"        [{name}] {v}")
         n_img = len(report)
-        n_bad = sum(1 for r in report if r["befunde"])
-        print(f"{n_img} Bilder, {n_bad} mit Befund, {total} Befunde, {errors} Fehler")
+        n_bad = sum(1 for r in report if r["findings"])
+        print(f"{n_img} pictures, {n_bad} with a finding, {total} findings, {errors} errors")
     if errors:
         return 2
     return 1 if total else 0
@@ -677,8 +670,8 @@ def run(args):
 
 # --- Selbsttest -------------------------------------------------------------------------------------
 def _in_bar(width, height, x, y):
-    """Pixel der kuenstlichen 2D-Leiste: 4:3-breit und mittig wie im Spiel, links der hoehere
-    Radarteil. Liegt knapp innerhalb der Vorgabemaske DEFAULT_HUD."""
+    """Pixels of the artificial 2D bar: 4:3 wide and centred as in the game, the higher radar part on
+    the left. Lies just inside the default mask DEFAULT_HUD."""
     bar_w = min(width, height * HUD_ASPECT)
     left = (width - bar_w) / 2.0
     if not left + 2 <= x < left + bar_w - 2:
@@ -688,9 +681,8 @@ def _in_bar(width, height, x, y):
 
 
 def _synthetic(width=640, height=360, seed=1):
-    """Gelaendeaehnliches Bild: weiches Wertrauschen in Gruen/Braun plus feines Rauschen,
-    unten mittig eine dunkle 2D-Leiste mit einem schwarzen Feld (die Leiste ist keine Szene),
-    links und rechts daneben Gelaende."""
+    """Terrain-like picture: soft value noise in green/brown plus fine noise, a dark 2D bar with a
+    black field at the bottom centre (the bar is no scene), terrain left and right of it."""
     import random
     rnd = random.Random(seed)
     cell = 40
@@ -715,7 +707,7 @@ def _synthetic(width=640, height=360, seed=1):
             if _in_bar(width, height, x, y):
                 b, g, r = 60, 45, 20
                 if width * 0.3 < x < width * 0.45 and y > hud_top + 10:
-                    b = g = r = 0      # schwarzes Feld in der Leiste (Minikarte o. ae.)
+                    b = g = r = 0      # black field in the bar (minimap or the like)
             d = (y * width + x) * 3
             out[d], out[d + 1], out[d + 2] = max(0, min(255, b)), max(0, min(255, g)), max(0, min(255, r))
     return compare_shots.Image(width, height, out)
@@ -733,7 +725,7 @@ def _fill(img, x0, y0, x1, y1, bgr):
 
 
 def _soft_corner(img, radius, cx=0, cy=0):
-    """Weicher schwarzer Verlauf um die Ecke (cx, cy) (wie ausserhalb der Karte). Die Leiste bleibt."""
+    """Soft black gradient around the corner (cx, cy) (as outside the map). The bar stays."""
     for y in range(img.height):
         for x in range(img.width):
             if _in_bar(img.width, img.height, x, y):
@@ -753,36 +745,36 @@ def selftest():
     cases.append(("unversehrt", base, set()))
     img = _copy(base)
     _fill(img, 200, 60, 360, 180, (0, 0, 0))
-    _fill(img, 260, 100, 280, 150, (90, 140, 170))   # "Haus" im Schwarzen
-    cases.append(("schwarzes Rechteck", img, {"schwarz"}))
+    _fill(img, 260, 100, 280, 150, (90, 140, 170))   # "house" in the black
+    cases.append(("schwarzes Rechteck", img, {"black"}))
     img = _copy(base)
     _soft_corner(img, 140)
-    cases.append(("weicher Rand ausserhalb der Karte", img, set()))
+    cases.append(("soft edge outside the map", img, set()))
     img = _copy(base)
-    for y in range(img.height):                          # die ganze Leiste schwarz
+    for y in range(img.height):                          # the whole bar black
         for x in range(img.width):
             if _in_bar(img.width, img.height, x, y):
                 _fill(img, x, y, x + 1, y + 1, (0, 0, 0))
-    cases.append(("schwarz nur in der 2D-Leiste", img, set()))
+    cases.append(("black only in the 2D bar", img, set()))
     img = _copy(base)
-    _fill(img, 0, 230, 72, 360, (0, 0, 0))              # Ecke links neben der Leiste, harte Kante
-    cases.append(("schwarze Ecke neben der Leiste, harte Kante", img, {"schwarz"}))
+    _fill(img, 0, 230, 72, 360, (0, 0, 0))              # corner left of the bar, hard edge
+    cases.append(("black corner next to the bar, hard edge", img, {"black"}))
     img = _copy(base)
     _soft_corner(img, 90, 0, 359)                        # Ecke links unten, weicher Verlauf
-    cases.append(("weicher Rand in der Ecke neben der Leiste", img, set()))
+    cases.append(("soft edge in the corner next to the bar", img, set()))
     img = _copy(base)
-    for x in range(40, 600, 10):                         # Menue-Striche alle 10 Pixel
+    for x in range(40, 600, 10):                         # menu lines every 10 pixels
         for y in range(0, 280):
             d = (y * img.width + x) * 3
             img.bgr[d:d + 3] = bytes(max(0, v - 60) for v in img.bgr[d:d + 3])
-    cases.append(("Naehte alle 10 Pixel", img, {"naht"}))
+    cases.append(("seams every 10 pixels", img, {"seam"}))
     img = _copy(base)                                    # Versatz: rechte Haelfte heller
     for y in range(img.height):
         for x in range(320, 640):
             d = (y * img.width + x) * 3
             img.bgr[d:d + 3] = bytes(min(255, v + 50) for v in img.bgr[d:d + 3])
-    cases.append(("einzelne senkrechte Naht", img, {"naht"}))
-    img = _copy(base)                                    # weich skalierte Rahmenlinie: kein Naht-Fehler
+    cases.append(("single vertical seam", img, {"seam"}))
+    img = _copy(base)                                    # softly scaled frame line: not a seam
     for y in range(img.height):
         for x, add in ((300, 50), (301, 130), (302, 100), (303, 20)):
             d = (y * img.width + x) * 3
@@ -797,9 +789,9 @@ def selftest():
             v = 255 if ((x // 2 + y // 2) & 1) else 0
             d = (y * img.width + x) * 3
             img.bgr[d:d + 3] = bytes((v, v, v))
-    cases.append(("Schachbrett", img, {"schach"}))
+    cases.append(("Schachbrett", img, {"checker"}))
     img = compare_shots.Image(640, 360, bytearray(b"\x20\x20\x20" * 640 * 360))
-    cases.append(("einfarbig", img, {"leer"}))
+    cases.append(("single-coloured", img, {"empty"}))
 
     args = argparse.Namespace(hud=None, black=BLACK_LEVEL, only=set(CHECKS))
     with tempfile.TemporaryDirectory() as tmp:
@@ -807,12 +799,12 @@ def selftest():
             path = os.path.join(tmp, "shot.bmp")
             compare_shots.write_bmp(path, img)
             _, findings = inspect_image(path, args)
-            got = {f["pruefung"] for f in findings}
+            got = {f["check"] for f in findings}
             good = got == expected
             ok &= good
-            print(f"{'ok    ' if good else 'FEHLER'} {name}: erwartet {sorted(expected) or '-'}, "
-                  f"gefunden {sorted(got) or '-'}")
-        # Folge: mittleres Bild weicht ab
+            print(f"{'ok    ' if good else 'ERROR'} {name}: expected {sorted(expected) or '-'}, "
+                  f"found {sorted(got) or '-'}")
+        # sequence: the middle picture differs
         seq_dir = os.path.join(tmp, "folge")
         os.makedirs(seq_dir)
         flick = _copy(base)
@@ -826,8 +818,8 @@ def selftest():
         jumps = check_sequence(entries)
         good = list(jumps) == [entries[2][0]]
         ok &= good
-        print(f"{'ok    ' if good else 'FEHLER'} Sprung in der Bildfolge: "
-              f"{'Bild 2 gemeldet' if good else sorted(os.path.basename(k) for k in jumps)}")
+        print(f"{'ok    ' if good else 'ERROR'} jump in the picture sequence: "
+              f"{'picture 2 reported' if good else sorted(os.path.basename(k) for k in jumps)}")
     print("Selbsttest", "bestanden" if ok else "FEHLGESCHLAGEN")
     return 0 if ok else 1
 
@@ -840,37 +832,37 @@ def _hud_rect(spec):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Bildpruefung fuer Render-Tests (ohne Referenz)")
-    ap.add_argument("inputs", nargs="*", help="Ordner mit shot_*.bmp oder einzelne Bilder")
-    ap.add_argument("--json", action="store_true", help="Ergebnis als JSON auf stdout")
-    ap.add_argument("--crops", help="Ordner fuer vergroesserte Ausschnitte der Befunde")
-    ap.add_argument("--only", help="nur diese Pruefungen, kommagetrennt: " + ",".join(CHECKS))
+    ap = argparse.ArgumentParser(description="Picture inspection for render tests (without a reference)")
+    ap.add_argument("inputs", nargs="*", help="folders with shot_*.bmp or single pictures")
+    ap.add_argument("--json", action="store_true", help="result as JSON on stdout")
+    ap.add_argument("--crops", help="folder for enlarged sections of the findings")
+    ap.add_argument("--only", help="only these checks, comma-separated: " + ",".join(CHECKS))
     ap.add_argument("--hud", action="append", type=_hud_rect, metavar="X,Y,B,H", default=None,
-                    help="Rechteck der 2D-Leiste in Pixeln oder Prozent des Bildes (z. B. "
-                         "12%%,68%%,76%%,32%%), mehrfach angebbar; ersetzt die Vorgabe (4:3-breite "
-                         "Leiste mittig, Radarteil und Rest)")
+                    help="rectangle of the 2D bar in pixels or percent of the picture (e.g. "
+                         "12%%,68%%,76%%,32%%), may be given several times; replaces the default (4:3-wide "
+                         "bar in the middle, radar part and rest)")
     ap.add_argument("--black", type=int, default=BLACK_LEVEL,
-                    help="Pixel mit max(R,G,B) bis zu diesem Wert gelten als schwarz (Vorgabe 12)")
-    ap.add_argument("--stats", action="store_true", help="Messwerte je Pruefung ausgeben (Eichung)")
-    ap.add_argument("--quiet", action="store_true", help="unauffaellige Bilder nicht auflisten")
-    ap.add_argument("--selftest", action="store_true", help="Selbsttest mit kuenstlich beschaedigten Bildern")
+                    help="pixels with max(R,G,B) up to this value count as black (default 12)")
+    ap.add_argument("--stats", action="store_true", help="print measured values per check (calibration)")
+    ap.add_argument("--quiet", action="store_true", help="do not list unremarkable pictures")
+    ap.add_argument("--selftest", action="store_true", help="self test with artificially damaged pictures")
     args = ap.parse_args()
     if args.selftest:
         return selftest()
     if not args.inputs:
-        ap.error("Ordner oder Bild angeben (oder --selftest)")
+        ap.error("give a folder or a picture (or --selftest)")
     if args.only:
         wanted = {s.strip() for s in args.only.split(",") if s.strip()}
         unknown = wanted - set(CHECKS)
         if unknown:
-            ap.error("unbekannte Pruefung: " + ",".join(sorted(unknown)))
+            ap.error("unknown check: " + ",".join(sorted(unknown)))
         args.only = wanted
     else:
         args.only = set(CHECKS)
     try:
         return run(args)
     except (OSError, ValueError) as e:
-        print(f"FEHLER: {e}", file=sys.stderr)
+        print(f"ERROR: {e}", file=sys.stderr)
         return 2
 
 

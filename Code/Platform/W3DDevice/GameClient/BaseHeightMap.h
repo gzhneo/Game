@@ -138,6 +138,7 @@ public:
   {
     REF_PTR_RELEASE( m_map );
 	  REF_PTR_SET(m_map, pMap);	//update our heightmap pointer in case it changed since last call.
+	  ++m_heightFieldVersion;
   }
 
 
@@ -270,6 +271,7 @@ protected:
 	void drawScorches(void);		///< Draws the scorch mark polygons in m_vertexScorch.
 #endif
 	WorldHeightMap *m_map;
+	UnsignedInt m_heightFieldVersion = 1;	///< counts every change of the height data m_map holds; the renderer uploads the height field only when it moves
 	Bool m_useDepthFade;	///<fade terrain lighting under water
 	Bool m_updating;
 	Vector3 m_depthFade;	///<depth based fall off values for r,g,b

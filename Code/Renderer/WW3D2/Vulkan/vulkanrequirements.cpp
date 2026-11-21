@@ -7,9 +7,11 @@
 // vulkanrequirements.cpp -- see vulkanrequirements.h.
 
 #include "vulkanrequirements.h"
+#include "WW3D2/Common/gpuadapter.h"
 
 #include <cstdio>
 #include <cstring>
+#include <vector>
 
 namespace {
 
@@ -95,6 +97,18 @@ int Vulkan_Choose_Device(const VulkanDeviceInfo* devices, unsigned count)
 			best = static_cast<int>(i);
 	}
 	return best;
+}
+
+int Vulkan_Choose_Device_Preferred(const VulkanDeviceInfo* devices, unsigned count, const char* choice)
+{
+	if (choice && *choice && devices && count) {
+		std::vector<GpuAdapter::Candidate> candidates;
+		for (unsigned i = 0; i < count; ++i)
+			candidates.push_back({ devices[i].vendor_id, devices[i].device_id, devices[i].name });
+		const int wanted = GpuAdapter::Choose(choice, candidates.data(), count);
+		if (wanted >= 0 && Vulkan_Missing_Requirements(devices[wanted]) == 0) return wanted;
+	}
+	return Vulkan_Choose_Device(devices, count);
 }
 
 const char* Vulkan_Device_Type_Name(int type)

@@ -1190,6 +1190,7 @@ public:
 	int	  m_curTick;
 	float m_xOffset;
 	float m_yOffset;
+	Bool  m_cloudsStarted;		///< the cloud position runs on over a device reset (init runs again then)
 	virtual Int set(Int pass) override;		///<setup shader for the specified rendering pass.
 	virtual Int init(void) override;			///<perform any one time initialization and validation
 	virtual void reset(void) override;		///<do any custom resetting necessary to bring W3D in sync.
@@ -1281,10 +1282,14 @@ Int TerrainShader2Stage::init( void )
 	//initialize settings for uv animated clouds
 	m_xSlidePerSecond = -0.02f;	 
 	m_ySlidePerSecond =  1.50f * m_xSlidePerSecond;
-	m_curTick = 0;
-	m_curTick = WW3D::Get_Sync_Time();//::GetTickCount();
-	m_xOffset = 0;
-	m_yOffset = 0;
+	// The shaders are initialized again after a lost device; the clouds keep their place and time then.
+	if (!m_cloudsStarted)
+	{
+		m_curTick = WW3D::Get_Sync_Time();
+		m_xOffset = 0;
+		m_yOffset = 0;
+		m_cloudsStarted = TRUE;
+	}
 
 	//no special device validation needed - anything in our min spec should handle this.
 

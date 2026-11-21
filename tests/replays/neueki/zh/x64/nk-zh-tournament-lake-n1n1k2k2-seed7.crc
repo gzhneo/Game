@@ -1,12 +1,17 @@
-TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
-MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
-FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
-MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
-FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
-TEXTURPAKET ersetzt 0 texturen 63
-VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+TEXTURETIER SD wanted Auto (Settings.ini) reason output height below 900 height 600 budget 15419 MB uma nein available SD,HD,UHD package 7 rejected 0
+MOD folder ProjectData\Inhalt\BaeumeFrei\ files 217
+FREE CONTENT ProjectData\Inhalt\BaeumeFrei\ files 217 tier SD manifest 101
+MOD folder ProjectData\Inhalt\FreierBoden\ files 723
+FREE CONTENT ProjectData\Inhalt\FreierBoden\ files 723 tier SD manifest -1
+MOD folder ProjectData\Inhalt\FreieStrassen\ files 63
+FREE CONTENT ProjectData\Inhalt\FreieStrassen\ files 63 tier SD manifest 63
+TEXTUREPACK replaced 0 textures 164
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15419 MB (used 0 MB), dedicated 16191 MB, shared 48862 MB
 WORKERS 30
-D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+PREFETCH plan files 1022 mb 1478
+D3D11EFFECTS flags 0xC7DDFFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 terrain 0.50 ground_detail 1.00 mountains 1.00 relief 2.00 tessellation 2.00 factor 16 pixel 8 probe 0 rock_tess 1.00
+GRAPHICSCARD 1002:7550 AMD Radeon RX 9070 by 2
+PREFETCH files 1022 mb 1478 ms 328
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
 STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
 SLOTS mode 2 seed 7 localSlot 0
@@ -30,22 +35,32 @@ TERRAINTILES dds Art/Terrain/TMCliff02a.dds tiles 16 extent 128
 TERRAINTILES dds Art/Terrain/TMCliff13a.dds tiles 16 extent 128
 TERRAINTILES dds Art/Terrain/TMCliff15b.dds tiles 16 extent 128
 TERRAINTILES dds Art/Terrain/TMCliff16a.dds tiles 16 extent 128
-BODENDETAIL klassen 15 mit_detail 15 zuordnungen 253 raster 28 x 15 atlas 1024
-TERRAINRELIEF kacheln 216 von 216 stufe 2 atlas 4096 x 2048
-TERRAINTESS kacheln 216 von 216 stufe 1 klassen 15 von 15 gitter 450 x 450 abweichend 0
-KIOHNE 0 spieler 3 teile 14336
-KIOHNE 0 spieler 4 teile 14336
+GROUNDDETAIL classes 15 with_detail 15 mappings 253 grid 28 x 15 atlas 1024
+TERRAINRELIEF tiles 216 of 216 level 2 atlas 4096 x 2048
+TERRAINTESS tiles 216 of 216 level 1 classes 15 of 15 grid 450 x 450 deviating 0
+AIOFF 0 player 3 parts 134232064
+AIOFF 0 player 4 parts 134232064
 0 4A3F8232
 STATE frame 0 mode 2 players 8 objects 194 recorder 0 particles 0/0
 STATE frame 1 mode 2 players 8 objects 201 recorder 0 particles 0/0
 30 8D7FF572
 60 C351040A
-KIEROEFFNUNG 63 spieler 3 startkapital 10000 klasse standard geldfaktor 1.00
-KIHAUSHALT 63 spieler 3 geld 10600 basis 0 frei 10600 vorrang_offen 0
-KIWIRTSCHAFT 63 spieler 3 lage vorrat 0 zentren 0 geld 10600 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
-KIEROEFFNUNG 64 spieler 4 startkapital 10000 klasse standard geldfaktor 1.00
-KIHAUSHALT 64 spieler 4 geld 10600 basis 0 frei 10600 vorrang_offen 0
-KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 10600 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
+AIOPENING 63 player 3 start_money 10000 class standard money_factor 1.00
+AIPOWER 63 player 3 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 0
+AITHREAT 63 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 63 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 0 gather_s 0 attack_s 0
+AIECONOMY 63 player 3 build AirF_AmericaPowerPlant have 0 target 2 reserve 0 reason power
+AIPOSTS 63 player 3 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+AIBUDGET 63 player 3 money 10600 base 800 free 9800 priority_open 1
+AIECONOMY 63 player 3 situation reserve 0 centres 0 money 10600 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
+AIOPENING 64 player 4 start_money 10000 class standard money_factor 1.00
+AIPOWER 64 player 4 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 0
+AITHREAT 64 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 64 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 0 gather_s 0 attack_s 0
+AIECONOMY 64 player 4 build Lazr_AmericaPowerPlant have 0 target 4 reserve 0 reason power
+AIPOSTS 64 player 4 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+AIBUDGET 64 player 4 money 10600 base 700 free 9900 priority_open 1
+AIECONOMY 64 player 4 situation reserve 0 centres 0 money 10600 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
 90 F29C7CFF
 120 8801FCAF
 150 3B6F6978
@@ -56,1260 +71,1872 @@ KIWIRTSCHAFT 64 spieler 4 lage vorrat 0 zentren 0 geld 10600 hacker 0 sammler 0 
 300 D5913DA1
 330 2914F4A1
 360 7E40F369
+AIPOWER 363 player 3 production 0 consumption 0 underpowered_s 0 power_plants 1 defence 0
+AIPOWER 364 player 4 production 0 consumption 0 underpowered_s 0 power_plants 0 defence 0
 390 09BE27A3
-420 0ACC0221
-450 30F278A3
-480 63DE9834
-510 CFE5BBC9
-540 840CA0AA
-570 697B4CD9
-600 B046F0A2
-630 C2295EA6
-660 6CEAEF34
-690 AA41FCA5
-720 1EA36189
-750 02431A10
-780 4D99AD43
-810 01C35012
-840 08A32253
-870 322B67BB
-900 3CBB3F1C
+420 92B7B5B1
+450 204D9C87
+480 AF620DE5
+510 6228E0EE
+540 8FCD9F40
+570 11737839
+600 983886F7
+630 FB009D25
+660 2B3977A5
+AIPOWER 663 player 3 production 0 consumption 0 underpowered_s 0 power_plants 1 defence 0
+AIPOWER 664 player 4 production 0 consumption 0 underpowered_s 0 power_plants 1 defence 0
+690 B49C311C
+720 E88E0E40
+750 1D79C95E
+780 5D021361
+810 A9A31F31
+840 C0E8FABF
+870 43DCF58F
+900 665CEE0B
 STATE frame 900 mode 2 players 8 objects 205 recorder 0 particles 0/0
-930 C97B33B9
-960 C55F7B4D
-990 E9921F27
-1020 FF4DC694
-1050 704AE50B
-1080 0D3509B1
-1110 F9E386FC
-1140 DBC21A90
-1170 B9686627
-1200 87061355
-1230 62646FB0
-1260 7A8CF2E4
-1290 4CC79CA1
-1320 50E92519
-1350 96BB0C93
-1380 474A649B
-1410 8A830473
-1440 3074499A
-1470 6E8AFBB9
-1500 EBB569E8
-1530 E6E3413A
-1560 439EEC3A
-1590 CBE46ECB
-1620 40ECFFED
-1650 DE23DEE9
-1680 95F04820
-1710 F3DC8171
-1740 1A196328
-1770 33B67CCD
-1800 39C946AE
-STATE frame 1800 mode 2 players 8 objects 215 recorder 0 particles 0/0
-1830 375869DB
-1860 027A9993
-KIHAUSHALT 1863 spieler 3 geld 5850 basis 0 frei 5850 vorrang_offen 0
-KIWIRTSCHAFT 1863 spieler 3 lage vorrat 30000 zentren 1 geld 5850 hacker 0 sammler 0 bedarf 0 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
-KIHAUSHALT 1864 spieler 4 geld 12950 basis 0 frei 12950 vorrang_offen 1
-KIWIRTSCHAFT 1864 spieler 4 lage vorrat 0 zentren 0 geld 12950 hacker 0 sammler 0 bedarf 2000 einnahmebauten 0 technik 0 frei 6 sammelrate 0 restzeit_min 999.0 investieren 1
-1890 41AD46B9
-1920 005115EB
-KIFOKUS 1950 spieler 3 gegner 5 vorher -1 grund wahl kosten 2818
-KIFOKUS 1950 spieler 4 gegner 5 vorher -1 grund buendnis kosten 0
-1950 5BA1332A
-1980 DED75790
-2010 4BAABE62
-2040 5509B186
-2070 0958E6DB
-2100 BA81A009
-2130 F788F1F3
-2160 0842ED2D
-2190 524183C5
-2220 AE47C410
-2250 6B45E05A
-2280 F9499E8F
-2310 37D1DDAE
-2340 CB378A72
-2370 AD57DB9F
-2400 8209B777
-2430 29C625F2
-2460 651D4878
-2490 A7C20D35
-2520 304CDFEA
-2550 1DC48B97
-2580 1A46CB6B
-2610 E6A32B27
-2640 6DA1215E
-2670 3526AF9A
-2700 9697C52A
-STATE frame 2700 mode 2 players 8 objects 224 recorder 0 particles 0/0
-2730 C5B78C2D
-2760 A5E9B95B
-KIWIRTSCHAFT 2764 spieler 4 ausbau Lazr_AmericaSupplyCenter vorrat 30000 zentren 1 grund wachstum
-2790 4E7D205B
-2820 18E8AE1C
-2850 07930412
-2880 9D0278B0
-2910 C908DA53
-2940 FFA13614
-KIWIRTSCHAFT 2943 spieler 3 technik TechOilDerrick einheit AirF_AmericaInfantryRanger ort 1288 1791
-2970 19901C23
-3000 3FBAEE78
-3030 5CC9E2B9
-3060 8533880C
-3090 04B35B09
-3120 0E50F62A
-KIWIRTSCHAFT 3124 spieler 4 technik TechOilDerrick einheit Lazr_AmericaInfantryRanger ort 1877 1353
-3150 7F62289C
-3180 FF53976E
-3210 652E96A1
-3240 B17594AB
-3270 790012A1
-3300 78117FE8
-3330 0E684FFA
-3360 8A8418AE
-3390 5AC106E2
-3420 171D3F57
-3450 22A0FBBA
-3480 963A73F4
-3510 DD61A9FE
-3540 7A3A37D1
-3570 F75F2AE0
-KISUPERWAFFE 3600 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 204 wert 5300 radius 300
-3600 AF825CBD
-STATE frame 3600 mode 2 players 8 objects 235 recorder 0 particles 9/6
-KISUPERWAFFE 3603 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 204 wert 5200 radius 300
-3630 F71B1DB4
-3660 284FC1D2
-KIWIRTSCHAFT 3663 spieler 3 technik_ende einheit_weg dauer 24
-KIHAUSHALT 3663 spieler 3 geld 12350 basis 1000 frei 11350 vorrang_offen 1
-KIWIRTSCHAFT 3663 spieler 3 lage vorrat 28425 zentren 1 geld 12350 hacker 0 sammler 3 bedarf 0 einnahmebauten 0 technik 0 frei 5 sammelrate 1575 restzeit_min 18.0 investieren 0
-KIHAUSHALT 3664 spieler 4 geld 5550 basis 1000 frei 4550 vorrang_offen 1
-KIWIRTSCHAFT 3664 spieler 4 lage vorrat 115725 zentren 2 geld 5550 hacker 0 sammler 2 bedarf 0 einnahmebauten 0 technik 0 frei 5 sammelrate 0 restzeit_min 999.0 investieren 1
-3690 EEB382F7
-3720 B306BCFB
-KIFOKUS 3750 spieler 3 gegner 6 vorher 5 grund wechsel kosten 3072
-KIFOKUS 3750 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-3750 E1D8E3A7
-3780 487DF03A
-KIUEBERFALL 3783 spieler 3 bau transport AirF_AmericaVehicleHumvee fahrer AirF_AmericaInfantryColonelBurton anzahl 0 kosten 8300
-3810 6BF3FCF2
-3840 4375DEB3
-3870 63CD074B
-3900 348E39E3
-3930 2626AD97
-3960 1787875C
-3990 22A8A4A6
-4020 4B3C162B
-KIWIRTSCHAFT 4024 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 3 ziel 6
-4050 9A9DB5A0
-4080 CECA6AAC
-4110 A9BF18D8
-4140 1A8E2FCE
-4170 87D518EF
-4200 8FDA7936
-4230 51A3E90F
-4260 C04E2E08
-4290 9AA064CF
-4320 52FED300
-4350 D67992FF
-4380 05D0AC66
-KIWIRTSCHAFT 4384 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 6
-KIWIRTSCHAFT 4384 spieler 4 technik_ende einheit_weg dauer 42
-4410 8F6F3099
-4440 7978590F
-4470 F0CD9D05
-4500 C03FFC09
-STATE frame 4500 mode 2 players 8 objects 258 recorder 0 particles 17/28
-4530 4066C7AD
-4560 C7895245
-4590 45E2B025
-4620 5D71B4DA
-4650 9D4E4DDB
-4680 9F09F07B
-4710 5BDCF47D
-4740 47C885BD
-KIWIRTSCHAFT 4743 spieler 3 ausbau AirF_AmericaSupplyCenter vorrat 26625 zentren 1 grund wachstum
-KIWIRTSCHAFT 4744 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 6
-4770 9B3006C3
-4800 F285AB3E
-4830 8DAFE5AB
-4860 BB67D0E5
-4890 552489A5
-4920 5B65EF18
-4950 5D86F364
-4980 88E13975
-5010 249072BC
-5040 566E765B
-5070 53CAED6E
-5100 EF89093C
-5130 3C9969D0
-5160 1C3E7148
-5190 CCAD3273
-5220 F60462B2
-5250 82F1E9AC
-5280 52AAACE9
-KIGEGNERMODELL 5283 spieler 3 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 2975 luftwert 0 abwehr 0 getarnt 0
-5310 6B76F3A3
-5340 AF7CBED4
-5370 2441B7A8
-KISUPERWAFFE 5400 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 265 wert 6600 radius 300
-5400 4FCDEA77
-STATE frame 5400 mode 2 players 8 objects 280 recorder 0 particles 26/95
-KISUPERWAFFE 5404 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 265 wert 6500 radius 300
-KIHILFE 5404 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
-5430 A9863972
-5460 2BE53789
-KIHAUSHALT 5463 spieler 3 geld 7200 basis 0 frei 7200 vorrang_offen 1
-KIWIRTSCHAFT 5463 spieler 3 lage vorrat 25425 zentren 1 geld 7200 hacker 0 sammler 3 bedarf 2000 einnahmebauten 0 technik 0 frei 3 sammelrate 2288 restzeit_min 11.1 investieren 0
-KIHAUSHALT 5464 spieler 4 geld 900 basis 0 frei 900 vorrang_offen 0
-KIWIRTSCHAFT 5464 spieler 4 lage vorrat 113325 zentren 2 geld 900 hacker 0 sammler 7 bedarf 0 einnahmebauten 0 technik 0 frei 3 sammelrate 2550 restzeit_min 44.4 investieren 0
-5490 B8ED2F10
-5520 16998E7E
-5550 50C8740C
-5580 C9D3D77E
-5610 F8BC05B9
-5640 7B89290C
-KIHILFE 5644 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
-5670 37E14AB7
-5700 5A1394AD
-5730 54C40048
-5760 82C971B0
-5790 787327F9
-5820 9C286664
-KIHILFE 5824 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
-5850 E8B46195
-5880 E19CADC3
-5910 49AA4151
-5940 8B327418
-5970 9E6082E4
-6000 4D1E076F
-KIHILFE 6004 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
-6030 6872481C
-6060 8BF59BFE
-6090 C942F898
-6120 11F5676B
-6150 7B20DAB2
-6180 B521DA53
-KIHILFE 6184 spieler 4 verworfen verbuendeter 3 bedrohung 700 armee 450 einsetzbar 315 kandidaten 2 wert 450
-6210 F9B85626
-6240 EA08E065
-6270 C4E07BF4
-6300 5FF36A16
-STATE frame 6300 mode 2 players 8 objects 293 recorder 0 particles 80/485
-KIHILFE 6303 spieler 3 verworfen verbuendeter 4 bedrohung 1950 armee 3450 einsetzbar 925 kandidaten 2 wert 450
-KIUEBERFALL 6304 spieler 4 bau transport Lazr_AmericaVehicleHumvee fahrer Lazr_AmericaInfantryColonelBurton anzahl 0 kosten 8200
-6330 609E22C8
-6360 A53145CC
-6390 E374EA22
-6420 C72E3ED7
-6450 8F18A328
-6480 DB35C235
-KIHILFE 6483 spieler 3 verworfen verbuendeter 4 bedrohung 1050 armee 4650 einsetzbar 1525 kandidaten 2 wert 450
-KIGEGNERMODELL 6484 spieler 4 ansturm 1 einigeln 0 luft 0 tarnung 0 armee 4975 luftwert 0 abwehr 0 getarnt 0
-6510 F928D32A
-6540 88703C80
-6570 90E826B3
-6600 F5F851B2
-KIWIRTSCHAFT 6603 spieler 3 auftrag_abgebrochen AirF_AmericaSupplyCenter ort 1235 1509
-6630 8273535B
-6660 A7273D87
-KIHILFE 6663 spieler 3 verworfen verbuendeter 4 bedrohung 1800 armee 4650 einsetzbar 1525 kandidaten 2 wert 450
-6690 58858C6B
-6720 A016FE31
-6750 6C4BD8AB
-6780 22AD770D
-6810 42E69D64
-6840 F5EB9D13
-KIHILFE 6843 spieler 3 verworfen verbuendeter 4 bedrohung 1750 armee 4650 einsetzbar 1525 kandidaten 2 wert 450
-6870 95B05660
-6900 88FC81B3
-6930 5411972F
-6960 53B4EEB4
-6990 44462610
-7020 3C94EE5D
-KIHILFE 7023 spieler 3 verworfen verbuendeter 4 bedrohung 3150 armee 5850 einsetzbar 2125 kandidaten 2 wert 450
-7050 A6787564
-7080 6E473106
-KIWIRTSCHAFT 7084 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 6
-7110 323AEB6C
-7140 3AF6C80A
-7170 3EE88F1D
-KISUPERWAFFE 7200 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 228 wert 6901 radius 300
-7200 7832244F
-STATE frame 7200 mode 2 players 8 objects 332 recorder 0 particles 150/972
-KIHILFE 7203 spieler 3 verworfen verbuendeter 4 bedrohung 3450 armee 5850 einsetzbar 2125 kandidaten 2 wert 450
-KISUPERWAFFE 7205 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 228 wert 9008 radius 300
-7230 AA872152
-7260 A5F45C1E
-KIHAUSHALT 7263 spieler 3 geld 11250 basis 0 frei 11250 vorrang_offen 0
-KIWIRTSCHAFT 7263 spieler 3 lage vorrat 22425 zentren 1 geld 11250 hacker 0 sammler 3 bedarf 0 einnahmebauten 0 technik 0 frei 2 sammelrate 2644 restzeit_min 8.5 investieren 0
-KIHAUSHALT 7264 spieler 4 geld 4275 basis 1000 frei 3275 vorrang_offen 1
-KIWIRTSCHAFT 7264 spieler 4 lage vorrat 108150 zentren 2 geld 4275 hacker 0 sammler 4 bedarf 0 einnahmebauten 0 technik 0 frei 2 sammelrate 3788 restzeit_min 28.6 investieren 0
-7290 6939D464
-7320 5F393E63
-7350 B8D2698B
-7380 3609A262
-KIHILFE 7383 spieler 3 verworfen verbuendeter 4 bedrohung 3150 armee 5850 einsetzbar 2125 kandidaten 2 wert 450
-KIUEBERFALL 7383 spieler 3 ende sammeln_zeit
-7410 E4AF1EAD
-7440 81D6FD60
-KIWIRTSCHAFT 7444 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 9
-7470 14BB0965
-KIFOKUS 7500 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2078
-7500 3F1016CB
-KIFOKUS 7514 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-7530 E26E4886
-7560 026B747B
-KIHILFE 7563 spieler 3 verworfen verbuendeter 4 bedrohung 2750 armee 5850 einsetzbar 2925 kandidaten 3 wert 1250
-7590 5A492255
-7620 41AAAB2B
-KIWIRTSCHAFT 7624 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 9
-7650 5362ED43
-7680 1D399B49
-7710 D1951F87
-7740 698504E7
-KIHILFE 7743 spieler 3 verworfen verbuendeter 4 bedrohung 2750 armee 8050 einsetzbar 4025 kandidaten 3 wert 1250
-7770 3B10C311
-7800 26659FC8
-7830 25BA80C8
-7860 F345AE4B
-7890 64966518
-7920 E2EF3786
-KIHILFE 7923 spieler 3 start verbuendeter 4 bedrohung 1150 einheiten 3 wert 1250 ort 1938 1379 armee 9150 einsetzbar 4575 kandidaten 3 wert 1250
-7950 CAFA14C3
-7980 19E9E261
-8010 7822709B
-8040 FBDE15F6
-KIHILFE 8043 spieler 3 ende aussichtslos dauer 4 verbleibend 3
-8070 A3E5EF1E
-8100 AF019341
-STATE frame 8100 mode 2 players 8 objects 339 recorder 0 particles 99/392
-8130 4D289A18
-8160 51A9B7CB
-8190 673371F7
-8220 5E18A1E4
-8250 9081F188
-8280 972DF7C6
-KIGEGNERMODELL 8283 spieler 3 ansturm 1 einigeln 0 luft 1 tarnung 0 armee 10925 luftwert 2800 abwehr 1000 getarnt 0
-KIGEGNERMODELL 8284 spieler 4 ansturm 1 einigeln 0 luft 1 tarnung 0 armee 10925 luftwert 2800 abwehr 1000 getarnt 0
-8310 12370DC2
-8340 CAE0EE7E
-8370 295E9EB9
-8400 A2D2A0AB
-8430 734BFE90
-8460 1786C750
-8490 5E826E53
-8520 0F96E9D7
-KIHILFE 8523 spieler 3 start verbuendeter 4 bedrohung 1400 einheiten 5 wert 1700 ort 1514 707 armee 11800 einsetzbar 5900 kandidaten 5 wert 1700
-8550 ED2F59F3
-8580 3FB2293E
-KIGEFECHT 8595 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 5 feinde 6
-8610 6D965866
-8640 9876F6D2
-8670 E5E681E7
-8700 0EC4492A
-KIWIRTSCHAFT 8703 spieler 3 sammler AFG_AmericaVehicleChinook bestand 3 ziel 5
-8730 2E53453B
-8760 5C95B76F
-KIUEBERFALL 8763 spieler 3 bau transport AirF_AmericaVehicleHumvee fahrer AirF_AmericaInfantryMissileDefender anzahl 5 kosten 2300
-8790 935CA917
-8820 8BD24334
-KIHILFE 8823 spieler 3 ende eigene_basis dauer 10 verbleibend 3
-8850 95835611
-8880 8A444CB1
-8910 49D13203
-8940 318DB222
-8970 84A3DBB9
-KISUPERWAFFE 9000 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 7522 radius 300
-9000 B1C8C8CA
-STATE frame 9000 mode 2 players 8 objects 363 recorder 0 particles 77/311
-KIHILFE 9004 spieler 4 start verbuendeter 3 bedrohung 700 einheiten 4 wert 1650 ort 531 1031 armee 10350 einsetzbar 4475 kandidaten 5 wert 2550
-KISUPERWAFFE 9006 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 281 wert 8501 radius 300
-KIGEFECHT 9015 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 4 feinde 8
-9030 8A20CCAE
-9060 CAB4B873
-KIWIRTSCHAFT 9063 spieler 3 sammler AFG_AmericaVehicleChinook bestand 4 ziel 5
-KIHAUSHALT 9063 spieler 3 geld 6050 basis 1000 frei 4100 vorrang_offen 1
-KIWIRTSCHAFT 9063 spieler 3 lage vorrat 40725 zentren 2 geld 6050 hacker 0 sammler 4 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 2644 restzeit_min 15.4 investieren 0
-KIHAUSHALT 9064 spieler 4 geld 375 basis 1000 frei -625 vorrang_offen 1
-KIWIRTSCHAFT 9064 spieler 4 lage vorrat 40725 zentren 2 geld 375 hacker 0 sammler 8 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 3788 restzeit_min 10.8 investieren 0
-9090 571C169A
-9120 E31DF925
-KIVERTEIDIGUNG 9123 spieler 3 bedrohung 700 einheiten 1 wert 300 ort 534 930
-KIHILFE 9124 spieler 4 ende eigene_basis dauer 4 verbleibend 4
-KIFOKUS 9150 spieler 3 gegner 6 vorher 5 grund druck kosten 1199
-9150 CB79246A
-KIFOKUS 9164 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-9180 B362BF1E
-KIHILFE 9183 spieler 3 start verbuendeter 4 bedrohung 1300 einheiten 4 wert 2050 ort 2601 1131 armee 15400 einsetzbar 7700 kandidaten 8 wert 3100
-KIGEFECHT 9195 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 4 feinde 2
-9210 5C33FEFB
-9240 90A63911
-9270 90E12F19
-9300 572B8008
-9330 09CDCD65
-9360 18D60E58
-9390 5FA52255
-9420 78723DED
-KIVERTEIDIGUNG 9423 spieler 3 bedrohung 700 einheiten 2 wert 525 ort 1106 385
-KIHILFE 9423 spieler 3 ende eigene_basis dauer 8 verbleibend 4
-9450 35123363
-9480 C2B800A8
-9510 EB5813D3
-9540 BC4FFA0B
-9570 C676BA15
-9600 DF0DEDCE
-9630 9B412D52
-9660 1A68A4B9
-KIHILFE 9663 spieler 3 start verbuendeter 4 bedrohung 750 einheiten 3 wert 1325 ort 2295 1013 armee 16300 einsetzbar 7550 kandidaten 9 wert 3400
-KIGEFECHT 9675 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 3 feinde 4
-9690 0316D569
-9720 38C8CB85
-9750 19E5E464
-9780 E6782C9C
-9810 B45AF93B
-9840 DA15A224
-9870 BEC23CBA
-9900 6E3E2CB2
-STATE frame 9900 mode 2 players 8 objects 391 recorder 0 particles 117/573
-KIHILFE 9903 spieler 3 ende eigene_basis dauer 8 verbleibend 3
-KIHILFE 9904 spieler 4 verworfen verbuendeter 3 bedrohung 2800 armee 10425 einsetzbar 4512 kandidaten 2 wert 1125
-KIUEBERFALL 9904 spieler 4 ende sammeln_zeit
-9930 113C8897
-9960 3DF6788B
-9990 2FD163ED
-10020 7D2F3CA2
-KIVERTEIDIGUNG 10023 spieler 3 bedrohung 2300 einheiten 1 wert 225 ort 852 978
-KIFOKUS 10050 spieler 3 gegner 5 vorher 6 grund druck kosten 2095
-10050 0F6FAB45
-KIFOKUS 10075 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-10080 375E949D
-10110 9945326F
-10140 CEED1489
-10170 25A7EBBD
-10200 7628FE64
-10230 C48D33D6
-10260 B08CD639
-10290 DAE71B4F
-10320 6444B5C5
-10350 94CD4D4B
-10380 777DC346
-10410 4DF84E42
-10440 D9FF905A
-10470 0C3F99BD
-10500 88BDCF87
-10530 0E886C50
-10560 EBB55675
-10590 BA468780
-10620 2DEA481D
-10650 CBFAAE5D
-10680 A8D0546B
-10710 483C7E56
-10740 6425A15C
-10770 D3D1DC0E
-KISUPERWAFFE 10800 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9400 radius 300
-10800 1E133C2D
-STATE frame 10800 mode 2 players 8 objects 375 recorder 0 particles 149/701
-KISUPERWAFFE 10807 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9300 radius 300
-10830 E05A1040
-10860 1D2D756A
-KIHAUSHALT 10863 spieler 3 geld 1850 basis 1000 frei 850 vorrang_offen 1
-KIWIRTSCHAFT 10863 spieler 3 lage vorrat 34575 zentren 2 geld 1850 hacker 0 sammler 5 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 4322 restzeit_min 8.0 investieren 0
-KIHAUSHALT 10864 spieler 4 geld 75 basis 1000 frei -925 vorrang_offen 1
-KIWIRTSCHAFT 10864 spieler 4 lage vorrat 34575 zentren 2 geld 75 hacker 0 sammler 8 bedarf 0 einnahmebauten 0 technik 0 frei 0 sammelrate 46744 restzeit_min 0.7 investieren 0
-10890 0B80922A
-10920 DF394B1E
-10950 7AC3D33B
-10980 396CB3F4
-11010 FC60B963
-11040 1A41FFAA
-11070 F98D0830
-11100 10D02DAA
-11130 0E8ED561
-11160 ABA60822
-KIVERTEIDIGUNG 11164 spieler 4 bedrohung 900 einheiten 6 wert 2200 ort 2559 1134
-11190 9B810D82
-11220 1D5A46C6
-KIFOKUS 11250 spieler 3 gegner 6 vorher 5 grund druck kosten 1730
-11250 6795E865
-KIFOKUS 11275 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-11280 3E13B21C
-11310 DC947ECB
-11340 362E1A93
-11370 A8AF1677
-11400 8FA9FC30
-11430 55A67532
-11460 2DCBA73F
-11490 86B2726F
-11520 64DEE6F3
-11550 916D52DA
-11580 A13F2215
-KIUEBERFALL 11583 spieler 3 los fahrer 5
-11610 BB4B1BD5
-11640 6324561E
-KIHILFE 11643 spieler 3 verworfen verbuendeter 4 bedrohung 6000 armee 14925 einsetzbar 5162 kandidaten 6 wert 1925
-KIUEBERFALL 11643 spieler 3 ziel AmericaSupplyCenter id 1640 sieger 0 verhaeltnis 1000000.00
-11670 3458A4D6
-11700 1A22FCF3
-STATE frame 11700 mode 2 players 8 objects 422 recorder 0 particles 230/1309
-KIUEBERFALL 11704 spieler 4 bau transport Lazr_AmericaVehicleHumvee fahrer Lazr_AmericaInfantryMissileDefender anzahl 5 kosten 2200
-KIBAU 11704 spieler 4 upgrade Upgrade_ComancheRocketPods kosten 800 geld 12325
-11730 2A7DAAC8
-11760 524BE4D3
-11790 CA99B247
-11820 4C76A268
-KIGEGNERMODELL 11823 spieler 3 ansturm 1 einigeln 0 luft 1 tarnung 1 armee 37200 luftwert 16500 abwehr 8000 getarnt 3200
-KIVERTEIDIGUNG 11823 spieler 3 bedrohung 3200 einheiten 4 wert 1475 ort 936 963
-KIGEGNERMODELL 11824 spieler 4 ansturm 1 einigeln 0 luft 1 tarnung 1 armee 37200 luftwert 16500 abwehr 8000 getarnt 3200
-KIVERTEIDIGUNG 11824 spieler 4 bedrohung 6000 einheiten 2 wert 450 ort 2633 1060
-11850 F995A869
-11880 6DC6BA33
-KIVERTEIDIGUNG 11884 spieler 4 bedrohung 6000 einheiten 1 wert 225 ort 2628 1035
-11910 C21DFFE0
-11940 B3E476B8
-11970 6416FAEF
-12000 76A3B3A4
-KIUEBERFALL 12003 spieler 3 rueckzug prognose
-12030 0A68C67F
-12060 BBFD31E9
-KIHILFE 12063 spieler 3 verworfen verbuendeter 4 bedrohung 7900 armee 13825 einsetzbar 4612 kandidaten 6 wert 1925
-12090 886E5FD8
-12120 38F3AF70
-KIUEBERFALL 12123 spieler 3 heim fahrer 5
-12150 2DBE44DB
-12180 02157C23
-KIVERTEIDIGUNG 12184 spieler 4 bedrohung 8800 einheiten 1 wert 700 ort 2510 893
-12210 AF0DDEC3
-12240 8C9F65ED
-KIHILFE 12243 spieler 3 verworfen verbuendeter 4 bedrohung 6000 armee 13825 einsetzbar 4612 kandidaten 6 wert 1925
-12270 51AAD102
-12300 90BE5FE8
-KIVERTEIDIGUNG 12304 spieler 4 bedrohung 4900 einheiten 1 wert 225 ort 2476 845
-12330 81F5AC51
-12360 F0E6B643
-KIVERTEIDIGUNG 12364 spieler 4 bedrohung 2900 einheiten 2 wert 600 ort 2481 847
-12390 A78222EB
-12420 148E71CC
-12450 884E8293
-12480 E932C76D
-KIVERTEIDIGUNG 12484 spieler 4 bedrohung 2000 einheiten 1 wert 300 ort 2443 793
-12510 8F4A882B
-12540 FFEE1691
-KIBAU 12544 spieler 4 upgrade Upgrade_AmericaRangerFlashBangGrenade kosten 800 geld 13525
-12570 7E7B6210
-KISUPERWAFFE 12600 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 10100 radius 300
-12600 0CA0334A
-STATE frame 12600 mode 2 players 8 objects 416 recorder 0 particles 113/896
-KIVERTEIDIGUNG 12603 spieler 3 bedrohung 900 einheiten 1 wert 225 ort 742 1094
-KISUPERWAFFE 12608 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 13000 radius 300
-12630 C5724960
-KISUPERWAFFE 12655 spieler 4 macht SuperweaponA10ThunderboltMissileStrike gegner 6 ziel_id 362 wert 7000 radius 50
-12660 8952C4F9
-KIHAUSHALT 12663 spieler 3 geld 600 basis 1000 frei -400 vorrang_offen 1
-KIWIRTSCHAFT 12663 spieler 3 lage vorrat 28575 zentren 2 geld 600 hacker 0 sammler 6 bedarf 2500 einnahmebauten 0 technik 0 frei 0 sammelrate 5198 restzeit_min 5.5 investieren 0
-KIHAUSHALT 12664 spieler 4 geld 13725 basis 1000 frei 12725 vorrang_offen 1
-KIWIRTSCHAFT 12664 spieler 4 lage vorrat 28575 zentren 2 geld 13725 hacker 0 sammler 9 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 26409 restzeit_min 1.1 investieren 0
-12690 80D54A8B
-12720 0EF31DA7
-KIFOKUS 12750 spieler 3 gegner 5 vorher 6 grund druck kosten 1850
-12750 8848FB7B
-KIFOKUS 12775 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-12780 D1215111
-KIHILFE 12784 spieler 4 start verbuendeter 3 bedrohung 3000 einheiten 8 wert 2800 ort 971 1099 armee 7500 einsetzbar 2850 kandidaten 8 wert 2800
-KIGEFECHT 12795 spieler 4 lage fokus 7 abstand 0 verteilt 0 eigene 8 feinde 5
-12810 B489C9AC
-12840 FD5AC873
-12870 2893B181
-12900 71D7BF80
-12930 36DA9D00
-12960 508A961F
-12990 0EBC93DB
-13020 3E8E8688
-13050 E764A95F
-13080 068EE20C
-KIGEFECHT 13095 spieler 4 lage fokus 10 abstand 17 verteilt 0 eigene 8 feinde 7
-13110 5769C900
-13140 085F3966
-13170 B96C045B
-13200 7745EC75
-13230 F9C18EF7
-13260 7DB2C2D1
-13290 5FC435BD
-13320 DFCCBF6F
-13350 9206C7A4
-13380 2FCE6FD1
-KIGEFECHT 13395 spieler 4 lage fokus 2 abstand 0 verteilt 0 eigene 8 feinde 6
-13410 9673BA94
-13440 372CD860
-KIBAU 13444 spieler 4 einheit Lazr_AmericaInfantryPathfinder kosten 600 geld 10025 wahl detektor
-13470 C4CAA4C3
-13500 62D86526
-STATE frame 13500 mode 2 players 8 objects 401 recorder 0 particles 112/596
-KIUEBERFALL 13503 spieler 3 los fahrer 5
-13530 639FBB6D
-KISUPERWAFFE 13537 spieler 3 macht AirF_SuperweaponA10ThunderboltMissileStrike warten wert 2000
-13560 B041908E
-KIUEBERFALL 13563 spieler 3 ziel Lazr_AmericaSupplyCenter id 222 sieger 0 verhaeltnis 4.64
-13590 656C2AF2
-13620 1CF237CC
-13650 CC68DF60
-13680 D3640B7A
-13710 6C64EFFC
-13740 577450F9
-13770 2BE977F5
-13800 9300753D
-KIGEFECHT 13815 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 7 feinde 3
-13830 C947AF13
-13860 2801FDC2
-13890 B162EFA1
-13920 436D4BD0
-13950 1F143874
-13980 18FA3765
-KIVERTEIDIGUNG 13984 spieler 4 bedrohung 2000 einheiten 4 wert 3300 ort 2412 1071
-KIHILFE 13984 spieler 4 ende eigene_basis dauer 40 verbleibend 7
-14010 2CD843E5
-14040 539A8E4D
-KIBAU 14044 spieler 4 einheit Lazr_AmericaInfantryPathfinder kosten 600 geld 8675 wahl detektor
-14070 D3603730
-14100 5B0844AD
-KIBAU 14104 spieler 4 upgrade Upgrade_AmericaBunkerBusters kosten 1500 geld 6575
-14130 1E362B90
-14160 9010C993
-14190 7B3498A7
-14220 44BDFF16
-14250 98CEE680
-14280 FF966788
-14310 0F681734
-14340 C3C17E6B
-KIBAU 14344 spieler 4 einheit Lazr_AmericaInfantryMissileDefender kosten 300 geld 5675 wahl konter
-14370 4E0AB30C
-KISUPERWAFFE 14400 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9400 radius 300
-14400 B16F82AB
-STATE frame 14400 mode 2 players 8 objects 430 recorder 0 particles 171/791
-KIVERTEIDIGUNG 14403 spieler 3 bedrohung 1400 einheiten 1 wert 225 ort 981 799
-KIHILFE 14404 spieler 4 start verbuendeter 3 bedrohung 2800 einheiten 9 wert 4950 ort 1038 932 armee 11850 einsetzbar 5025 kandidaten 9 wert 4950
-KISUPERWAFFE 14409 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 9525 radius 300
-KIGEFECHT 14415 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 4
-14430 4D01FF14
-14460 3383ED09
-KIUEBERFALL 14463 spieler 3 ziel Lazr_AmericaSupplyCenter id 705 sieger 1 verhaeltnis 0.64
-KIHAUSHALT 14463 spieler 3 geld 150 basis 1000 frei -850 vorrang_offen 1
-KIWIRTSCHAFT 14463 spieler 3 lage vorrat 22425 zentren 2 geld 150 hacker 0 sammler 7 bedarf 2500 einnahmebauten 0 technik 0 frei 0 sammelrate 5712 restzeit_min 3.9 investieren 0
-KIHAUSHALT 14464 spieler 4 geld 6375 basis 1000 frei 5375 vorrang_offen 1
-KIWIRTSCHAFT 14464 spieler 4 lage vorrat 22425 zentren 2 geld 6375 hacker 0 sammler 9 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 16355 restzeit_min 1.4 investieren 0
-14490 1016D698
-14520 F592AB54
-KIUEBERFALL 14523 spieler 3 rueckzug prognose
-KIBAU 14524 spieler 4 upgrade Upgrade_AmericaSentryDroneGun kosten 1000 geld 4150
-14550 0E842404
-14580 990CEB53
-KIVERTEIDIGUNG 14583 spieler 3 bedrohung 1400 einheiten 1 wert 225 ort 578 859
-14610 1381B630
-14640 084969B8
-14670 B2911248
-14700 7ABD24D7
-14730 3E85D75D
-14760 FFDBAF4B
-KIGEFECHT 14760 spieler 4 lage fokus 1 abstand 0 verteilt 0 eigene 9 feinde 5
-KIBAU 14763 spieler 3 upgrade Upgrade_AmericaChemicalSuits kosten 1000 geld 11100
-KIBAU 14763 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 10100 wahl luftabwehr
-14790 ED195C24
-14820 1F1BA9F2
-14850 22B9D73C
-14880 CD509841
-KIUEBERFALL 14883 spieler 3 heim fahrer 5
-KIVERTEIDIGUNG 14884 spieler 4 bedrohung 2800 einheiten 3 wert 4500 ort 2475 1034
-KIHILFE 14884 spieler 4 ende eigene_basis dauer 16 verbleibend 9
-KISUPERWAFFE 14887 spieler 3 macht AirF_SuperweaponA10ThunderboltMissileStrike gegner 5 ziel_id 660 wert 7200 radius 50
-14910 D9A8AC8B
-14940 830F1018
-KIBAU 14943 spieler 3 upgrade Upgrade_AmericaRangerFlashBangGrenade kosten 800 geld 10600
-14970 C3F54EE2
-KIFOKUS 15000 spieler 3 gegner 6 vorher 5 grund druck kosten 1421
-15000 3652F76F
-KIFOKUS 15025 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-15030 D2503999
-15060 9806C444
-15090 6EA72DA8
-15120 C596E6DC
-15150 B0CB8CC4
-15180 ACB43F0B
-15210 EDB08AFC
-15240 8D58F847
-15270 9B25B34F
-15300 CF8928D6
-STATE frame 15300 mode 2 players 8 objects 434 recorder 0 particles 181/2264
-KIUEBERFALL 15304 spieler 4 ende sammeln_zeit
-15330 A32F22D9
-15360 A28F37E5
-KIVERTEIDIGUNG 15364 spieler 4 bedrohung 2700 einheiten 2 wert 600 ort 2389 1009
-15390 E23879AF
-15420 13886205
-15450 0772B5F5
-15480 81C994B7
-15510 88AF49A5
-15540 B2FF1118
-15570 688D8CBF
-15600 9714C4E1
-KIBAU 15603 spieler 3 upgrade Upgrade_ComancheRocketPods kosten 800 geld 7300
-15630 6D63279A
-15660 AC9E15C6
-15690 5D100076
-15720 A32B9914
-15750 E82180F5
-15780 7DF13FCE
-KIVERTEIDIGUNG 15783 spieler 3 bedrohung 1500 einheiten 2 wert 525 ort 735 1135
-15810 95BE5A5E
-15840 31B09007
-KIBAU 15843 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 7700 wahl luftabwehr
-15870 2B3AAEAD
-15900 84ED3754
-15930 8147457E
-15960 8C7AC35D
-15990 DB4B5098
-16020 45414C99
-16050 C052E623
-16080 E77B5DA0
-16110 6E1245B9
-16140 ABC8D971
-KIVERTEIDIGUNG 16143 spieler 3 bedrohung 900 einheiten 1 wert 300 ort 785 1087
-16170 C003B891
-KISUPERWAFFE 16200 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 13368 radius 300
-16200 1F09CEFB
-STATE frame 16200 mode 2 players 8 objects 447 recorder 0 particles 171/2656
-KISUPERWAFFE 16210 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 3840 wert 22231 radius 300
-16230 3D522E93
-KISUPERWAFFE 16237 spieler 3 macht AirF_SuperweaponSpectreGunship gegner 6 ziel_id 3909 wert 22833 radius 200
-16260 CC709A91
-KIUEBERFALL 16263 spieler 3 ende aufgeloest
-KIHAUSHALT 16263 spieler 3 geld 3950 basis 1000 frei 2950 vorrang_offen 1
-KIWIRTSCHAFT 16263 spieler 3 lage vorrat 16200 zentren 2 geld 3950 hacker 0 sammler 7 bedarf 4500 einnahmebauten 0 technik 0 frei 0 sammelrate 5893 restzeit_min 2.7 investieren 0
-KIHAUSHALT 16264 spieler 4 geld 625 basis 1000 frei -375 vorrang_offen 1
-KIWIRTSCHAFT 16264 spieler 4 lage vorrat 16200 zentren 2 geld 625 hacker 0 sammler 10 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 11215 restzeit_min 1.4 investieren 0
-16290 275D1D12
-16320 43C22D76
-KIVERTEIDIGUNG 16324 spieler 4 bedrohung 3850 einheiten 7 wert 2550 ort 2548 1040
-16350 7EA62274
-16380 DFCCC47F
-KIVERTEIDIGUNG 16384 spieler 4 bedrohung 2450 einheiten 1 wert 300 ort 2515 1066
-16410 3138B3E5
-16440 1FDBCA8B
-16470 6BE0F151
-16500 9CB88F83
-16530 2D5B52A8
-16560 F9B75EE1
-16590 AAC86A6B
-16620 8D9223F3
-16650 FF2B992E
-16680 2B5FD728
-16710 4A94B6C1
-16740 88F7A415
-16770 9A1B57AD
-16800 13738E94
-16830 60EAD87F
-16860 B971E4AA
-16890 6E8E1C3D
-16920 F53727C3
-KIFOKUS 16950 spieler 3 gegner 5 vorher 6 grund druck kosten 1491
-16950 11610879
-16980 714E88B6
-KIFOKUS 16985 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-17010 D6188B4A
-17040 62CF3AE8
-17070 B9D50466
-17100 9D9F3FBD
-STATE frame 17100 mode 2 players 8 objects 471 recorder 0 particles 207/1142
-KIVERTEIDIGUNG 17104 spieler 4 bedrohung 1100 einheiten 2 wert 900 ort 2576 1110
-17130 C3FA1178
-17160 ADB464E7
-KIHILFE 17164 spieler 4 start verbuendeter 3 bedrohung 6150 einheiten 13 wert 5325 ort 644 882 armee 10650 einsetzbar 5325 kandidaten 15 wert 7050
-KIGEFECHT 17175 spieler 4 lage fokus 5 abstand 1 verteilt 0 eigene 13 feinde 13
-17190 8989467E
-17220 F8288C82
-17250 45B632B0
-17280 EE440590
-KIHILFE 17284 spieler 4 ende eigene_basis dauer 4 verbleibend 13
-17310 BBD6FBD3
-17340 F4E6C982
-17370 81016493
-17400 3C4A799E
-17430 6F42B125
-17460 E17990C8
-KIHILFE 17464 spieler 4 start verbuendeter 3 bedrohung 4350 einheiten 9 wert 4050 ort 708 835 armee 10650 einsetzbar 5325 kandidaten 9 wert 4050
-KIGEFECHT 17475 spieler 4 lage fokus 3 abstand 7 verteilt 0 eigene 9 feinde 8
-17490 F3394106
-17520 6CB809DB
-17550 23A690DA
-17580 76D2301F
-17610 43D6B3F3
-17640 91FCEBEE
-KIVERTEIDIGUNG 17643 spieler 3 bedrohung 4050 einheiten 2 wert 450 ort 772 882
-KIHILFE 17644 spieler 4 ende eigene_basis dauer 6 verbleibend 9
-17670 644D5F1E
-17700 CE815044
-KIVERTEIDIGUNG 17703 spieler 3 bedrohung 3750 einheiten 1 wert 800 ort 785 851
-17730 56E837A8
-17760 BAB80215
-17790 C67372BC
-17820 8B8A4C7A
-17850 99C557BC
-17880 600BAA94
-17910 2CC250A9
-17940 ED21BD11
-17970 FEC7259A
-KISUPERWAFFE 18000 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8700 radius 300
-18000 28F9336E
-STATE frame 18000 mode 2 players 8 objects 457 recorder 0 particles 195/2088
-KISUPERWAFFE 18011 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8600 radius 300
-18030 BE7AB9F1
-18060 EBA5F85B
-KIHAUSHALT 18063 spieler 3 geld 60 basis 1000 frei -940 vorrang_offen 1
-KIWIRTSCHAFT 18063 spieler 3 lage vorrat 10275 zentren 2 geld 60 hacker 0 sammler 7 bedarf 4500 einnahmebauten 0 technik 0 frei 0 sammelrate 5947 restzeit_min 1.7 investieren 0
-KIVERTEIDIGUNG 18064 spieler 4 bedrohung 3100 einheiten 1 wert 225 ort 2458 1012
-KIHAUSHALT 18064 spieler 4 geld 775 basis 1000 frei -225 vorrang_offen 1
-KIWIRTSCHAFT 18064 spieler 4 lage vorrat 32175 zentren 3 geld 775 hacker 0 sammler 10 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 8720 restzeit_min 3.7 investieren 0
-18090 252A5F57
-18120 B0F8D400
-KIVERTEIDIGUNG 18124 spieler 4 bedrohung 3100 einheiten 1 wert 225 ort 2458 1012
-KIFOKUS 18150 spieler 3 gegner 6 vorher 5 grund druck kosten 1624
-18150 3E064C0E
-18180 C89F93F0
-KIHILFE 18183 spieler 3 start verbuendeter 4 bedrohung 3100 einheiten 7 wert 4850 ort 2458 1012 armee 15700 einsetzbar 7850 kandidaten 8 wert 5150
-KIFOKUS 18185 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-KIGEFECHT 18195 spieler 3 lage fokus 7 abstand 0 verteilt 0 eigene 7 feinde 5
-18210 773A0B4B
-18240 190DBCAF
-18270 5C64D7F3
-18300 C24529B1
-18330 DC12FA2E
-18360 47F5778F
-18390 2FFC9B8A
-18420 1AA9C23F
-18450 F16056B4
-18480 565B9F21
-18510 2540ECF0
-KIGEFECHT 18510 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 7 feinde 5
-18540 69C20533
-18570 F3B376B1
-18600 7632A011
-18630 8AA4E5B8
-18660 249D294F
-18690 6E4E80C5
-18720 40D119D8
-18750 8F786A83
-18780 B95AC8A3
-KIVERTEIDIGUNG 18783 spieler 3 bedrohung 1400 einheiten 1 wert 300 ort 854 822
-KIHILFE 18783 spieler 3 ende eigene_basis dauer 20 verbleibend 7
-18810 117DC78B
-18840 02691D6B
-18870 BFEC6994
-18900 EBD131C8
-STATE frame 18900 mode 2 players 8 objects 469 recorder 0 particles 221/2738
-18930 78FD23D0
-18960 FB305823
-18990 6C0493B8
-19020 6956E7E7
-19050 45B016D7
-19080 0783E337
-19110 631ADD23
-19140 14729794
-19170 C150FF4A
-19200 3FE09EA1
-19230 56B2FD59
-19260 2C43498E
-19290 6C1F5C8D
-19320 4B4D2CC7
-19350 FC759606
-19380 084A0C76
-KIGEGNERMODELL 19384 spieler 4 ansturm 0 einigeln 0 luft 1 tarnung 1 armee 18800 luftwert 9000 abwehr 14000 getarnt 0
-19410 B850EE97
-19440 E80EBB0B
-19470 9F93A74A
-19500 7AB45A61
-19530 50F8B8C8
-19560 E8219836
-19590 DB883A96
-19620 7946B6C5
-KIGEGNERMODELL 19623 spieler 3 ansturm 0 einigeln 0 luft 1 tarnung 1 armee 20575 luftwert 10400 abwehr 13000 getarnt 0
-19650 AC953CA3
-19680 1341D46C
-KIHILFE 19683 spieler 3 start verbuendeter 4 bedrohung 8250 einheiten 16 wert 8175 ort 2348 1183 armee 13075 einsetzbar 9152 kandidaten 16 wert 8175
-KIWIRTSCHAFT 19683 spieler 3 bau AirF_AmericaSupplyDropZone bestand 1 ziel 2 vorrat 4875 grund knapp
-KIVERTEIDIGUNG 19684 spieler 4 bedrohung 1400 einheiten 1 wert 300 ort 2664 940
-KIGEFECHT 19695 spieler 3 lage fokus 7 abstand 2 verteilt 0 eigene 16 feinde 15
-19710 49D4A1CA
-19740 B33BBD39
-19770 957DBD61
-KISUPERWAFFE 19800 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 197 wert 15100 radius 300
-19800 7D1AC940
-STATE frame 19800 mode 2 players 8 objects 463 recorder 0 particles 337/6358
-KISUPERWAFFE 19812 spieler 4 macht SpecialPowerSpySatellite gegner 6 ziel_id 3799 wert 20725 radius 300
-19830 64D1F6A8
-19860 A23F9DAF
-KIHAUSHALT 19863 spieler 3 geld 500 basis 1000 frei -500 vorrang_offen 1
-KIWIRTSCHAFT 19863 spieler 3 lage vorrat 4200 zentren 2 geld 500 hacker 0 sammler 7 bedarf 7000 einnahmebauten 0 technik 0 frei 0 sammelrate 5973 restzeit_min 0.7 investieren 0
-KIHAUSHALT 19864 spieler 4 geld 475 basis 1000 frei -525 vorrang_offen 1
-KIWIRTSCHAFT 19864 spieler 4 lage vorrat 24900 zentren 3 geld 475 hacker 0 sammler 8 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 7660 restzeit_min 3.3 investieren 0
-19890 F60E6444
-19920 89518B21
-19950 0D8DAD53
-19980 4CCD5E94
-KIGEFECHT 19995 spieler 3 lage fokus 5 abstand 24 verteilt 0 eigene 15 feinde 14
-20010 6D0C0A8C
-20040 54460114
-20070 8EF88A6D
-20100 B45D6945
-20130 6765FF24
-20160 AC155F08
-20190 60D9D166
-20220 AEAD595D
-20250 F9908170
-20280 F8C8C61E
-KIVERTEIDIGUNG 20284 spieler 4 bedrohung 1725 einheiten 1 wert 225 ort 2521 808
-KIGEFECHT 20295 spieler 3 lage fokus 5 abstand 2 verteilt 0 eigene 14 feinde 4
-20310 4ED54505
-20340 34552D0C
-20370 7268EBEA
-20400 D7EF5905
-20430 F6C81167
-20460 DBF62CC8
-20490 ADA50348
-20520 0927D05C
-20550 9690001F
-20580 DBA4500D
-KIGEFECHT 20595 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 14 feinde 12
-20610 6AE615A3
-20640 E4714618
-20670 7A2E2E01
-20700 639CE760
-STATE frame 20700 mode 2 players 8 objects 443 recorder 0 particles 146/2146
-20730 EFDFA708
-KISUPERWAFFE 20745 spieler 4 macht SuperweaponA10ThunderboltMissileStrike gegner 6 ziel_id 825 wert 5400 radius 50
-20760 E0488BFA
-20790 D4F7A5FF
-20820 2CE1ACC1
-KIHILFE 20823 spieler 3 verstaerkung einheiten 4 wert 2700 bedrohung 5625
-KIFOKUS 20850 spieler 3 gegner 5 vorher 6 grund druck kosten 1391
-20850 41247512
-20880 A85979A2
-KIFOKUS 20885 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-KIGEFECHT 20895 spieler 3 lage fokus 10 abstand 0 verteilt 0 eigene 15 feinde 22
-20910 73316A65
-20940 B53CC3E0
-KIHILFE 20944 spieler 4 verworfen verbuendeter 3 bedrohung 5200 armee 3400 einsetzbar 2380 kandidaten 1 wert 300
-20970 C874F34A
-21000 864A3E81
-21030 3D4B6786
-21060 98DBA3ED
-21090 83B5701D
-21120 976D7753
-KIVERTEIDIGUNG 21123 spieler 3 bedrohung 900 einheiten 2 wert 525 ort 956 944
-KIHILFE 21123 spieler 3 ende eigene_basis dauer 48 verbleibend 15
-21150 EE270BF3
-21180 71F1B45D
-21210 8EE191EE
-21240 96F949B5
-KIVERTEIDIGUNG 21244 spieler 4 bedrohung 2225 einheiten 2 wert 450 ort 2556 1123
-21270 9471950F
-21300 3E85161D
-KIHILFE 21303 spieler 3 start verbuendeter 4 bedrohung 5775 einheiten 17 wert 8900 ort 791 1328 armee 12725 einsetzbar 8908 kandidaten 17 wert 8900
-KIGEFECHT 21315 spieler 3 lage fokus 15 abstand 0 verteilt 0 eigene 17 feinde 36
-21330 E4388AB3
-21360 2C8CFCF6
-KIHILFE 21363 spieler 3 ende eigene_basis dauer 2 verbleibend 17
-21390 3645EF76
-21420 82024055
-KIVERTEIDIGUNG 21423 spieler 3 bedrohung 1500 einheiten 1 wert 225 ort 593 1116
-21450 8D00177B
-21480 B059D538
-21510 246285C1
-21540 AA5BC981
-KIHILFE 21543 spieler 3 start verbuendeter 4 bedrohung 6675 einheiten 15 wert 8225 ort 783 1302 armee 12900 einsetzbar 9030 kandidaten 15 wert 8225
-21570 D7B05494
-KISUPERWAFFE 21600 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 290 wert 14598 radius 300
-21600 F07B9879
-STATE frame 21600 mode 2 players 8 objects 506 recorder 0 particles 325/1228
-KIHILFE 21603 spieler 3 ende eigene_basis dauer 2 verbleibend 15
-KISUPERWAFFE 21613 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 290 wert 17801 radius 300
-21630 66F38B72
-KISUPERWAFFE 21648 spieler 3 macht SuperweaponDaisyCutter gegner 5 ziel_id 9093 wert 12383 radius 170
-KISUPERWAFFE 21648 spieler 3 macht AirF_SuperweaponSpectreGunship gegner 5 ziel_id 9093 wert 14283 radius 200
-21660 0D17F88A
-KIHAUSHALT 21663 spieler 3 geld 450 basis 1000 frei -550 vorrang_offen 1
-KIWIRTSCHAFT 21663 spieler 3 lage vorrat 0 zentren 2 geld 450 hacker 0 sammler 6 bedarf 7000 einnahmebauten 0 technik 0 frei 0 sammelrate 5499 restzeit_min 0.0 investieren 0
-KIHAUSHALT 21664 spieler 4 geld 600 basis 1000 frei -400 vorrang_offen 1
-KIWIRTSCHAFT 21664 spieler 4 lage vorrat 20100 zentren 3 geld 600 hacker 0 sammler 3 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 7242 restzeit_min 2.8 investieren 0
-21690 68219A41
-21720 C692C4A6
-KIVERTEIDIGUNG 21723 spieler 3 bedrohung 1350 einheiten 1 wert 1300 ort 549 1081
-21750 5590F590
-21780 CC6A2E8D
-KIVERTEIDIGUNG 21783 spieler 3 bedrohung 2850 einheiten 1 wert 800 ort 633 1097
-21810 704A8317
-21840 03EDF33F
-21870 8ECFE1A9
-21900 527936BA
-21930 9AC6C95A
-21960 21545061
-21990 A77D91B0
-22020 99DCC1EA
-22050 141D8A75
-22080 EBDD7586
-22110 28B3B731
-22140 4903D723
-KIVERTEIDIGUNG 22143 spieler 3 bedrohung 4350 einheiten 3 wert 900 ort 664 923
-22170 767BC81D
-22200 8C420CDD
-KIWIRTSCHAFT 22204 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 3 ziel 9
-KIWIRTSCHAFT 22204 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 9
-KIWIRTSCHAFT 22204 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 5 ziel 9
-KIBAU 22204 spieler 4 einheit Lazr_AmericaTankAvenger kosten 1500 geld 16000 wahl luftabwehr
-22230 D9A3F369
-22260 C2BDA169
-KIVERTEIDIGUNG 22263 spieler 3 bedrohung 4950 einheiten 2 wert 450 ort 782 944
-KIUEBERFALL 22263 spieler 3 bau transport AirF_AmericaVehicleHumvee fahrer AirF_AmericaInfantryColonelBurton anzahl 0 kosten 8300
-KIBAU 22263 spieler 3 upgrade Upgrade_AmericaMOAB kosten 4000 geld 13495
-KIBAU 22263 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 9495 wahl konter
-22290 3B3102DE
-22320 76DF2D0A
-KIVERTEIDIGUNG 22323 spieler 3 bedrohung 4425 einheiten 2 wert 450 ort 784 938
-22350 D433222F
-22380 600C2D98
-KIVERTEIDIGUNG 22383 spieler 3 bedrohung 4425 einheiten 2 wert 450 ort 829 908
-22410 04A2E980
-22440 ECF36062
-22470 657C98B9
-22500 7DC7597F
-STATE frame 22500 mode 2 players 8 objects 600 recorder 0 particles 499/1768
-KIVERTEIDIGUNG 22503 spieler 3 bedrohung 5325 einheiten 1 wert 300 ort 698 962
-22530 574DFA3B
-22560 DF604C06
-KIWIRTSCHAFT 22564 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 6
-22590 8ADF728E
-22620 82430413
-KIVERTEIDIGUNG 22623 spieler 3 bedrohung 2325 einheiten 1 wert 300 ort 585 1048
-22650 61C040EA
-22680 E954D752
-KIVERTEIDIGUNG 22683 spieler 3 bedrohung 2025 einheiten 1 wert 225 ort 602 1066
-22710 ED617CD6
-22740 409924B8
-KIBAU 22743 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 9645 wahl konter
-22770 75071E22
-22800 753A6CCB
-22830 137AE5A6
-KISUPERWAFFE 22848 spieler 3 macht AirF_SuperweaponA10ThunderboltMissileStrike gegner 5 ziel_id 949 wert 5400 radius 50
-22860 C052A1ED
-22890 7271544B
-22920 3BEF9FA5
-KIVERTEIDIGUNG 22923 spieler 3 bedrohung 1125 einheiten 1 wert 225 ort 704 978
-KIBAU 22923 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 9345 wahl konter
-KIWIRTSCHAFT 22924 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 3 ziel 6
-22950 16A2B703
-22980 D4EC52A1
-KIVERTEIDIGUNG 22983 spieler 3 bedrohung 900 einheiten 1 wert 300 ort 755 965
-23010 EB92A789
-23040 572B6E09
-KIHILFE 23043 spieler 3 start verbuendeter 4 bedrohung 6400 einheiten 19 wert 7075 ort 2136 1092 armee 13625 einsetzbar 9538 kandidaten 19 wert 7075
-KIGEFECHT 23055 spieler 3 lage fokus 8 abstand 0 verteilt 0 eigene 19 feinde 6
-23070 66447176
-23100 6CB05CB4
-KIHILFE 23103 spieler 3 ende eigene_basis dauer 2 verbleibend 19
-KIBAU 23103 spieler 3 einheit AirF_AmericaInfantryMissileDefender kosten 300 geld 4595 wahl konter
-23130 5A847B4D
-23160 63B7E8B8
-KIVERTEIDIGUNG 23163 spieler 3 bedrohung 950 einheiten 1 wert 225 ort 526 1099
-23190 34441BA0
-23220 CE4AC1DD
-KIVERTEIDIGUNG 23223 spieler 3 bedrohung 950 einheiten 1 wert 300 ort 554 1063
-23250 AD5DA7C0
-23280 5CF96126
-KIVERTEIDIGUNG 23283 spieler 3 bedrohung 950 einheiten 1 wert 1500 ort 559 1075
-KIWIRTSCHAFT 23284 spieler 4 sammler Lazr_AmericaVehicleChinook bestand 4 ziel 6
-23310 DF2C7FDE
-23340 3B229E27
-KIVERTEIDIGUNG 23343 spieler 3 bedrohung 950 einheiten 2 wert 525 ort 544 1072
-23370 ECAD33C1
-KIFOKUS 23400 spieler 3 gegner 6 vorher 5 grund druck kosten 1643
-KISUPERWAFFE 23400 spieler 3 macht SpecialPowerSpySatellite gegner 6 ziel_id 1769 wert 20580 radius 300
-23400 FF1D61AC
-STATE frame 23400 mode 2 players 8 objects 542 recorder 0 particles 626/2574
-KIHILFE 23403 spieler 3 start verbuendeter 4 bedrohung 6100 einheiten 17 wert 5550 ort 2757 690 armee 16400 einsetzbar 11480 kandidaten 17 wert 5550
-KISUPERWAFFE 23414 spieler 4 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8175 radius 300
-KIGEFECHT 23415 spieler 3 lage fokus 8 abstand 0 verteilt 0 eigene 17 feinde 2
-23430 847C2F53
-KIFOKUS 23435 spieler 4 gegner 6 vorher 5 grund buendnis kosten 0
-23460 B6BEC804
-KIHAUSHALT 23463 spieler 3 geld 1505 basis 1000 frei 505 vorrang_offen 1
-KIWIRTSCHAFT 23463 spieler 3 lage vorrat 0 zentren 2 geld 1505 hacker 0 sammler 3 bedarf 2000 einnahmebauten 2 technik 0 frei 0 sammelrate 2975 restzeit_min 0.0 investieren 1
-KIHAUSHALT 23464 spieler 4 geld 2500 basis 700 frei 1800 vorrang_offen 1
-KIWIRTSCHAFT 23464 spieler 4 lage vorrat 18000 zentren 2 geld 2500 hacker 0 sammler 2 bedarf 2000 einnahmebauten 0 technik 0 frei 0 sammelrate 4746 restzeit_min 3.8 investieren 0
-23490 F7406F38
-23520 3635A00B
-23550 3CCE694F
-23580 2480F897
-KIVERTEIDIGUNG 23584 spieler 4 bedrohung 11000 einheiten 3 wert 675 ort 2771 731
-23610 8EBC7C43
-23640 2B86EDCA
-23670 2C215A86
-23700 1D735857
-KIGEFECHT 23715 spieler 3 lage fokus 21 abstand 0 verteilt 0 eigene 17 feinde 0
-23730 60CBC163
-23760 20533DC4
-23790 1CCC4B26
-23820 449F07FD
-23850 6285B16F
-23880 B4613E07
-23910 8A018D7A
-23940 0AB22280
-KIVERTEIDIGUNG 23943 spieler 3 bedrohung 1800 einheiten 1 wert 225 ort 700 1132
-KIHILFE 23943 spieler 3 ende eigene_basis dauer 18 verbleibend 17
-23970 DD9ADB29
-24000 B475A287
-24030 F0236F06
-24060 99D761DF
-24090 E75DA3C7
-24120 F3A81092
-KIHILFE 24123 spieler 3 start verbuendeter 4 bedrohung 10600 einheiten 20 wert 6375 ort 2790 462 armee 19750 einsetzbar 13825 kandidaten 20 wert 6375
-KIGEFECHT 24135 spieler 3 lage fokus 2 abstand 0 verteilt 0 eigene 20 feinde 5
-24150 24BE2B85
-24180 E0954A38
-24210 C353CDA7
-24240 F033FD52
-KIVERTEIDIGUNG 24243 spieler 3 bedrohung 1100 einheiten 1 wert 225 ort 1137 546
-KIHILFE 24243 spieler 3 ende eigene_basis dauer 4 verbleibend 20
-24270 EF3A1C65
-24300 8CD6B17C
-STATE frame 24300 mode 2 players 8 objects 482 recorder 0 particles 299/1338
-24330 515BECA6
-24360 2E4FE0E4
-24390 4F8B3C14
-24420 5F2BCFC9
-KIHILFE 24423 spieler 3 start verbuendeter 4 bedrohung 8600 einheiten 26 wert 7725 ort 2699 352 armee 21675 einsetzbar 15172 kandidaten 26 wert 7725
-KIGEFECHT 24435 spieler 3 lage fokus 7 abstand 0 verteilt 0 eigene 26 feinde 35
-24450 C15A997C
-24480 6DB77517
-24510 19749B03
-24540 6D0CEA7D
-24570 5480146C
-24600 B4AA4792
-24630 F85F4040
-24660 393AFEC9
-KIHILFE 24663 spieler 3 ende aussichtslos dauer 8 verbleibend 23
-24690 B03D5AA7
-24720 487FD743
-KIVERTEIDIGUNG 24724 spieler 4 bedrohung 23400 einheiten 2 wert 450 ort 2612 548
-24750 CCF1F195
-24780 F7AC45AE
-24810 E5DF8C5F
-24840 B48DEF9A
-KIHILFE 24843 spieler 3 verworfen verbuendeter 4 bedrohung 13600 armee 22500 einsetzbar 15750 kandidaten 21 wert 6600
-24870 EFB8972B
-24900 8FBFC705
-24930 4FF6738A
-24960 3095124F
-24990 3B507DB6
-25020 A8D93C7E
-25050 BA97EEFC
-25080 8690276D
-25110 35721017
-25140 A2EA5202
-25170 3026EC31
-KIFOKUS 25200 spieler 3 gegner 5 vorher 6 grund wechsel kosten 2388
-KISUPERWAFFE 25200 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 947 wert 8532 radius 300
-25200 953CADB3
-STATE frame 25200 mode 2 players 8 objects 489 recorder 0 particles 218/995
-25230 49AFF53E
-KIFOKUS 25235 spieler 4 gegner 5 vorher 6 grund buendnis kosten 0
-25260 D28053C5
-KIHAUSHALT 25263 spieler 3 geld 125 basis 1000 frei -875 vorrang_offen 1
-KIWIRTSCHAFT 25263 spieler 3 lage vorrat 0 zentren 2 geld 125 hacker 0 sammler 0 bedarf 6500 einnahmebauten 2 technik 0 frei 0 sammelrate 1487 restzeit_min 0.0 investieren 1
-KIHAUSHALT 25264 spieler 4 geld 0 basis 700 frei -700 vorrang_offen 1
-KIWIRTSCHAFT 25264 spieler 4 lage vorrat 0 zentren 0 geld 0 hacker 0 sammler 0 bedarf 4000 einnahmebauten 0 technik 0 frei 0 sammelrate 11823 restzeit_min 0.0 investieren 0
-25290 42B27BFB
-25320 9DEB0C9A
-25350 23A6A4BD
-25380 C17BE327
-25410 E211FE9B
-25440 D79942BB
-KIANGRIFF 25443 spieler 3 sammeln gegner 5 einheiten 16 wert 5400 einsetzbar 17150 ort 483 1050
-25470 885DCDB8
-25500 0048F676
-25530 609BAB43
-25560 5FADEFB2
-25590 B5CD2465
-25620 41CCE916
-25650 2B0B9A9A
-25680 6A42251E
-25710 7C892056
-25740 1BB05348
-KIANGRIFF 25743 spieler 3 los allein gegner 5 einheiten 18 wert 5850 ziel 541 1715
-25770 2DEE7DCF
-25800 28F8DD5A
-KIZIEL 25803 spieler 3 ziel Lazr_AmericaSupplyCenter id 222 sieger 0 verhaeltnis 15.95 weg_bedrohung 212
-25830 B7E6DFA0
-25860 634CA93D
-KIUEBERFALL 25863 spieler 3 ende sammeln_zeit
-25890 3DDEF9E4
-25920 1DA7C21D
-25950 5D0F16EC
-25980 BB047A6A
-26010 8EB63481
-26040 222A5230
-26070 E514A2A2
-26100 8EDD42FC
-KIGEFECHT 26100 spieler 3 lage fokus 1 abstand 0 verteilt 0 eigene 18 feinde 8
-STATE frame 26100 mode 2 players 8 objects 458 recorder 0 particles 146/1347
-26130 78AA9510
-26160 88BAB171
-KIVERTEIDIGUNG 26163 spieler 3 bedrohung 7500 einheiten 3 wert 750 ort 364 979
-KIANGRIFF 26163 spieler 3 ende eigene_basis phase 2 dauer 14 wert 5850 start 5850
-26190 0B1D74F9
-26220 3AE40716
-26250 670464D9
-26280 BDBDFBF2
-26310 607606AE
-26340 DB524D71
-26370 4D2B8EF0
-26400 EBF3A9E0
-26430 AC9F0306
-26460 4EC961AF
-26490 5664D427
-26520 12BF1BD2
-KIHILFE 26524 spieler 4 verworfen verbuendeter 3 bedrohung 12600 armee 0 einsetzbar 0 kandidaten 0 wert 0
-26550 329C81B9
-26580 89EFF8ED
-26610 F8EBBF99
-26640 3737F154
-KIVERTEIDIGUNG 26643 spieler 3 bedrohung 10700 einheiten 2 wert 450 ort 1083 550
-26670 FBB5CD68
-26700 439AF732
-KIVERTEIDIGUNG 26703 spieler 3 bedrohung 12600 einheiten 1 wert 225 ort 1062 577
-KIHILFE 26704 spieler 4 verworfen verbuendeter 3 bedrohung 9500 armee 0 einsetzbar 0 kandidaten 0 wert 0
-26730 AF8F3A8A
-26760 EDB99CD0
-KIVERTEIDIGUNG 26763 spieler 3 bedrohung 12600 einheiten 1 wert 225 ort 1039 588
-26790 6D279E96
-26820 CA9497C4
-26850 3FA9708C
-26880 D889A163
-KIVERTEIDIGUNG 26883 spieler 3 bedrohung 12600 einheiten 2 wert 525 ort 1008 600
-KIHILFE 26884 spieler 4 verworfen verbuendeter 3 bedrohung 12000 armee 0 einsetzbar 0 kandidaten 0 wert 0
-26910 1CE5F368
-26940 B4306F45
-KIVERTEIDIGUNG 26943 spieler 3 bedrohung 12600 einheiten 6 wert 1500 ort 1001 598
-26970 5B101FE8
+930 6E93FD9C
+960 37CE4C2B
+AIPOWER 963 player 3 production 0 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AITHREAT 963 player 3 threat 0 emergency 0 held_seconds 0
+AIPOSTS 963 player 3 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+AIPOWER 964 player 4 production 0 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AITHREAT 964 player 4 threat 0 emergency 0 held_seconds 0
+AIPOSTS 964 player 4 posts 3 army 0 posted 0 idle_home 0 idle_field 0 script_team 0 mission 0
+990 16169306
+1020 D729B17F
+1050 7080CB69
+1080 DB831F5A
+1110 0E3C6D10
+1140 A17DB566
+1170 250962F8
+1200 24BC934F
+1230 CF5679C4
+1260 9E5919FC
+AIPOWER 1263 player 3 production 0 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AIPOWER 1264 player 4 production 0 consumption 0 underpowered_s 0 power_plants 2 defence 0
+1290 BDAEDFB3
+1320 064833AB
+1350 9351B8F4
+1380 FAD398A3
+1410 75A985B5
+1440 49BEF003
+1470 CCDEA18B
+1500 230D23A7
+1530 DAF7F79A
+1560 2A8B54C1
+AIPOWER 1563 player 3 production 0 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AIPOWER 1564 player 4 production 0 consumption 0 underpowered_s 0 power_plants 2 defence 0
+1590 B5ECF963
+1620 AAF29577
+1650 439A2689
+1680 A45F0A59
+1710 97C20C00
+1740 72AC338D
+1770 5A721823
+1800 12EFF012
+STATE frame 1800 mode 2 players 8 objects 218 recorder 0 particles 0/0
+1830 54D6A779
+1860 D1FAB6FF
+AIPOWER 1863 player 3 production 5 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AIMIX 1863 player 3 front 500/449 anti_vehicle 0/200 anti_infantry 500/150 anti_air 0/100 siege 0/100 distance 800
+AITHREAT 1863 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 1863 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 30 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 1863 player 3 posts 3 army 450 posted 0 idle_home 0 idle_field 0 script_team 450 mission 0
+AIBUDGET 1863 player 3 money 4550 base 0 free 4550 priority_open 0
+AIECONOMY 1863 player 3 situation reserve 30000 centres 1 money 4550 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
+AIPOWER 1864 player 4 production 16 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AIMIX 1864 player 4 front 500/449 anti_vehicle 0/200 anti_infantry 500/150 anti_air 0/100 siege 0/100 distance 800
+AITHREAT 1864 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 1864 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 30 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 0/0 units 0/0 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 1864 player 4 posts 3 army 450 posted 0 idle_home 0 idle_field 0 script_team 450 mission 0
+AIBUDGET 1864 player 4 money 10750 base 0 free 10750 priority_open 0
+AIECONOMY 1864 player 4 situation reserve 30000 centres 1 money 10750 hackers 0 harvesters 0 need 0 income_buildings 0 tech 0 free 6 gather_rate 0 minutes_left 999.0 invest 1
+1890 EAF0213F
+1920 F96D4703
+1950 378E68E6
+1980 A3C1B820
+2010 4EBAEEF9
+2040 3838E35F
+2070 6DE1A2B0
+2100 220DF805
+2130 9FB233AC
+2160 9F57425B
+AIPOWER 2163 player 3 production 10 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AIPOWER 2164 player 4 production 16 consumption 0 underpowered_s 0 power_plants 2 defence 0
+2190 83AD4E99
+2220 CD4A4563
+2250 25BF3BF8
+2280 2D2E4D1D
+2310 401F2A07
+2340 828F91BD
+2370 82A3F571
+AIFOCUS 2400 player 3 enemy 6 before -1 reason choice cost 2901
+AIFOCUS 2400 player 4 enemy 6 before -1 reason alliance cost 0
+2400 3005FFAE
+2430 8E39AEB2
+2460 F780C36E
+AIPOWER 2463 player 3 production 10 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AIPOWER 2464 player 4 production 16 consumption 0 underpowered_s 0 power_plants 2 defence 0
+2490 B8CD092A
+2520 D640BDE6
+2550 B4C7E234
+2580 78431CD2
+2610 9D1C9C20
+2640 98D9AB86
+2670 D218523A
+2700 CEE25D27
+STATE frame 2700 mode 2 players 8 objects 223 recorder 0 particles 0/0
+2730 BD1BF8A1
+2760 8C7B10FF
+AIPOWER 2763 player 3 production 20 consumption 0 underpowered_s 0 power_plants 2 defence 0
+AIMIX 2763 player 3 front 500/449 anti_vehicle 0/200 anti_infantry 500/150 anti_air 0/100 siege 0/100 distance 800
+AITHREAT 2763 player 3 threat 0 emergency 0 held_seconds 0
+AISCRIPT 2763 player 3 teams 1 value 450 top USA Tech Capture Team. 13=450;
+AIPOSTS 2763 player 3 posts 1 army 450 posted 0 idle_home 0 idle_field 0 script_team 450 mission 0
+AISQUAD 2763 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AIECONOMY 2763 player 3 tech TechOilDerrick unit AirF_AmericaInfantryRanger pos 533 1499
+AIPOWER 2764 player 4 production 32 consumption 1 underpowered_s 0 power_plants 2 defence 1
+AIMIX 2764 player 4 front 500/449 anti_vehicle 0/200 anti_infantry 500/150 anti_air 0/100 siege 0/100 distance 800
+AITHREAT 2764 player 4 threat 0 emergency 0 held_seconds 0
+AISCRIPT 2764 player 4 teams 1 value 450 top USA Tech Capture Team. 22=450;
+AIPOSTS 2764 player 4 posts 3 army 450 posted 0 idle_home 0 idle_field 0 script_team 450 mission 0
+2790 C60697AA
+2820 60D00172
+2850 D6C14F96
+2880 555147E0
+AISQUAD 2883 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+2910 23F859C2
+2940 DE87A6F1
+AISQUAD 2943 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AIECONOMY 2943 player 3 expansion AirF_AmericaSupplyCenter reserve 30000 centres 1 reason growth
+2970 6093CD64
+3000 2BAF4CC2
+AISQUAD 3003 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+3030 7C4CB3BB
+3060 1CECC5E8
+AIPOWER 3063 player 3 production 20 consumption 0 underpowered_s 0 power_plants 2 defence 1
+AISQUAD 3063 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AIPOWER 3064 player 4 production 32 consumption 1 underpowered_s 0 power_plants 2 defence 1
+3090 5E5D54C6
+3120 C136CCEA
+AISQUAD 3123 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AISQUAD 3124 player 4 picked 1 of 1 value 225 ratio 0.25 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 0 missing 1
+AIECONOMY 3124 player 4 tech TechOilDerrick unit Lazr_AmericaInfantryRanger pos 1877 1353
+3150 D96F68D5
+3180 63BEA7FF
+AISQUAD 3183 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+3210 FE278EBC
+3240 532132A7
+AISQUAD 3243 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+3270 689114B8
+3300 0B5EF6E1
+AISQUAD 3303 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+3330 49BDD2AE
+3360 7939A8A2
+AIPOWER 3363 player 3 production 20 consumption 1 underpowered_s 0 power_plants 2 defence 1
+AISQUAD 3363 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AIPOWER 3364 player 4 production 32 consumption 1 underpowered_s 0 power_plants 2 defence 1
+3390 DC35517C
+3420 F83ED07D
+AISQUAD 3423 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+3450 DB597CE0
+3480 6B1161DB
+AISQUAD 3483 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AIECONOMY 3483 player 3 tech_end captured duration 24
+3510 9ED6D54F
+3540 FE18A9B3
+AISQUAD 3543 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+3570 5837835F
+AISUPERWEAPON 3600 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 197 value 4492 radius 300
+3600 97D3481B
+STATE frame 3600 mode 2 players 8 objects 238 recorder 0 particles 0/0
+AISUPERWEAPON 3603 player 4 special_power SpecialPowerSpySatellite enemy 6 target_id 197 value 4395 radius 300
+AISQUAD 3603 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+AISQUAD 3604 player 4 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+3630 89962C83
+3660 1B920590
+AIPOWER 3663 player 3 production 20 consumption 1 underpowered_s 0 power_plants 2 defence 1
+AIMIX 3663 player 3 front 500/399 anti_vehicle 0/50 anti_infantry 500/400 anti_air 0/100 siege 0/50 distance 401
+AITHREAT 3663 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 3663 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 9 no_target 0 squad_ratio 0 squad_shares 0 small_force 21 regrow 0 started 0 force 225/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 3663 player 3 posts 2 army 450 posted 0 idle_home 0 idle_field 0 script_team 450 mission 0
+AIECONOMY 3663 player 3 tech TechOilDerrick unit AirF_AmericaInfantryRanger pos 1288 1791
+AIBUDGET 3663 player 3 money 10650 base 2000 free 8650 priority_open 1
+AIECONOMY 3663 player 3 situation reserve 108150 centres 2 money 10650 hackers 0 harvesters 2 need 0 income_buildings 0 tech 1 free 4 gather_rate 0 minutes_left 999.0 invest 1
+AIPOWER 3664 player 4 production 32 consumption 1 underpowered_s 0 power_plants 2 defence 1
+AIMIX 3664 player 4 front 500/399 anti_vehicle 0/50 anti_infantry 500/400 anti_air 0/100 siege 0/50 distance 401
+AITHREAT 3664 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 3664 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 9 no_target 0 squad_ratio 8 squad_shares 0 small_force 13 regrow 0 started 0 force 225/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 3664 player 4 posts 1 army 450 posted 0 idle_home 0 idle_field 0 script_team 450 mission 0
+AIBUDGET 3664 player 4 money 4950 base 1000 free 3950 priority_open 1
+AIECONOMY 3664 player 4 situation reserve 28800 centres 1 money 4950 hackers 0 harvesters 3 need 0 income_buildings 0 tech 0 free 4 gather_rate 1200 minutes_left 24.0 invest 1
+3690 542A6EA1
+3720 2AC20D30
+AIFOCUS 3750 player 3 enemy 5 before 6 reason switch cost 2676
+AIFOCUS 3750 player 4 enemy 5 before 6 reason alliance cost 0
+3750 FF205C67
+3780 37123517
+3810 887F91AD
+3840 E2734E95
+AIECONOMY 3843 player 3 harvester AFG_AmericaVehicleChinook have 3 target 6
+AIECONOMY 3844 player 4 expansion Lazr_AmericaSupplyCenter reserve 28575 centres 1 reason growth
+3870 D111B3C1
+3900 BB7114EE
+3930 CFA41FE0
+3960 52F576E9
+AIPOWER 3963 player 3 production 20 consumption 4 underpowered_s 0 power_plants 2 defence 1
+AIPOWER 3964 player 4 production 32 consumption 6 underpowered_s 0 power_plants 2 defence 1
+3990 CFE5D290
+4020 81B56C4D
+4050 08823188
+4080 C31AED81
+4110 F7BFA96D
+4140 4014526E
+4170 52175304
+4200 E88C529F
+AIECONOMY 4203 player 3 harvester AFG_AmericaVehicleChinook have 4 target 6
+4230 898EC269
+4260 2EF988B5
+AIPOWER 4263 player 3 production 20 consumption 4 underpowered_s 0 power_plants 2 defence 1
+AIPOWER 4264 player 4 production 32 consumption 7 underpowered_s 0 power_plants 2 defence 1
+4290 2B4D82FD
+4320 948EC579
+4350 FDCAC42B
+4380 2A2F6B14
+AIECONOMY 4383 player 3 tech_end unit_gone duration 24
+4410 F01E2644
+4440 60C831F4
+4470 EF38824C
+4500 4FE486F1
+STATE frame 4500 mode 2 players 8 objects 255 recorder 0 particles 27/71
+4530 B7972C26
+4560 4080599D
+AIPOWER 4563 player 3 production 20 consumption 4 underpowered_s 0 power_plants 2 defence 1
+AIMIX 4563 player 3 front 500/190 anti_vehicle 0/47 anti_infantry 500/380 anti_air 0/95 siege 0/285 distance 857
+AITHREAT 4563 player 3 threat 0 emergency 0 held_seconds 0
+AISCRIPT 4563 player 3 teams 1 value 225 top USA Tech Capture Team. 13=225;
+AIPOSTS 4563 player 3 posts 3 army 225 posted 0 idle_home 0 idle_field 0 script_team 225 mission 0
+AIECONOMY 4563 player 3 harvester AFG_AmericaVehicleChinook have 5 target 6
+AIPOWER 4564 player 4 production 32 consumption 8 underpowered_s 0 power_plants 2 defence 1
+AIMIX 4564 player 4 front 357/190 anti_vehicle 571/47 anti_infantry 71/380 anti_air 0/95 siege 0/285 distance 1380
+AITHREAT 4564 player 4 threat 0 emergency 0 held_seconds 0
+AISCRIPT 4564 player 4 teams 2 value 2025 top USA H 1ST Wave Rush. 22=1800;USA Tech Capture Team. 22=225;
+AIPOSTS 4564 player 4 posts 3 army 2025 posted 0 idle_home 0 idle_field 0 script_team 2025 mission 0
+AIECONOMY 4564 player 4 tech_end unit_gone duration 48
+4590 8BF7CD4E
+4620 20A813AA
+4650 71799AC8
+4680 D672CAC3
+4710 99E5E381
+4740 F2858DEB
+4770 7ACCBA50
+4800 F69567F0
+4830 9419E18E
+4860 ADE4A0A9
+AIPOWER 4863 player 3 production 20 consumption 4 underpowered_s 0 power_plants 2 defence 1
+AIPOWER 4864 player 4 production 32 consumption 9 underpowered_s 0 power_plants 2 defence 1
+4890 F3010FA7
+4920 842ABDF6
+4950 8FA543B0
+4980 875EDF9E
+AISCOUT 4984 player 4 scout Lazr_AmericaTankCrusader target 414 2710
+AISQUAD 4984 player 4 picked 3 of 4 value 900 ratio 2.67 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5010 CEEC2FA5
+5040 00CA9BD8
+AISQUAD 5044 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5070 34491C17
+5100 E74EB383
+AISQUAD 5104 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5130 38245928
+5160 85B1DC43
+AIPOWER 5163 player 3 production 20 consumption 5 underpowered_s 0 power_plants 2 defence 1
+AIPOWER 5164 player 4 production 32 consumption 9 underpowered_s 0 power_plants 2 defence 1
+AISQUAD 5164 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5190 3AA242A4
+5220 8F52EF9C
+AISQUAD 5224 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5250 1D11014F
+5280 B809EC5D
+AIECONOMY 5283 player 3 expansion AirF_AmericaSupplyCenter reserve 105450 centres 2 reason growth
+AISQUAD 5284 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5310 9D651284
+5340 27D6FAAD
+AISQUAD 5344 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5370 79543C98
+AISUPERWEAPON 5400 player 3 special_power SpecialPowerSpySatellite enemy 5 target_id 204 value 6000 radius 300
+5400 D5924C5E
+STATE frame 5400 mode 2 players 8 objects 274 recorder 0 particles 18/42
+AISUPERWEAPON 5404 player 4 special_power SpecialPowerSpySatellite enemy 5 target_id 204 value 5900 radius 300
+AISQUAD 5404 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+5430 5A29999D
+5460 03BF10F0
+AIPOWER 5463 player 3 production 20 consumption 6 underpowered_s 0 power_plants 3 defence 1
+AIMIX 5463 player 3 front 500/190 anti_vehicle 0/190 anti_infantry 500/381 anti_air 0/95 siege 0/141 distance 854
+AITHREAT 5463 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 5463 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 5 squad_shares 0 small_force 25 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 5463 player 3 posts 3 army 225 posted 0 idle_home 0 idle_field 0 script_team 225 mission 0
+AIBUDGET 5463 player 3 money 7600 base 0 free 7600 priority_open 1
+AIECONOMY 5463 player 3 situation reserve 105150 centres 2 money 7600 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 1 free 3 gather_rate 2700 minutes_left 38.9 invest 0
+AIPOWER 5464 player 4 production 32 consumption 10 underpowered_s 0 power_plants 2 defence 1
+AIMIX 5464 player 4 front 333/190 anti_vehicle 666/190 anti_infantry 0/381 anti_air 0/95 siege 0/141 distance 1237
+AITHREAT 5464 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 5464 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 1 squad_shares 0 small_force 29 regrow 0 started 0 force 600/5000 units 2/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 5464 player 4 posts 3 army 3600 posted 600 idle_home 600 idle_field 0 script_team 2100 mission 900
+AISCOUT 5464 player 4 done unit Lazr_AmericaTankCrusader
+AISQUAD 5464 player 4 picked 2 of 2 value 600 ratio 1.19 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+AIBUDGET 5464 player 4 money 425 base 700 free -275 priority_open 1
+AIECONOMY 5464 player 4 situation reserve 112350 centres 2 money 425 hackers 0 harvesters 3 need 0 income_buildings 0 tech 0 free 3 gather_rate 1200 minutes_left 93.6 invest 1
+5490 809FE372
+5520 BFEB9FF9
+AIFOCUS 5550 player 3 enemy 6 before 5 reason switch cost 2749
+AIFOCUS 5550 player 4 enemy 6 before 5 reason alliance cost 0
+5550 EE190B59
+5580 F44546E5
+AIHELP 5584 player 4 start ally 3 threat 700 units 2 value 600 pos 1115 1911 armee 4525 einsetzbar 3168 kandidaten 2 wert 600
+5610 9EAB94F8
+5640 9F531E4C
+5670 3CE23AE1
+5700 B3485626
+AIRAID 5704 player 4 build transport Lazr_AmericaVehicleHumvee riders Lazr_AmericaInfantryColonelBurton count 0 cost 8200
+5730 B4D2C57D
+5760 83585238
+AIPOWER 5763 player 3 production 20 consumption 6 underpowered_s 0 power_plants 3 defence 1
+AIPOWER 5764 player 4 production 32 consumption 10 underpowered_s 0 power_plants 2 defence 2
+5790 1F9785FF
+5820 CE2B194C
+AIECONOMY 5824 player 4 harvester Lazr_AmericaVehicleChinook have 3 target 6
+5850 06909426
+5880 820ECEF5
+5910 6933B98B
+5940 CDB7636A
+5970 B488B2F6
+6000 B5286F48
+6030 216F5FDD
+6060 57BBC4D1
+AIPOWER 6063 player 3 production 20 consumption 6 underpowered_s 0 power_plants 3 defence 1
+AIRAID 6063 player 3 build transport AirF_AmericaVehicleHumvee riders AirF_AmericaInfantryColonelBurton count 0 cost 8300
+AIPOWER 6064 player 4 production 32 consumption 11 underpowered_s 0 power_plants 3 defence 2
+6090 E537F142
+6120 C02955E0
+6150 9DE78EF9
+6180 EB26E2F1
+6210 6F80B191
+AIMICRO 6225 player 4 situation focus 2 spacing 0 spread 0 own 2 enemies 4
+6240 D0F57BBA
+6270 FD11EBD1
+6300 8B22A5AC
+STATE frame 6300 mode 2 players 8 objects 291 recorder 0 particles 31/130
+6330 D94D6400
+6360 744D841B
+AIPOWER 6363 player 3 production 20 consumption 7 underpowered_s 0 power_plants 3 defence 2
+AIMIX 6363 player 3 front 500/190 anti_vehicle 0/47 anti_infantry 500/380 anti_air 0/95 siege 0/285 distance 857
+AITHREAT 6363 player 3 threat 0 emergency 0 held_seconds 0
+AISCRIPT 6363 player 3 teams 1 value 225 top USA Tech Capture Team. 13=225;
+AIPOSTS 6363 player 3 posts 3 army 225 posted 0 idle_home 0 idle_field 0 script_team 225 mission 0
+AIPOWER 6364 player 4 production 32 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIMIX 6364 player 4 front 244/190 anti_vehicle 391/47 anti_infantry 364/380 anti_air 0/95 siege 0/285 distance 795
+AITHREAT 6364 player 4 threat 0 emergency 0 held_seconds 0
+AISCRIPT 6364 player 4 teams 3 value 4850 top USA H 2ND Wave Fast Attack. 22=2600;USA H 2ND Wave Tanks. 22=1800;USA Tech Capture Team. 22=450;
+AIPOSTS 6364 player 4 posts 3 army 5450 posted 0 idle_home 0 idle_field 0 script_team 4850 mission 600
+6390 7AD19C2D
+6420 9AC978CF
+6450 710F1F30
+6480 5FE2EFA0
+6510 8F269258
+6540 42E03A95
+6570 B4FB6DD7
+6600 E385F171
+AIHELP 6604 player 4 end hopeless duration 34 remaining 1
+AISQUAD 6604 player 4 picked 1 of 1 value 300 ratio 0.09 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 0 missing 1
+6630 7CCD0951
+6660 48C87102
+AIPOWER 6663 player 3 production 20 consumption 7 underpowered_s 0 power_plants 3 defence 2
+AIPOWER 6664 player 4 production 32 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIPOSTS 6664 player 4 posts 3 army 5850 posted 0 idle_home 0 idle_field 0 script_team 4850 mission 700
+6690 DFDBD3C8
+6720 97F0F063
+6750 3054C9CE
+6780 7D02DE8D
+AIHELP 6784 player 4 rejected ally 3 threat 1525 armee 7050 einsetzbar 4235 kandidaten 2 wert 450
+6810 9EE8AA81
+6840 A72B15BF
+AISQUAD 6843 player 3 picked 1 of 1 value 800 ratio 9.71 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 1
+6870 D822846C
+6900 CD5E8083
+6930 F77A0651
+6960 29AEF0D3
+AIPOWER 6963 player 3 production 20 consumption 7 underpowered_s 0 power_plants 3 defence 2
+AIPOWER 6964 player 4 production 32 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIHELP 6964 player 4 rejected ally 3 threat 1825 armee 8550 einsetzbar 5285 kandidaten 2 wert 450
+6990 043ACB1D
+7020 189EB0B4
+7050 0EDA50DA
+7080 5DDCF4FB
+7110 8D98C360
+7140 4A2C1AC7
+AIENEMYMODEL 7143 player 3 rush 0 turtle 0 air 1 stealth 0 army 9175 air_value 2800 defence 0 stealthed 0
+AIECONOMY 7143 player 3 order_cancelled AirF_AmericaSupplyCenter pos 1974 1723
+AIENEMYMODEL 7144 player 4 rush 0 turtle 0 air 1 stealth 0 army 9175 air_value 2800 defence 0 stealthed 0
+AIHELP 7144 player 4 start ally 3 threat 1825 units 5 value 2950 pos 668 1553 armee 8850 einsetzbar 5495 kandidaten 5 wert 2950
+7170 7E88C43D
+AISUPERWEAPON 7200 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 282 value 6600 radius 300
+7200 AF6EFC73
+STATE frame 7200 mode 2 players 8 objects 313 recorder 0 particles 170/699
+AISUPERWEAPON 7205 player 4 special_power SpecialPowerSpySatellite enemy 6 target_id 282 value 6500 radius 300
+7230 9A40BCA1
+7260 FA58C962
+AIPOWER 7263 player 3 production 25 consumption 6 underpowered_s 0 power_plants 3 defence 3
+AIMIX 7263 player 3 front 264/180 anti_vehicle 0/250 anti_infantry 735/108 anti_air 0/360 siege 0/100 distance 1422
+AITHREAT 7263 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 7263 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 30 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 7263 player 3 posts 2 army 1925 posted 0 idle_home 0 idle_field 0 script_team 450 mission 800
+AIBUDGET 7263 player 3 money 18050 base 800 free 17250 priority_open 1
+AIECONOMY 7263 player 3 situation reserve 23400 centres 1 money 18050 hackers 0 harvesters 7 need 0 income_buildings 0 tech 0 free 2 gather_rate 3825 minutes_left 6.1 invest 0
+AIPOWER 7264 player 4 production 32 consumption 16 underpowered_s 0 power_plants 3 defence 3
+AIMIX 7264 player 4 front 197/180 anti_vehicle 315/250 anti_infantry 486/108 anti_air 0/360 siege 0/100 distance 921
+AITHREAT 7264 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 7264 player 4 cooldown 0 assist 19 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 2 squad_shares 0 small_force 9 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIHELP 7264 player 4 end hopeless duration 4 remaining 5
+AISQUAD 7264 player 4 picked 3 of 5 value 2500 ratio 1.69 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 720 anti_air 0 siege 0 ok 1 missing 8
+AIECONOMY 7264 player 4 tech TechOilDerrick unit Lazr_AmericaInfantryRanger pos 1877 1353
+AIBUDGET 7264 player 4 money 1200 base 2000 free -800 priority_open 1
+AIECONOMY 7264 player 4 situation reserve 107850 centres 2 money 1200 hackers 0 harvesters 6 need 0 income_buildings 0 tech 0 free 2 gather_rate 1950 minutes_left 55.3 invest 1
+7290 AE2A20D6
+7320 8296E853
+AIENEMYMODEL 7323 player 3 rush 1 turtle 0 air 1 stealth 0 army 15775 air_value 4300 defence 0 stealthed 0
+AISCRIPT 7324 player 4 teams 2 value 2800 top USA H 2ND Wave Fast Attack. 22=1900;USA Air Defender 1. 22=900;
+AIPOSTS 7324 player 4 posts 3 army 6450 posted 1600 idle_home 1600 idle_field 0 script_team 2800 mission 700
+AISQUAD 7324 player 4 picked 2 of 2 value 1600 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 562 anti_air 0 siege 0 ok 1 missing 8
+7350 B2B90B1B
+7380 83AD38F3
+AISQUAD 7384 player 4 picked 2 of 2 value 1600 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 562 anti_air 0 siege 0 ok 1 missing 8
+7410 C3FE225E
+7440 B317FC4A
+AISQUAD 7444 player 4 picked 2 of 2 value 1600 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 562 anti_air 0 siege 0 ok 1 missing 8
+7470 4DF4D35F
+AIFOCUS 7500 player 3 enemy 5 before 6 reason switch cost 2805
+AIFOCUS 7500 player 4 enemy 5 before 6 reason alliance cost 0
+7500 D0705F08
+7530 F984B043
+7560 5B7F0708
+AIPOWER 7563 player 3 production 25 consumption 6 underpowered_s 0 power_plants 3 defence 3
+AIPOWER 7564 player 4 production 32 consumption 16 underpowered_s 0 power_plants 3 defence 3
+AIHELP 7564 player 4 start ally 3 threat 700 units 2 value 1600 pos 523 1065 armee 9750 einsetzbar 6125 kandidaten 10 wert 4850
+7590 3F8A66FC
+7620 846EC3A5
+7650 22437532
+7680 BBEE5EFF
+7710 EA634029
+7740 C0B20CDC
+AIHELP 7743 player 3 rejected ally 4 threat 700 armee 2000 einsetzbar 200 kandidaten 0 wert 0
+7770 C690ED45
+7800 873CEF69
+7830 461AD3DF
+7860 A6EF17FC
+AIPOWER 7863 player 3 production 25 consumption 9 underpowered_s 0 power_plants 3 defence 2
+AIPOWER 7864 player 4 production 40 consumption 16 underpowered_s 0 power_plants 3 defence 3
+7890 8748500F
+7920 553A6D5E
+AIHELP 7923 player 3 rejected ally 4 threat 1400 armee 2225 einsetzbar 312 kandidaten 0 wert 0
+7950 ABB2484A
+7980 C04AD845
+8010 C7B789AA
+8040 E6AA4460
+8070 DAFC2ED4
+8100 A9CB63AC
+STATE frame 8100 mode 2 players 8 objects 324 recorder 0 particles 53/96
+AIHELP 8103 player 3 rejected ally 4 threat 1400 armee 2450 einsetzbar 425 kandidaten 2 wert 450
+8130 539892BF
+8160 90B3FB96
+AIPOWER 8163 player 3 production 25 consumption 9 underpowered_s 0 power_plants 3 defence 2
+AIMIX 8163 player 3 front 155/160 anti_vehicle 0/321 anti_infantry 844/183 anti_air 0/212 siege 0/122 distance 1323
+AITHREAT 8163 player 3 threat 0 emergency 0 held_seconds 0
+AISCRIPT 8163 player 3 teams 1 value 450 top USA Tech Capture Team. 13=450;
+AIPOSTS 8163 player 3 posts 2 army 1250 posted 0 idle_home 0 idle_field 0 script_team 450 mission 800
+AIPOWER 8164 player 4 production 40 consumption 16 underpowered_s 0 power_plants 3 defence 2
+AIMIX 8164 player 4 front 145/160 anti_vehicle 346/321 anti_infantry 420/183 anti_air 87/212 siege 0/122 distance 524
+AITHREAT 8164 player 4 threat 0 emergency 0 held_seconds 0
+AIECONOMY 8164 player 4 harvester Lazr_AmericaVehicleChinook have 6 target 9
+8190 1A29D091
+8220 36D735EB
+AIPOSTS 8224 player 4 posts 4 army 8775 posted 600 idle_home 600 idle_field 0 script_team 5650 mission 2300
+8250 7CEC8293
+8280 6E423D0F
+AIHELP 8283 player 3 rejected ally 4 threat 3025 armee 2450 einsetzbar 425 kandidaten 2 wert 450
+8310 69A37132
+8340 643F488D
+AIMICRO 8355 player 4 situation focus 1 spacing 0 spread 0 own 2 enemies 10
+8370 BB2ED40B
+8400 86268F50
+8430 E0BFB96E
+8460 234E79B6
+AIPOWER 8463 player 3 production 25 consumption 9 underpowered_s 0 power_plants 3 defence 2
+AIHELP 8463 player 3 rejected ally 4 threat 4650 armee 2450 einsetzbar 425 kandidaten 2 wert 450
+AIPOWER 8464 player 4 production 40 consumption 17 underpowered_s 0 power_plants 3 defence 2
+8490 442F6579
+8520 A0E08936
+AIECONOMY 8524 player 4 tech_end unit_gone duration 42
+8550 425BB5DD
+8580 FF99C734
+8610 2ACC57E0
+8640 D71CE6D0
+AIHELP 8643 player 3 rejected ally 4 threat 5425 armee 3700 einsetzbar 1050 kandidaten 2 wert 450
+AIMICRO 8655 player 4 situation focus 1 spacing 0 spread 0 own 1 enemies 4
+8670 2A91C1B2
+8700 6205E50B
+8730 E3837B87
+8760 13399D68
+AIPOWER 8763 player 3 production 25 consumption 10 underpowered_s 0 power_plants 3 defence 2
+AIPOWER 8764 player 4 production 40 consumption 17 underpowered_s 0 power_plants 3 defence 2
+AIHELP 8764 player 4 reinforcement units 5 value 1675 threat 1600
+8790 E0DB672D
+8820 F466ADA6
+AIHELP 8823 player 3 rejected ally 4 threat 2375 armee 3475 einsetzbar 938 kandidaten 1 wert 225
+8850 0A16EE82
+8880 04D9E112
+8910 6B25958B
+AITAKEOVER 8915 player 4 team USA CT - Tank 1. 22 units 3 value 900
+8940 0669C1B1
+AIMICRO 8955 player 4 situation focus 2 spacing 3 spread 0 own 6 enemies 11
+8970 2411B653
+AISUPERWEAPON 9000 player 3 special_power SpecialPowerSpySatellite enemy 5 target_id 753 value 7415 radius 300
+9000 3AE44CDE
+STATE frame 9000 mode 2 players 8 objects 341 recorder 0 particles 102/345
+AIHELP 9003 player 3 rejected ally 4 threat 1150 armee 3250 einsetzbar 825 kandidaten 0 wert 0
+AISUPERWEAPON 9006 player 4 special_power SpecialPowerSpySatellite enemy 5 target_id 191 value 9726 radius 300
+9030 1A358938
+9060 A5C23D09
+AIPOWER 9063 player 3 production 25 consumption 10 underpowered_s 0 power_plants 3 defence 2
+AIMIX 9063 player 3 front 0/179 anti_vehicle 277/272 anti_infantry 722/58 anti_air 0/358 siege 0/131 distance 1337
+AITHREAT 9063 player 3 threat 700 emergency 0 held_seconds 0
+AIGATE 9063 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 30 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIPOSTS 9063 player 3 posts 2 army 800 posted 0 idle_home 0 idle_field 0 script_team 0 mission 800
+AIBUDGET 9063 player 3 money 22550 base 1000 free 21550 priority_open 1
+AIECONOMY 9063 player 3 situation reserve 20475 centres 1 money 22550 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 0 free 1 gather_rate 41738 minutes_left 0.5 invest 0
+AIPOWER 9064 player 4 production 40 consumption 17 underpowered_s 0 power_plants 3 defence 2
+AIMIX 9064 player 4 front 193/179 anti_vehicle 392/272 anti_infantry 349/58 anti_air 64/358 siege 0/131 distance 850
+AITHREAT 9064 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 9064 player 4 cooldown 0 assist 25 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 1 squad_shares 0 small_force 4 regrow 0 started 0 force 1600/5000 units 2/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 9064 player 4 money 1075 base 1000 free 75 priority_open 1
+AIECONOMY 9064 player 4 situation reserve 40875 centres 2 money 1075 hackers 0 harvesters 6 need 0 income_buildings 0 tech 0 free 1 gather_rate 3562 minutes_left 11.5 invest 1
+9090 99F664B6
+9120 2D55907F
+AISCRIPT 9124 player 4 teams 5 value 5325 top USA H 3RD Wave Tanks C. 22=2700;USA Air Defender 2. 22=1500;USA CT - Tank 2. 22=600;USA Air Defender 1. 22=300;USA Tech Capture Team. 22=225;
+AIPOSTS 9124 player 4 posts 3 army 9500 posted 900 idle_home 300 idle_field 0 script_team 5325 mission 3275
+AIFOCUS 9150 player 3 enemy 6 before 5 reason switch cost 2718
+AIFOCUS 9150 player 4 enemy 6 before 5 reason alliance cost 0
+9150 894D82F9
+9180 2C9FF2C1
+AIHELP 9183 player 3 rejected ally 4 threat 2050 armee 3250 einsetzbar 825 kandidaten 0 wert 0
+9210 E182D622
+9240 3D992E22
+AIMICRO 9255 player 4 situation focus 2 spacing 0 spread 0 own 5 enemies 10
+9270 8E88193C
+9300 B6576C23
+AIRAID 9304 player 4 end gather_timeout
+9330 3DB491FE
+9360 BFFC1AB3
+AIPOWER 9363 player 3 production 25 consumption 10 underpowered_s 0 power_plants 3 defence 2
+AIHELP 9363 player 3 rejected ally 4 threat 3750 armee 4575 einsetzbar 1488 kandidaten 0 wert 0
+AIPOWER 9364 player 4 production 40 consumption 17 underpowered_s 0 power_plants 3 defence 2
+AIPOSTS 9364 player 4 posts 3 army 9275 posted 1600 idle_home 700 idle_field 0 script_team 5400 mission 2275
+9390 CB90BCE5
+9420 A4395751
+9450 C906689E
+9480 993170BE
+9510 CE324FBC
+9540 476A6C02
+AIHELP 9543 player 3 rejected ally 4 threat 2050 armee 4800 einsetzbar 1600 kandidaten 2 wert 450
+AIHELP 9544 player 4 end repelled duration 66 remaining 4
+AISQUAD 9544 player 4 picked 6 of 7 value 2050 ratio 0.61 min_ratio 0.80 invited 0 covered 0 defenders 5 second_wave 0 front 219 anti_air 0 siege 0 ok 0 missing 9
+9570 4DB581B9
+9600 22D464E1
+AISCRIPT 9604 player 4 teams 6 value 7650 top USA Air Defender 2. 22=3000;USA H 3RD Wave Tanks C. 22=2700;USA CT - Tank 1. 22=600;USA CT - Tank 2. 22=600;USA Tech Capture Team. 22=450;
+AIPOSTS 9604 player 4 posts 3 army 9475 posted 1825 idle_home 225 idle_field 0 script_team 7650 mission 0
+9630 E1869E7C
+AITAKEOVER 9632 player 4 team USA H 3RD Wave Tanks C. 22 units 3 value 2700
+9660 E08D8DC5
+AIPOWER 9663 player 3 production 25 consumption 10 underpowered_s 0 power_plants 3 defence 2
+AIRAID 9663 player 3 end gather_timeout
+AIPOWER 9664 player 4 production 40 consumption 16 underpowered_s 0 power_plants 3 defence 2
+9690 935F191E
+9720 1DA2F429
+AISCRIPT 9723 player 3 teams 1 value 450 top USA Tech Capture Team. 13=450;
+AIPOSTS 9723 player 3 posts 2 army 1250 posted 800 idle_home 800 idle_field 0 script_team 450 mission 0
+AIHELP 9723 player 3 start ally 4 threat 2050 units 3 value 1250 pos 2206 1587 armee 4800 einsetzbar 2400 kandidaten 3 wert 1250
+9750 B2681972
+AIMICRO 9765 player 3 situation focus 1 spacing 0 spread 0 own 3 enemies 2
+9780 03FBCCC3
+9810 3E8710D5
+9840 450288CA
+AITAKEOVER 9851 player 4 team USA CT - Tank 1. 22 units 3 value 900
+9870 2D4F9447
+9900 AE7F73C5
+STATE frame 9900 mode 2 players 8 objects 362 recorder 0 particles 115/567
+AIHELP 9903 player 3 end hopeless duration 6 remaining 3
+AISQUAD 9903 player 3 picked 3 of 3 value 1250 ratio 0.27 min_ratio 0.80 invited 0 covered 0 defenders 3 second_wave 0 front 360 anti_air 0 siege 0 ok 0 missing 9
+AISQUAD 9904 player 4 picked 7 of 8 value 3100 ratio 1.31 min_ratio 0.80 invited 0 covered 0 defenders 3 second_wave 0 front 290 anti_air 0 siege 0 ok 1 missing 9
+9930 1429A04E
+9960 BFB507C8
+AIPOWER 9963 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIMIX 9963 player 3 front 83/149 anti_vehicle 291/208 anti_infantry 624/183 anti_air 0/291 siege 0/166 distance 1047
+AITHREAT 9963 player 3 threat 900 emergency 0 held_seconds 0
+AIPOSTS 9963 player 3 posts 3 army 1475 posted 1250 idle_home 450 idle_field 0 script_team 225 mission 0
+AIDEFENCE 9963 player 3 threat 900 units 3 value 1250 pos 957 977
+AIPOWER 9964 player 4 production 40 consumption 17 underpowered_s 0 power_plants 3 defence 2
+AIMIX 9964 player 4 front 162/149 anti_vehicle 398/208 anti_infantry 325/183 anti_air 113/291 siege 0/166 distance 687
+AITHREAT 9964 player 4 threat 0 emergency 0 held_seconds 0
+AISQUAD 9964 player 4 picked 7 of 7 value 3100 ratio 1.31 min_ratio 0.80 invited 0 covered 0 defenders 3 second_wave 0 front 290 anti_air 0 siege 0 ok 1 missing 9
+9990 10FCC710
+10020 4B59D9C6
+AISQUAD 10024 player 4 picked 7 of 8 value 3100 ratio 1.02 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 290 anti_air 0 siege 0 ok 1 missing 9
+10050 9F70C5C0
+10080 4B84F718
+AISQUAD 10084 player 4 picked 7 of 7 value 3100 ratio 1.06 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 290 anti_air 0 siege 0 ok 1 missing 9
+10110 561E42C0
+10140 8445C660
+AIHELP 10144 player 4 start ally 3 threat 900 units 5 value 1425 pos 896 935 armee 16075 einsetzbar 11252 kandidaten 12 wert 6925
+AIMICRO 10155 player 4 situation focus 2 spacing 3 spread 0 own 5 enemies 6
+10170 5555B5D3
+10200 1A559E68
+AITAKEOVER 10226 player 4 team USA CT - Tank 2. 22 units 4 value 2400
+10230 EFBAE4B9
+10260 DDDBD6C0
+AIPOWER 10263 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIPOWER 10264 player 4 production 40 consumption 16 underpowered_s 0 power_plants 3 defence 2
+10290 BE47AD86
+10320 FEF66401
+10350 64B26B85
+10380 55C87D75
+AIENEMYMODEL 10384 player 4 rush 1 turtle 0 air 1 stealth 0 army 8775 air_value 2900 defence 1000 stealthed 0
+AIDEFENCE 10384 player 4 threat 700 units 7 value 3700 pos 2536 1118
+10410 97AAC3F4
+10440 B9941F7A
+AIHELP 10443 player 3 start ally 4 threat 700 units 4 value 900 pos 2585 1056 armee 8000 einsetzbar 4000 kandidaten 4 wert 900
+AIMICRO 10455 player 3 situation focus 1 spacing 3 spread 0 own 4 enemies 0
+10470 AD4B1960
+10500 E7EEED7D
+AIPOSTS 10504 player 4 posts 3 army 10675 posted 0 idle_home 0 idle_field 0 script_team 4650 mission 1425
+10530 755DC8B2
+10560 FB6FA891
+AIPOWER 10563 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIPOWER 10564 player 4 production 40 consumption 16 underpowered_s 0 power_plants 3 defence 2
+AIHELP 10564 player 4 end repelled duration 14 remaining 5
+10590 0F0F7488
+AITAKEOVER 10602 player 4 team USA CT - Air 1. 22 units 4 value 1200
+10620 A1DA24B1
+AIHELP 10623 player 3 end hopeless duration 6 remaining 4
+AISCRIPT 10624 player 4 teams 3 value 3750 top USA Air Defender 2. 22=3000;USA Tech Capture Team. 22=450;USA Air Defender 1. 22=300;
+AIPOSTS 10624 player 4 posts 3 army 10450 posted 2100 idle_home 2100 idle_field 0 script_team 3750 mission 0
+10650 D4BB0AA7
+10680 0C5F48CA
+AISCRIPT 10683 player 3 teams 1 value 225 top USA Tech Capture Team. 13=225;
+AIPOSTS 10683 player 3 posts 3 army 1125 posted 900 idle_home 900 idle_field 0 script_team 225 mission 0
+AISQUAD 10684 player 4 picked 6 of 6 value 2400 ratio 1.04 min_ratio 0.80 invited 0 covered 0 defenders 3 second_wave 0 front 375 anti_air 0 siege 0 ok 1 missing 9
+10710 37FB4712
+10740 49134D27
+10770 0617F7E3
+AIFOCUS 10800 player 3 enemy 5 before 6 reason pressure cost 1714
+AISUPERWEAPON 10800 player 3 special_power SpecialPowerSpySatellite enemy 5 target_id 753 value 8000 radius 300
+AIFOCUS 10800 player 4 enemy 5 before 6 reason alliance cost 0
+10800 9F8EDE06
+STATE frame 10800 mode 2 players 8 objects 366 recorder 0 particles 115/453
+AIDEFENCE 10803 player 3 threat 2800 units 4 value 900 pos 934 807
+AIBUILD 10803 player 3 upgrade Upgrade_AmericaSentryDroneGun cost 1000 money 13800
+AIROLES 10803 player 3 template AirF_AmericaInfantryRanger roles front anti_infantry 
+AIROLES 10803 player 3 template AirF_AmericaInfantryMissileDefender roles anti_vehicle 
+AIBUILD 10803 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 12800 choice anti_air
+AISQUAD 10804 player 4 picked 4 of 7 value 2400 ratio 1.49 min_ratio 0.80 invited 0 covered 0 defenders 3 second_wave 0 front 750 anti_air 0 siege 0 ok 1 missing 8
+AISUPERWEAPON 10807 player 4 special_power SpecialPowerSpySatellite enemy 5 target_id 459 value 9300 radius 300
+10830 5ABFDC5B
+10860 D4567976
+AIPOWER 10863 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIMIX 10863 player 3 front 93/174 anti_vehicle 324/295 anti_infantry 582/108 anti_air 0/293 siege 0/128 distance 1005
+AITHREAT 10863 player 3 threat 2800 emergency 0 held_seconds 0
+AIGATE 10863 player 3 cooldown 0 assist 6 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 4 squad_shares 0 small_force 20 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 10863 player 3 money 13500 base 1000 free 12500 priority_open 1
+AIECONOMY 10863 player 3 situation reserve 34875 centres 2 money 13500 hackers 0 harvesters 7 need 0 income_buildings 0 tech 0 free 0 gather_rate 41738 minutes_left 0.8 invest 0
+AIPOWER 10864 player 4 production 40 consumption 17 underpowered_s 0 power_plants 3 defence 2
+AIMIX 10864 player 4 front 155/167 anti_vehicle 436/283 anti_infantry 293/104 anti_air 114/321 siege 0/123 distance 683
+AITHREAT 10864 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 10864 player 4 cooldown 0 assist 15 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 9 squad_shares 0 small_force 6 regrow 0 started 0 force 2400/5000 units 4/6 idle_s 60 gather_s 0 attack_s 0
+AISQUAD 10864 player 4 picked 4 of 8 value 3000 ratio 2.11 min_ratio 0.80 invited 0 covered 0 defenders 3 second_wave 0 front 900 anti_air 0 siege 0 ok 1 missing 8
+AIBUDGET 10864 player 4 money 775 base 1000 free -225 priority_open 1
+AIECONOMY 10864 player 4 situation reserve 34875 centres 2 money 775 hackers 0 harvesters 5 need 0 income_buildings 0 tech 0 free 0 gather_rate 46481 minutes_left 0.8 invest 0
+10890 4EE9B526
+10920 3BB53634
+AISQUAD 10924 player 4 picked 3 of 9 value 1500 ratio 1.58 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 8
+10950 A389DF64
+10980 86693281
+AISQUAD 10983 player 3 picked 1 of 1 value 225 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 8
+AIBUILD 10983 player 3 upgrade Upgrade_AmericaRangerFlashBangGrenade cost 800 money 11250
+AISQUAD 10984 player 4 picked 2 of 9 value 1800 ratio 2.07 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 0
+11010 60481EC5
+11040 BED0F3B4
+AIDEFENCE 11043 player 3 threat 900 units 2 value 450 pos 1013 922
+AIRAID 11043 player 3 build transport AirF_AmericaVehicleHumvee riders AirF_AmericaInfantryColonelBurton count 0 cost 8300
+AISQUAD 11044 player 4 picked 3 of 10 value 1500 ratio 1.60 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 0
+11070 EFDF01A7
+11100 34D793F8
+AIDEFENCE 11104 player 4 threat 1400 units 8 value 3000 pos 2164 278
+11130 853CB577
+11160 62A4FE2F
+AIPOWER 11163 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIPOWER 11164 player 4 production 40 consumption 18 underpowered_s 0 power_plants 3 defence 3
+11190 5E834781
+11220 27C1A55F
+AIDEFENCE 11223 player 3 threat 2700 units 1 value 300 pos 730 1045
+11250 C846E37C
+11280 6E7AEB74
+AIHELP 11284 player 4 start ally 3 threat 1800 units 7 value 3900 pos 613 1077 armee 16950 einsetzbar 8475 kandidaten 18 wert 8850
+AIMICRO 11295 player 4 situation focus 3 spacing 0 spread 0 own 7 enemies 11
+11310 A1367907
+11340 08E28B69
+11370 B870C444
+11400 58715B91
+11430 C11274A8
+11460 A19E4163
+AIPOWER 11463 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIDEFENCE 11463 player 3 threat 900 units 1 value 225 pos 615 1055
+AIPOWER 11464 player 4 production 40 consumption 16 underpowered_s 0 power_plants 3 defence 2
+11490 4BB25321
+11520 3E0BF7FD
+AIPOSTS 11524 player 4 posts 3 army 7650 posted 300 idle_home 300 idle_field 0 script_team 2250 mission 2700
+11550 B00071A5
+11580 5B59E3B8
+AIPOSTS 11583 player 3 posts 3 army 1200 posted 0 idle_home 0 idle_field 0 script_team 450 mission 0
+AIDEFENCE 11584 player 4 threat 1100 units 1 value 300 pos 2473 1105
+AIHELP 11584 player 4 reinforcement units 5 value 3300 threat 3600
+AIMICRO 11595 player 4 situation focus 4 spacing 0 spread 0 own 9 enemies 9
+11610 C58AF54C
+11640 C48D878D
+11670 23D45DCC
+11700 746A3391
+STATE frame 11700 mode 2 players 8 objects 383 recorder 0 particles 199/567
+AIHELP 11703 player 3 rejected ally 4 threat 5800 armee 11450 einsetzbar 5725 kandidaten 3 wert 750
+AIBUILD 11703 player 3 upgrade Upgrade_ComancheRocketPods cost 800 money 7250
+AIRAID 11704 player 4 build transport Lazr_AmericaVehicleHumvee riders Lazr_AmericaInfantryColonelBurton count 0 cost 8200
+AIBUILD 11704 player 4 upgrade Upgrade_ComancheRocketPods cost 800 money 13375
+AIROLES 11704 player 4 template Lazr_AmericaInfantryRanger roles front anti_infantry 
+AIROLES 11704 player 4 template Lazr_AmericaInfantryMissileDefender roles anti_vehicle 
+AIBUILD 11704 player 4 unit Lazr_AmericaInfantryRanger cost 225 money 12575 choice role
+11730 00FD1E8F
+11760 8AAA7190
+AIPOWER 11763 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIMIX 11763 player 3 front 10/164 anti_vehicle 441/293 anti_infantry 547/119 anti_air 0/276 siege 0/146 distance 1154
+AITHREAT 11763 player 3 threat 2700 emergency 0 held_seconds 0
+AIPOWER 11764 player 4 production 40 consumption 15 underpowered_s 0 power_plants 3 defence 3
+AIMIX 11764 player 4 front 69/172 anti_vehicle 384/308 anti_infantry 392/125 anti_air 153/240 siege 0/153 distance 687
+AITHREAT 11764 player 4 threat 4900 emergency 0 held_seconds 0
+11790 A297882D
+11820 745E3081
+11850 947ADEAE
+11880 8DF5B4F7
+AIDEFENCE 11883 player 3 threat 1800 units 1 value 225 pos 429 1081
+AIHELP 11883 player 3 rejected ally 4 threat 4700 armee 12325 einsetzbar 6162 kandidaten 2 wert 525
+AIBUILD 11883 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 7050 choice anti_air
+AIBUILD 11884 player 4 upgrade Upgrade_AmericaRangerFlashBangGrenade cost 800 money 8650
+AIMICRO 11895 player 4 situation focus 8 spacing 0 spread 0 own 9 enemies 9
+11910 D0BE5C6E
+11940 9B11C9E9
+11970 18470059
+12000 515CE454
+AIDEFENCE 12004 player 4 threat 4700 units 2 value 450 pos 2612 1033
+12030 4669A783
+12060 A11AE222
+AIPOWER 12063 player 3 production 25 consumption 11 underpowered_s 0 power_plants 3 defence 2
+AIDEFENCE 12063 player 3 threat 1800 units 1 value 300 pos 429 1081
+AIPOWER 12064 player 4 production 40 consumption 11 underpowered_s 0 power_plants 3 defence 2
+12090 6482B909
+12120 BC6528C9
+AIBUILD 12123 player 3 upgrade Upgrade_AmericaChemicalSuits cost 1000 money 4325
+AIROLES 12123 player 3 template AirF_AmericaVehicleTomahawk roles anti_vehicle anti_infantry 
+AIROLES 12123 player 3 template AirF_AmericaTankAvenger roles anti_air 
+AIROLES 12123 player 3 template AirF_AmericaTankMicrowave roles 
+AIBUILD 12123 player 3 unit AirF_AmericaTankAvenger cost 2000 money 3325 choice anti_air
+AIDEFENCE 12124 player 4 threat 5200 units 1 value 225 pos 2584 980
+AIFOCUS 12150 player 3 enemy 6 before 5 reason pressure cost 1063
+AIFOCUS 12150 player 4 enemy 6 before 5 reason alliance cost 0
+12150 F463B1CF
+AIECONOMY 12163 player 3 blocked AirF_AmericaSupplyDropZone balance 2 reason power
+12180 C0F1DABF
+AIMICRO 12195 player 4 situation focus 8 spacing 0 spread 0 own 8 enemies 4
+12210 5E482D2E
+12240 DBA18195
+AIHELP 12243 player 3 rejected ally 4 threat 2900 armee 13650 einsetzbar 6825 kandidaten 4 wert 1625
+12270 FCDF8B91
+12300 C53AA30B
+AISQUAD 12303 player 3 picked 1 of 1 value 300 ratio 1.08 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 9
+12330 A0464E93
+12360 4B68C6AC
+AIPOWER 12363 player 3 production 25 consumption 13 underpowered_s 0 power_plants 3 defence 3
+AISQUAD 12363 player 3 picked 1 of 1 value 300 ratio 1.08 min_ratio 0.80 invited 0 covered 0 defenders 1 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 9
+AIPOWER 12364 player 4 production 40 consumption 11 underpowered_s 0 power_plants 3 defence 2
+12390 3B8C4D46
+12420 7FBC9988
+AISQUAD 12423 player 3 picked 1 of 1 value 300 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 9
+AISCRIPT 12424 player 4 teams 2 value 1200 top USA H 3RD Wave Tanks F. 22=900;USA Air Defender 1. 22=300;
+AIPOSTS 12424 player 4 posts 3 army 6925 posted 0 idle_home 0 idle_field 0 script_team 1200 mission 4500
+12450 D2B1EF22
+12480 73616537
+AISCRIPT 12483 player 3 teams 1 value 450 top USA Tech Capture Team. 13=450;
+AIPOSTS 12483 player 3 posts 3 army 2075 posted 1100 idle_home 1100 idle_field 0 script_team 450 mission 0
+AISQUAD 12483 player 3 picked 1 of 2 value 800 ratio 1.45 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 1 front 0 anti_air 0 siege 0 ok 1 missing 9
+AIMICRO 12495 player 4 situation focus 5 spacing 0 spread 0 own 7 enemies 2
+12510 1084EA46
+12540 2814845B
+AIDEFENCE 12543 player 3 threat 1400 units 3 value 1400 pos 1021 850
+12570 93B7DE1F
+AISUPERWEAPON 12600 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 197 value 11203 radius 300
+12600 62D737D0
+STATE frame 12600 mode 2 players 8 objects 385 recorder 0 particles 68/504
+AIDEFENCE 12603 player 3 threat 1400 units 1 value 225 pos 927 914
+AISUPERWEAPON 12608 player 4 special_power SpecialPowerSpySatellite enemy 6 target_id 197 value 11117 radius 300
+12630 61B8AED1
+AISUPERWEAPON 12655 player 4 special_power SuperweaponA10ThunderboltMissileStrike enemy 6 target_id 285 value 7000 radius 50
+12660 89717A76
+AIPOWER 12663 player 3 production 25 consumption 13 underpowered_s 0 power_plants 4 defence 2
+AIMIX 12663 player 3 front 27/193 anti_vehicle 354/48 anti_infantry 536/166 anti_air 81/386 siege 0/205 distance 1352
+AITHREAT 12663 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 12663 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 30 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIENEMYMODEL 12663 player 3 rush 1 turtle 0 air 1 stealth 1 army 25025 air_value 14700 defence 6000 stealthed 1500
+AIBUDGET 12663 player 3 money 300 base 1000 free -700 priority_open 1
+AIECONOMY 12663 player 3 situation reserve 29100 centres 2 money 300 hackers 0 harvesters 7 need 2500 income_buildings 0 tech 0 free 0 gather_rate 23794 minutes_left 1.2 invest 0
+AIPOWER 12664 player 4 production 40 consumption 10 underpowered_s 0 power_plants 3 defence 2
+AIMIX 12664 player 4 front 81/193 anti_vehicle 317/48 anti_infantry 384/166 anti_air 216/386 siege 0/205 distance 974
+AITHREAT 12664 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 12664 player 4 cooldown 0 assist 23 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 7 regrow 0 started 0 force 0/5000 units 0/6 idle_s 60 gather_s 0 attack_s 0
+AIENEMYMODEL 12664 player 4 rush 1 turtle 0 air 1 stealth 1 army 25025 air_value 14700 defence 6000 stealthed 1500
+AIBUDGET 12664 player 4 money 9150 base 1000 free 8150 priority_open 1
+AIECONOMY 12664 player 4 situation reserve 29100 centres 2 money 9150 hackers 0 harvesters 7 need 0 income_buildings 0 tech 0 free 0 gather_rate 26091 minutes_left 1.1 invest 0
+12690 2841A594
+12720 3A7B9B22
+12750 C4CD9C55
+12780 B3C61082
+AIROLES 12784 player 4 template Lazr_AmericaInfantryPathfinder roles anti_infantry support
+AIBUILD 12784 player 4 unit Lazr_AmericaInfantryPathfinder cost 600 money 7850 choice detector
+AIMICRO 12795 player 4 situation focus 4 spacing 0 spread 0 own 7 enemies 3
+12810 85659034
+12840 389F4B48
+12870 85630AB8
+12900 BB8D72D8
+12930 6DCCF8C2
+12960 B01D550A
+AIPOWER 12963 player 3 production 25 consumption 13 underpowered_s 0 power_plants 4 defence 2
+AIPOWER 12964 player 4 production 40 consumption 11 underpowered_s 0 power_plants 3 defence 2
+12990 5F23C6AC
+13020 379F79B7
+13050 E28A8394
+13080 B6B2F733
+AITAKEOVER 13088 player 3 team USA H 4TH Wave Burton. 13 units 1 value 1500
+AIMICRO 13095 player 4 situation focus 7 spacing 0 spread 0 own 7 enemies 4
+13110 05A3B718
+AITAKEOVER 13138 player 4 team USA H 3RD Wave Tanks F. 22 units 3 value 2700
+13140 6F4A26BA
+AISQUAD 13143 player 3 picked 1 of 1 value 1500 ratio 2.00 min_ratio 0.80 invited 0 covered 0 defenders 0 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 9
+13170 191A7E02
+13200 0C1CA275
+13230 A1D7F8ED
+13260 74E3E57A
+AIPOWER 13263 player 3 production 30 consumption 13 underpowered_s 0 power_plants 4 defence 2
+AIPOWER 13264 player 4 production 40 consumption 12 underpowered_s 0 power_plants 3 defence 2
+AIBUILD 13264 player 4 unit Lazr_AmericaInfantryPathfinder cost 600 money 6725 choice detector
+13290 4996FFC3
+13320 274CC5D6
+AIPOSTS 13324 player 4 posts 3 army 9550 posted 1800 idle_home 1800 idle_field 0 script_team 750 mission 5200
+13350 78455ECE
+13380 8AFDF932
+AIPOSTS 13383 player 3 posts 3 army 6375 posted 225 idle_home 225 idle_field 0 script_team 4050 mission 1500
+AIMICRO 13395 player 4 situation focus 11 spacing 0 spread 0 own 7 enemies 5
+13410 21D19405
+13440 1174EAD0
+AISQUAD 13443 player 3 picked 1 of 1 value 225 ratio 76.95 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 24
+13470 F40C82A1
+13500 52503012
+STATE frame 13500 mode 2 players 8 objects 397 recorder 0 particles 84/541
+AISQUAD 13503 player 3 picked 2 of 2 value 525 ratio 11.46 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+13530 5DEE2C14
+13560 74CC3145
+AIPOWER 13563 player 3 production 30 consumption 13 underpowered_s 0 power_plants 4 defence 2
+AIMIX 13563 player 3 front 22/175 anti_vehicle 328/219 anti_infantry 581/86 anti_air 66/350 siege 0/167 distance 1209
+AITHREAT 13563 player 3 threat 0 emergency 0 held_seconds 0
+AISQUAD 13563 player 3 picked 2 of 3 value 525 ratio 11.46 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+AIPOWER 13564 player 4 production 40 consumption 12 underpowered_s 0 power_plants 3 defence 2
+AIMIX 13564 player 4 front 164/175 anti_vehicle 324/219 anti_infantry 353/86 anti_air 157/350 siege 0/167 distance 744
+AITHREAT 13564 player 4 threat 0 emergency 0 held_seconds 0
+AIBUILD 13564 player 4 unit Lazr_AmericaInfantryRanger cost 225 money 4225 choice role
+13590 5FA67ED9
+13620 20CFD349
+AISQUAD 13623 player 3 picked 2 of 3 value 525 ratio 11.51 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+13650 2CCCF582
+13680 7E9CAB04
+AISQUAD 13683 player 3 picked 2 of 3 value 525 ratio 11.77 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+AIHELP 13684 player 4 end repelled duration 80 remaining 7
+AISQUAD 13684 player 4 picked 7 of 8 value 3600 ratio 0.89 min_ratio 0.80 invited 0 covered 1 defenders 6 second_wave 0 front 500 anti_air 0 siege 0 ok 1 missing 24
+13710 DE42C8CF
+13740 3BD5BC79
+AISQUAD 13743 player 3 picked 2 of 3 value 525 ratio 12.03 min_ratio 0.80 invited 0 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+AISCRIPT 13744 player 4 teams 2 value 750 top USA Tech Capture Team. 22=450;USA Air Defender 1. 22=300;
+AIPOSTS 13744 player 4 posts 3 army 10375 posted 7500 idle_home 2400 idle_field 3300 script_team 750 mission 700
+AISQUAD 13744 player 4 picked 9 of 9 value 5700 ratio 1.25 min_ratio 0.80 invited 0 covered 1 defenders 6 second_wave 0 front 315 anti_air 263 siege 0 ok 1 missing 17
+AIATTACK 13744 player 4 gather enemy 6 units 9 value 5700 usable 6688 pos 2649 1157
+AIBUILD 13744 player 4 unit Lazr_AmericaInfantryRanger cost 225 money 4000 choice role
+13770 7F1AE4BB
+13800 78AAFAA7
+AISQUAD 13803 player 3 picked 2 of 3 value 525 ratio 12.31 min_ratio 0.00 invited 1 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+13830 92306138
+13860 AFA8411F
+AIPOWER 13863 player 3 production 35 consumption 13 underpowered_s 0 power_plants 4 defence 2
+AISQUAD 13863 player 3 picked 2 of 3 value 525 ratio 12.60 min_ratio 0.00 invited 1 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+AIPOWER 13864 player 4 production 40 consumption 12 underpowered_s 0 power_plants 3 defence 2
+13890 06BB1BB0
+13920 D67C789D
+AISQUAD 13923 player 3 picked 2 of 3 value 525 ratio 12.89 min_ratio 0.00 invited 1 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+AIBUILD 13924 player 4 unit Lazr_AmericaInfantryRanger cost 225 money 4375 choice role
+13950 5AEC922A
+13980 95AA5772
+AISQUAD 13983 player 3 picked 2 of 3 value 525 ratio 13.20 min_ratio 0.00 invited 1 covered 0 defenders 2 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+14010 1F03B85F
+14040 1B6522B7
+AISQUAD 14043 player 3 picked 1 of 3 value 225 ratio 1000000.00 min_ratio 0.00 invited 1 covered 0 defenders 1 second_wave 0 front 1000 anti_air 0 siege 0 ok 1 missing 8
+14070 1223000C
+14100 7101957F
+AISQUAD 14103 player 3 picked 3 of 3 value 825 ratio 2.00 min_ratio 0.00 invited 1 covered 0 defenders 0 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+AIBUILD 14104 player 4 unit Lazr_AmericaInfantryRanger cost 225 money 3850 choice role
+14130 64A0E0D5
+14160 E0D7314C
+AIPOWER 14163 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 2
+AISQUAD 14163 player 3 picked 2 of 3 value 525 ratio 2.12 min_ratio 0.00 invited 1 covered 0 defenders 1 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+AIPOWER 14164 player 4 production 40 consumption 12 underpowered_s 0 power_plants 3 defence 2
+14190 5A862A4E
+14220 F60EB2BE
+AISQUAD 14223 player 3 picked 3 of 3 value 825 ratio 2.56 min_ratio 0.00 invited 1 covered 0 defenders 2 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+14250 20341B9A
+14280 13D79884
+AISCRIPT 14283 player 3 teams 3 value 4850 top USA H 4TH Wave Tanks F. 13=3600;USA H 4TH Wave Artillery B. 13=800;USA Tech Capture Team. 13=450;
+AIPOSTS 14283 player 3 posts 3 army 7175 posted 825 idle_home 600 idle_field 0 script_team 4850 mission 1500
+AISQUAD 14283 player 3 picked 3 of 3 value 825 ratio 2.00 min_ratio 0.00 invited 1 covered 0 defenders 0 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+AIBUILD 14284 player 4 unit Lazr_AmericaInfantryPathfinder cost 600 money 3625 choice role
+14310 AD5DE155
+14340 B017E52E
+AISQUAD 14343 player 3 picked 2 of 3 value 525 ratio 7.41 min_ratio 0.00 invited 1 covered 0 defenders 1 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 9
+14370 30605D73
+AISUPERWEAPON 14400 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 1339 value 12415 radius 300
+14400 69A32FD6
+STATE frame 14400 mode 2 players 8 objects 417 recorder 0 particles 184/2026
+AISQUAD 14403 player 3 picked 3 of 3 value 825 ratio 2.00 min_ratio 0.00 invited 1 covered 0 defenders 0 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+AISUPERWEAPON 14409 player 4 special_power SpecialPowerSpySatellite enemy 6 target_id 2549 value 14773 radius 300
+14430 AC8FE356
+14460 854CAAE9
+AIPOWER 14463 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 2
+AIMIX 14463 player 3 front 20/168 anti_vehicle 340/296 anti_infantry 576/75 anti_air 62/320 siege 0/138 distance 1090
+AITHREAT 14463 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 14463 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 1 squad_shares 0 small_force 29 regrow 0 started 0 force 825/2000 units 3/3 idle_s 60 gather_s 0 attack_s 0
+AISQUAD 14463 player 3 picked 3 of 3 value 825 ratio 2.00 min_ratio 0.00 invited 1 covered 0 defenders 0 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+AIBUDGET 14463 player 3 money 200 base 1000 free -800 priority_open 1
+AIECONOMY 14463 player 3 situation reserve 23100 centres 2 money 200 hackers 0 harvesters 8 need 2500 income_buildings 0 tech 0 free 0 gather_rate 14897 minutes_left 1.6 invest 0
+AIPOWER 14464 player 4 production 40 consumption 12 underpowered_s 0 power_plants 3 defence 2
+AIMIX 14464 player 4 front 171/168 anti_vehicle 250/296 anti_infantry 324/75 anti_air 254/320 siege 0/138 distance 503
+AITHREAT 14464 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 14464 player 4 cooldown 0 assist 17 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 1 regrow 0 started 1 force 5700/5000 units 9/6 idle_s 36 gather_s 24 attack_s 0
+AIBUDGET 14464 player 4 money 3125 base 1000 free 2125 priority_open 1
+AIECONOMY 14464 player 4 situation reserve 23100 centres 2 money 3125 hackers 0 harvesters 7 need 0 income_buildings 0 tech 0 free 0 gather_rate 16120 minutes_left 1.4 invest 0
+14490 15859869
+14520 82A93790
+AISQUAD 14523 player 3 picked 3 of 3 value 825 ratio 0.01 min_ratio 0.00 invited 1 covered 0 defenders 1 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+14550 49451D24
+14580 3D336209
+AISQUAD 14583 player 3 picked 3 of 3 value 825 ratio 0.02 min_ratio 0.00 invited 1 covered 0 defenders 1 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+AIBUILD 14584 player 4 unit Lazr_AmericaInfantryMissileDefender cost 300 money 2725 choice role
+14610 AE77DA10
+14640 3765480E
+AISQUAD 14643 player 3 picked 3 of 3 value 825 ratio 2.00 min_ratio 0.00 invited 1 covered 0 defenders 0 second_wave 0 front 272 anti_air 0 siege 0 ok 1 missing 9
+AIRAID 14643 player 3 end gather_timeout
+AIPOSTS 14644 player 4 posts 3 army 14350 posted 0 idle_home 0 idle_field 0 script_team 4650 mission 9100
+14670 935F4F35
+14700 B9412206
+AIPOSTS 14703 player 3 posts 3 army 6950 posted 2325 idle_home 1500 idle_field 0 script_team 4625 mission 0
+AISQUAD 14703 player 3 picked 4 of 4 value 2325 ratio 1.15 min_ratio 0.00 invited 1 covered 1 defenders 4 second_wave 0 front 96 anti_air 0 siege 0 ok 1 missing 25
+AIATTACK 14703 player 3 gather enemy 6 units 4 value 2325 usable 10450 pos 1728 1169 eingeladen
+14730 5E8B421E
+14760 022EEB41
+AIPOWER 14763 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 2
+AIBUILD 14763 player 3 unit AirF_AmericaInfantryRanger cost 225 money 11650 choice role
+AIPOWER 14764 player 4 production 40 consumption 13 underpowered_s 0 power_plants 4 defence 2
+14790 4F1967D0
+14820 B195B30B
+AIBUILD 14823 player 3 upgrade Upgrade_AmericaAdvancedTraining cost 1500 money 10025
+14850 A616F33F
+14880 4E001297
+14910 4ABB8F78
+14940 7F6BCEEF
+AIBUILD 14943 player 3 unit AirF_AmericaInfantryRanger cost 225 money 8525 choice role
+14970 9FC2979D
+AIFOCUS 15000 player 3 enemy 5 before 6 reason pressure cost 2338
+AIFOCUS 15000 player 4 enemy 5 before 6 reason alliance cost 0
+15000 BF213A4A
+15030 5E509FC9
+15060 5C24BCAD
+AIPOWER 15063 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 4
+AIPOWER 15064 player 4 production 40 consumption 13 underpowered_s 0 power_plants 4 defence 2
+15090 1414E9F0
+15120 7AA6921F
+15150 7D9550E5
+15180 AE191B41
+15210 453AB89A
+15240 C09C472C
+AIBUILD 15244 player 4 unit Lazr_AmericaInfantryPathfinder cost 600 money 4900 choice role
+15270 AD83F790
+15300 165929EC
+STATE frame 15300 mode 2 players 8 objects 474 recorder 0 particles 271/3307
+AIRAID 15304 player 4 end gather_timeout
+AIBUILD 15304 player 4 upgrade Upgrade_AmericaBunkerBusters cost 1500 money 4300
+15330 D2B375B0
+15360 778D5FCF
+AIPOWER 15363 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 4
+AIMIX 15363 player 3 front 40/165 anti_vehicle 295/303 anti_infantry 574/128 anti_air 90/271 siege 0/131 distance 892
+AITHREAT 15363 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 15364 player 4 production 40 consumption 14 underpowered_s 0 power_plants 4 defence 2
+AIMIX 15364 player 4 front 208/165 anti_vehicle 295/303 anti_infantry 290/128 anti_air 205/271 siege 0/131 distance 411
+AITHREAT 15364 player 4 threat 0 emergency 0 held_seconds 0
+AISCRIPT 15364 player 4 teams 5 value 7575 top USA H 4TH Wave Tanks B. 22=4200;USA Air Defender 2. 22=1500;USA H Fire Base Units 1. 22=1125;USA Tech Capture Team. 22=450;USA Air Defender 1. 22=300;
+AIPOSTS 15364 player 4 posts 3 army 17275 posted 700 idle_home 700 idle_field 0 script_team 7575 mission 9000
+15390 26918C58
+15420 8D86AF63
+AIBUILD 15423 player 3 unit AirF_AmericaInfantryRanger cost 225 money 8630 choice role
+15450 19FBAA6D
+15480 177AFFEC
+15510 6134F955
+15540 35690BB6
+15570 CCBFCC6B
+15600 69DA457C
+AISCRIPT 15603 player 3 teams 2 value 4550 top USA H 4TH Wave Tanks F. 13=4100;USA Tech Capture Team. 13=450;
+AIPOSTS 15603 player 3 posts 3 army 7550 posted 0 idle_home 0 idle_field 0 script_team 4550 mission 2775
+AIBUILD 15603 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 5155 choice anti_air
+15630 ED4BEA8E
+15660 F2EDAF69
+AIPOWER 15663 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 4
+AIPOWER 15664 player 4 production 40 consumption 15 underpowered_s 0 power_plants 4 defence 2
+15690 24901021
+15720 570435D0
+15750 A2139C7F
+15780 3BD13E75
+AIBUILD 15783 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 5515 choice anti_air
+15810 7CE2FDF6
+15840 E2FA10FF
+15870 24F63D32
+15900 2BC7C341
+15930 A55D104D
+15960 CAE119C7
+AIPOWER 15963 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 4
+AIATTACK 15963 player 3 launch pincer enemy 5 units 7 value 3000 target 1288 1791
+AIPOWER 15964 player 4 production 40 consumption 16 underpowered_s 0 power_plants 4 defence 2
+AIATTACK 15964 player 4 launch with_ally enemy 5 units 18 value 10300 target 1288 1791
+AIMICRO 15975 player 4 situation focus 4 spacing 0 spread 0 own 18 enemies 9
+15990 D9206AD9
+16020 C59BDAEE
+AITARGET 16023 player 3 target Lazr_AmericaSupplyCenter id 1002 winner 0 ratio 24.16 path_threat 160
+AITARGET 16024 player 4 target Lazr_AmericaSupplyCenter id 1002 winner 0 ratio 3.43 path_threat 60
+16050 5056E268
+16080 558A7AF9
+AIMICRO 16095 player 3 situation focus 1 spacing 0 spread 0 own 7 enemies 18
+16110 D479C65F
+16140 894FA68D
+16170 DCDC29B1
+AISUPERWEAPON 16200 player 3 special_power SpecialPowerSpySatellite enemy 5 target_id 239 value 8501 radius 300
+16200 0F0B702B
+STATE frame 16200 mode 2 players 8 objects 433 recorder 0 particles 151/617
+AISUPERWEAPON 16210 player 4 special_power SpecialPowerSpySatellite enemy 5 target_id 239 value 10601 radius 300
+16230 1DBE3780
+AISUPERWEAPON 16237 player 3 special_power AirF_SuperweaponA10ThunderboltMissileStrike enemy 5 target_id 352 value 9000 radius 50
+16260 3569B94A
+AIPOWER 16263 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 4
+AIMIX 16263 player 3 front 49/171 anti_vehicle 269/245 anti_infantry 461/114 anti_air 219/343 siege 0/124 distance 741
+AITHREAT 16263 player 3 threat 900 emergency 0 held_seconds 0
+AIGATE 16263 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 4 regrow 0 started 1 force 2325/2000 units 4/3 idle_s 8 gather_s 42 attack_s 10
+AIBUDGET 16263 player 3 money 850 base 1000 free -150 priority_open 1
+AIECONOMY 16263 player 3 situation reserve 17025 centres 2 money 850 hackers 0 harvesters 8 need 0 income_buildings 1 tech 0 free 0 gather_rate 10411 minutes_left 1.6 invest 0
+AIPOWER 16264 player 4 production 48 consumption 16 underpowered_s 0 power_plants 4 defence 3
+AIMIX 16264 player 4 front 221/171 anti_vehicle 301/245 anti_infantry 287/114 anti_air 190/343 siege 0/124 distance 556
+AITHREAT 16264 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 16264 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 5700/5000 units 9/6 idle_s 0 gather_s 50 attack_s 10
+AIPOSTS 16264 player 4 posts 3 army 18775 posted 0 idle_home 0 idle_field 0 script_team 8475 mission 10300
+AIBUDGET 16264 player 4 money 2200 base 1000 free 1200 priority_open 1
+AIECONOMY 16264 player 4 situation reserve 17025 centres 2 money 2200 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 0 free 0 gather_rate 11060 minutes_left 1.5 invest 0
+AIMICRO 16275 player 4 situation focus 18 spacing 5 spread 0 own 18 enemies 12
+16290 BA658CB0
+16320 836ABCA7
+16350 A50B8524
+16380 72CBE75D
+AIMICRO 16395 player 3 situation focus 4 spacing 0 spread 0 own 7 enemies 18
+16410 1229823F
+16440 CE17358B
+16470 689F64A6
+16500 A2A474D8
+AIPOSTS 16503 player 3 posts 3 army 11875 posted 0 idle_home 0 idle_field 0 script_team 6875 mission 3000
+16530 0567C266
+16560 80E3A521
+AIPOWER 16563 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 4
+AIPOWER 16564 player 4 production 48 consumption 14 underpowered_s 0 power_plants 4 defence 3
+AIMICRO 16575 player 4 situation focus 12 spacing 20 spread 0 own 13 enemies 10
+16590 AA2E8203
+16620 9B64B123
+16650 18F86DE0
+16680 44C7E7F4
+AIHELP 16684 player 4 start ally 3 threat 3600 units 3 value 2700 pos 451 1191 armee 19650 einsetzbar 2825 kandidaten 7 wert 5625
+AIMICRO 16695 player 3 situation focus 8 spacing 0 spread 0 own 7 enemies 19
+16710 03EBCBC3
+16740 7729F7F8
+16770 261519D8
+16800 44E04860
+AIBUILD 16803 player 3 upgrade Upgrade_AmericaDroneArmor cost 500 money 4530
+AIBUILD 16803 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 4030 choice anti_air
+AIATTACK 16804 player 4 end forecast phase 2 duration 28 value 5500 start 10300
+AIATTACK 16804 player 4 regrow_from value 13390 until 22204
+16830 51F029D7
+16860 164FABC0
+AIPOWER 16863 player 3 production 35 consumption 14 underpowered_s 0 power_plants 4 defence 4
+AIDEFENCE 16863 player 3 threat 2700 units 1 value 2000 pos 365 1141
+AIPOWER 16864 player 4 production 48 consumption 14 underpowered_s 0 power_plants 4 defence 3
+AISCRIPT 16864 player 4 teams 7 value 7050 top USA H 4TH Wave Tanks F. 22=2400;USA Air Defender 2. 22=1500;USA H Fire Base Units 1. 22=1125;USA H 4TH Wave Tanks B. 22=900;USA CT - Tank 2. 22=600;
+AIPOSTS 16864 player 4 posts 3 army 14725 posted 1050 idle_home 1050 idle_field 0 script_team 7050 mission 2700
+AIMICRO 16875 player 4 situation focus 2 spacing 15 spread 0 own 3 enemies 9
+16890 9C29E462
+16920 C2237410
+AIECONOMY 16923 player 3 build AirF_AmericaPowerPlant have 1 target 2 reserve 0 reason power
+16950 281493EE
+AITAKEOVER 16955 player 3 team USA CT - Base Def 2. 13 units 1 value 1300
+16980 512EA8B3
+AIHELP 16984 player 4 reinforcement units 7 value 3900 threat 3900
+AIMICRO 16995 player 3 situation focus 19 spacing 0 spread 0 own 7 enemies 13
+17010 CF5F9D13
+17040 CAB63B82
+17070 2954EE1A
+17100 547A24C7
+STATE frame 17100 mode 2 players 8 objects 472 recorder 0 particles 369/3231
+17130 A5F28A38
+17160 76D80DCB
+AIPOWER 17163 player 3 production 30 consumption 14 underpowered_s 0 power_plants 3 defence 4
+AIMIX 17163 player 3 front 60/172 anti_vehicle 351/171 anti_infantry 521/172 anti_air 66/344 siege 0/138 distance 1056
+AITHREAT 17163 player 3 threat 1600 emergency 0 held_seconds 0
+AIDEFENCE 17163 player 3 threat 1600 units 2 value 450 pos 753 948
+AIPOWER 17164 player 4 production 48 consumption 13 underpowered_s 0 power_plants 4 defence 3
+AIMIX 17164 player 4 front 200/172 anti_vehicle 303/171 anti_infantry 294/172 anti_air 200/344 siege 0/138 distance 564
+AITHREAT 17164 player 4 threat 0 emergency 0 held_seconds 0
+AIMICRO 17175 player 4 situation focus 1 spacing 0 spread 0 own 7 enemies 13
+17190 AE5F44F0
+17220 DE536CE2
+17250 3B1A84BE
+17280 4B083366
+AIDEFENCE 17283 player 3 threat 3000 units 2 value 525 pos 916 798
+AIHELP 17284 player 4 reinforcement units 2 value 1800 threat 5600
+AIMICRO 17295 player 3 situation focus 34 spacing 0 spread 0 own 6 enemies 11
+17310 5BE01686
+17340 B4E5CC66
+17370 337C370A
+17400 32B6AE0E
+AISCRIPT 17403 player 3 teams 4 value 4275 top USA H 4TH Wave Artillery B. 13=2000;USA H 4TH Wave Tanks F. 13=1300;USA H Fire Base Units 1. 13=525;USA Tech Capture Team. 13=450;
+AIPOSTS 17403 player 3 posts 3 army 9100 posted 0 idle_home 0 idle_field 0 script_team 4275 mission 2775
+17430 CA147B3D
+17460 07C78E45
+AIPOWER 17463 player 3 production 30 consumption 14 underpowered_s 0 power_plants 3 defence 4
+AIPOWER 17464 player 4 production 48 consumption 13 underpowered_s 0 power_plants 4 defence 3
+17490 719402DB
+17520 B98AB5D3
+AIMICRO 17520 player 4 situation focus 1 spacing 0 spread 0 own 8 enemies 14
+AIFOCUS 17550 player 3 enemy 6 before 5 reason pressure cost 1751
+AIFOCUS 17550 player 4 enemy 6 before 5 reason alliance cost 0
+17550 1F685DE5
+17580 31ADF96B
+AITARGET 17583 player 3 target AmericaSupplyCenter id 5682 winner 0 ratio 3.05 path_threat 26
+AISUPERWEAPON 17587 player 3 special_power AirF_SuperweaponSpectreGunship enemy 6 target_id 2448 value 14287 radius 200
+AIMICRO 17595 player 3 situation focus 12 spacing 0 spread 0 own 6 enemies 8
+17610 7B71A24A
+17640 2884817B
+17670 09BE0BFD
+17700 B067660B
+17730 4B29ED28
+AITAKEOVER 17745 player 4 team USA CT - Tank 1. 22 units 3 value 900
+17760 EFA1D8AB
+AIPOWER 17763 player 3 production 30 consumption 14 underpowered_s 0 power_plants 3 defence 4
+AIPOWER 17764 player 4 production 48 consumption 13 underpowered_s 0 power_plants 4 defence 3
+AIENEMYMODEL 17764 player 4 rush 0 turtle 0 air 1 stealth 1 army 28125 air_value 12000 defence 15000 stealthed 0
+AIPOSTS 17764 player 4 posts 3 army 10575 posted 300 idle_home 300 idle_field 0 script_team 4125 mission 5550
+17790 85916537
+17820 BC2DF125
+AIMICRO 17820 player 4 situation focus 11 spacing 0 spread 0 own 8 enemies 16
+AIATTACK 17823 player 3 end forecast phase 2 duration 62 value 2550 start 3000
+AIATTACK 17823 player 3 regrow_from value 3900 until 23223
+AIDEFENCE 17824 player 4 threat 1200 units 2 value 600 pos 2652 1101
+17850 08A2C196
+17880 D065869C
+AIPOSTS 17883 player 3 posts 3 army 9450 posted 2350 idle_home 2350 idle_field 0 script_team 5075 mission 0
+AIHELP 17884 player 4 end repelled duration 40 remaining 8
+AISQUAD 17884 player 4 picked 5 of 6 value 3825 ratio 1.33 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 529 anti_air 392 siege 0 ok 1 missing 16
+17910 D193428A
+17940 81C311F9
+AISCRIPT 17944 player 4 teams 8 value 10675 top USA H 4TH Wave Tanks F. 22=5100;USA Air Defender 2. 22=1500;USA H Fire Base Units 1. 22=1125;USA CT - Infantry 1. 22=700;USA CT - Air 1. 22=600;
+AIPOSTS 17944 player 4 posts 3 army 11575 posted 0 idle_home 0 idle_field 0 script_team 10675 mission 0
+17970 C3BECA91
+AISUPERWEAPON 18000 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 2448 value 25373 radius 300
+18000 C9A3D67D
+STATE frame 18000 mode 2 players 8 objects 469 recorder 0 particles 377/5917
+AISUPERWEAPON 18011 player 4 special_power SpecialPowerSpySatellite enemy 6 target_id 2448 value 25273 radius 300
+18030 55FB9C24
+18060 EB5563AF
+AIPOWER 18063 player 3 production 30 consumption 17 underpowered_s 0 power_plants 4 defence 4
+AIMIX 18063 player 3 front 41/188 anti_vehicle 363/118 anti_infantry 522/129 anti_air 73/377 siege 0/186 distance 1274
+AITHREAT 18063 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 18063 player 3 cooldown 3 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 2325/2000 units 4/3 idle_s 8 gather_s 0 attack_s 52
+AIBUDGET 18063 player 3 money 160 base 1000 free -840 priority_open 1
+AIECONOMY 18063 player 3 situation reserve 10875 centres 2 money 160 hackers 0 harvesters 8 need 2000 income_buildings 1 tech 0 free 0 gather_rate 8243 minutes_left 1.3 invest 0
+AIPOWER 18064 player 4 production 48 consumption 13 underpowered_s 0 power_plants 4 defence 3
+AIMIX 18064 player 4 front 184/188 anti_vehicle 345/118 anti_infantry 340/129 anti_air 129/377 siege 0/186 distance 875
+AITHREAT 18064 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 18064 player 4 cooldown 9 assist 8 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 3 regrow 0 started 0 force 0/5000 units 0/6 idle_s 42 gather_s 0 attack_s 18
+AIBUDGET 18064 player 4 money 0 base 1000 free -1000 priority_open 1
+AIECONOMY 18064 player 4 situation reserve 10875 centres 2 money 0 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 0 free 0 gather_rate 8568 minutes_left 1.3 invest 0
+18090 206A23C5
+18120 BB452F83
+18150 1BB57269
+18180 6AD0BCE6
+18210 55D27E61
+18240 280A313E
+AIENEMYMODEL 18243 player 3 rush 0 turtle 0 air 1 stealth 1 army 27400 air_value 13400 defence 17000 stealthed 0
+18270 1A54CCB1
+18300 3A1CA9BA
+18330 DD6EE1F9
+18360 F9D8F0C7
+AIPOWER 18363 player 3 production 30 consumption 17 underpowered_s 0 power_plants 4 defence 4
+AIPOWER 18364 player 4 production 48 consumption 17 underpowered_s 0 power_plants 4 defence 3
+18390 671C3459
+18420 307D250C
+AISQUAD 18423 player 3 picked 5 of 6 value 2350 ratio 0.33 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 191 anti_air 0 siege 0 ok 0 missing 25
+18450 2E42A6C9
+18480 7419E60D
+18510 BA561DD0
+18540 543FE93F
+18570 7C08D635
+18600 60391286
+18630 70AD1DA9
+18660 EFB57E90
+AIPOWER 18663 player 3 production 30 consumption 17 underpowered_s 0 power_plants 4 defence 4
+AIPOWER 18664 player 4 production 48 consumption 17 underpowered_s 0 power_plants 4 defence 3
+18690 8C221D15
+18720 E3B2E162
+18750 CCE06262
+18780 0EDBB7A5
+AISCRIPT 18783 player 3 teams 5 value 6375 top USA H 4TH Wave Artillery B. 13=3300;USA H 4TH Wave Tanks F. 13=1300;USA CT - Base Def 1. 13=800;USA H Fire Base Units 1. 13=525;USA Tech Capture Team. 13=450;
+AIPOSTS 18783 player 3 posts 3 army 8725 posted 2350 idle_home 300 idle_field 0 script_team 6375 mission 0
+AISQUAD 18784 player 4 picked 3 of 3 value 900 ratio 0.25 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 0 anti_air 0 siege 0 ok 0 missing 25
+AITAKEOVER 18805 player 4 team USA CT - Air 1. 22 units 4 value 1200
+18810 4A5D5318
+18840 A3A344FC
+AIPOSTS 18844 player 4 posts 3 army 10375 posted 1800 idle_home 1800 idle_field 0 script_team 8275 mission 0
+AISQUAD 18844 player 4 picked 6 of 6 value 1800 ratio 0.98 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+18870 7AF8C106
+18900 A37E5739
+STATE frame 18900 mode 2 players 8 objects 446 recorder 0 particles 118/1454
+AISQUAD 18904 player 4 picked 6 of 6 value 1800 ratio 1.02 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+18930 C2B1EED7
+18960 9132398E
+AIPOWER 18963 player 3 production 35 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AIMIX 18963 player 3 front 32/175 anti_vehicle 371/196 anti_infantry 538/82 anti_air 57/350 siege 0/194 distance 1262
+AITHREAT 18963 player 3 threat 0 emergency 0 held_seconds 0
+AISQUAD 18963 player 3 picked 4 of 6 value 1050 ratio 1.50 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 428 anti_air 0 siege 0 ok 1 missing 25
+AIPOWER 18964 player 4 production 48 consumption 16 underpowered_s 0 power_plants 4 defence 3
+AIMIX 18964 player 4 front 203/175 anti_vehicle 406/196 anti_infantry 165/82 anti_air 225/350 siege 0/194 distance 640
+AITHREAT 18964 player 4 threat 0 emergency 0 held_seconds 0
+AISQUAD 18964 player 4 picked 2 of 6 value 600 ratio 4.46 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+18990 AF0C0C33
+19020 2CD4D727
+19050 5A518798
+19080 AE0E3A42
+AISQUAD 19083 player 3 picked 3 of 6 value 750 ratio 5.86 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19084 player 4 picked 2 of 6 value 600 ratio 4.56 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19110 11D42E68
+19140 0E3DA12F
+AISQUAD 19143 player 3 picked 3 of 5 value 750 ratio 5.66 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19144 player 4 picked 2 of 7 value 600 ratio 4.41 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19170 50146D4B
+19200 E5D5D72D
+AISQUAD 19203 player 3 picked 3 of 6 value 750 ratio 5.66 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19204 player 4 picked 2 of 7 value 600 ratio 4.41 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19230 0FF6DCA7
+19260 97977801
+AIPOWER 19263 player 3 production 35 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AISQUAD 19263 player 3 picked 3 of 5 value 750 ratio 4.65 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AIPOWER 19264 player 4 production 48 consumption 16 underpowered_s 0 power_plants 4 defence 3
+AISQUAD 19264 player 4 picked 2 of 7 value 600 ratio 3.61 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19290 377042A6
+19320 85A8A7ED
+AISQUAD 19323 player 3 picked 3 of 6 value 750 ratio 4.51 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19324 player 4 picked 2 of 7 value 600 ratio 3.50 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19350 94790285
+19380 68E7A326
+AISQUAD 19383 player 3 picked 3 of 5 value 750 ratio 4.44 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19384 player 4 picked 2 of 7 value 600 ratio 3.45 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19410 BB8726C5
+19440 6D5559AF
+AISQUAD 19443 player 3 picked 3 of 6 value 750 ratio 3.66 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19444 player 4 picked 2 of 7 value 600 ratio 2.82 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19470 4403F0F1
+19500 FCF7ACA5
+AISQUAD 19503 player 3 picked 3 of 5 value 750 ratio 3.66 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19504 player 4 picked 2 of 7 value 600 ratio 2.82 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19530 91241478
+19560 0F73B250
+AIPOWER 19563 player 3 production 35 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AISQUAD 19563 player 3 picked 3 of 6 value 750 ratio 2.54 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AIPOWER 19564 player 4 production 48 consumption 16 underpowered_s 0 power_plants 4 defence 3
+AISQUAD 19564 player 4 picked 2 of 7 value 600 ratio 1.94 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19590 79947250
+19620 BCBB6E8D
+AISQUAD 19623 player 3 picked 3 of 5 value 750 ratio 2.82 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+AISQUAD 19624 player 4 picked 2 of 7 value 600 ratio 2.22 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+19650 C8C7A558
+19680 D38FB7FB
+AIPOSTS 19683 player 3 posts 3 army 10025 posted 2350 idle_home 0 idle_field 0 script_team 7675 mission 0
+AISQUAD 19683 player 3 picked 3 of 6 value 750 ratio 20.52 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 16
+AISQUAD 19684 player 4 picked 1 of 7 value 300 ratio 4.51 min_ratio 0.80 invited 0 covered 1 defenders 2 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 17
+19710 83C267E7
+19740 D0690081
+AISCRIPT 19744 player 4 teams 6 value 7225 top USA H 4TH Wave Tanks F. 22=1800;USA Air Defender 2. 22=1500;USA CT - Infantry 1. 22=1150;USA H Fire Base Units 1. 22=1125;USA CT - Infantry 2. 22=1050;
+AIPOSTS 19744 player 4 posts 3 army 9325 posted 2100 idle_home 300 idle_field 0 script_team 7225 mission 0
+19770 AB19C087
+AISUPERWEAPON 19800 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 2448 value 16600 radius 300
+19800 1169AB76
+STATE frame 19800 mode 2 players 8 objects 421 recorder 0 particles 167/479
+AISUPERWEAPON 19812 player 4 special_power SpecialPowerSpySatellite enemy 6 target_id 2448 value 23100 radius 300
+19830 9B6B4205
+19860 D59E3AD5
+AIPOWER 19863 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AIMIX 19863 player 3 front 31/165 anti_vehicle 358/215 anti_infantry 554/112 anti_air 55/330 siege 0/175 distance 1170
+AITHREAT 19863 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 19863 player 3 cooldown 6 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 12 squad_shares 0 small_force 12 regrow 0 started 0 force 750/5000 units 3/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 19863 player 3 money 770 base 1000 free -230 priority_open 1
+AIECONOMY 19863 player 3 situation reserve 4875 centres 2 money 770 hackers 0 harvesters 8 need 4500 income_buildings 1 tech 0 free 0 gather_rate 7159 minutes_left 0.7 invest 1
+AIPOWER 19864 player 4 production 48 consumption 16 underpowered_s 0 power_plants 4 defence 3
+AIMIX 19864 player 4 front 238/165 anti_vehicle 440/215 anti_infantry 197/112 anti_air 122/330 siege 0/175 distance 768
+AITHREAT 19864 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 19864 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 16 squad_shares 0 small_force 14 regrow 0 started 0 force 300/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 19864 player 4 money 600 base 1000 free -400 priority_open 1
+AIECONOMY 19864 player 4 situation reserve 4875 centres 2 money 600 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 0 free 0 gather_rate 7321 minutes_left 0.7 invest 1
+19890 44027FD3
+19920 48C67B28
+19950 505A0ED9
+19980 D694EB33
+20010 12A77298
+20040 BEDF91CD
+20070 FECE42D2
+20100 EB615A68
+20130 C5BC15A5
+20160 2420B93E
+AIPOWER 20163 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AIPOWER 20164 player 4 production 48 consumption 16 underpowered_s 0 power_plants 4 defence 3
+AITAKEOVER 20185 player 4 team USA CT - Infantry 2. 22 units 4 value 1650
+20190 9957923F
+20220 B1BAA074
+20250 BB44CA81
+20280 26CE7A01
+20310 A1283248
+20340 145CBC2E
+20370 0F7CAB11
+20400 181C443B
+20430 73FB9D68
+20460 DD42314C
+AIPOWER 20463 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 5
+AIPOWER 20464 player 4 production 48 consumption 16 underpowered_s 0 power_plants 4 defence 3
+20490 BC06FDC2
+20520 00FEA051
+20550 8D1BCB72
+20580 92FE3D1F
+AISCRIPT 20583 player 3 teams 3 value 6375 top USA H 4TH Wave Artillery B. 13=5400;USA H Fire Base Units 1. 13=525;USA Tech Capture Team. 13=450;
+AIPOSTS 20583 player 3 posts 3 army 8725 posted 2350 idle_home 0 idle_field 0 script_team 6375 mission 0
+AISQUAD 20583 player 3 picked 5 of 6 value 2350 ratio 0.04 min_ratio 0.80 invited 0 covered 1 defenders 7 second_wave 0 front 191 anti_air 0 siege 0 ok 0 missing 25
+AISQUAD 20584 player 4 picked 11 of 11 value 3750 ratio 0.14 min_ratio 0.80 invited 0 covered 1 defenders 8 second_wave 0 front 120 anti_air 0 siege 0 ok 0 missing 25
+20610 0B76019A
+20640 2EF10525
+AIPOSTS 20644 player 4 posts 4 army 10600 posted 3750 idle_home 1650 idle_field 0 script_team 6850 mission 0
+20670 458BE519
+20700 98DC2B47
+STATE frame 20700 mode 2 players 8 objects 466 recorder 0 particles 161/1838
+20730 F4D7A8B9
+AISUPERWEAPON 20745 player 4 special_power SuperweaponA10ThunderboltMissileStrike wait value 2500
+20760 4BDED96B
+AIPOWER 20763 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 5
+AIMIX 20763 player 3 front 29/175 anti_vehicle 375/120 anti_infantry 541/136 anti_air 53/350 siege 0/218 distance 1321
+AITHREAT 20763 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 20764 player 4 production 48 consumption 17 underpowered_s 0 power_plants 4 defence 3
+AIMIX 20764 player 4 front 281/175 anti_vehicle 393/120 anti_infantry 231/134 anti_air 93/350 siege 0/218 distance 951
+AITHREAT 20764 player 4 threat 0 emergency 0 held_seconds 0
+20790 9368F380
+20820 0A8760E1
+20850 9999F9BB
+20880 585AD849
+20910 C041337D
+20940 D443CB00
+20970 A0C72EB1
+21000 7223BA25
+21030 AFA0CE2E
+21060 5415E19E
+AIPOWER 21063 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 5
+AIPOWER 21064 player 4 production 48 consumption 17 underpowered_s 0 power_plants 4 defence 3
+21090 78B4A3A5
+21120 7FAF069B
+21150 E62A4705
+21180 AC781873
+AIECONOMY 21205 player 4 build Lazr_AmericaPowerPlant have -4 target 4 reserve 0 reason power
+AIECONOMY 21205 player 4 blocked Lazr_AmericaSupplyCenter balance 4 reason power
+21210 58AC20C9
+21240 F7521ECE
+21270 4B857705
+AIFOCUS 21300 player 3 enemy 5 before 6 reason pressure cost 1840
+AIFOCUS 21300 player 4 enemy 5 before 6 reason alliance cost 0
+21300 D83C0954
+21330 69BEBABB
+21360 D13E7711
+AIPOWER 21363 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 5
+AIPOWER 21364 player 4 production 32 consumption 17 underpowered_s 0 power_plants 3 defence 3
+21390 59A28F73
+21420 E7291993
+21450 D5D35598
+21480 DEC3D479
+AIPOSTS 21483 player 3 posts 2 army 4925 posted 2350 idle_home 0 idle_field 0 script_team 2575 mission 0
+AISQUAD 21483 player 3 picked 5 of 6 value 2350 ratio 0.03 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 191 anti_air 0 siege 0 ok 0 missing 25
+AISQUAD 21484 player 4 picked 17 of 17 value 6050 ratio 0.40 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 223 anti_air 0 siege 0 ok 0 missing 25
+AIECONOMY 21506 player 4 blocked Lazr_AmericaPatriotBattery balance 4 reason power
+21510 AE092D42
+21540 7FD41180
+AISCRIPT 21544 player 4 teams 7 value 8975 top LR Complimentary Team2=2300;USA H 4TH Wave Tanks F. 22=1800;USA CT - Tank 2. 22=1500;USA H 5TH Wave Tanks B. 22=1500;USA H Fire Base Units 1. 22=1125;
+AIPOSTS 21544 player 4 posts 3 army 12725 posted 3750 idle_home 0 idle_field 0 script_team 8975 mission 0
+21570 FD1FC470
+AISUPERWEAPON 21600 player 3 special_power SpecialPowerSpySatellite enemy 5 target_id 4020 value 9300 radius 300
+21600 B03DD24D
+STATE frame 21600 mode 2 players 8 objects 440 recorder 0 particles 225/707
+AISUPERWEAPON 21613 player 4 special_power SpecialPowerSpySatellite enemy 5 target_id 3693 value 8900 radius 300
+21630 229D5EB4
+AISUPERWEAPON 21645 player 4 special_power SuperweaponA10ThunderboltMissileStrike enemy 5 target_id 5704 value 7500 radius 50
+AISUPERWEAPON 21648 player 3 special_power SuperweaponDaisyCutter enemy 5 target_id 4940 value 9525 radius 170
+21660 AD39FBDB
+AIPOWER 21663 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AIMIX 21663 player 3 front 37/167 anti_vehicle 384/207 anti_infantry 578/223 anti_air 0/213 siege 0/187 distance 1063
+AITHREAT 21663 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 21663 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 30 squad_shares 0 small_force 0 regrow 0 started 0 force 750/5000 units 3/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 21663 player 3 money 10 base 1000 free -990 priority_open 1
+AIECONOMY 21663 player 3 situation reserve 0 centres 2 money 10 hackers 0 harvesters 8 need 4500 income_buildings 1 tech 0 free 0 gather_rate 6654 minutes_left 0.0 invest 1
+AIPOWER 21664 player 4 production 32 consumption 15 underpowered_s 0 power_plants 4 defence 3
+AIMIX 21664 player 4 front 190/167 anti_vehicle 312/207 anti_infantry 399/223 anti_air 97/213 siege 0/187 distance 607
+AITHREAT 21664 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 21664 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 30 squad_shares 0 small_force 0 regrow 0 started 0 force 300/5000 units 1/6 idle_s 60 gather_s 0 attack_s 0
+AIBUDGET 21664 player 4 money 300 base 1000 free -700 priority_open 1
+AIECONOMY 21664 player 4 situation reserve 0 centres 2 money 300 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 0 free 0 gather_rate 6736 minutes_left 0.0 invest 1
+21690 A32C418A
+AITAKEOVER 21693 player 4 team USA CT - Tank 2. 22 units 3 value 1500
+21720 8A4C7763
+AIDEFENCE 21723 player 3 threat 900 units 6 value 2575 pos 643 1168
+21750 A58639C7
+21780 F1A5C3D3
+21810 5465C15F
+21840 0D5814D9
+21870 698C78F2
+21900 540A6FFB
+21930 7240AF85
+21960 A4D0B37F
+AIPOWER 21963 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AIPOWER 21964 player 4 production 32 consumption 15 underpowered_s 0 power_plants 4 defence 3
+21990 91DDEA90
+22020 5ACD1E73
+22050 BD0DE39F
+22080 FCBABC88
+22110 E3FA3F94
+22140 CF09090F
+22170 C3CE01D4
+22200 8AA13D74
+AIRAID 22204 player 4 build transport Lazr_AmericaVehicleHumvee riders Lazr_AmericaInfantryColonelBurton count 0 cost 8200
+AIBUILD 22204 player 4 unit Lazr_AmericaInfantryPathfinder cost 600 money 18300 choice role
+22230 00CF9FB3
+22260 0AE9D877
+AIPOWER 22263 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 4
+AIRAID 22263 player 3 build transport AirF_AmericaVehicleHumvee riders AirF_AmericaInfantryColonelBurton count 1 cost 8300
+AIBUILD 22263 player 3 upgrade Upgrade_AmericaMOAB cost 4000 money 16710
+AIPOWER 22264 player 4 production 32 consumption 15 underpowered_s 0 power_plants 4 defence 3
+AISQUAD 22264 player 4 picked 15 of 17 value 5400 ratio 1.31 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 333 anti_air 0 siege 0 ok 1 missing 25
+AIATTACK 22264 player 4 gather enemy 5 units 15 value 5400 usable 8802 pos 1772 1091
+AIECONOMY 22266 player 3 blocked AirF_AmericaParticleCannonUplink balance 7 reason power
+22290 284C892E
+22320 C2BDF96B
+AISQUAD 22323 player 3 picked 1 of 1 value 1300 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+22350 E3BF9699
+22380 BC69A44A
+AISCRIPT 22383 player 3 teams 3 value 3150 top USA H 5TH Wave Tanks C. 13=2400;USA H Fire Base Units 1. 13=525;USA Tech Capture Team. 13=225;
+AIPOSTS 22383 player 3 posts 3 army 5500 posted 1300 idle_home 1300 idle_field 0 script_team 3150 mission 0
+AISQUAD 22383 player 3 picked 1 of 1 value 1300 ratio 0.00 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 0 anti_air 0 siege 0 ok 1 missing 25
+22410 51403917
+22440 BBED8D86
+AISQUAD 22443 player 3 picked 3 of 3 value 1825 ratio 0.04 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 123 anti_air 0 siege 0 ok 1 missing 25
+AIPOSTS 22444 player 4 posts 3 army 11075 posted 300 idle_home 300 idle_field 0 script_team 4675 mission 6100
+22470 AC2A9417
+22500 3F69DC15
+STATE frame 22500 mode 2 players 8 objects 465 recorder 0 particles 289/3067
+AISQUAD 22503 player 3 picked 3 of 3 value 1825 ratio 0.04 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 123 anti_air 0 siege 0 ok 1 missing 25
+22530 77ABD505
+22560 AD866EBA
+AIPOWER 22563 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 5
+AIMIX 22563 player 3 front 33/153 anti_vehicle 385/169 anti_infantry 580/257 anti_air 0/225 siege 0/194 distance 1078
+AITHREAT 22563 player 3 threat 0 emergency 0 held_seconds 0
+AISQUAD 22563 player 3 picked 3 of 3 value 1825 ratio 0.04 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 123 anti_air 0 siege 0 ok 1 missing 25
+AIPOWER 22564 player 4 production 32 consumption 15 underpowered_s 0 power_plants 4 defence 3
+AIMIX 22564 player 4 front 158/153 anti_vehicle 345/169 anti_infantry 400/257 anti_air 95/225 siege 0/194 distance 647
+AITHREAT 22564 player 4 threat 0 emergency 0 held_seconds 0
+22590 8468BB17
+22620 9D10E299
+AISQUAD 22623 player 3 picked 3 of 3 value 1825 ratio 0.05 min_ratio 0.00 invited 1 covered 1 defenders 4 second_wave 0 front 123 anti_air 0 siege 0 ok 1 missing 25
+22650 D1FA480C
+22680 9EDBE3CB
+AISQUAD 22683 player 3 picked 5 of 5 value 2350 ratio 0.16 min_ratio 0.00 invited 1 covered 1 defenders 3 second_wave 0 front 191 anti_air 0 siege 0 ok 1 missing 25
+AIATTACK 22683 player 3 gather enemy 5 units 5 value 2350 usable 12600 pos 759 958 eingeladen
+22710 0F014425
+22740 FE680C40
+22770 94F8CAB9
+22800 A372DCCA
+22830 7FDF1E2D
+22860 B5A148D3
+AIPOWER 22863 player 3 production 45 consumption 21 underpowered_s 0 power_plants 5 defence 5
+AIBUILD 22863 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 12300 choice anti_air
+AIPOWER 22864 player 4 production 32 consumption 15 underpowered_s 0 power_plants 4 defence 3
+22890 3AC6C8B4
+22920 19203392
+22950 67476360
+22980 9B3AB5FC
+23010 3D6974E8
+23040 4FE266F4
+AIECONOMY 23043 player 3 build AirF_AmericaPowerPlant have -3 target 2 reserve 0 reason power
+AIBUILD 23043 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 14200 choice anti_air
+AIECONOMY 23045 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+23070 29A6AD59
+23100 F4DC519F
+23130 30E277C3
+23160 89824D53
+AIPOWER 23163 player 3 production 40 consumption 22 underpowered_s 0 power_plants 5 defence 5
+AIECONOMY 23163 player 3 build AirF_AmericaPowerPlant have -3 target 2 reserve 0 reason power
+AIPOWER 23164 player 4 production 40 consumption 16 underpowered_s 0 power_plants 4 defence 4
+AIATTACK 23164 player 4 launch pincer enemy 5 units 22 value 8150 target 1174 1820
+23190 81C8C997
+23220 E5DC3313
+AIATTACK 23223 player 3 launch with_ally enemy 5 units 10 value 7050 target 1174 1820
+AIBUILD 23223 player 3 unit AirF_AmericaInfantryRanger cost 225 money 11860 choice role
+AIMICRO 23235 player 3 situation focus 19 spacing 0 spread 0 own 10 enemies 2
+23250 8CA819BD
+23280 536EF8CA
+AIPOSTS 23283 player 3 posts 4 army 10175 posted 300 idle_home 300 idle_field 0 script_team 525 mission 7050
+AITARGET 23283 player 3 target Lazr_AmericaPowerPlant id 266 winner 0 ratio 1.53 path_threat 1249
+23310 F5D3D09F
+23340 18EC4599
+AISCRIPT 23344 player 4 teams 5 value 5550 top USA H 5TH Wave Tanks B. 22=2400;LR Complimentary Team2=1200;USA H Fire Base Units 1. 22=1125;USA Air Defender 1. 22=600;USA Tech Capture Team. 22=225;
+AIPOSTS 23344 player 4 posts 3 army 14700 posted 300 idle_home 0 idle_field 0 script_team 5550 mission 8850
+23370 8B0EFB4E
+AIMICRO 23385 player 4 situation focus 1 spacing 0 spread 0 own 22 enemies 7
+AIFOCUS 23400 player 3 enemy 6 before 5 reason pressure cost 2391
+AISUPERWEAPON 23400 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 2448 value 16600 radius 300
+AIFOCUS 23400 player 4 enemy 6 before 5 reason alliance cost 0
+23400 E656F06F
+STATE frame 23400 mode 2 players 8 objects 449 recorder 0 particles 183/2862
+AIBUILD 23403 player 3 unit AirF_AmericaInfantryRanger cost 225 money 9870 choice role
+AIBUILD 23404 player 4 unit Lazr_AmericaInfantryPathfinder cost 600 money 12650 choice role
+AISUPERWEAPON 23414 player 4 special_power SpecialPowerSpySatellite enemy 6 target_id 2448 value 22300 radius 300
+AIECONOMY 23419 player 4 blocked Lazr_AmericaPatriotBattery balance 4 reason power
+23430 EEF99DFE
+23460 4C208AD7
+AIPOWER 23463 player 3 production 40 consumption 22 underpowered_s 0 power_plants 5 defence 5
+AIMIX 23463 player 3 front 24/172 anti_vehicle 367/279 anti_infantry 553/55 anti_air 53/345 siege 0/146 distance 1174
+AITHREAT 23463 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 23463 player 3 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 2 squad_shares 0 small_force 15 regrow 0 started 1 force 2350/2000 units 5/3 idle_s 34 gather_s 18 attack_s 8
+AIBUDGET 23463 player 3 money 10445 base 800 free 9645 priority_open 1
+AIECONOMY 23463 player 3 situation reserve 4425 centres 3 money 10445 hackers 0 harvesters 9 need 4500 income_buildings 1 tech 0 free 0 gather_rate 6654 minutes_left 0.7 invest 1
+AIPOWER 23464 player 4 production 40 consumption 17 underpowered_s 0 power_plants 4 defence 4
+AIMIX 23464 player 4 front 214/172 anti_vehicle 353/279 anti_infantry 363/55 anti_air 68/345 siege 0/146 distance 849
+AITHREAT 23464 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 23464 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 10 squad_shares 0 small_force 0 regrow 0 started 1 force 5400/5000 units 15/6 idle_s 20 gather_s 30 attack_s 10
+AIBUDGET 23464 player 4 money 13050 base 1000 free 12050 priority_open 1
+AIECONOMY 23464 player 4 situation reserve 0 centres 2 money 13050 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 0 free 0 gather_rate 44805 minutes_left 0.0 invest 1
+23490 5207E733
+23520 760D3B7B
+AIMICRO 23535 player 3 situation focus 2 spacing 0 spread 0 own 10 enemies 4
+23550 498ABC22
+23580 F6204AC4
+23610 CF376BDD
+23640 48A01EEE
+23670 847EDDC1
+AIMICRO 23685 player 4 situation focus 13 spacing 13 spread 0 own 22 enemies 11
+23700 8306F6CF
+AIBUILD 23704 player 4 unit Lazr_AmericaInfantryMissileDefender cost 300 money 12050 choice role
+AIECONOMY 23719 player 4 blocked Lazr_AmericaPatriotBattery balance 4 reason power
+23730 D2E2A80A
+23760 E8748973
+AIPOWER 23763 player 3 production 40 consumption 22 underpowered_s 0 power_plants 5 defence 5
+AIPOWER 23764 player 4 production 40 consumption 17 underpowered_s 0 power_plants 4 defence 4
+23790 73276685
+23820 20FFCB6A
+AIATTACK 23823 player 3 resupply units 6 value 3275
+AIMICRO 23835 player 3 situation focus 9 spacing 15 spread 0 own 16 enemies 9
+23850 2A351F6C
+23880 E1D4A012
+AIBUILD 23883 player 3 unit AirF_AmericaInfantryMissileDefender cost 300 money 8015 choice anti_air
+AIBUILD 23884 player 4 unit Lazr_AmericaInfantryMissileDefender cost 300 money 10250 choice role
+23910 CC12EB59
+23940 324B082F
+23970 C7C96A03
+AIMICRO 23985 player 4 situation focus 7 spacing 28 spread 0 own 18 enemies 20
+24000 073DCABF
+AIECONOMY 24019 player 4 blocked Lazr_AmericaPatriotBattery balance 4 reason power
+24030 CB02CA01
+AISUPERWEAPON 24048 player 3 special_power AirF_SuperweaponSpectreGunship enemy 6 target_id 2448 value 14600 radius 200
+AISUPERWEAPON 24048 player 3 special_power AirF_SuperweaponA10ThunderboltMissileStrike enemy 6 target_id 524 value 5500 radius 50
+24060 76B5BD98
+AIPOWER 24063 player 3 production 40 consumption 22 underpowered_s 0 power_plants 5 defence 5
+AIHELP 24063 player 3 start ally 4 threat 1100 units 3 value 750 pos 1877 1208 armee 30275 einsetzbar 10868 kandidaten 3 wert 750
+AIBUILD 24063 player 3 unit AirF_AmericaInfantryRanger cost 225 money 6615 choice role
+AIPOWER 24064 player 4 production 40 consumption 17 underpowered_s 0 power_plants 4 defence 4
+AIBUILD 24064 player 4 unit Lazr_AmericaInfantryMissileDefender cost 300 money 10550 choice role
+24090 2FE0C430
+24120 B775988F
+AITARGET 24123 player 3 target AmericaPowerPlant id 3855 winner 0 ratio 2.54 path_threat 2336
+AITARGET 24124 player 4 target AmericaPowerPlant id 3855 winner 0 ratio 3.70 path_threat 1433
+AIMICRO 24135 player 3 situation focus 11 spacing 22 spread 0 own 19 enemies 14
+24150 CCEB4973
+24180 A666FB49
+AISCRIPT 24183 player 3 teams 2 value 1600 top USA CT - Base Def 2. 13=1300;USA H Fire Base Units 1. 13=300;
+AIPOSTS 24183 player 3 posts 3 army 12675 posted 0 idle_home 0 idle_field 0 script_team 1600 mission 11075
+24210 8AEC0543
+24240 7605C328
+AIHELP 24243 player 3 end hopeless duration 6 remaining 3
+AIPOSTS 24244 player 4 posts 3 army 16625 posted 1200 idle_home 900 idle_field 0 script_team 8175 mission 6650
+AIBUILD 24244 player 4 unit Lazr_AmericaInfantryMissileDefender cost 300 money 9950 choice role
+24270 67FBEC9F
+AIMICRO 24285 player 4 situation focus 49 spacing 5 spread 0 own 17 enemies 25
+24300 5FAAD838
+STATE frame 24300 mode 2 players 8 objects 469 recorder 0 particles 180/522
+AIPOSTS 24303 player 3 posts 3 army 12900 posted 750 idle_home 750 idle_field 0 script_team 1600 mission 10325
+AIECONOMY 24319 player 4 blocked Lazr_AmericaPatriotBattery balance 4 reason power
+24330 A67C81F3
+AISUPERWEAPON 24345 player 4 special_power SuperweaponDaisyCutter enemy 6 target_id 303 value 16600 radius 170
+AISUPERWEAPON 24345 player 4 special_power SuperweaponSpectreGunship enemy 6 target_id 3857 value 22700 radius 200
+24360 52C3C95C
+AIPOWER 24363 player 3 production 40 consumption 22 underpowered_s 0 power_plants 5 defence 5
+AIMIX 24363 player 3 front 35/167 anti_vehicle 388/313 anti_infantry 536/44 anti_air 39/335 siege 0/138 distance 1133
+AITHREAT 24363 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 24364 player 4 production 40 consumption 17 underpowered_s 0 power_plants 4 defence 4
+AIMIX 24364 player 4 front 206/167 anti_vehicle 330/313 anti_infantry 325/44 anti_air 137/335 siege 0/138 distance 673
+AITHREAT 24364 player 4 threat 275 emergency 0 held_seconds 0
+24390 CDC55136
+24420 76B48408
+AIBUILD 24424 player 4 unit Lazr_AmericaInfantryMissileDefender cost 300 money 10475 choice role
+AIMICRO 24435 player 3 situation focus 36 spacing 0 spread 0 own 15 enemies 23
+AIECONOMY 24439 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+24450 A256257C
+AITAKEOVER 24460 player 3 team USA CT - Base Def 2. 13 units 2 value 2600
+24480 1B722278
+24510 8FD9B6E3
+24540 196CAA80
+AIDEFENCE 24544 player 4 threat 2500 units 2 value 1200 pos 2531 1108
+24570 48AB7479
+AIMICRO 24585 player 4 situation focus 32 spacing 1 spread 0 own 16 enemies 39
+24600 76ED1F55
+AIBUILD 24604 player 4 unit Lazr_AmericaInfantryMissileDefender cost 300 money 9275 choice role
+AIECONOMY 24619 player 4 blocked Lazr_AmericaPatriotBattery balance 4 reason power
+24630 3610F7E4
+24660 10A1BEA5
+AIPOWER 24663 player 3 production 45 consumption 22 underpowered_s 0 power_plants 6 defence 5
+AIPOWER 24664 player 4 production 40 consumption 17 underpowered_s 0 power_plants 4 defence 4
+24690 5BED2A38
+AIMICRO 24705 player 3 spread_out units 12 spacing 150 superweapon 1
+AIMICRO 24705 player 4 spread_out units 16 spacing 150 superweapon 1
+24720 C44BFFB1
+AIMICRO 24735 player 3 situation focus 24 spacing 0 spread 12 own 11 enemies 19
+AIECONOMY 24739 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+AIECONOMY 24739 player 4 build Lazr_AmericaPowerPlant have -4 target 4 reserve 0 reason power
+AIFOCUS 24750 player 3 enemy 5 before 6 reason switch cost 1857
+AIFOCUS 24750 player 4 enemy 5 before 6 reason alliance cost 0
+24750 44D84DDE
+24780 2D6AB137
+AITARGET 24783 player 3 target Lazr_AmericaStrategyCenter id 9767 winner 1 ratio 0.09 path_threat 714
+AITARGET 24784 player 4 target Lazr_AmericaSupplyCenter id 225 winner 0 ratio 1.73 path_threat 3220
+24810 6D38400E
+24840 B5299773
+24870 BA7E50E4
+AIMICRO 24885 player 4 situation focus 12 spacing 0 spread 16 own 15 enemies 46
+24900 7E653057
+24930 E64569FD
+24960 0D41BF2E
+AIPOWER 24963 player 3 production 45 consumption 22 underpowered_s 0 power_plants 6 defence 5
+AIPOWER 24964 player 4 production 24 consumption 17 underpowered_s 0 power_plants 2 defence 4
+AIECONOMY 24964 player 4 build Lazr_AmericaPowerPlant have -4 target 4 reserve 0 reason power
+AIDEFENCE 24964 player 4 threat 2500 units 6 value 1350 pos 2957 1075
+24990 7C95D754
+AIMICRO 25005 player 3 spread_out units 9 spacing 150 superweapon 1
+25020 928BE965
+AIECONOMY 25024 player 4 build Lazr_AmericaPowerPlant have 3 target 4 reserve 0 reason power
+AIMICRO 25035 player 3 situation focus 9 spacing 0 spread 9 own 7 enemies 20
+AIECONOMY 25039 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+25050 FA3EBB01
+25080 CC2DE5C3
+AIATTACK 25083 player 3 end forecast phase 2 duration 62 value 3275 start 10325
+AIATTACK 25083 player 3 regrow_from value 13422 until 30483
+25110 DC94E07C
+25140 D6D0F5DB
+AISCRIPT 25143 player 3 teams 3 value 1550 top USA CT - Base Def 1. 13=800;USA Tech Capture Team. 13=450;USA H Fire Base Units 1. 13=300;
+AIPOSTS 25143 player 3 posts 4 army 8400 posted 4850 idle_home 4100 idle_field 0 script_team 1550 mission 0
+AISCRIPT 25144 player 4 teams 6 value 4950 top USA CT - Tank 3. 22=1800;USA H Fire Base Units 1. 22=1125;USA H 5TH Wave Tanks B. 22=900;LR Complimentary Team2=600;USA Air Defender 1. 22=300;
+AIPOSTS 25144 player 4 posts 3 army 12425 posted 0 idle_home 0 idle_field 0 script_team 4950 mission 6125
+25170 ADD50C9E
+AIMICRO 25185 player 4 situation focus 27 spacing 0 spread 0 own 14 enemies 56
+AISUPERWEAPON 25200 player 3 special_power SpecialPowerSpySatellite enemy 5 target_id 10604 value 13793 radius 300
+25200 22295F3F
+STATE frame 25200 mode 2 players 8 objects 512 recorder 0 particles 282/1310
+AISUPERWEAPON 25215 player 4 special_power SpecialPowerSpySatellite enemy 5 target_id 10860 value 13910 radius 300
+25230 F4333BCB
+25260 B13C8B43
+AIPOWER 25263 player 3 production 45 consumption 22 underpowered_s 0 power_plants 6 defence 5
+AIMIX 25263 player 3 front 35/148 anti_vehicle 406/297 anti_infantry 519/175 anti_air 38/163 siege 0/213 distance 904
+AITHREAT 25263 player 3 threat 0 emergency 0 held_seconds 0
+AIGATE 25263 player 3 cooldown 2 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 2350/2000 units 5/3 idle_s 6 gather_s 0 attack_s 54
+AIBUDGET 25263 player 3 money 2230 base 1000 free 1230 priority_open 1
+AIECONOMY 25263 player 3 situation reserve 1500 centres 3 money 2230 hackers 0 harvesters 9 need 4500 income_buildings 1 tech 0 free 0 gather_rate 4790 minutes_left 0.3 invest 1
+AIPOWER 25264 player 4 production 24 consumption 22 underpowered_s 0 power_plants 3 defence 4
+AIMIX 25264 player 4 front 311/148 anti_vehicle 332/297 anti_infantry 355/175 anti_air 0/163 siege 0/213 distance 754
+AITHREAT 25264 player 4 threat 0 emergency 0 held_seconds 0
+AIGATE 25264 player 4 cooldown 0 assist 0 grace 0 threat 0 no_enemy 0 no_target 0 squad_ratio 0 squad_shares 0 small_force 0 regrow 0 started 0 force 5400/5000 units 15/6 idle_s 0 gather_s 0 attack_s 60
+AIBUDGET 25264 player 4 money 7675 base 700 free 6975 priority_open 1
+AIECONOMY 25264 player 4 situation reserve 0 centres 2 money 7675 hackers 0 harvesters 7 need 2000 income_buildings 0 tech 0 free 0 gather_rate 22403 minutes_left 0.0 invest 1
+25290 0E9C761A
+25320 36C81053
+AIECONOMY 25339 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+25350 5ECCF468
+25380 4C5ABB12
+AITARGET 25384 player 4 target Lazr_AmericaPatriotBattery id 4346 winner 1 ratio 0.20 path_threat 0
+25410 2F76AD06
+25440 B1599D2D
+25470 D982B4B9
+AIMICRO 25485 player 4 situation focus 33 spacing 3 spread 0 own 9 enemies 26
+25500 10690ED5
+25530 BBFB701E
+AITAKEOVER 25541 player 3 team USA H 5TH Wave Burton. 13 units 1 value 1500
+25560 74DCDC2B
+AIPOWER 25563 player 3 production 45 consumption 22 underpowered_s 0 power_plants 6 defence 5
+AIPOWER 25564 player 4 production 24 consumption 21 underpowered_s 0 power_plants 3 defence 4
+25590 8D15B615
+25620 E0478918
+AIECONOMY 25639 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+25650 9F912AAB
+25680 D88D5F45
+AISQUAD 25683 player 3 picked 10 of 11 value 4625 ratio 0.03 min_ratio 0.80 invited 0 covered 1 defenders 9 second_wave 0 front 243 anti_air 0 siege 0 ok 0 missing 25
+25710 1B768BB3
+25740 4EDE4D8D
+AIATTACK 25744 player 4 resupply units 7 value 2850
+25770 BBE237A3
+AIMICRO 25785 player 4 spread_out units 13 spacing 150 superweapon 1
+AIMICRO 25785 player 4 situation focus 33 spacing 0 spread 13 own 13 enemies 31
+25800 3F19F62B
+AIRAID 25804 player 4 end gather_timeout
+25830 60C5C7DD
+25860 CCEB5816
+AIPOWER 25863 player 3 production 50 consumption 22 underpowered_s 0 power_plants 6 defence 5
+AIRAID 25863 player 3 end gather_timeout
+AIPOWER 25864 player 4 production 24 consumption 21 underpowered_s 0 power_plants 3 defence 4
+AIPOSTS 25864 player 4 posts 3 army 10525 posted 700 idle_home 700 idle_field 0 script_team 5325 mission 4500
+25890 5937931D
+25920 0ABA4A0D
+AIPOSTS 25923 player 3 posts 4 army 9500 posted 6350 idle_home 1500 idle_field 0 script_team 3150 mission 0
+25950 84C59CAD
+25980 F27CD0EC
+AIECONOMY 25980 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+26010 6B187601
+26040 3A9FB2B1
+26070 3D7D9B93
+AIMICRO 26085 player 4 situation focus 18 spacing 0 spread 0 own 13 enemies 31
+AIFOCUS 26100 player 3 enemy 6 before 5 reason pressure cost 1928
+AIFOCUS 26100 player 4 enemy 6 before 5 reason alliance cost 0
+26100 AC780CCF
+STATE frame 26100 mode 2 players 8 objects 471 recorder 0 particles 296/2110
+26130 6AC6401B
+26160 AF49CE9C
+AIPOWER 26163 player 3 production 50 consumption 22 underpowered_s 0 power_plants 6 defence 5
+AIMIX 26163 player 3 front 56/166 anti_vehicle 343/316 anti_infantry 599/81 anti_air 0/274 siege 0/161 distance 1090
+AITHREAT 26163 player 3 threat 0 emergency 0 held_seconds 0
+AIPOWER 26164 player 4 production 32 consumption 21 underpowered_s 0 power_plants 3 defence 4
+AIMIX 26164 player 4 front 217/166 anti_vehicle 289/316 anti_infantry 286/81 anti_air 206/274 siege 0/161 distance 511
+AITHREAT 26164 player 4 threat 0 emergency 0 held_seconds 0
+26190 C6A8BEBF
+26220 11C9A16F
+AIDEFENCE 26224 player 4 threat 2500 units 1 value 700 pos 2660 966
+26250 8C77172F
+26280 CC3395C9
+AIECONOMY 26280 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+AISQUAD 26283 player 3 picked 5 of 12 value 1275 ratio 3.13 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 529 anti_air 0 siege 0 ok 1 missing 24
+26310 089B8833
+26340 E342BE94
+AISQUAD 26343 player 3 picked 11 of 11 value 6125 ratio 1.17 min_ratio 0.80 invited 0 covered 1 defenders 4 second_wave 0 front 183 anti_air 0 siege 0 ok 1 missing 25
+26370 32B38562
+AIMICRO 26385 player 4 situation focus 29 spacing 0 spread 0 own 6 enemies 27
+26400 CC344C12
+AISQUAD 26403 player 3 picked 3 of 12 value 750 ratio 1.45 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 600 anti_air 0 siege 0 ok 1 missing 24
+26430 63D54369
+26460 61F29062
+AIPOWER 26463 player 3 production 50 consumption 25 underpowered_s 0 power_plants 6 defence 5
+AISQUAD 26463 player 3 picked 11 of 11 value 6125 ratio 1.11 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 183 anti_air 0 siege 0 ok 1 missing 25
+AIPOWER 26464 player 4 production 32 consumption 22 underpowered_s 0 power_plants 3 defence 4
+AIHELP 26464 player 4 start ally 3 threat 3300 units 6 value 4900 pos 870 1675 armee 10075 einsetzbar 5402 kandidaten 7 wert 5800
+26490 967CF69C
+26520 E09E85C0
+AISQUAD 26523 player 3 picked 11 of 12 value 6125 ratio 1.11 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 183 anti_air 0 siege 0 ok 1 missing 25
+26550 4498A85A
+26580 DECEFF2F
+AISQUAD 26583 player 3 picked 11 of 11 value 6125 ratio 1.10 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 183 anti_air 0 siege 0 ok 1 missing 25
+AIECONOMY 26584 player 4 order_cancelled Lazr_AmericaPowerPlant pos 2619 615
+AIECONOMY 26585 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+26610 A7C71EA2
+26640 7A33732E
+AISQUAD 26643 player 3 picked 11 of 12 value 6125 ratio 1.10 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 183 anti_air 0 siege 0 ok 1 missing 25
+26670 3F6B9D83
+AIMICRO 26685 player 4 situation focus 29 spacing 9 spread 0 own 11 enemies 27
+26700 AB4B2BDC
+AISQUAD 26703 player 3 picked 10 of 10 value 5825 ratio 0.93 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 193 anti_air 0 siege 0 ok 1 missing 25
+AITARGET 26704 player 4 target AmericaSupplyDropZone id 1339 winner 1 ratio 0.14 path_threat 630
+26730 B88FD15B
+26760 BAA1273E
+AIPOWER 26763 player 3 production 50 consumption 25 underpowered_s 0 power_plants 6 defence 5
+AISQUAD 26763 player 3 picked 9 of 10 value 5600 ratio 0.82 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 160 anti_air 0 siege 0 ok 1 missing 25
+AIPOWER 26764 player 4 production 32 consumption 23 underpowered_s 0 power_plants 3 defence 4
+AISCRIPT 26764 player 4 teams 2 value 2925 top USA H 5TH Wave Tanks F. 22=1800;USA H Fire Base Units 1. 22=1125;
+AIPOSTS 26764 player 4 posts 3 army 7375 posted 0 idle_home 0 idle_field 0 script_team 2925 mission 4450
+26790 8AE2FEAE
+26820 7C1C41B0
+AISCRIPT 26823 player 3 teams 3 value 3725 top USA H 5TH Wave Tanks C. 13=3200;USA H Fire Base Units 1. 13=300;USA Tech Capture Team. 13=225;
+AIPOSTS 26823 player 3 posts 4 army 9550 posted 5825 idle_home 0 idle_field 0 script_team 3725 mission 0
+AISQUAD 26823 player 3 picked 9 of 9 value 5600 ratio 0.82 min_ratio 0.80 invited 0 covered 1 defenders 3 second_wave 0 front 160 anti_air 0 siege 0 ok 1 missing 25
+26850 40B8A76E
+26880 846FC592
+AIDEFENCE 26884 player 4 threat 5200 units 1 value 900 pos 2440 1059
+AIECONOMY 26885 player 3 blocked AirF_AmericaPatriotBattery balance 2 reason power
+26910 2EFA51CC
+26940 54055A30
+AIDEFENCE 26943 player 3 threat 2550 units 10 value 5825 pos 814 744
+AIHELP 26943 player 3 start ally 4 threat 1500 units 6 value 2500 pos 817 1629 armee 17500 einsetzbar 12250 kandidaten 11 wert 6050
+AIMICRO 26955 player 3 situation focus 1 spacing 0 spread 0 own 6 enemies 21
+26970 D0071763
+AIMICRO 26985 player 4 situation focus 44 spacing 11 spread 0 own 9 enemies 27
 END maxFrames 27000
-KISUPERWAFFE 27000 spieler 3 macht SpecialPowerSpySatellite gegner 5 ziel_id 196 wert 10579 radius 300
-27000 064664CD
+AISUPERWEAPON 27000 player 3 special_power SpecialPowerSpySatellite enemy 6 target_id 1339 value 12100 radius 300
+27000 CBCFFAB9
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
-BENCH ticks 26998 mean 1.516 p50 1.427 p95 3.333 p99 4.976 max 19.202 total 40930 ms
-FRAMES frames 26940 mean 1.521 p50 1.432 p95 3.337 p99 4.979 max 28.730 total 40981 ms
-PFADSUCHE 0.2401 ms je Tick mit Anfragen (13118 Ticks, hoechstens 15.161 ms) anfragen 25996 zellen 6834220 warteschlange 2.0 hoechstens 26 rest 0.03 anfragen_je_tick 6504 4924 1602 88 einzeln_hoechstens 15.161 ms
-PFADSUCHE_ARTEN pfad 20974 zellen 1499888 ms 1137.1 hoechstens 15.15 naechster 668 zellen 1811416 ms 719.1 hoechstens 8.04 angriff 3311 zellen 3517267 ms 1202.7 hoechstens 1.84 kosten 435 zellen 1298 ms 0.1 hoechstens 0.00 boden 62 zellen 40131 ms 82.9 hoechstens 12.53 ausweichen 409 zellen 12581 ms 5.1 hoechstens 0.18 sichtlinie 2607065 schritte 16400426 abbrueche 2598620 vorrat_leer 3594 pfad_fehlschlaege 4 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 22448 kleinste 20704 frei_bei_vorrat_leer 0
-LOGIKPHASEN 27001 Ticks, 1.2121 ms je Tick (Mittel/hoechstens ms): skript 0.0861/12.670 gelaende 0.0001/0.240 befehle 0.0015/25.891 updates 0.7586/13.109 ki 0.2291/250.061 bau 0.0002/0.221 partition 0.1143/6.324 tickende 0.0221/0.637
-LOGIKMODULE 57 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): AIUpdateInterface 0.2883 59.8 8.759 PhysicsBehavior 0.0881 109.6 1.927 JetAIUpdate 0.0704 15.5 2.301 PointDefenseLaserUpdate 0.0497 26.8 1.224 ChinookAIUpdate 0.0318 21.7 0.401 DozerAIUpdate 0.0300 8.5 0.702 ProductionUpdate 0.0267 75.2 12.090 TransportAIUpdate 0.0155 1.6 1.126 ObjectWeaponStatusHelper 0.0152 95.8 0.409 MissileAIUpdate 0.0093 4.4 0.356 StealthDetectorUpdate 0.0084 3.8 0.387 SlowDeathBehavior 0.0047 8.5 2.232
-LOGIKSPITZE ab Tick 31: laengster Tick 27000 26.322 ms: skript 0.423 gelaende 0.000 befehle 25.891 updates 0.000 ki 0.003 bau 0.001 partition 0.002 tickende 0.002; laengstes Update 12.090 ms Tick 12418 ProductionUpdate an AmericaBarracks
-GPUEFFEKTE flags 0x1FFFF samples 1 bilder 53 bild 14.4606 ms (53) bodendetail zeichnungen 0.0 von 0.0 felder 216 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 463.6 umlaeufe 0.16
-PARTIKELZEIT simulation 0.0004 ms je Tick (57 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+BENCH ticks 26998 mean 1.185 p50 1.069 p95 2.661 p99 4.029 max 18.466 total 31994 ms
+FRAMES frames 26940 mean 1.190 p50 1.072 p95 2.665 p99 4.030 max 32.555 total 32051 ms
+PATHFINDING 0.1311 ms per tick with requests (14759 ticks, max 10.505 ms) requests 28045 cells 3856679 queue 1.9 max 28 rest 0.03 requests_per_tick 8263 4886 1355 255 single_max 9.538 ms
+PATHFINDING_KINDS path 22882 cells 1441160 ms 1071.5 max 9.53 nearest 513 cells 754171 ms 262.6 max 6.62 attack 2396 cells 1657524 ms 531.3 max 1.34 cost 462 cells 1407 ms 0.2 max 0.01 ground 63 cells 33804 ms 81.8 max 7.26 evade 307 cells 8538 ms 3.5 max 0.24 line_of_sight 1621004 steps 12686708 aborts 1612446 pool_empty 4567 path_failures 3 of_pool_empty 0 repeated 0 free_at_start mean 22654 smallest 20868 free_when_pool_empty 0
+LOGICPHASES 27001 ticks, 0.9484 ms per tick (mean/max ms): script 0.0674/11.548 terrain 0.0001/0.090 commands 0.0016/29.739 updates 0.5923/7.800 ai 0.1746/18.218 build 0.0001/0.080 partition 0.0978/2.417 tick_end 0.0145/3.614
+LOGICMODULES 58 types (ms per tick, calls per tick, longest call ms): AIUpdateInterface 0.1958 53.0 2.412 JetAIUpdate 0.0679 15.7 1.728 PhysicsBehavior 0.0670 96.2 1.806 PointDefenseLaserUpdate 0.0459 23.5 1.143 ChinookAIUpdate 0.0254 21.3 0.257 ProductionUpdate 0.0226 74.3 7.748 DozerAIUpdate 0.0207 7.6 0.501 TransportAIUpdate 0.0164 2.1 1.675 ObjectWeaponStatusHelper 0.0115 94.2 0.227 StealthDetectorUpdate 0.0067 3.2 0.253 MissileAIUpdate 0.0063 3.3 0.538 SlowDeathBehavior 0.0038 7.7 1.622
+LOGICPEAK from tick 31: longest tick 27000 29.980 ms: script 0.233 terrain 0.000 commands 29.739 updates 0.000 ai 0.003 build 0.000 partition 0.003 tick_end 0.003; longest update 7.748 ms tick 1150 ProductionUpdate on Lazr_AmericaBarracks
+GPUEFFECTS flags 0xC7DDFFFF samples 1 frames 53 frame 9.3177 ms (53) ground_detail draws 0.0 of 0.0 cells 216 table 1 textures -1 mountains draws 0.0 heightfield 0 x 0 textures -1 relief draws 0.0 atlas 1 tessellation draws 0.0 sections 0.00 patches 0 points 0 triangles 0 measured 0 heights 1 rock 0.00 cb_ring writes 463.6 wraps 0.16
+PARTICLETIME simulation 0.0008 ms per tick (57 ticks, 0.0 particles) prepare 0.0000 ms per frame (0 frames, 0.0 particles visible)
 EXIT code 0

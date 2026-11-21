@@ -94,11 +94,9 @@ UpgradeCenter TheUpgradeCenter lesen
 Version TheVersion lesen
 VictoryConditionsInterface TheVictoryConditions lesen
 VideoPlayerInterface TheVideoPlayer lesen
-W3DBufferManager TheW3DBufferManager lesen
 W3DFileSystem TheW3DFileSystem lesen
 W3DProjectedShadowManager TheW3DProjectedShadowManager lesen
 W3DShadowManager TheW3DShadowManager lesen
-W3DVolumetricShadowManager TheW3DVolumetricShadowManager lesen
 WaterRenderObjClass TheWaterRenderObj lesen
 WeaponStore TheWeaponStore lesen
 Win32Keyboard TheWin32Keyboard lesen

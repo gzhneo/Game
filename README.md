@@ -20,10 +20,10 @@ Hour, for example from *The Ultimate Collection* on the
 [EA app](https://www.ea.com/en-gb/games/command-and-conquer/command-and-conquer-the-ultimate-collection/buy/pc) or
 [Steam](https://store.steampowered.com/bundle/39394/Command__Conquer_The_Ultimate_Collection/).
 
-## Status: 2.0-alpha-2
+## Status: 2.0-alpha-3
 
-This is the second public version of GZH Neo, **2.0-alpha-2**, after 2.0-alpha-1 (November 2026, source code
-only). The "2" marks the step from EA's last patches, Generals
+This is the third public version of GZH Neo, **2.0-alpha-3**, after 2.0-alpha-1 (November 2026, source code
+only) and 2.0-alpha-2 (November 2026, the first with a setup). The "2" marks the step from EA's last patches, Generals
 1.08 and Zero Hour 1.04. *Alpha* means: both games build, run and are playable — skirmish, campaign and network games —
 but not everything is finished. Both games and all automated tests have passed on several different computers, but not
 yet on the wide range of hardware that players have. Expect rough edges and please
@@ -53,7 +53,7 @@ around it, such as mods, may follow as repositories of their own under [github.c
 - **Network play without GameSpy:** a new session layer with LAN lobby, direct connection, invite codes and a relay;
   packets are encrypted and authenticated. Games over the internet use a small rendezvous server (`gzh-rendezvous`,
   part of the source code) that anyone can run for themselves or their community
-  ([Code/Tools/Server/Rendezvous/README.md](Code/Tools/Server/Rendezvous/README.md)); the game is told about it with `-treffpunkt` or
+  ([Code/Tools/Server/Rendezvous/README.md](Code/Tools/Server/Rendezvous/README.md)); the game is told about it with `-rendezvous` or
   `<user folder>\Rendezvous.txt`.
 - **Many bugs of the original fixed:** memory errors and remotely triggerable faults in the network code, memory leaks,
   crashes on exit, a 1997 typo in the vector maths, broken German speech, errors in the game data.
@@ -81,8 +81,8 @@ around it, such as mods, may follow as repositories of their own under [github.c
 ### Game
 
 - **A new computer AI**, selectable next to the classic one in skirmish ("Brutal (new AI)" and the easier levels): it
-  cooperates with allies, attacks in a coordinated way, defends its base and expands its economy. In Zero Hour it wins
-  about 70 % of games against the classic Brutal AI.
+  cooperates with allies, attacks in a coordinated way, defends its base and expands its economy. It wins about two
+  thirds of games against the classic Brutal AI.
 - **Spectating** AI-only games, a **grace period** as a game option, a reworked options menu.
 
 ### Tools and tests

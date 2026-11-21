@@ -305,9 +305,17 @@ class XAudio2AudioManager : public AudioManager
 		std::list<PlayingAudio *> m_fadingAudio;
 		std::list<PlayingAudio *> m_stoppedAudio;
 
-		// One-off, fire-and-forget playback used only by friend_forcePlayAudioEventRTS() (loading
-		// screens) -- bypasses the priority/limit system entirely.
-		std::list<IXAudio2SourceVoice *> m_audioForcePlayed;
+		// One-off playback used only by friend_forcePlayAudioEventRTS() (loading screens) -- bypasses
+		// the priority/limit system entirely. The voice plays straight from the cached file, so the file
+		// stays open until the voice is gone.
+		struct ForcePlayed
+		{
+			IXAudio2SourceVoice *m_voice;
+			void *m_file;
+		};
+		std::list<ForcePlayed> m_audioForcePlayed;
+		void releaseForcePlayed( const ForcePlayed &played );
+		void processForcePlayedList( void );		///< Destroys finished voices and closes their files
 
 		std::unique_ptr<AudioFileCache> m_audioCache;
 		PlayingAudio *m_binkHandle;			// unused stub; video audio uses its own voices

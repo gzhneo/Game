@@ -10,18 +10,25 @@
 #include "formatinto.h"
 
 #include "Common/CrashReport.h"
+#include "Engine/Clock.h"
 #include "Engine/CpuTopology.h"
 #include "Engine/EngineLog.h"
 #include "Common/GlobalData.h"
+#include "Common/GameLOD.h"
 #include "Common/Recorder.h"
 #include "Common/StackDump.h"
+#include "Lib/SafeString.h"
+#include <shellapi.h>
+#include "Common/UserSettings.h"
 #include "Common/version.h"
+#include "GameClient/ParticleSys.h"
 #include "GameLogic/GameLogic.h"
 
 // <imagehlp.h>, not <dbghelp.h>: the precompiled header (PreRTS.h) already includes imagehlp.h,
 // and dbghelp.h would define the same types again (C2011/C2365). imagehlp.h includes
 // minidumpapiset.h (MiniDumpWriteDump).
 #include <imagehlp.h>
+#include <psapi.h>
 
 // A failing step of the report must not take the others down (see WriteCrashReport below).
 // Structured exception handling exists only with MSVC; elsewhere (g++ syntax checks) the macros
@@ -104,9 +111,19 @@ static void writeInfoFile( const char *path, const char *reason )
 
 	if( TheGlobalData != nullptr )
 	{
+		if( TheGlobalData->m_graphicsCard.isNotEmpty() )
+			fprintf( out, "Graphics:    %s\n", TheGlobalData->m_graphicsCard.str() );
 		fprintf( out, "Map:         %s\n", TheGlobalData->m_mapName.str() );
 		fprintf( out, "Worker:      %d\n", TheGlobalData->m_workerThreads );
+		fprintf( out, "Backend:     %s\n", UserSettings::useVulkanRenderer() ? "Vulkan" : "Direct3D 11" );
+		fprintf( out, "Resolution:  %d x %d (%s)\n", TheGlobalData->m_xResolution, TheGlobalData->m_yResolution,
+			TheGlobalData->m_windowed ? "windowed" : "fullscreen" );
+		fprintf( out, "Effects:     0x%08x, MSAA %d, texture tier %d\n", static_cast<unsigned>(TheGlobalData->m_renderEffects),
+			static_cast<int>(TheGlobalData->m_renderEffectMsaa), static_cast<int>(TheGlobalData->m_textureQuality) );
 	}
+	if( TheGameLODManager != nullptr )
+		fprintf( out, "Detail:      static level %d, dynamic level %d\n",
+			static_cast<Int>(TheGameLODManager->getStaticLODLevel()), static_cast<Int>(TheGameLODManager->getDynamicLODLevel()) );
 	if( TheGameLogic != nullptr )
 	{
 		fprintf( out, "Logic frame: %u\n", TheGameLogic->getFrame() );
@@ -115,7 +132,25 @@ static void writeInfoFile( const char *path, const char *reason )
 			TheGameLogic->isInShellGame() ? 1 : 0 );
 	}
 	if( TheRecorder != nullptr )
+	{
 		fprintf( out, "Recorder:    mode %d\n", static_cast<Int>(TheRecorder->getMode()) );
+		// Single player games (campaign, challenge) are not recorded: their scripts use the local player,
+		// so a replay would not reproduce the game. The map and logic frame above are then all there is.
+		if( TheGameLogic != nullptr && TheGameLogic->getGameMode() == GAME_SINGLE_PLAYER )
+			fprintf( out, "Replay:      none (single player games are not recorded)\n" );
+	}
+	if( TheParticleSystemManager != nullptr )
+		fprintf( out, "Particles:   %u\n", static_cast<unsigned>(TheParticleSystemManager->getParticleCount()) );
+	if( TheGameLogic != nullptr )
+		fprintf( out, "Objects:     %u\n", static_cast<unsigned>(TheGameLogic->getObjectCount()) );
+	{
+		PROCESS_MEMORY_COUNTERS counters;
+		counters.cb = sizeof(counters);
+		if( ::GetProcessMemoryInfo( ::GetCurrentProcess(), &counters, sizeof(counters) ) )
+			fprintf( out, "Memory:      working set %llu MB, peak %llu MB, committed %llu MB\n",
+				static_cast<unsigned long long>(counters.WorkingSetSize >> 20), static_cast<unsigned long long>(counters.PeakWorkingSetSize >> 20),
+				static_cast<unsigned long long>(counters.PagefileUsage >> 20) );
+	}
 
 	fclose( out );
 }
@@ -212,10 +247,87 @@ Bool WriteCrashReport( const char *reason, struct _EXCEPTION_POINTERS *exception
 		CRASHREPORT_CATCH
 	}
 
+	// The next start tells the player where the report is (CrashReportAnnouncePrevious). A watchdog report
+	// (no exception) is no crash: the game keeps running.
+	if( exceptionInfo != nullptr )
+	{
+		CRASHREPORT_TRY
+		{
+			FILE *marker = fopen( "Crashes\\Pending.txt", "w" );
+			if( marker != nullptr )
+			{
+				fputs( folder, marker );
+				fclose( marker );
+			}
+		}
+		CRASHREPORT_CATCH
+	}
+
 	if( outFolder != nullptr && outFolderSize > 0 )
 	{
 		strncpy( outFolder, folder, outFolderSize - 1 );
 		outFolder[outFolderSize - 1] = 0;
 	}
 	return TRUE;
+}
+
+//-------------------------------------------------------------------------------------------------
+void CrashReportAnnouncePrevious( Bool interactive )
+{
+	FILE *marker = fopen( "Crashes\\Pending.txt", "r" );
+	if( marker == nullptr )
+		return;
+	char folder[MAX_PATH] = "";
+	if( fgets( folder, sizeof(folder), marker ) == nullptr )
+		folder[0] = 0;
+	fclose( marker );
+
+	for( size_t n = strlen( folder ); n > 0 && (folder[n - 1] == '\n' || folder[n - 1] == '\r'); --n )
+		folder[n - 1] = 0;
+	if( folder[0] == 0 )
+	{
+		remove( "Crashes\\Pending.txt" );
+		return;
+	}
+
+	char full[MAX_PATH];
+	if( ::GetFullPathName( folder, sizeof(full), full, nullptr ) == 0 )
+		safe_strcpy( full, folder );
+
+	ENGINE_LOG_WARNING( ::Engine::LOG_CAT_ENGINE, "The previous run ended with a crash; report in %s", full );
+	DEBUG_LOG(( "previous run crashed, report in %s\n", full ));
+
+	// Test and tool runs only log it and leave the note for the player's next start.
+	if( !interactive )
+		return;
+	remove( "Crashes\\Pending.txt" );
+
+	char text[MAX_PATH + 256];
+	WWFormat::Into( text, "The game did not end properly last time.\n\nA crash report was saved in:\n{}\n\n"
+		"Please send this folder along with your bug report. Open it now?", full );
+	text[sizeof(text) - 1] = 0;
+	if( ::MessageBoxA( nullptr, text, "Crash report", MB_YESNO | MB_ICONINFORMATION | MB_TASKMODAL ) == IDYES )
+		::ShellExecuteA( nullptr, "open", full, nullptr, nullptr, SW_SHOWNORMAL );
+}
+
+//-------------------------------------------------------------------------------------------------
+void CrashReportLogCounters( void )
+{
+	static UnsignedInt lastMs = 0;
+	const UnsignedInt nowMs = ::Engine::Clock::milliseconds();
+	if( nowMs - lastMs < 1000 )
+		return;
+	lastMs = nowMs;
+
+	unsigned long long workingMB = 0;
+	PROCESS_MEMORY_COUNTERS counters;
+	counters.cb = sizeof(counters);
+	if( ::GetProcessMemoryInfo( ::GetCurrentProcess(), &counters, sizeof(counters) ) )
+		workingMB = counters.WorkingSetSize >> 20;
+
+	ENGINE_LOG_INFO( ::Engine::LOG_CAT_ENGINE, "counters: frame %u, objects %u, particles %u, memory %llu MB",
+		TheGameLogic != nullptr ? static_cast<unsigned>(TheGameLogic->getFrame()) : 0u,
+		TheGameLogic != nullptr ? static_cast<unsigned>(TheGameLogic->getObjectCount()) : 0u,
+		TheParticleSystemManager != nullptr ? static_cast<unsigned>(TheParticleSystemManager->getParticleCount()) : 0u,
+		workingMB );
 }

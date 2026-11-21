@@ -878,7 +878,7 @@ void ScriptEngine::setTimer( ScriptAction *pAction, Bool millisecondTimer, Bool 
 		Real value = pAction->getParameter(1)->getReal();
 		if (random) {
 			Real randomValue = pAction->getParameter(2)->getReal();
-			value = static_cast<Real>(GameLogicRandomValue(static_cast<Int>(value), static_cast<Int>(randomValue)));
+			value = GameLogicRandomValueReal(value, randomValue);
 		}
 		m_counters[counterNdx].value = REAL_TO_INT_CEIL(ConvertDurationFromMsecsToFrames(value*1000));
 	} else {

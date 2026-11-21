@@ -1,9 +1,9 @@
 # Optionsmenue oeffnen und bei offenem Menue das Fenster schliessen (WM_CLOSE, wie Alt+F4).
-hauptmenue
-klick MainMenu.wnd:ButtonOptions
-fenster OptionsMenu.wnd:ButtonBack
-warte 60
-schliessen
-warte 600
+mainMenu
+click MainMenu.wnd:ButtonOptions
+window OptionsMenu.wnd:ButtonBack
+wait 60
+close
+wait 600
 log WM_CLOSE ohne Wirkung
-beenden
+quit

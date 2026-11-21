@@ -23,7 +23,7 @@
 // The typed readers below keep the fallbacks of the old Options.ini readers: when the file does not set
 // a value, it comes from game data (GlobalData, AudioSettings, the detail level), not from the schema.
 // Values change in memory at once; save() writes the files that changed, unless the run may not write
-// (test runs, -einstellungenNurLesen).
+// (test runs, -settingsReadOnly).
 
 #pragma once
 
@@ -42,6 +42,10 @@ namespace Engine { namespace Settings { class Store; } }
 
 namespace UserSettings
 {
+
+/// True for test and tool runs (-runner, -maxFrames, -quitAfter, screenshots, camera paths, test scripts, local network
+/// instances, -settingsReadOnly): they write no settings and must not stop at a dialog.
+Bool isAutomatedRun();
 
 // ---- by schema id
 
@@ -103,7 +107,6 @@ Bool getExtraAnimationsDisabled();
 Bool getUseHeatEffects();
 Bool getDynamicLODEnabled();
 Bool getFPSLimitEnabled();
-Bool get3DShadowsEnabled();
 Bool get2DShadowsEnabled();
 Bool getBuildingOcclusionEnabled();
 Int getParticleCap();
@@ -121,6 +124,7 @@ Bool getVSyncEnabled();
 Bool useVulkanRenderer();			///< Display.RenderBackend, -vulkan and -d3d11 included
 Int getAntiAliasing();				///< multisampling samples: menu index 0/1/2 or 4/8/16
 Int getTextureQuality();			///< Engine::TEXTURE_TIER_*
+AsciiString getAdapter();				///< Display.Adapter, -adapter included; empty: automatic
 AsciiString getD3D11Effects();
 Real getRenderScale();				///< 0.5..1, -renderScale included; -1 if not set
 Int getRenderScaleFilter();			///< 0 bilinear, 1 bicubic, 2 cas; -1 if not set

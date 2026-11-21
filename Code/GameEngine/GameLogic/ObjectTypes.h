@@ -86,6 +86,10 @@ public:
 
 	// Can the player build any of the thing templates that we have names for?
 	Bool canBuildAny(Player *player);
+
+private:
+	// Templates named in this list; a name of another script object type list adds its members (once each).
+	void collectTemplates(std::vector<const ObjectTypes *>& visited, std::vector<const ThingTemplate *>& templates) const;
 };
 EMPTY_DTOR(ObjectTypes)
 

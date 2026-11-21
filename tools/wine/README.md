@@ -88,11 +88,11 @@ Baut aus den Testdaten eine Stufe UHD (`texturpaket_stufe.py`: Texturen vierfach
 `ZHTS4`, die Wassertextur `testwater` als DXT1-DDS mit voller Mip-Kette), daraus das Paket
 (`tools/assets/build_texture_package.py`) und startet vier Skirmish-Läufe mit `-logTextureStats`: ohne Paket und
 mit `-textureQuality sd|hd|uhd`, dazu UHD mit einem Mod (`-mod`), der die Wassertextur in Originalgröße ersetzt.
-Geprüft: Zeile `TEXTURPAKET <Stufe>`, SD so viele Texel wie ohne Paket, HD und UHD mehr, mindestens eine DXT-Textur,
-Geländeatlas-Faktor 1/1/2/4, mit Mod `TEXTURPAKET ersetzt 1` und weniger Texel als ohne Mod, jeder Lauf endet mit 0. Ablage
+Geprüft: Zeile `TEXTUREPACK <Stufe>`, SD so viele Texel wie ohne Paket, HD und UHD mehr, mindestens eine DXT-Textur,
+Geländeatlas-Faktor 1/1/2/4, mit Mod `TEXTUREPACK ersetzt 1` und weniger Texel als ohne Mod, jeder Lauf endet mit 0. Ablage
 `<CNC_WINE_DIR>/testdata-paket`.
 
-`run_game.sh <Datenordner> -modellPruefung <Datei>` lädt jedes Modell unter `Art\W3D` und jede DDS unter
+`run_game.sh <Datenordner> -modelCheck <Datei>` lädt jedes Modell unter `Art\W3D` und jede DDS unter
 `Art\Textures` und beendet das Spiel nach dem Start; die Zeilen `MODELCHECK` stehen in `<Datei>` (Testdaten:
 23 Modelle, nichts abgewiesen).
 
@@ -100,7 +100,7 @@ Geländeatlas-Faktor 1/1/2/4, mit Mod `TEXTURPAKET ersetzt 1` und weniger Texel 
 
     tools/wine/dateisystem_test.sh
 
-Vergleicht die Auflösung des Spiels (`-dateiIndexAusgeben`) mit `VfsDump`, das die alte Vorrangregel nachbildet: SD, HD mit
+Vergleicht die Auflösung des Spiels (`-dumpFileIndex`) mit `VfsDump`, das die alte Vorrangregel nachbildet: SD, HD mit
 Mod-Ordner, `-mod <ZIP>` (je ohne freien Inhalt); dazu UHD mit Texturpaket, Mod und freiem Inhalt mit gezielten Prüfungen der
 Ränge. Daten: Testdaten, die Archive aus `tools/dateisystem/beispiel.py` und ein Testpaket unter `ProjectData\Inhalt`
 .
@@ -135,7 +135,7 @@ Instanzen (gleicher Befehlsstrom, `replay1.txt`, `replay2.txt`). Bildschirmfotos
 Dauer rund 14 Minuten. `LAN_HOST_PARTIE` und `LAN_GAST_PARTIE` ersetzen die Schritte in der Partie. `LAN_KARTE=versus`
 spielt auf der Karte `TestVersus` (Basen in Sichtweite, feste Startpositionen) ein Gefecht: jeder Schütze greift die
 gegnerische Kommandozentrale an. `LAN_MODUS=internet` nimmt die Lobby im Internet-Modus über einen Treffpunkt-Server im
-Namensraum des Gastgebers (öffentlich gelistetes Spiel); `LAN_SCHALTER` hängt Spielschalter an, etwa `-netzNurRelais`
+Namensraum des Gastgebers (öffentlich gelistetes Spiel); `LAN_SCHALTER` hängt Spielschalter an, etwa `-netRelayOnly`
 für den Weg über das Relais. `klicktest.sh`: `mX,Y` bewegt nur die Maus (vor dem Klick auf ein Kontrollkästchen); `KLICK_GENERALS=1` startet Generals
 statt Zero Hour.
 
@@ -151,12 +151,12 @@ in allen drei Protokollen (unter 125 %), `ZM=<Prozent>;` im Replay-Kopf (keiner 
     tools/wine/lan_austritt.sh [--emulator] <Ausgabeordner> [Runden]
 
 Austritt aus einer LAN-Partie (root, `iproute2`): wie `lan_zwei.sh` zwei Instanzen in eigenen Netz-Namensräumen
-(`gzh-aus1`/`-aus2`, Präfixe `<Ablage>/wineprefix-aus1`, `-aus2`), aber über Testabläufe (`-testablauf`) statt Mausklicks und
+(`gzh-aus1`/`-aus2`, Präfixe `<Ablage>/wineprefix-aus1`, `-aus2`), aber über Testabläufe (`-testScript`) statt Mausklicks und
 mit einem frisch erzeugten Datensatz. Der Gast verlässt bei Logik-Frame 200 über das Spielmenü, der Host gibt in den Frames um
 den Austritt Baubefehle (Knopf 1 der Kommandozentrale); beide schreiben die Prüfsumme jedes Frames (`-crcLog`,
 `-crcLogInterval 1`). Je Runde vergleicht das Skript die gemeinsamen Frames (`<Ausgabeordner>/rundeN/ergebnis.txt`), Exit-Code 0
-ohne Abweichung. `--emulator` schaltet den Netzwerkemulator des Spiels zu (Vorgabe `-netzLatenz 80 -netzSchwankung 20
--netzVerlust 2`, `AUSTRITT_EMULATOR` ersetzt die Schalter); `tc netem` gibt es im Kernel der Cloud-Umgebung nicht. Dauer rund
+ohne Abweichung. `--emulator` schaltet den Netzwerkemulator des Spiels zu (Vorgabe `-netLatency 80 -netJitter 20
+-netLoss 2`, `AUSTRITT_EMULATOR` ersetzt die Schalter); `tc netem` gibt es im Kernel der Cloud-Umgebung nicht. Dauer rund
 sechs Minuten je Runde; den Bau wählt `CNC_WINE_DIR`.
 
 ## Speichern und Laden
@@ -180,14 +180,14 @@ Abweichung. Dauer rund fünf Minuten (ohne Abweichung), im Prüfgang mit `--full
 Wie `tools/netz/zuschauen_test.py` (Variante „direkt“) unter Windows: Gastgeber und Mitspieler spielen eine LAN-Partie über die
 Szenen `tools/netz/szenen/zuschauen_*.txt`, eine dritte Instanz tritt zweimal nacheinander als Zuschauer bei. Root und `iproute2`:
 jede Instanz läuft in einem eigenen Netz-Namensraum (`gzh-zu1` bis `-zu3`, 10.78.0.1 bis .3 an der Bridge `gzh-zbr`), mit eigenem
-Präfix (`<Ablage>/wineprefix-zu1` bis `-zu3`) und frisch erzeugtem Datensatz. Loopback-Instanzen (`-netzLokal`) gehen unter Wine nicht
+Präfix (`<Ablage>/wineprefix-zu1` bis `-zu3`) und frisch erzeugtem Datensatz. Loopback-Instanzen (`-netLocal`) gehen unter Wine nicht
 (Wine bindet Broadcast-Sockets an alle Adressen, die zweite Instanz bekommt den Lobby-Port nicht). Ergebnis je Runde in
 `<Ausgabeordner>/rundeN/ergebnis.txt` (Spieler gleich, jeder Zuschauer wurde Zuschauer und hat die CRCs des Gastgebers);
 `ZUSCHAUEN_SCHALTER` hängt Spielschalter an, `ZUSCHAUEN_VORLAUF` setzt die Sekunden bis zum ersten Zuschauer (Vorgabe 20),
 `ZUSCHAUEN_FRAMES` die Logik-Frames je Zuschauer (Vorgabe ein Viertel der Partie), `ZUSCHAUEN_KI=1` lässt den Gastgeber gegen eine KI
 spielen statt gegen die zweite Instanz (zwei Instanzen, weniger Last). Die Partie muss beide Zuschauer überdauern; unter Wine mit
 Software-Rendering reicht `zuschauen.sh <Ordner> 2 6000` mit `ZUSCHAUEN_FRAMES=450` (eine Runde rund 15 bis 25 Minuten), sonst meldet
-die Auswertung „Partie zu kurz“. Eine Sperre verhindert zwei gleichzeitige Läufe. Stand 2026-10-10: bestanden (R-508).
+die Auswertung „Partie zu kurz“. Eine Sperre verhindert zwei gleichzeitige Läufe. Stand 2026-10-10: bestanden.
 
 ## Lecksuche mit Benutzerkarte
 
@@ -196,7 +196,7 @@ die Auswertung „Partie zu kurz“. Eine Sperre verhindert zwei gleichzeitige L
 
 Der Debug-Bau startet bis ins Hauptmenü und beendet sich, einmal ohne und einmal mit einer Karte im Ordner `Maps` der
 Benutzerdaten, die nicht im Kartenkatalog der Testdaten steht. Das Hauptmenü liest sie aus der Datei (`MapCache::addMap`, `loadMap`),
-derselbe Weg wie bei einer per Kartentransfer empfangenen Karte. Beide Leckberichte („Leaked a block …“) müssen leer sein (R-568).
+derselbe Weg wie bei einer per Kartentransfer empfangenen Karte. Beide Leckberichte („Leaked a block …“) müssen leer sein.
 `CNC_WINE_DIR` wählt den Debug-Bau (Vorgabe `${TMPDIR:-/tmp}/cnc-wine-dbg`); ein Lauf dauert rund zwei Minuten.
 
 ## Kartentransfer mit Lecksuche
@@ -206,7 +206,7 @@ derselbe Weg wie bei einer per Kartentransfer empfangenen Karte. Beide Leckberic
 Zwei Instanzen des Debug-Baus in eigenen Netz-Namensräumen (10.76.0.1 Host, 10.76.0.2 Gast; root und `iproute2`): der Host
 eröffnet ein LAN-Spiel mit einer Benutzerkarte samt `map.str` und Vorschaubild, die nur er hat, der Gast tritt bei und bekommt die
 Karte beim Start übertragen; beide spielen 200 Logik-Frames, verlassen die Partie und beenden das Spiel. Geprüft werden die
-angekommenen Dateien und beide Leckberichte (R-568). Rund 15 Minuten.
+angekommenen Dateien und beide Leckberichte. Rund 15 Minuten.
 
 ## Auswahlrahmen
 
@@ -217,8 +217,7 @@ der Testablauf-Befehl `rahmen [Rand]` zieht mit der linken Maustaste über die n
 Einheiten im Bild (ihre projizierten Mittelpunkte plus Rand) und prüft, dass jede danach ausgewählt ist, einmal an der
 Startposition und einmal herausgezoomt, dazu je ein großer Rahmen mit den Einheiten nahe der oberen, unteren, linken und
 rechten Kante (`rahmen 12 oben` usw.). Nach jedem Rahmen prüft `zeichenbereich`, dass der Boden unter den Rändern der ganzen
-3D-Ansicht im Bereich liegt, der je Bild gezeichnet wird. Bei breiten Auflösungen reicht die 3D-Ansicht unter die Steuerleiste
-(R-587); dort legt `streifen` eine eigene Einheit per Kamera in den Seitenstreifen neben der Leiste und `streifen mitte` hinter die
+3D-Ansicht im Bereich liegt, der je Bild gezeichnet wird. Bei breiten Auflösungen reicht die 3D-Ansicht unter die Steuerleiste; dort legt `streifen` eine eigene Einheit per Kamera in den Seitenstreifen neben der Leiste und `streifen mitte` hinter die
 Leiste und löst „alle im Bild“ aus: neben der Leiste muss sie ausgewählt sein, dahinter nicht. Rund drei Minuten. Denselben Ablauf
 für Windows mit den echten Daten (Skirmish über das Menü) enthält `tests/render/auswahlrahmen_ablauf.txt`.
 
@@ -250,8 +249,7 @@ wie das Spiel, nach `<Ablage>/mapeditor`:
 - keine Zeile `FAIL` meldet;
 - Wine keinen Absturz meldet.
 
-Bilder, `selftest.log` und `engine.log` liegen danach unter `<Ablage>/mapeditor-lauf`. Der Selbsttest prüft seit
-R-329 auch den Bildinhalt der 3D-Ansicht: die Bildmitte darf weder überwiegend schwarz noch magentafarben
+Bilder, `selftest.log` und `engine.log` liegen danach unter `<Ablage>/mapeditor-lauf`. Der Selbsttest prüft auch den Bildinhalt der 3D-Ansicht: die Bildmitte darf weder überwiegend schwarz noch magentafarben
 (fehlende Textur) noch einfarbig sein. Einstellungen des Nutzers bleiben unberührt.
 
 **GUI-Editor** (`Code/Tools/Editors/GuiEditor`): `build_mapeditor.sh` baut `GuiEditor.exe` mit, neben

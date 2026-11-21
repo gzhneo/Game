@@ -6,13 +6,13 @@
 
 Startet das Spiel im Fenster mit einem Skirmish (lokaler Spieler Beobachter) und einem Testablauf. Die Befehle
 ziehenEcht, radEcht und tasteEcht schicken echte Fenster-Nachrichten (WM_RBUTTONDOWN/WM_MOUSEMOVE/WM_RBUTTONUP,
-WM_MOUSEWHEEL, WM_KEYDOWN/WM_KEYUP) durch den Eingabeweg von Win32Mouse und Win32Keyboard; bildlauf und rad speisen
-Testeingaben hinter diesem Weg ein. Ausgewertet werden die Zeilen "TESTABLAUF ..." des Runner-Protokolls (-crcLog).
+WM_MOUSEWHEEL, WM_KEYDOWN/WM_KEYUP) durch den Eingabeweg von Win32Mouse und Win32Keyboard; scroll und rad speisen
+Testeingaben hinter diesem Weg ein. Ausgewertet werden die Zeilen "TESTSCRIPT ..." des Runner-Protokolls (-crcLog).
 
 Laeufe:
   A  normal: Ziehen mit der rechten Taste nach rechts und links, Rad je Raste und fein, Umschalt+Pfeil, dazu die
      Bildlauf-Messung (Taste, Rand, Ziehen 100 Pixel)
-  B  mit -echteEingabeAus: dieselben echten Eingaben duerfen nichts bewirken, Testeingaben (bildlauf, rad) schon
+  B  mit -noRealInput: dieselben echten Eingaben duerfen nichts bewirken, Testeingaben (bildlauf, rad) schon
   C  nur mit --vergleich: dieselbe Bildlauf-Messung mit dem Bau von main (Exe) oder aus dessen Protokoll (.log)
 
 Pruefungen, Tabelle OK/FEHLER/n/a in <out>/ergebnis.txt und auf der Konsole:
@@ -28,7 +28,7 @@ Pruefungen, Tabelle OK/FEHLER/n/a in <out>/ergebnis.txt und auf der Konsole:
    9 Testeingaben wirken      Lauf B: bildlauf und rad wirken weiter
   10 Bildlauf-Vorgabe         Kamerastrecke je Takt fuer Taste, Rand und Ziehen wie main (hoechstens 3 % daneben;
                               n/a ohne --vergleich)
-  11 Ohne Absturz             Exit-Code 0 beider Laeufe, keine Zeile TESTABLAUF ERROR
+  11 Ohne Absturz             Exit-Code 0 beider Laeufe, keine Zeile TESTSCRIPT ERROR
 
 Die echten Mauseingaben setzen den Mauszeiger fuer etwa zwei Sekunden in die Fenstermitte und danach zurueck.
 Waehrend der Laeufe die Maus nicht benutzen und kein anderes Fenster anklicken: verliert das Spielfenster den Fokus,
@@ -44,19 +44,19 @@ import argparse, ctypes, os, re, subprocess, sys, threading, time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-BILDLAUF = ["bildlauf taste rechts 30", "logik 10", "bildlauf taste links 30", "logik 10",
-            "bildlauf rand rechts 30", "logik 10", "bildlauf rand links 30", "logik 10",
-            "bildlauf ziehen rechts 30 100", "logik 10", "bildlauf ziehen links 30 100", "logik 10"]
-VORSPANN = ["partie 30000", "logik 90", "bildlauf taste rechts 1", "logik 10"]
+SCROLLRUN = ["scroll key right 30", "logic 10", "scroll key left 30", "logic 10",
+            "scroll edge right 30", "logic 10", "scroll edge left 30", "logic 10",
+            "scroll drag right 30 100", "logic 10", "scroll drag left 30 100", "logic 10"]
+VORSPANN = ["game 30000", "logic 90", "scroll key right 1", "logic 10"]
 
-LAUF_A = VORSPANN + BILDLAUF + [
-    "ziehenEcht rechts 300 60", "logik 10", "ziehenEcht links 300 60", "logik 10",
-    "radEcht 120 2", "radEcht -120 2", "radEcht 30 1", "radEcht -30 1", "radEcht 120 1", "radEcht -120 1",
-    "tasteEcht rechts 60", "logik 10", "tasteEcht links 60", "beenden"]
+LAUF_A = VORSPANN + SCROLLRUN + [
+    "dragReal right 300 60", "logic 10", "dragReal left 300 60", "logic 10",
+    "wheelReal 120 2", "wheelReal -120 2", "wheelReal 30 1", "wheelReal -30 1", "wheelReal 120 1", "wheelReal -120 1",
+    "keyReal right 60", "logic 10", "keyReal left 60", "quit"]
 LAUF_B = VORSPANN + [
-    "ziehenEcht rechts 150 40", "logik 10", "radEcht 120 2", "tasteEcht rechts 60", "logik 10",
-    "bildlauf taste rechts 30", "logik 10", "rad 2", "beenden"]
-LAUF_C = VORSPANN + BILDLAUF + ["beenden"]
+    "dragReal right 150 40", "logic 10", "wheelReal 120 2", "keyReal right 60", "logic 10",
+    "scroll key right 30", "logic 10", "wheel 2", "quit"]
+LAUF_C = VORSPANN + SCROLLRUN + ["quit"]
 
 
 def werte(zeile, kennung):
@@ -71,7 +71,7 @@ def zeilen(log):
     if not os.path.isfile(log):
         return []
     with open(log, encoding="latin-1", errors="replace") as f:
-        return [z.rstrip() for z in f if "TESTABLAUF" in z]
+        return [z.rstrip() for z in f if "TESTSCRIPT" in z]
 
 
 def alle(log, kennung):
@@ -98,8 +98,8 @@ def starte(a, exe, name, befehle, extra, out):
         os.remove(log)
     exe = os.path.abspath(exe)
     xres, yres = a.res.split("x")
-    cmd = [exe, "-win", "-xres", xres, "-yres", yres, "-quickstart", "-noaudio", "-einstellungenNurLesen",
-           "-crcLog", log, "-testablauf", skript, "-skirmish", a.map, "-skirmishAI", "2", "-skirmishSeed", "1"] + extra
+    cmd = [exe, "-win", "-xres", xres, "-yres", yres, "-quickstart", "-noaudio", "-settingsReadOnly",
+           "-crcLog", log, "-testScript", skript, "-skirmish", a.map, "-skirmishAI", "2", "-skirmishSeed", "1"] + extra
     from slot import wait_free
     wait_free()
     print("Bitte waehrend des Laufs die Maus nicht benutzen (das Spielfenster braucht den Fokus).", flush=True)
@@ -117,10 +117,10 @@ def starte(a, exe, name, befehle, extra, out):
 def je_takt(log):
     """Kamerastrecke je Takt fuer jede Bildlauf-Art (Mittel aus beiden Richtungen; der Aufwaermlauf zaehlt nicht)."""
     summe = {}
-    for w in alle(log, "BILDLAUF"):
-        if "art" not in w or w.get("ticks") == "1":
+    for w in alle(log, "SCROLLRUN"):
+        if "kind" not in w or w.get("ticks") == "1":
             continue
-        art = w["art"] + (w["drag"] if w["art"] == "ziehen" else "")
+        art = w["kind"] + (w["drag"] if w["kind"] == "drag" else "")
         summe.setdefault(art, []).append(float(w["world"]) / float(w["ticks"]))
     return {k: sum(v) / len(v) for k, v in summe.items()}
 
@@ -128,7 +128,7 @@ def je_takt(log):
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--exe", required=True, help="GZHNeo.exe oder GZHNeoZH.exe dieses Zweigs")
-    p.add_argument("--vergleich", help="Exe von main (Lauf C) oder ein Runner-Protokoll (.log) mit seinen BILDLAUF-Zeilen")
+    p.add_argument("--vergleich", help="Exe von main (Lauf C) oder ein Runner-Protokoll (.log) mit seinen SCROLLRUN-Zeilen")
     p.add_argument("--map", default="Alpine Assault")
     p.add_argument("--res", default="1280x720")
     p.add_argument("--frist", type=int, default=600)
@@ -142,9 +142,9 @@ def main():
         ergebnis.append((nummer, name, "n/a" if ok is None else ("OK" if ok else "FEHLER"), text))
 
     code_a, log_a = starte(a, a.exe, "A_normal", LAUF_A, [], out)
-    code_b, log_b = starte(a, a.exe, "B_echteEingabeAus", LAUF_B, ["-echteEingabeAus"], out)
+    code_b, log_b = starte(a, a.exe, "B_echteEingabeAus", LAUF_B, ["-noRealInput"], out)
 
-    ziehen = alle(log_a, "ZIEHENECHT")
+    ziehen = alle(log_a, "DRAGREAL")
     if ziehen:
         weiter = all(int(w["dragged"]) and float(w["world"]) > float(w["across"]) for w in ziehen)
         fokus = all(int(w["focus"]) for w in ziehen)
@@ -157,9 +157,9 @@ def main():
                "; ".join(f"{w['dir']}: zurueck {w['back']} (Abstand {w['cursor']}), sichtbar {w['visible']}, zieht noch {w['still_dragging']}" for w in ziehen) + ("" if fokus else " (Fenster ohne Fokus: von Hand pruefen)"))
     else:
         for n, name in ((1, "Ziehen ueber den Rand"), (2, "Zeiger versteckt"), (3, "Zeiger zurueck")):
-            pruefe(n, name, False, "keine Zeile ZIEHENECHT")
+            pruefe(n, name, False, "keine Zeile DRAGREAL")
 
-    rad = alle(log_a, "RADECHT")
+    rad = alle(log_a, "WHEELREAL")
     if len(rad) >= 6:
         d = [abs(float(w["zoom_after"]) - float(w["zoom_before"])) for w in rad]
         schritt = d[0] / 2 if d[0] > 0 else 0
@@ -172,24 +172,24 @@ def main():
         pruefe(6, "Rad nach feinem", 0.75 <= anteil <= 1.25, f"eine Raste danach: {d[4]:.4f} = {anteil:.2f} Schritte")
     else:
         for n, name in ((4, "Rad je Raste"), (5, "Rad stufenlos"), (6, "Rad nach feinem")):
-            pruefe(n, name, False, f"{len(rad)} von 6 Zeilen RADECHT")
+            pruefe(n, name, False, f"{len(rad)} von 6 Zeilen WHEELREAL")
 
-    taste = alle(log_a, "TASTEECHT")
+    taste = alle(log_a, "KEYREAL")
     pruefe(7, "Taste echt", bool(taste) and all(float(w["world"]) > 1 for w in taste),
-           "; ".join(f"{w['dir']}: {float(w['world']):.0f}" for w in taste) or "keine Zeile TASTEECHT")
+           "; ".join(f"{w['dir']}: {float(w['world']):.0f}" for w in taste) or "keine Zeile KEYREAL")
 
-    zb, rb, tb = alle(log_b, "ZIEHENECHT"), alle(log_b, "RADECHT"), alle(log_b, "TASTEECHT")
+    zb, rb, tb = alle(log_b, "DRAGREAL"), alle(log_b, "WHEELREAL"), alle(log_b, "KEYREAL")
     gesperrt = bool(zb and rb and tb) and float(zb[0]["world"]) < 1 and not int(zb[0]["dragged"]) \
         and abs(float(rb[0]["zoom_after"]) - float(rb[0]["zoom_before"])) < 1e-4 and float(tb[0]["world"]) < 1
     pruefe(8, "echteEingabeAus sperrt", gesperrt,
            (f"Ziehen {float(zb[0]['world']):.1f}, Rad {rb[0]['zoom_before']} -> {rb[0]['zoom_after']}, Taste {float(tb[0]['world']):.1f}")
            if zb and rb and tb else "Zeilen fehlen")
-    lauf_b = [w for w in alle(log_b, "BILDLAUF") if "art" in w and w.get("ticks") != "1"]
-    rad_ok = [z for z in zeilen(log_b) if " rad 2 zoom " in z]
+    lauf_b = [w for w in alle(log_b, "SCROLLRUN") if "kind" in w and w.get("ticks") != "1"]
+    rad_ok = [z for z in zeilen(log_b) if " wheel 2 zoom " in z]
     zoom_b = float(rad_ok[0].split(" zoom ")[1].split()[0]) if rad_ok else None
     wirkt = bool(lauf_b) and float(lauf_b[0]["world"]) > 1 and zoom_b is not None and rb and abs(zoom_b - float(rb[0]["zoom_after"])) > 1e-4
     pruefe(9, "Testeingaben wirken", wirkt,
-           (f"bildlauf {float(lauf_b[0]['world']):.0f}, rad Zoom {rb[0]['zoom_after'] if rb else '?'} -> {zoom_b}") if lauf_b else "keine Zeile BILDLAUF")
+           (f"scroll {float(lauf_b[0]['world']):.0f}, rad Zoom {rb[0]['zoom_after'] if rb else '?'} -> {zoom_b}") if lauf_b else "keine Zeile SCROLLRUN")
 
     jetzt = je_takt(log_a)
     if a.vergleich:
@@ -211,7 +211,7 @@ def main():
     else:
         pruefe(10, "Bildlauf-Vorgabe", None, "ohne --vergleich; je Takt: " + ", ".join(f"{k} {v:.2f}" for k, v in sorted(jetzt.items())))
 
-    fehler = [z for z in zeilen(log_a) + zeilen(log_b) if "TESTABLAUF ERROR" in z]
+    fehler = [z for z in zeilen(log_a) + zeilen(log_b) if "TESTSCRIPT ERROR" in z]
     pruefe(11, "Ohne Absturz", code_a == 0 and code_b == 0 and not fehler,
            f"Exit-Codes {code_a}, {code_b}; ERROR-Zeilen {len(fehler)}" + (f" ({fehler[0]})" if fehler else ""))
 

@@ -121,6 +121,18 @@ Buffer::~Buffer()
 	for (const Retired& r : m_retired) m_gpu->Retire(VK_OBJECT_TYPE_BUFFER, reinterpret_cast<uint64_t>(r.slice.buffer), r.slice.allocation);
 }
 
+void Buffer::Drop_Handles()
+{
+	m_gpu->Free_Slice(m_current);
+	for (Slice& s : m_free) m_gpu->Free_Slice(s);
+	for (Retired& r : m_retired) m_gpu->Free_Slice(r.slice);
+	m_free.clear();
+	m_retired.clear();
+	m_used_since_discard = false;
+	last_use = 0;
+	upload_batch = 0;
+}
+
 bool Buffer::New_Slice(Slice& slice)
 {
 	if (!m_gpu->Allocate_Buffer(m_desc.ByteWidth, Buffer_Usage(m_desc), true, false, slice) || !slice.mapped) return false;
@@ -237,6 +249,29 @@ Texture::~Texture()
 	}
 	m_gpu->Retire(VK_OBJECT_TYPE_IMAGE, reinterpret_cast<uint64_t>(m_image), m_allocation);
 	m_gpu->Retire(VK_OBJECT_TYPE_BUFFER, reinterpret_cast<uint64_t>(m_staging.buffer), m_staging.allocation);
+}
+
+void Texture::Drop_Handles()
+{
+	for (PendingMap& p : m_pending) m_gpu->Free_Slice(p.slice);
+	memset(m_pending, 0, sizeof(m_pending));
+	m_gpu->Free_Slice(m_staging);
+	if (m_image) {
+		if (m_allocation) vmaDestroyImage(m_gpu->Allocator(), m_image, m_allocation);
+		else vkDestroyImage(m_gpu->Vk(), m_image, nullptr);
+	}
+	m_image = VK_NULL_HANDLE;
+	m_allocation = nullptr;
+	m_layout = VK_IMAGE_LAYOUT_UNDEFINED;
+	m_subresources.clear();
+	last_use = 0;
+	upload_batch = 0;
+}
+
+bool Texture::Recreate_Handles()
+{
+	m_samples = VK_SAMPLE_COUNT_1_BIT;
+	return Create(nullptr);
 }
 
 VkImageSubresourceRange Texture::Full_Range() const
@@ -437,6 +472,9 @@ View<Interface>::View(Gpu* gpu, Texture* t) : Object<Interface>(gpu)
 	format = VK_FORMAT_UNDEFINED;
 	mip = 0;
 	aspect = 0;
+	mip_count = 1;
+	swizzled = false;
+	for (VkComponentSwizzle& w : swizzle) w = VK_COMPONENT_SWIZZLE_IDENTITY;
 }
 
 template <class Interface>
@@ -445,10 +483,6 @@ View<Interface>::~View()
 	this->m_gpu->Retire(VK_OBJECT_TYPE_IMAGE_VIEW, reinterpret_cast<uint64_t>(view));
 	texture->Release();
 }
-
-template class View<GpuShaderResourceView>;
-template class View<GpuRenderTargetView>;
-template class View<GpuDepthStencilView>;
 
 namespace {
 
@@ -489,6 +523,24 @@ bool Create_Image_View(VkDevice device, Texture* t, VkFormat format, const VkCom
 
 }  // namespace
 
+template <class Interface>
+void View<Interface>::Drop_Handles()
+{
+	if (view) vkDestroyImageView(this->m_gpu->Vk(), view, nullptr);
+	view = VK_NULL_HANDLE;
+}
+
+template <class Interface>
+bool View<Interface>::Recreate_Handles()
+{
+	if (!texture->m_image) return false;
+	return Create_Image_View(this->m_gpu->Vk(), texture, format, swizzled ? swizzle : nullptr, aspect, mip, mip_count, &view);
+}
+
+template class View<GpuShaderResourceView>;
+template class View<GpuRenderTargetView>;
+template class View<GpuDepthStencilView>;
+
 HRESULT Gpu::CreateShaderResourceView(GpuResource* resource, const GPU_SHADER_RESOURCE_VIEW_DESC* desc, GpuShaderResourceView** out)
 {
 	Texture* t = As_Texture(resource);
@@ -506,6 +558,9 @@ HRESULT Gpu::CreateShaderResourceView(GpuResource* resource, const GPU_SHADER_RE
 	v->format = info.format == VK_FORMAT_UNDEFINED ? t->m_format->format : info.format;
 	v->aspect = depth ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 	v->mip = first;
+	v->mip_count = count;
+	v->swizzled = !depth;
+	for (unsigned i = 0; i < 4; ++i) v->swizzle[i] = info.swizzle[i];
 	if (!Create_Image_View(m_device, t, v->format, depth ? nullptr : info.swizzle, v->aspect, first, count, &v->view)) {
 		v->Release();
 		return E_FAIL;
@@ -524,6 +579,7 @@ HRESULT Gpu::CreateRenderTargetView(GpuResource* resource, const GPU_RENDER_TARG
 	v->format = t->m_format->format;
 	v->aspect = VK_IMAGE_ASPECT_COLOR_BIT;
 	v->mip = (desc && desc->ViewDimension == GPU_RTV_DIMENSION_TEXTURE2D) ? desc->Texture2D.MipSlice : 0;
+	v->mip_count = 1;
 	if (!Create_Image_View(m_device, t, v->format, nullptr, v->aspect, v->mip, 1, &v->view)) {
 		v->Release();
 		return E_FAIL;
@@ -542,6 +598,7 @@ HRESULT Gpu::CreateDepthStencilView(GpuResource* resource, const GPU_DEPTH_STENC
 	v->format = t->m_format->format;
 	v->aspect = t->m_format->aspect;
 	v->mip = (desc && desc->ViewDimension == GPU_DSV_DIMENSION_TEXTURE2D) ? desc->Texture2D.MipSlice : 0;
+	v->mip_count = 1;
 	if (!Create_Image_View(m_device, t, v->format, nullptr, v->aspect, v->mip, 1, &v->view)) {
 		v->Release();
 		return E_FAIL;

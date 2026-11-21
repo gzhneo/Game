@@ -2,7 +2,7 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Globale Engine-Singletons (`extern T *TheX;`) in eine gemeinsame Struktur `Engine::EngineContext` ueberfuehren (TODO 43 (e)).
+"""Globale Engine-Singletons (`extern T *TheX;`) in eine gemeinsame Struktur `Engine::EngineContext` ueberfuehren.
 
 Was das Werkzeug macht (mit --anwenden, sonst nur Bericht):
   1. sucht alle Deklarationen `extern [const] T *TheX;` in Code/GameEngine, Code/Platform und
@@ -26,7 +26,7 @@ import re
 import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'Code'))
-LISTE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'singletons_kontext.txt')
+LIST = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'singletons_kontext.txt')
 KOPF = os.path.join(ROOT, 'Core', 'EngineCore', 'Engine', 'EngineContext.h')
 DECL_DIRS = [os.path.join(ROOT, 'GameEngine'), os.path.join(ROOT, 'Platform')]
 EXTRA_DECLS = [os.path.join(ROOT, 'Platform', 'W3DDevice', 'GameClient', 'BaseHeightMap.cpp'),
@@ -81,7 +81,7 @@ def zugriff(name):
 def liste_lesen():
     """[(Typ, Name)] und die Menge der Namen mit Zugriffsfunktion aus singletons_kontext.txt."""
     paare, lesen_ = [], set()
-    for l in open(LISTE, encoding='utf-8'):
+    for l in open(LIST, encoding='utf-8'):
         teile = l.split()
         if not teile:
             continue
@@ -142,7 +142,7 @@ def main():
     gefunden = sammeln()
     paare = sorted(((t, n) for n, (t, _) in gefunden.items()), key=lambda x: x[1])
     lesen_ = set()
-    if os.path.exists(LISTE):
+    if os.path.exists(LIST):
         liste, lesen_ = liste_lesen()
         if not paare:
             paare = liste
@@ -184,7 +184,7 @@ def main():
     print('%d Deklarationszeilen, %d Definitionszeilen entfernt' % (entfernt_decl, entfernt_def))
     if anwenden:
         kopf_schreiben(paare, lesen_)
-        open(LISTE, 'w', encoding='utf-8', newline='\n').write(''.join('%s %s%s\n' % (t, n, ' lesen' if n in lesen_ else '')
+        open(LIST, 'w', encoding='utf-8', newline='\n').write(''.join('%s %s%s\n' % (t, n, ' lesen' if n in lesen_ else '')
                                                                        for t, n in paare))
         print('EngineContext.h und singletons_kontext.txt geschrieben')
 

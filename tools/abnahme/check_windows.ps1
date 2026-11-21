@@ -9,19 +9,22 @@
   Ablauf (jeder Schritt laeuft weiter, auch wenn ein frueherer fehlschlaegt; Ausnahme: ohne
   erfolgreichen Bau werden keine Spiele gestartet, damit nicht mit alten Exes getestet wird):
     1. Stand: Branch, Commit, ungesicherte Aenderungen
+       Static checks: the checks of tools/gate.sh that need no build and no game data (texts in the code,
+       numbers in published files, layers, tables, interface names, logic ID, tool self tests); the word lists
+       of texte_im_code.py come once per machine from "python tools\refactor\texte_im_code.py --setup"
     2. Bau: build-x64 Debug/Release, build-x64-tools Debug/Release (fehlende Ordner per Preset)
     3. ctest: ohne Assets (-LE assets) Debug/Release; mit -CtestAssets zusaetzlich die vier Replay-Tests
        (-L assets, ctest -j4); sonst deckt der Replay-Pool (4.) sie ab, nur die langen Debug-Replays brauchen -Voll
        Nebenbei als Hintergrundprozesse ab Skriptbeginn: alle EA-Karten gegen die Grenzen der Kartenleser
-       (kartengrenzen.py) und alle .big-Archive gegen die Regeln des Archivlesers (bigpruefung.py),
-       dazu alle Fensterlayouts (.wnd) der Archive gegen die Regeln des Layout-Lesers (wndpruefung.py, R-339),
+       (map_limits.py) und alle .big-Archive gegen die Regeln des Archivlesers (big_check.py),
+       dazu alle Fensterlayouts (.wnd) der Archive gegen die Regeln des Layout-Lesers (wnd_check.py),
        alles ohne Spielstart. Der Bau von build-x64 und build-x64-tools laeuft je Konfiguration gleichzeitig.
     4. Replays: alle Referenzsaetze (runner.py check), beide Spiele, Debug und Release;
        einzeln verteilt, standardmaessig sieben gleichzeitig (-ReplayParallel), die laengsten zuerst
        (lange Replays -- Referenz-.crc ueber -DebugReplayMaxZeilen Zeilen -- nur in Release, mit -Voll auch in Debug)
        (Dauern des letzten Laufs in render-out\pruefung\replay_dauer.json). Sie laufen weiter, waehrend
        die Schritte 5 und 6 und die optionalen Tests laufen -- das Skript startet in jeder Wartepause die
-       naechsten (Runner-Laeufe zaehlen fuer die Warteschlange nicht, Starttests schreiben mit -mehrfach
+       naechsten (Runner-Laeufe zaehlen fuer die Warteschlange nicht, Starttests schreiben mit -multiInstance
        ein eigenes Protokoll).
     5. Starttests: Generals und Zero Hour (Debug) gleichzeitig je 60 Frames im Fenster, Protokoll ausgewertet
        (Assertions, Lecks, lebende D3D11-Objekte, D3D11-Pruefschicht, nicht geladene DDS, Absturzberichte)
@@ -32,9 +35,9 @@
   Der Bericht nennt am Anfang die Zeitverteilung je Abschnitt samt Wartezeit auf die Warteschlange.
 
   Aufruf (im Repo-Ordner, PowerShell):
-    powershell -ExecutionPolicy Bypass -File tools\abnahme\pruefung_windows.ps1
-    powershell -ExecutionPolicy Bypass -File tools\abnahme\pruefung_windows.ps1 -Schnell
-    powershell -ExecutionPolicy Bypass -File tools\abnahme\pruefung_windows.ps1 -Bildvergleich x64ref -Lecksuche
+    powershell -ExecutionPolicy Bypass -File tools\abnahme\check_windows.ps1
+    powershell -ExecutionPolicy Bypass -File tools\abnahme\check_windows.ps1 -Schnell
+    powershell -ExecutionPolicy Bypass -File tools\abnahme\check_windows.ps1 -Bildvergleich x64ref -Lecksuche
 
   Regeln: Spiele nur im Fenster (-win), vor jedem Start die Warteschlange
   (tools/abnahme/slot.py, wait_free), die Options.ini des Nutzers bleibt unberuehrt, keine fremden
@@ -80,7 +83,7 @@ $script:Fehler = 0
 
 function Schreibe([string]$t) { $script:BerichtZeilen.Add($t) }
 function Ergebnis([string]$schritt, [bool]$ok, [string]$kurz) {
-	$z = if ($ok) { "OK" } else { "FEHLER" }
+	$z = if ($ok) { "OK" } else { "ERROR" }
 	if (-not $ok) { $script:Fehler++ }
 	$script:Uebersicht.Add("| $schritt | $z | $kurz |")
 	Write-Host ("[{0}] {1}: {2}" -f $z, $schritt, $kurz)
@@ -147,12 +150,12 @@ function ReplayPump() {
 		$laufend++
 	}
 }
-# -benutzerdaten <Ordner>\<Spiel> fuer jeden Spielstart, wenn -Benutzerdaten gesetzt ist (ohne Leerzeichen im
+# -userData <Ordner>\<Spiel> fuer jeden Spielstart, wenn -userData gesetzt ist (ohne Leerzeichen im
 # Unterordner, weil Start-Process unter PowerShell 5.1 Argumente nicht in Anfuehrungszeichen setzt)
 function BenutzerArgs([string]$exe) {
 	if (-not $Benutzerdaten) { return @() }
 	$spiel = if ((Split-Path $exe -Leaf) -match "ZH\.exe$") { "ZeroHour" } else { "Generals" }
-	return @("-benutzerdaten", (Join-Path $Benutzerdaten $spiel))
+	return @("-userData", (Join-Path $Benutzerdaten $spiel))
 }
 function ReplaysOffen() { @($script:ReplayJobs | Where-Object { $null -eq $_.rc }).Count }
 
@@ -269,10 +272,49 @@ if ($offen.Count -gt 0) { Block "git status" $offen 40 }
 # Map files against the reader limits and .big archives against the rules of the archive reader (a rejected
 # archive is not loaded at all): needs only the game data, so it runs during the build and the tests.
 if (-not $Schnell) {
-	$script:BgKarten = Hintergrund "kartengrenzen" $Python @("tools\abnahme\kartengrenzen.py")
-	$script:BgBig = Hintergrund "bigpruefung" $Python @("tools\abnahme\bigpruefung.py")
-	$script:BgWnd = Hintergrund "wndpruefung" $Python @("tools\abnahme\wndpruefung.py")
+	$script:BgKarten = Hintergrund "kartengrenzen" $Python @("tools\abnahme\map_limits.py")
+	$script:BgBig = Hintergrund "bigpruefung" $Python @("tools\abnahme\big_check.py")
+	$script:BgWnd = Hintergrund "wndpruefung" $Python @("tools\abnahme\wnd_check.py")
 }
+
+# ----------------------------------------------------------------------------------------------
+# Static checks shared with tools/gate.sh: they need neither a build nor game data. Two gate steps are left out
+# because the Windows build covers them: the Debug output after a condition (C4390 breaks the Release build with
+# /WX) and the GPU_ enumerations (the static_asserts in d3d11device_enums.inl compare every value with the SDK).
+# The word lists of texte_im_code.py come once per machine from "python tools\refactor\texte_im_code.py --setup".
+Phase "Static checks"
+Schreibe ""
+Schreibe "## Static checks"
+$replayDateien = @(Get-ChildItem (Join-Path $Root "tests\replays") -Recurse -Filter *.rep | Sort-Object FullName | ForEach-Object { $_.FullName })
+$statisch = @(
+	@{ n = "Code texts English, no markers"; a = @("tools\refactor\texte_im_code.py") },
+	@{ n = "No TODO, finding or plan numbers in published files"; a = @("tools\refactor\nummern_im_text.py") },
+	@{ n = "Replay command tool reads the reference replays"; a = @("tools\fuzz\replaycmd\replaycmd.py", "selftest") + $replayDateien },
+	@{ n = "INI tables with end entry"; a = @("tools\refactor\tabellenende.py") },
+	@{ n = "Shader slot table"; a = @("tools\render\plaetze_pruefen.py") },
+	@{ n = "Renderer layers"; a = @("tools\refactor\renderer_schichten.py") },
+	@{ n = "Project texts (Data/Text)"; a = @("tools\refactor\projekttexte.py") },
+	@{ n = "Interface names: inventory matches the code"; a = @("tools\inhalt\schnittstellen.py", "--pruefen") },
+	@{ n = "Logic ID matches the reference replays"; a = @("tools\determinism\logikkennung.py", "--pruefen") },
+	@{ n = "Editors and Babylon: every text translated"; a = @("tools\mapeditor\lang_check.py") },
+	@{ n = "Layers under Code/"; a = @("tools\schichten\pruefen.py") },
+	@{ n = "Game folders hold only their three files"; a = @("tools\mdsync\treediff.py", "--overlap") },
+	@{ n = "Texture tier tool, self test"; a = @("tools\assets\build_texture_tiers.py", "--selftest") },
+	@{ n = "AI texture set tool, self test"; a = @("tools\assets\ki_satz.py", "--selftest") },
+	@{ n = "Tier metrics tool, self test"; a = @("tools\assets\stufen_kennzahlen.py", "--selftest") },
+	@{ n = "Texture package tool, self test"; a = @("tools\assets\build_texture_package.py", "--selftest") }
+)
+foreach ($s in $statisch) {
+	$t = Get-Date
+	$r = Lauf ("static_" + [IO.Path]::GetFileNameWithoutExtension($s.a[0])) $Python $s.a
+	$letzte = (Get-Content $r.log | Where-Object { $_.Trim() } | Select-Object -Last 1)
+	Ergebnis $s.n ($r.rc -eq 0) "$letzte, $(Dauer $t)"
+	if ($r.rc -ne 0) { Block $s.n (Get-Content $r.log -Tail 40) 40 }
+}
+# The replay command numbers come from MessageStream.h; one fixed entry shows the table was read.
+$r = Lauf "static_replaycmd_types" $Python @("tools\fuzz\replaycmd\replaycmd.py", "types")
+$typOk = ($r.rc -eq 0) -and [bool](Select-String -Path $r.log -Pattern '^1092 MSG_SET_REPLAY_CAMERA$' -CaseSensitive)
+Ergebnis "Replay command numbers from MessageStream.h" $typOk "Exit $($r.rc), 1092 MSG_SET_REPLAY_CAMERA $(if ($typOk) { 'found' } else { 'missing' })"
 
 # ----------------------------------------------------------------------------------------------
 # 2. Bau
@@ -376,7 +418,7 @@ if ($Schnell -or -not $bauOk) {
 	foreach ($exe in @($ExeG, $ExeZ, $ExeGR, $ExeZR)) {
 		$ordner = Join-Path $Root (Split-Path $exe)
 		$p = Start-Process -FilePath (Join-Path $ordner (Split-Path $exe -Leaf)) -WorkingDirectory $ordner -PassThru `
-			-ArgumentList (@("-win", "-xres", "800", "-yres", "600", "-nologo", "-noaudio", "-fixedTimeStep", "-quitAfter", "5", "-ignoreAsserts", "-mehrfach") + (BenutzerArgs $exe))
+			-ArgumentList (@("-win", "-xres", "800", "-yres", "600", "-nologo", "-noaudio", "-fixedTimeStep", "-quitAfter", "5", "-ignoreAsserts", "-multiInstance") + (BenutzerArgs $exe))
 		$null = $p.Handle
 		if (-not $p.WaitForExit(120000)) { $p.Kill(); $p.WaitForExit() }
 	}
@@ -434,22 +476,22 @@ if ($Schnell -or -not $bauOk) {
 		"Assertions"               = "ASSERTION FAILURE"
 		"Lecks (Bloecke)"          = "^Leaked a block"
 		"Lecksumme"                = "There were \d+ memory leaks|Leaked a total of"
-		"lebende D3D11-Objekte"    = "D3D11-LEBEND "
+		"lebende D3D11-Objekte"    = "D3D11-LIVE "
 		"D3D11-Pruefschicht"       = "D3D11-Debug-Layer \["
 		"DDS nicht geladen"        = "not loaded"
 		"Absturz"                  = "EXCEPTION DUMP|^ABORT:|crash report in"
 		"Watchdog"                 = "hung for"
-		"Testablauf/Kamera-Fehler" = "TESTABLAUF ERROR|CAMERAPATH ERROR"
+		"Testablauf/Kamera-Fehler" = "TESTSCRIPT ERROR|CAMERAPATH ERROR"
 	}
 	# Both games start together: one pass through the queue for two windows; each instance has its own
-	# folder and writes its own log (-mehrfach).
+	# folder and writes its own log (-multiInstance).
 	WarteAufSlot 2
 	$starts = @()
 	foreach ($exe in @($ExeG, $ExeZ)) {
 		$ordner = Join-Path $Root (Split-Path $exe)
 		$datei = Split-Path $exe -Leaf
 		$p = Start-Process -FilePath (Join-Path $ordner $datei) -WorkingDirectory $ordner -PassThru `
-			-ArgumentList (@("-win", "-xres", "800", "-yres", "600", "-nologo", "-noaudio", "-fixedTimeStep", "-quitAfter", "60", "-ignoreAsserts", "-mehrfach") + (BenutzerArgs $exe))
+			-ArgumentList (@("-win", "-xres", "800", "-yres", "600", "-nologo", "-noaudio", "-fixedTimeStep", "-quitAfter", "60", "-ignoreAsserts", "-multiInstance") + (BenutzerArgs $exe))
 		$null = $p.Handle   # sonst liefert ExitCode unter PowerShell 5.1 nichts
 		$starts += , @{ ordner = $ordner; datei = $datei; p = $p; t = (Get-Date) }
 	}
@@ -468,7 +510,7 @@ if ($Schnell -or -not $bauOk) {
 			$kurz = @("Exit $($p.ExitCode)")
 			$ok = ($p.ExitCode -eq 0)
 		}
-		# -mehrfach: own log m<PID>_DebugLogFileD.txt, as Debug replays in the same folder write DebugLogFileD.txt
+		# -multiInstance: own log m<PID>_DebugLogFileD.txt, as Debug replays in the same folder write DebugLogFileD.txt
 		$logDatei = Join-Path $ordner ("m{0}_DebugLogFileD.txt" -f $p.Id)
 		if (Test-Path $logDatei) {
 			Move-Item $logDatei (Join-Path $Out "start_$datei.DebugLogFileD.txt") -Force
@@ -507,7 +549,7 @@ if ($Schnell -or -not $bauOk) {
 			$ziel = "render-out\pruefung\$Stempel\bild_$($f[0])"
 			$r = LaufNebenbei "bild_$($f[0])" $Python (@("tools\render\run_render_test.py", "run", "--exe", $f[1], "--out", $ziel,
 				"--reference", "render-out\$Bildvergleich-$($f[0])") + $f[2] + @("--extra", "-ignoreAsserts"))
-			$ab = @(Select-String -Path $r.log -Pattern "^ABWEICHT|^FEHLER" | ForEach-Object Line)
+			$ab = @(Select-String -Path $r.log -Pattern "^DIFFERS|^ERROR" | ForEach-Object Line)
 			Ergebnis "Bild $($f[0])" (($r.rc -eq 0) -and ($ab.Count -eq 0)) "$($ab.Count) abweichend, Exit $($r.rc), $(Dauer $t)"
 			if ($ab.Count -gt 0) { Block "Bild $($f[0])" $ab 30 }
 		}
@@ -518,7 +560,7 @@ if ($Schnell -or -not $bauOk) {
 		$t = Get-Date
 		# own build folder (build-x64-editor); the replays keep running while it builds and tests
 		$r = LaufNebenbei "karteneditor" "powershell.exe" @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "$Root\tools\mapeditor\bauen_windows.ps1", "-Config", "Release")
-		$fehl = @(Select-String -Path $r.log -Pattern "^\[FEHLER\]" | ForEach-Object Line)
+		$fehl = @(Select-String -Path $r.log -Pattern "^\[ERROR\]" | ForEach-Object Line)
 		Ergebnis "Karteneditor bauen und Selbsttest (Release)" (($r.rc -eq 0) -and ($fehl.Count -eq 0)) "Exit $($r.rc), $($fehl.Count) Fehler, $(Dauer $t)"
 		if ($fehl.Count -gt 0) { Block "Karteneditor Fehler" $fehl 30 }
 		Block "Karteneditor (Ausgabe)" (Get-Content $r.log -Tail 60) 60
@@ -526,9 +568,22 @@ if ($Schnell -or -not $bauOk) {
 	if ($Lecksuche) {
 		Schreibe ""
 		Schreibe "## Lecksuche"
+		# build-leak (call stacks) is a separate folder; an old exe there would not understand the current test scripts
+		$t = Get-Date
+		$leakOk = Test-Path (Join-Path $Root "build-leak\CMakeCache.txt")
+		if ($leakOk) {
+			$r = LaufNebenbei "build_leak" $CMake @("--build", "build-leak", "--config", "Debug", "--target", "GZHNeo", "GZHNeoZH", "--", "-m")
+			$leakOk = ($r.rc -eq 0)
+			Ergebnis "Bau build-leak Debug" $leakOk "Exit $($r.rc), $(Dauer $t)"
+			if (-not $leakOk) { Block "Bau build-leak" (Get-Content $r.log -Tail 40) 40 }
+		} else {
+			Ergebnis "Bau build-leak Debug" $false "build-leak missing (cmake --preset x64-debug -B build-leak -DENABLE_MEMORYPOOL_STACKTRACE=ON)"
+		}
+	}
+	if ($Lecksuche -and $leakOk) {
 		$t = Get-Date
 		$r = LaufNebenbei "lecksuche" $Python (@("tools\lecksuche\lecksuche.py", "--auswahl", "abnahme", "--out", "render-out\pruefung\$Stempel\lecksuche",
-			"--warteschlange", "$Root\tools\abnahme\slot.py") + $(if ($Benutzerdaten) { @("--benutzerdaten", $Benutzerdaten) } else { @() }))
+			"--warteschlange", "$Root\tools\abnahme\slot.py") + $(if ($Benutzerdaten) { @("--userData", $Benutzerdaten) } else { @() }))
 		Ergebnis "Lecksuche" ($r.rc -eq 0) "Exit $($r.rc), $(Dauer $t)"
 		Block "Lecksuche" (Get-Content $r.log -Tail 60) 60
 	}
@@ -575,7 +630,7 @@ if ($Schnell -or -not $bauOk) {
 		$zeilen = @()
 		foreach ($j in $meine) {
 			$inhalt = @(Get-Content $j.log -ErrorAction SilentlyContinue) + @(Get-Content ($j.log + ".err") -ErrorAction SilentlyContinue)
-			$treffer = @($inhalt | Where-Object { $_ -match "OK|FEHLER|ABWEICHUNG|Absturzbericht|Traceback|Error" })
+			$treffer = @($inhalt | Where-Object { $_ -match "OK|ERROR|ABWEICHUNG|Absturzbericht|Traceback|Error" })
 			if ($treffer.Count -eq 0) { $treffer = @("$($j.name): keine Ausgabe, Exit $($j.rc)") }
 			$zeilen += $treffer
 		}

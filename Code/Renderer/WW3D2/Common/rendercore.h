@@ -178,10 +178,11 @@ public:
 	// Terrain detail layer, section 10 in the .cpp
 	virtual void Set_Terrain_Detail_Table(const RenderTerrainDetailTable& table) override;
 	virtual void Set_Terrain_Detail(bool enable) override;
+	virtual void Warm_Shaders() override;
 
 	// Terrain rock layer, section 11 in the .cpp
 	virtual void Set_Terrain_Height_Field(const unsigned char* heights, int width, int height, int border,
-		float cell_size, float height_scale) override;
+		float cell_size, float height_scale, unsigned version) override;
 	virtual void Set_Terrain_Lighting(const RenderTerrainLighting& lighting) override;
 
 	// Terrain relief (normal maps and gloss), section 11b in the .cpp
@@ -219,7 +220,9 @@ private:
 	Impl*	M;		///< all D3D11 objects; defined in rendercore_internal.h
 
 	void	Release_Scene_Target();
-	bool	Create_Scene_Target(unsigned width, unsigned height);
+	bool	Create_Scene_Target(unsigned width, unsigned height);	///< with the fallback of Build_Scene_Target
+	void	Leave_Safe_Scene_Target();							///< the next target is built with the requested settings again
+	bool	Build_Scene_Target(unsigned width, unsigned height);	///< one attempt with the current settings (scene_safe: plain target)
 	void	Update_Scene_Surfaces(unsigned width, unsigned height);	///< point the handles at the scene target
 	void	Reset_Viewport_To_Target(unsigned width, unsigned height);	///< full-target viewport after a target change
 	void	Drain_Debug_Messages();			///< debug layer messages into the game log
@@ -229,6 +232,7 @@ private:
 	void	Init_Default_States();				///< set the state shadow to the fixed-function defaults
 	bool	Ensure_Draw_Resources();			///< constant buffers, uber shaders, helper resources
 	void	Release_Draw_Resources();
+	void	Restore_Buffer_Contents();			///< after a lost device: static buffers get their contents again
 	bool	Prepare_Draw(unsigned primitive_type);	///< bind everything a draw needs
 	void	Ud_Draw();							///< upload diagnosis: line of the prepared draw (rendercore_diagnosis.cpp)
 	void	Bind_State_Objects();				///< blend/depth-stencil/rasterizer from the state shadow
@@ -327,7 +331,8 @@ private:
 	bool	Sh_Compute_Light(const RenderShadowParams& params);	///< light matrix from camera and sun
 	WW3DVertexShaderHandle Sh_Vertex_Shader(unsigned variant);
 	/// Record the current draw as a shadow caster (after drawing, with the draw's state).
-	void	Sh_Record(bool indexed, unsigned count, unsigned start, int base_vertex,
+	/// `primitive_type` is the draw's own type: batched draws record before any Prepare_Draw ran for them.
+	void	Sh_Record(unsigned primitive_type, bool indexed, unsigned count, unsigned start, int base_vertex,
 					  unsigned min_index, unsigned num_vertices, unsigned up_offset, unsigned up_stride);
 	/// Before a buffer is overwritten or released: preserve the range used by recorded casters.
 	void	Sh_Before_Write(WW3DBufferCommon* buffer, unsigned offset, unsigned size, bool discard, bool index);

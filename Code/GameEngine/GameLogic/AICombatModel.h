@@ -41,6 +41,8 @@
 namespace AICombat
 {
 
+enum Kind { KIND_OTHER = 0, KIND_INFANTRY = 1, KIND_VEHICLE = 2 };
+
 struct Profile
 {
 	float maxHealth = 0.0f;
@@ -48,6 +50,7 @@ struct Profile
 	int armor = -1;			///< index into the armor list, -1 = takes damage unchanged
 	bool air = false;		///< a flying target (only anti-air weapons hit it)
 	bool structure = false;
+	int kind = KIND_OTHER;	///< infantry or vehicle (mobile ground units), for the roles
 	float range = 0.0f;		///< longest reach of a damaging weapon (world units)
 	float splash = 0.0f;		///< largest damage radius of a damaging weapon (area damage)
 };
@@ -594,6 +597,7 @@ struct Fighter
 	float health = 0.0f;
 	float x = 0.0f, y = 0.0f;
 	float speed = 0.0f;		///< top speed now (world units per frame), 0 = unknown or immobile
+	bool fireOnMove = true;	///< fires while moving (a turret); only these step back from short-ranged enemies
 };
 
 struct FocusAssignment
@@ -611,9 +615,12 @@ inline float distance2( const Fighter &a, const Fighter &b )
 /// Focus fire. Targets in order of the damage they deal to the own units per point of their
 /// remaining health (kill first what hurts most and dies fastest); each target takes shooters
 /// that reach it (range plus `approach`) and can hurt it until their fire kills it within
-/// `killSeconds` -- the rest go on to the next target instead of overkilling. Shooters in id order.
+/// `killSeconds` -- the rest go on to the next target instead of overkilling. Each target takes its nearest shooters
+/// first. A shooter keeps the target of the `previous` assignment while it lives, is in reach and hurts, unless a target
+/// the shooter reaches ranks more than `switchFactor` times as high.
 inline std::vector<FocusAssignment> assignFocusFire( const Table &table, const std::vector<Fighter> &own,
-	const std::vector<Fighter> &enemies, float approach = 100.0f, float killSeconds = 4.0f )
+	const std::vector<Fighter> &enemies, float approach = 100.0f, float killSeconds = 4.0f,
+	const std::vector<FocusAssignment> *previous = nullptr, float switchFactor = 1.3f )
 {
 	std::vector<FocusAssignment> out;
 	if (own.empty() || enemies.empty())
@@ -624,6 +631,7 @@ inline std::vector<FocusAssignment> assignFocusFire( const Table &table, const s
 
 	struct Ranked { size_t index; float score; };
 	std::vector<Ranked> ranked;
+	std::vector<float> scoreOf( enemies.size(), -1.0f );
 	for (size_t i = 0; i < enemies.size(); ++i)
 	{
 		const Fighter &e = enemies[i];
@@ -636,6 +644,7 @@ inline std::vector<FocusAssignment> assignFocusFire( const Table &table, const s
 		Ranked r;
 		r.index = i;
 		r.score = threat / e.health + 1.0e-6f / e.health;	// unarmed: weakest first, after all armed
+		scoreOf[i] = r.score;
 		ranked.push_back( r );
 	}
 	std::sort( ranked.begin(), ranked.end(), [&]( const Ranked &a, const Ranked &b )
@@ -645,17 +654,62 @@ inline std::vector<FocusAssignment> assignFocusFire( const Table &table, const s
 		return enemies[a.index].id < enemies[b.index].id;
 	} );
 
-	std::vector<size_t> order( own.size() );
-	for (size_t i = 0; i < own.size(); ++i)
-		order[i] = i;
-	std::sort( order.begin(), order.end(), [&]( size_t a, size_t b ) { return own[a].id < own[b].id; } );
 	std::vector<bool> busy( own.size(), false );
+	std::vector<float> assignedDps( enemies.size(), 0.0f );
 
+	// Keep the earlier assignment where it still makes sense.
+	if (previous != nullptr)
+	{
+		for (size_t k = 0; k < own.size(); ++k)
+		{
+			const Fighter &s = own[k];
+			if (s.profile < 0)
+				continue;
+			const FocusAssignment *prev = nullptr;
+			for (const FocusAssignment &a : *previous)
+				if (a.shooter == s.id)
+					prev = &a;
+			if (prev == nullptr)
+				continue;
+			const Profile &p = table.profiles[static_cast<size_t>(s.profile)];
+			const float reach = p.range + approach;
+			int kept = -1;
+			float bestScore = 0.0f;
+			for (size_t i = 0; i < enemies.size(); ++i)
+			{
+				if (scoreOf[i] < 0.0f || table.dpsAgainst( s.profile, enemies[i].profile ) <= 0.0f || distance2( s, enemies[i] ) > reach * reach)
+					continue;
+				bestScore = std::max( bestScore, scoreOf[i] );
+				if (enemies[i].id == prev->target)
+					kept = static_cast<int>( i );
+			}
+			if (kept < 0 || scoreOf[static_cast<size_t>( kept )] * switchFactor < bestScore)
+				continue;
+			busy[k] = true;
+			FocusAssignment a;
+			a.shooter = s.id;
+			a.target = prev->target;
+			out.push_back( a );
+			assignedDps[static_cast<size_t>( kept )] += table.dpsAgainst( s.profile, enemies[static_cast<size_t>( kept )].profile )
+				* ((p.maxHealth > 0.0f) ? s.health / p.maxHealth : 1.0f);
+		}
+	}
+
+	std::vector<size_t> order( own.size() );
 	for (const Ranked &r : ranked)
 	{
 		const Fighter &t = enemies[r.index];
 		const float needed = t.health / ((killSeconds > 0.1f) ? killSeconds : 0.1f);
-		float assigned = 0.0f;
+		float assigned = assignedDps[r.index];
+		for (size_t i = 0; i < own.size(); ++i)
+			order[i] = i;
+		std::sort( order.begin(), order.end(), [&]( size_t a, size_t b )
+		{
+			const float da = distance2( own[a], t ), db = distance2( own[b], t );
+			if (da != db)
+				return da < db;
+			return own[a].id < own[b].id;
+		} );
 		for (size_t k : order)
 		{
 			if (busy[k] || assigned >= needed)
@@ -686,7 +740,7 @@ inline std::vector<FocusAssignment> assignFocusFire( const Table &table, const s
 inline bool kiteStep( const Table &table, const Fighter &me, const std::vector<Fighter> &enemies, float *outX, float *outY,
 	float rangeShare = 0.7f, float margin = 60.0f )
 {
-	if (me.profile < 0)
+	if (me.profile < 0 || !me.fireOnMove)
 		return false;
 	const Profile &mine = table.profiles[static_cast<size_t>(me.profile)];
 	if (mine.structure || mine.range <= 0.0f)

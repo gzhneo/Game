@@ -373,23 +373,39 @@ void Release_Refs(SortingNodeStruct* state)
 }
 
 static unsigned overlapping_node_count;
-static unsigned overlapping_polygon_count;
+static unsigned overlapping_polygon_count;		// sorting elements: triangles and particles
+static unsigned overlapping_triangle_count;		// of those the triangles, the only ones that take index buffer room
 static unsigned overlapping_vertex_count;
 static const unsigned MAX_OVERLAPPING_NODES=4096;
+// One pass writes 16 bit indices into a dynamic vertex buffer of at most 65535 vertices and an index buffer of
+// at most 65535 indices.
+static const unsigned MAX_POOL_VERTICES=65535;
+static const unsigned MAX_POOL_TRIANGLES=65535/3;
 static SortingNodeStruct* overlapping_nodes[MAX_OVERLAPPING_NODES];
 
 // ----------------------------------------------------------------------------
 
 void SortingRendererClass::Insert_To_Sorting_Pool(SortingNodeStruct* state)
 {
-	if (overlapping_node_count>=MAX_OVERLAPPING_NODES) {
-		Release_Refs(state);
-		WWASSERT(0);
-		return;
+	// Particles draw as instances: no vertices, no triangles in the index buffer.
+	if (!state->particles && state->polygon_count>MAX_POOL_TRIANGLES) {
+		// A single node larger than one pass: draw what fits.
+		state->polygon_count=static_cast<unsigned short>(MAX_POOL_TRIANGLES);
+	}
+	const unsigned vertices=state->particles ? 0u : state->vertex_count;
+	const unsigned triangles=state->particles ? 0u : state->polygon_count;
+
+	// Draw the nodes collected so far when this one does not fit any more; the nodes arrive in drawing order,
+	// so the passes follow one another correctly.
+	if (overlapping_node_count>=MAX_OVERLAPPING_NODES ||
+		overlapping_vertex_count+vertices>MAX_POOL_VERTICES ||
+		overlapping_triangle_count+triangles>MAX_POOL_TRIANGLES) {
+		Flush_Sorting_Pool();
 	}
 
 	overlapping_nodes[overlapping_node_count]=state;
-	overlapping_vertex_count+=state->vertex_count;
+	overlapping_vertex_count+=vertices;
+	overlapping_triangle_count+=triangles;
 	overlapping_polygon_count+=state->polygon_count;
 	overlapping_node_count++;
 }
@@ -454,6 +470,9 @@ void SortingRendererClass::Flush_Sorting_Pool()
 {
 	if (!overlapping_node_count) return;
 
+	const bool old_enable=RenderDevice::_Is_Triangle_Draw_Enabled();
+	RenderDevice::_Enable_Triangle_Draw(_EnableTriangleDraw);
+
 	SNAPSHOT_SAY(("SortingSystem - Flush \n"));
 
 	// Fill dynamic index buffer with sorting index buffer vertices
@@ -464,7 +483,8 @@ void SortingRendererClass::Flush_Sorting_Pool()
 		vertexAllocCount = DEFAULT_SORTING_VERTEX_COUNT;	//make sure that we force the device dynamic vertex buffer to maximum size
 	if (overlapping_vertex_count > vertexAllocCount)
 		vertexAllocCount = overlapping_vertex_count;
-	WWASSERT(DEFAULT_SORTING_VERTEX_COUNT == 1 || vertexAllocCount <= DEFAULT_SORTING_VERTEX_COUNT);
+	if (vertexAllocCount > MAX_POOL_VERTICES)
+		vertexAllocCount = MAX_POOL_VERTICES;
 	DynamicVBAccessClass dyn_vb_access(BUFFER_TYPE_DYNAMIC_DEVICE,dynamic_fvf_type,static_cast<unsigned short>(vertexAllocCount)/*overlapping_vertex_count*/);
 	{
 		DynamicVBAccessClass::WriteLockClass lock(&dyn_vb_access);
@@ -571,28 +591,13 @@ void SortingRendererClass::Flush_Sorting_Pool()
 
 	Sort(tis, tis + overlapping_polygon_count);
 
-/*	///@todo: Add code to break up rendering into multiple index buffer fills to allow more than 65536/3 triangles.  -MW
-	int total_overlapping_polygon_count = overlapping_polygon_count;
-	while (  > 0)
-	{
-		if ((total_overlapping_polygon_count*3) > 65535)
-		{	//overflowed the index buffer, must break into multiple batches
-			overlapping_polygon_count = 65535/3;
-		}
-		else
-			overlapping_polygon_count = total_overlapping_polygon_count;
-
-		//insert rendering code here!!
-
-		total_overlapping_polygon_count -= overlapping_polygon_count;
-	}
-*/
-	unsigned polygonAllocCount = overlapping_polygon_count;
+	unsigned polygonAllocCount = overlapping_triangle_count;
 	if (static_cast<unsigned>(DynamicIBAccessClass::Get_Default_Index_Count()/3) < DEFAULT_SORTING_POLY_COUNT)
 		polygonAllocCount = DEFAULT_SORTING_POLY_COUNT;	//make sure that we force the device index buffer to maximum size
-	if (overlapping_polygon_count > polygonAllocCount)
-		polygonAllocCount = overlapping_polygon_count;
-	WWASSERT(DEFAULT_SORTING_POLY_COUNT <= 1 || polygonAllocCount <= DEFAULT_SORTING_POLY_COUNT);
+	if (overlapping_triangle_count > polygonAllocCount)
+		polygonAllocCount = overlapping_triangle_count;
+	if (polygonAllocCount > MAX_POOL_TRIANGLES)
+		polygonAllocCount = MAX_POOL_TRIANGLES;
 
 	DynamicIBAccessClass dyn_ib_access(BUFFER_TYPE_DYNAMIC_DEVICE,static_cast<unsigned short>(polygonAllocCount*3));
 	{
@@ -600,9 +605,14 @@ void SortingRendererClass::Flush_Sorting_Pool()
 		ShortVectorIStruct* sorted_polygon_index_array=reinterpret_cast<ShortVectorIStruct*>(lock.Get_Index_Array());
 
 		try {
+		// Only the triangles, in drawing order: a run of one node is a contiguous piece of this array.
+		unsigned triangles=0;
 		for (unsigned a=0;a<overlapping_polygon_count;++a) {
-			sorted_polygon_index_array[a]=tis[a].tri;
+			if (!overlapping_nodes[tis[a].idx]->particles) {
+				sorted_polygon_index_array[triangles++]=tis[a].tri;
+			}
 		}
+		WWASSERT(triangles==overlapping_triangle_count);
 		IndexBufferExceptionFunc();
 		} catch(...) {
 			IndexBufferExceptionFunc();
@@ -629,7 +639,8 @@ void SortingRendererClass::Flush_Sorting_Pool()
 		RenderDevice::Upload_Particle_Batch(_ParticleRun.data(),static_cast<unsigned>(_ParticleRun.size()));
 	unsigned particles_drawn=0;
 
-	// A run of elements of one node: triangles from the index buffer, particles as instances in sorted order.
+	// A run of elements of one node: triangles from the index buffer (run_start counts triangles only),
+	// particles as instances in sorted order.
 	auto render_run = [&particles_drawn,batch](unsigned run_node, unsigned run_start, unsigned run_count) {
 		SortingNodeStruct* state=overlapping_nodes[run_node];
 		Apply_Render_State(state->sorting_state);
@@ -651,15 +662,15 @@ void SortingRendererClass::Flush_Sorting_Pool()
 		}
 	};
 
-	unsigned count_to_render=1;
-	unsigned start_index=0;
-	unsigned node_id=tis[0].idx;
+	unsigned count_to_render=overlapping_polygon_count ? 1 : 0;
+	unsigned start_index=0;		// triangles drawn before the current run
+	unsigned node_id=overlapping_polygon_count ? tis[0].idx : 0;
 	for (unsigned i=1;i<overlapping_polygon_count;++i) {
 		if (node_id!=tis[i].idx) {
 			render_run(node_id,start_index,count_to_render);
+			if (!overlapping_nodes[node_id]->particles) start_index+=count_to_render;
 
 			count_to_render=0;
-			start_index=i;
 			node_id=tis[i].idx;
 		}
 		count_to_render++;	//keep track of number of polygons of same kind
@@ -678,8 +689,11 @@ void SortingRendererClass::Flush_Sorting_Pool()
 	}
 	overlapping_node_count=0;
 	overlapping_polygon_count=0;
+	overlapping_triangle_count=0;
 	overlapping_vertex_count=0;
-	_ParticlePool.clear();
+	// _ParticlePool stays: nodes still waiting for the next pass point into it (Flush clears it).
+
+	RenderDevice::_Enable_Triangle_Draw(old_enable);
 
 	SNAPSHOT_SAY(("SortingSystem - Done flushing\n"));
 
@@ -712,10 +726,8 @@ void SortingRendererClass::Flush()
 		}
 	}
 
-	bool old_enable=RenderDevice::_Is_Triangle_Draw_Enabled();
-	RenderDevice::_Enable_Triangle_Draw(_EnableTriangleDraw);
 	Flush_Sorting_Pool();
-	RenderDevice::_Enable_Triangle_Draw(old_enable);
+	_ParticlePool.clear();
 	RenderDevice::Set_Soft_Particles(false);	// the last node may have been a particle
 
 	RenderDevice::Set_Index_Buffer(0,0);

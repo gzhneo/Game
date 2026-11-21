@@ -8,7 +8,7 @@
 // harnesses so it uses the engine's Transport as the game does):
 //   1. two transports; every packet arrives once, in order, with sender address and port
 //
-// All transports use 127.0.0.1 with their own ports. The loopback addresses of -netzLokal
+// All transports use 127.0.0.1 with their own ports. The loopback addresses of -netLocal
 // (127.0.0.N, same port) cannot be tested under Wine 9: it refuses a second loopback address on a
 // port already bound and reports every loopback sender as 127.0.0.1 (Windows and Linux do neither).
 //   2. the network emulator on the receiving side: nothing before the latency, loss, duplicates

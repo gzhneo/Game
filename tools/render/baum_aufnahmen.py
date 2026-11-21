@@ -57,7 +57,7 @@ def cmd_lauf(a):
         wait_free(parallel=3)
         cmd = [sys.executable, os.path.join(HIER, "run_render_test.py"), "run", "--exe", a.zh, "--scene", szene,
                "--path", os.path.join(PFADE, pfad), "--every", str(takt), "--xres", str(a.xres), "--yres", str(a.yres),
-               "--texture-quality", a.stufe, "--mehrfach", "--out", out]
+               "--texture-quality", a.stufe, "--multiInstance", "--out", out]
         if karte:
             cmd += ["--map", karte, "--ai", "1", "--seed", "1"]
         extra = ["-ignoreAsserts", "-d3d11Effects", a.effekte]

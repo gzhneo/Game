@@ -59,6 +59,7 @@
 
 #include <cstdint>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace vkdev {
@@ -105,9 +106,26 @@ void				Fail(const char* text, int code = 0);
 // Objects
 // ------------------------------------------------------------------------------------------------
 
+/// What an object does when the device is lost and built again: Gpu::Orphan makes every object give back its
+/// Vulkan handles (the object itself, and everything the game holds a pointer to, stays), Gpu::Revive creates
+/// the handles again on the new device. Buffers and images come back empty, like under Direct3D 11.
+class Revivable
+{
+public:
+	/// Destroys the Vulkan handles at once (the GPU is idle) and forgets them.
+	virtual void	Drop_Handles() {}
+	/// Creates the handles again from what the object remembers.
+	virtual bool	Recreate_Handles() { return true; }
+	/// 0: resources and state, 1: what refers to them (views).
+	virtual int		Revive_Pass() const { return 0; }
+	bool			m_dropped = false;
+protected:
+	virtual ~Revivable() {}
+};
+
 /// Reference counting and the device link shared by every object.
 template <class Interface>
-class Object : public Interface
+class Object : public Interface, public Revivable
 {
 public:
 	ULONG	AddRef() override { return static_cast<ULONG>(InterlockedIncrement(&m_refs)); }
@@ -158,6 +176,8 @@ public:
 	void*	Native() override { return static_cast<ResourceBase*>(this); }
 
 	bool	Create(const GPU_SUBRESOURCE_DATA* initial);
+	void	Drop_Handles() override;
+	bool	Recreate_Handles() override { return Create(nullptr); }
 	/// A fresh slice for MAP_WRITE_DISCARD (the current one if the GPU cannot be using it).
 	bool	Discard();
 	bool	Is_Dynamic() const { return m_desc.Usage == GPU_USAGE_DYNAMIC; }
@@ -192,6 +212,8 @@ public:
 	void*	Native() override { return static_cast<ResourceBase*>(this); }
 
 	bool	Create(const GPU_SUBRESOURCE_DATA* initial);
+	void	Drop_Handles() override;
+	bool	Recreate_Handles() override;
 	/// Records the clear of every subresource to zero (image in TRANSFER_DST_OPTIMAL).
 	bool	Zero(VkCommandBuffer cmd);
 	bool	Is_Staging() const { return m_desc.Usage == GPU_USAGE_STAGING; }
@@ -221,6 +243,9 @@ struct ViewBase
 	VkFormat			format;
 	unsigned			mip;
 	VkImageAspectFlags	aspect;
+	unsigned			mip_count;		///< levels the view covers
+	bool				swizzled;
+	VkComponentSwizzle	swizzle[4];
 };
 
 template <class Interface>
@@ -230,6 +255,9 @@ public:
 	View(Gpu* gpu, Texture* texture);
 	~View() override;
 	void*	Native() override { return static_cast<ViewBase*>(this); }
+	void	Drop_Handles() override;
+	bool	Recreate_Handles() override;
+	int		Revive_Pass() const override { return 1; }
 };
 
 typedef View<GpuShaderResourceView>	ShaderResourceView;
@@ -255,6 +283,8 @@ public:
 	Shader(Gpu* gpu, unsigned stage);
 	~Shader() override;
 	void*	Native() override { return static_cast<ShaderBase*>(this); }
+	void	Drop_Handles() override;
+	bool	Recreate_Handles() override;
 };
 
 typedef Shader<GpuVertexShader>	VertexShader;
@@ -298,6 +328,8 @@ class SamplerState final : public Object<GpuSamplerState>
 public:
 	SamplerState(Gpu* gpu, const GPU_SAMPLER_DESC& desc) : Object<GpuSamplerState>(gpu), m_desc(desc), m_sampler(VK_NULL_HANDLE) {}
 	~SamplerState() override;
+	void	Drop_Handles() override;
+	bool	Recreate_Handles() override;
 	GPU_SAMPLER_DESC	m_desc;
 	VkSampler			m_sampler;
 };
@@ -316,6 +348,10 @@ class Query final : public Object<GpuQuery>
 public:
 	Query(Gpu* gpu, const GPU_QUERY_DESC& desc) : Object<GpuQuery>(gpu), m_desc(desc), m_pool(VK_NULL_HANDLE), m_serial(0), m_written(false), m_active(false) {}
 	~Query() override;
+	void	Drop_Handles() override;
+	bool	Recreate_Handles() override;
+	/// The query pool for the description (VK_NULL_HANDLE for query kinds without one).
+	VkQueryPool	Create_Pool();
 	GPU_QUERY_DESC	m_desc;
 	VkQueryPool		m_pool;			///< timestamps: one query
 	uint64_t		m_serial;		///< submission of the last End
@@ -438,6 +474,18 @@ public:
 	/// Waits for the GPU and destroys everything; objects still alive keep a dead device pointer
 	/// (their Release then only frees memory).
 	void	Destroy();
+	/// Like Destroy, but the objects still alive give back their Vulkan handles first and are kept for Revive:
+	/// the device is lost or being replaced and the game's pointers to buffers, textures and shaders stay valid.
+	void	Orphan();
+	/// After Create on the orphaned object: gives every object new handles (buffers and images empty).
+	void	Revive();
+	bool	Orphaned() const { return m_orphaned; }
+	/// The orphaned object is not coming back: it goes away with its last object.
+	void	Abandon();
+	void	Register(Revivable* object) { m_revivable.insert(object); }
+	void	Unregister(Revivable* object) { m_revivable.erase(object); }
+	/// Destroys a buffer slice at once (the GPU is idle).
+	void	Free_Slice(Slice& slice);
 
 	// ---- GpuDevice ------------------------------------------------------------------------------
 	HRESULT	CreateBuffer(const GPU_BUFFER_DESC* desc, const GPU_SUBRESOURCE_DATA* initial, GpuBuffer** out) override;
@@ -590,6 +638,7 @@ private:
 	VkShaderModule	Stage_Module(ShaderBase* shader, ShaderBase* previous);
 	HRESULT	Create_Shader(unsigned stage, const void* code, SIZE_T size, GpuObject** out);
 	VkSampler	Create_Sampler(const GPU_SAMPLER_DESC& desc);
+	friend class SamplerState;
 
 public:
 	// Objects shared by the files of the device.
@@ -607,6 +656,8 @@ public:
 	bool								m_pipeline_statistics;
 	Query*								m_open_statistics;	///< pipeline statistics query between Begin and End
 	bool								m_lost;
+	bool								m_orphaned;			///< objects wait for Revive; the device object stays
+	std::unordered_set<Revivable*>		m_revivable;		///< every live object
 
 private:
 	// Swap chain and back buffer
@@ -711,11 +762,13 @@ template <class Interface>
 Object<Interface>::Object(Gpu* gpu) : m_gpu(gpu), m_refs(1), m_id(gpu->Next_Id())
 {
 	gpu->Object_Created();
+	gpu->Register(this);
 }
 
 template <class Interface>
 Object<Interface>::~Object()
 {
+	m_gpu->Unregister(this);
 	m_gpu->Object_Destroyed();
 }
 

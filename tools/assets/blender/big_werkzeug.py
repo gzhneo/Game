@@ -1,7 +1,7 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-# .big-Archive lesen und schreiben für die Modell-Werkzeuge (TODO 56/62). Nur lesend auf EA-Archive.
+# .big-Archive lesen und schreiben für die Modell-Werkzeuge. Nur lesend auf EA-Archive.
 #
 #   python big_werkzeug.py suche <muster> <archiv.big>...        Einträge, deren Pfad <muster> enthält (mit MD5)
 #   python big_werkzeug.py entpacke <archiv.big> <ziel> <name>... Einträge nach Dateinamen (ohne Pfad, ohne

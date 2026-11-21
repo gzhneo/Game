@@ -36,6 +36,7 @@
 #include "Common/Player.h"
 #include "Common/PlayerList.h"
 
+#include "GameLogic/PartitionManager.h"
 #include "GameLogic/TerrainLogic.h"
 #include "GameLogic/GameLogic.h"
 #include "GameLogic/Object.h"
@@ -1414,6 +1415,16 @@ void W3DRadar::draw( Int pixelX, Int pixelY, Int width, Int height )
 	// where we should start and end the image so that the final drawn image has the
 	// same ratio as the map and isn't stretched or distorted
 	//
+	// After a device reset the terrain and shroud textures are empty: fill them again from the game state.
+	if( m_deviceResets != RenderDevice::Get_Device_Reset_Count() )
+	{
+		m_deviceResets = RenderDevice::Get_Device_Reset_Count();
+		if( TheTerrainLogic )
+			refreshTerrain( TheTerrainLogic );
+		if( ThePartitionManager )
+			ThePartitionManager->refreshShroudForLocalPlayer();
+	}
+
 	ICoord2D ul, lr;
 	findDrawPositions( pixelX, pixelY, width, height, &ul, &lr );
 

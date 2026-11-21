@@ -32,7 +32,7 @@ import subprocess
 import sys
 import time
 
-# Karten mit mindestens 4 Startplaetzen (Stand E-0.3; Namen wie im MapCache).
+# Karten mit mindestens 4 Startplaetzen (Namen wie im MapCache).
 DEFAULT_MAPS = [
     "Tournament Desert", "Tournament Island", "Tournament Lake", "Tournament Tundra",
     "Dark Mountain", "Fallen Empire", "Golden Oasis", "Homeland Alliance",
@@ -57,7 +57,7 @@ def crc_log_findings(path):
     return findings
 
 
-# E-8.1: Ein Absturz legt seit E-8.1 einen eigenen Ordner `Crashes\\JJJJ-MM-TT_HHMMSS` neben der
+# Ein Absturz legt einen eigenen Ordner `Crashes\\JJJJ-MM-TT_HHMMSS` neben der
 # Exe an (Minidump, Info.txt, EngineLog.txt, Replay). Die alten Einzeldateien kann es daneben
 # weiter geben (aelterer Build, Ausnahmefilter von Windows), deshalb werden beide gesucht.
 CRASH_DIR = "Crashes"
@@ -65,7 +65,7 @@ LEGACY_CRASH_FILES = ("CrashDump.dmp", "ReleaseCrashInfo.txt", "except.txt")
 
 
 def crash_folders(exe_dir):
-    """Namen der vorhandenen Absturzordner (E-8.1)."""
+    """Namen der vorhandenen Absturzordner."""
     base = os.path.join(exe_dir, CRASH_DIR)
     if not os.path.isdir(base):
         return set()

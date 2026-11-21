@@ -7,18 +7,18 @@
 Liest die CSV aus `-logRenderTime <Datei>` (GameEngine.cpp, logRenderTime) und prueft, ob die
 dargestellte Zeit ueber Tick- und Zwischenbilder stetig mit der Echtzeit laeuft.
 
-Spalten der CSV: ms, art, tick, frame, alpha, anzeige, ticklen
+Spalten der CSV: ms, art, tick, frame, alpha, display, ticklen
   art T = Tick-Bild nach der Logik (interpoliert), R = Zwischenbild (interpoliert),
       F = Tick-Bild vor der Logik ohne Interpolation (-fixedTimeStep, Zeitraffer, eingefrorene
-          Kamerafahrt). In F-Bildern steht die Kamera schon auf anzeige + 1.
-  anzeige = tick - 1 + alpha in Ticks
+          Kamerafahrt). In F-Bildern steht die Kamera schon auf display + 1.
+  display = tick - 1 + alpha in Ticks
 
 Ausgewertet werden aufeinanderfolgende Bilder, die beide T oder R sind und hoechstens --gap ms
 auseinanderliegen (Laden, Alt-Tab und Aufholen trennen die Abschnitte). Gemeldet werden:
-  rueckwaerts  anzeige ist gefallen -- das Bild zeigt einen frueheren Stand als das vorige.
+  rueckwaerts  display ist gefallen -- das Bild zeigt einen frueheren Stand als das vorige.
                Genau das war der Doppelbild-Fehler; soll 0 sein.
-  schritt      Zuwachs von anzeige je Bild in Ticks (bei 60 Hz und 30 Ticks/s um 0,5)
-  gleichlauf   Zuwachs von anzeige * ticklen minus Zuwachs von ms, also wie weit die gezeigte Zeit
+  schritt      Zuwachs von display je Bild in Ticks (bei 60 Hz und 30 Ticks/s um 0,5)
+  gleichlauf   Zuwachs von display * ticklen minus Zuwachs von ms, also wie weit die gezeigte Zeit
                von einem Bild zum naechsten gegen die Echtzeit verrutscht (ms). Die Spalte ms wird
                nach dem Zeichnen genommen, alpha schon davor; die Streuung enthaelt deshalb die
                schwankende Zeichen- und Present-Dauer. Mit VSync sind wenige ms normal.
@@ -55,8 +55,8 @@ def main():
     with open(a.csv, newline='') as f:
         for r in csv.DictReader(f):
             try:
-                rows.append((float(r['ms']), r['art'], int(r['tick']), int(r['frame']),
-                             float(r['alpha']), float(r['anzeige']), float(r['ticklen'])))
+                rows.append((float(r['ms']), r['kind'], int(r['tick']), int(r['frame']),
+                             float(r['alpha']), float(r['display']), float(r['ticklen'])))
             except (KeyError, ValueError):
                 print('unlesbare Zeile:', r)
                 return 2
@@ -94,7 +94,7 @@ def main():
         return 2
     print('rueckwaerts: %d' % len(rueck))
     for prev, cur in rueck[:a.list]:
-        print('  %.3f ms %s tick %d alpha %.4f anzeige %.4f  ->  %.3f ms %s tick %d alpha %.4f anzeige %.4f' % (
+        print('  %.3f ms %s tick %d alpha %.4f display %.4f  ->  %.3f ms %s tick %d alpha %.4f display %.4f' % (
             prev[0], prev[1], prev[2], prev[4], prev[5], cur[0], cur[1], cur[2], cur[4], cur[5]))
     print('schritt in Ticks     p1 %.3f  p50 %.3f  p99 %.3f  min %.3f  max %.3f' % (
         quantile(schritte, 0.01), quantile(schritte, 0.5), quantile(schritte, 0.99), min(schritte), max(schritte)))

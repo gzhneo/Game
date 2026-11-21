@@ -1,4 +1,4 @@
-# TODO 62 (Humvee-Pilot): Erkundung, wo im Replay e0zh-tournament-lake-3ai-seed2 Humvees
+# Humvee-Pilot: Erkundung, wo im Replay e0zh-tournament-lake-3ai-seed2 Humvees
 # stehen. Startpunkte aus tools/render/map_wegpunkte.py; die beiden USA-KI starten auf Player_1 und Player_2
 # (SLOT-Zeilen im .crc: Vorlage 5 = USA Superwaffen, 2 = USA). Je Startpunkt ein Halt mit mittlerem Zoom.
 # frame   x      y      zoom   drehung   neigung

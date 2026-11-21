@@ -2,73 +2,73 @@
 # verlassen ("Mission verlassen", Rueckfrage mit Ja), Punkteanzeige, Hauptmenue. Die ersten beiden Male fuellen die
 # Zwischenspeicher (beim zweiten Laden waechst noch einmalig etwas nach), Merkpunkt danach, Wachstum nach dem dritten
 # und vierten Mal: gleiche Inhalte, was dann noch bleibt, bleibt je Mission liegen.
-hauptmenue
+mainMenu
 # Mission 1, erstes Mal
-klickFalls MainMenu.wnd:ButtonSinglePlayer
-klick MainMenu.wnd:ButtonUSA
-klick MainMenu.wnd:ButtonEasy
-partie 20000
-warte 1800
-spielmenue
-klick QuitMenu.wnd:ButtonExit
-klick QuitMessageBox.wnd:ButtonYes
-keinePartie 20000
-klickFalls ScoreScreen.wnd:ButtonOk 900
-klickFalls ScoreScreen.wnd:ButtonContinue 60
-hauptmenue 20000
-klickFalls MainMenu.wnd:ButtonSingleBack
-hauptmenue
-warte 60
+clickIf MainMenu.wnd:ButtonSinglePlayer
+click MainMenu.wnd:ButtonUSA
+click MainMenu.wnd:ButtonEasy
+game 20000
+wait 1800
+gameMenu
+click QuitMenu.wnd:ButtonExit
+click QuitMessageBox.wnd:ButtonYes
+noGame 20000
+clickIf ScoreScreen.wnd:ButtonOk 900
+clickIf ScoreScreen.wnd:ButtonContinue 60
+mainMenu 20000
+clickIf MainMenu.wnd:ButtonSingleBack
+mainMenu
+wait 60
 # zweites Mal
-klickFalls MainMenu.wnd:ButtonSinglePlayer
-klick MainMenu.wnd:ButtonUSA
-klick MainMenu.wnd:ButtonEasy
-partie 20000
-warte 1800
-spielmenue
-klick QuitMenu.wnd:ButtonExit
-klick QuitMessageBox.wnd:ButtonYes
-keinePartie 20000
-klickFalls ScoreScreen.wnd:ButtonOk 900
-klickFalls ScoreScreen.wnd:ButtonContinue 60
-hauptmenue 20000
-klickFalls MainMenu.wnd:ButtonSingleBack
-hauptmenue
-warte 60
-merke
+clickIf MainMenu.wnd:ButtonSinglePlayer
+click MainMenu.wnd:ButtonUSA
+click MainMenu.wnd:ButtonEasy
+game 20000
+wait 1800
+gameMenu
+click QuitMenu.wnd:ButtonExit
+click QuitMessageBox.wnd:ButtonYes
+noGame 20000
+clickIf ScoreScreen.wnd:ButtonOk 900
+clickIf ScoreScreen.wnd:ButtonContinue 60
+mainMenu 20000
+clickIf MainMenu.wnd:ButtonSingleBack
+mainMenu
+wait 60
+checkpoint
 # drittes Mal
-klickFalls MainMenu.wnd:ButtonSinglePlayer
-klick MainMenu.wnd:ButtonUSA
-klick MainMenu.wnd:ButtonEasy
-partie 20000
-warte 1800
-spielmenue
-klick QuitMenu.wnd:ButtonExit
-klick QuitMessageBox.wnd:ButtonYes
-keinePartie 20000
-klickFalls ScoreScreen.wnd:ButtonOk 900
-klickFalls ScoreScreen.wnd:ButtonContinue 60
-hauptmenue 20000
-klickFalls MainMenu.wnd:ButtonSingleBack
-hauptmenue
-warte 60
-wachstum mission3
-merke
+clickIf MainMenu.wnd:ButtonSinglePlayer
+click MainMenu.wnd:ButtonUSA
+click MainMenu.wnd:ButtonEasy
+game 20000
+wait 1800
+gameMenu
+click QuitMenu.wnd:ButtonExit
+click QuitMessageBox.wnd:ButtonYes
+noGame 20000
+clickIf ScoreScreen.wnd:ButtonOk 900
+clickIf ScoreScreen.wnd:ButtonContinue 60
+mainMenu 20000
+clickIf MainMenu.wnd:ButtonSingleBack
+mainMenu
+wait 60
+growth mission3
+checkpoint
 # viertes Mal
-klickFalls MainMenu.wnd:ButtonSinglePlayer
-klick MainMenu.wnd:ButtonUSA
-klick MainMenu.wnd:ButtonEasy
-partie 20000
-warte 1800
-spielmenue
-klick QuitMenu.wnd:ButtonExit
-klick QuitMessageBox.wnd:ButtonYes
-keinePartie 20000
-klickFalls ScoreScreen.wnd:ButtonOk 900
-klickFalls ScoreScreen.wnd:ButtonContinue 60
-hauptmenue 20000
-klickFalls MainMenu.wnd:ButtonSingleBack
-hauptmenue
-warte 60
-wachstum mission4
-beenden
+clickIf MainMenu.wnd:ButtonSinglePlayer
+click MainMenu.wnd:ButtonUSA
+click MainMenu.wnd:ButtonEasy
+game 20000
+wait 1800
+gameMenu
+click QuitMenu.wnd:ButtonExit
+click QuitMessageBox.wnd:ButtonYes
+noGame 20000
+clickIf ScoreScreen.wnd:ButtonOk 900
+clickIf ScoreScreen.wnd:ButtonContinue 60
+mainMenu 20000
+clickIf MainMenu.wnd:ButtonSingleBack
+mainMenu
+wait 60
+growth mission4
+quit

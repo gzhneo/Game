@@ -38,7 +38,7 @@ import pfade  # noqa: E402
 
 WURZEL = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 API = 'https://api.polyhaven.com'
-KOPF = {'User-Agent': 'cnc-generals-modernisierung (TODO 61, Einzelabruf)'}
+KOPF = {'User-Agent': 'cnc-generals-modernisierung (single request)'}
 
 # Tageszeit des Spiels -> Poly-Haven-HDRI (CC0) und Hoehe in Grad, ab der das Bild freier Himmel ist
 HDRIS = {

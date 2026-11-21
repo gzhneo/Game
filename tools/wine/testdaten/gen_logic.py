@@ -120,7 +120,7 @@ def game_data():
         'MultiPassTerrain = Yes', 'AdjustCliffTextures = No', 'Use3WayTerrainBlends = 0',
         'StretchTerrain = No', 'UseHalfHeightMap = No', 'DrawEntireTerrain = No',
         'RightMouseAlwaysScrolls = No', 'UseWaterPlane = Yes', 'UseCloudPlane = No',
-        'UseShadowVolumes = No', 'UseShadowDecals = No', 'UseBehindBuildingMarker = No',
+        'UseShadowDecals = No', 'UseBehindBuildingMarker = No',
         'ShowSoftWaterEdge = Yes', 'DownwindAngle = -0.785',
         'CameraPitch = 37.5', 'CameraYaw = 0.0', 'CameraHeight = 0.0', 'MaxCameraHeight = 310.0',
         'MinCameraHeight = 100.0', 'TerrainHeightAtEdgeOfMap = 0.0',

@@ -9,7 +9,7 @@
 #
 # Each instance runs in its own network namespace (10.77.0.1 and 10.77.0.2, joined by a veth pair), with its
 # own Wine prefix and its own copy of the data folder. Wine cannot tell several loopback addresses apart
-# (-netzLokal), separate namespaces give real addresses and working broadcasts instead. Needs root and
+# (-netLocal), separate namespaces give real addresses and working broadcasts instead. Needs root and
 # iproute2 (ip). Instance 1 hosts, instance 2 joins the first game in the list and accepts, instance 1 starts.
 # Screenshots per step land in <output folder>/host and <output folder>/gast; at the end the two replays are
 # compared (replay1.txt, replay2.txt). The waits assume the release
@@ -85,7 +85,7 @@ done
 MENUE="w60 400,300 w15 650,266 w20 650,214"
 # LAN_MODUS=internet: the lobby in internet mode (main menu Multiplayer, Internet). A rendezvous server runs in the
 # host's namespace (gzh-rendezvous, built with tools/rendezvous/build_linux.sh into the build folder); both games get
-# -treffpunkt. The host lists its game publicly (checkbox in the setup), the guest finds it in the public list,
+# -rendezvous. The host lists its game publicly (checkbox in the setup), the guest finds it in the public list,
 # which it asks the server for, so it looks a minute later.
 HOST_LISTE=""; GAST_LOBBY=""; TREFFPUNKT=""
 if [ "${LAN_MODUS:-}" = internet ]; then
@@ -96,7 +96,7 @@ if [ "${LAN_MODUS:-}" = internet ]; then
 	MENUE="w60 400,300 w15 650,266 w20 650,266"
 	HOST_LISTE="m653,428 w3 653,428 w10 sliste"
 	GAST_LOBBY="w60"
-	TREFFPUNKT="-treffpunkt 10.77.0.1:8090"
+	TREFFPUNKT="-rendezvous 10.77.0.1:8090"
 fi
 # changing the map resets the acceptances, so the guest accepts later
 KARTE=""; GAST_WARTE=""
@@ -106,7 +106,7 @@ KARTE=""; GAST_WARTE=""
 	LAN_GAST_PARTIE=${LAN_GAST_PARTIE:-w240 spartie kq w10 r765,215 w120 skampf1 w120 skampf2 kEscape w15 400,386 w15 290,367 w60 sende}
 }
 # two software-rendered instances share the cores; without the D3D11 effects both keep up with each other
-# LAN_SCHALTER adds game switches for both (e.g. -netzNurRelais with LAN_MODUS=internet: all traffic over the relay),
+# LAN_SCHALTER adds game switches for both (e.g. -netRelayOnly with LAN_MODUS=internet: all traffic over the relay),
 # LAN_HOST_SCHALTER only for the host (e.g. -mod Name: a mod in the Mods folder of the host's prefix)
 export KLICK_SCHALTER="-d3d11Effects none $TREFFPUNKT ${LAN_SCHALTER:-}"
 KLICK_SCHALTER="$KLICK_SCHALTER ${LAN_HOST_SCHALTER:-}" \

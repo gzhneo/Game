@@ -250,7 +250,7 @@ Bool Transport::init( AsciiString ip, UnsignedShort port )
 
 Bool Transport::init( UnsignedInt ip, UnsignedShort port )
 {
-	// Loopback instances on one machine (-netzLokal) share [::]:port, so they stay on IPv4.
+	// Loopback instances on one machine (-netLocal) share [::]:port, so they stay on IPv4.
 	if (!m_socket.open(ip, port, TheGlobalData->m_netLocalInstance == 0))
 	{
 		DEBUG_CRASH(("Could not bind to 0x%8.8X:%d\n", ip, port));

@@ -266,6 +266,7 @@ protected:
 	Bool			m_freeWaterTried[3];
 	TextureClass *waterColorTexture(Bool river);
 	void releaseFreeWaterTextures(void);
+	void reloadCodeTextures(void);
 	Bool setupRealWater2(void);
 	WW3DPixelShaderHandle	m_riverWater2PixelShader;	///< sm4/riverwater2.ps.hlsl
 	Real			m_riverRate;					///< measured river texture progress (v per second)

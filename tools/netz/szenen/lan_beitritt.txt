@@ -1,28 +1,28 @@
 # LAN-Partie mit mehreren Instanzen, Beitretender: das Spiel des Gastgebers in der Lobby waehlen, beitreten,
 # bestaetigen, mitspielen, verlassen. {WARTE} = Wartezeit, bis der Gastgeber sein Spiel angekuendigt hat.
-hauptmenue
-klick MainMenu.wnd:ButtonMultiplayer
-klick MainMenu.wnd:ButtonNetwork
-fenster LanLobbyMenu.wnd:ListboxGames
-warte {WARTE}
-auswahl LanLobbyMenu.wnd:ListboxGames 0
-klick LanLobbyMenu.wnd:ButtonJoin
-fenster LanGameOptionsMenu.wnd:TextEntryChat
-warte 900
+mainMenu
+click MainMenu.wnd:ButtonMultiplayer
+click MainMenu.wnd:ButtonNetwork
+window LanLobbyMenu.wnd:ListboxGames
+wait {WARTE}
+select LanLobbyMenu.wnd:ListboxGames 0
+click LanLobbyMenu.wnd:ButtonJoin
+window LanGameOptionsMenu.wnd:TextEntryChat
+wait 900
 # Der Host meldet sich bereit, dann wird der Knopf "Annehmen" (ButtonStart beim Beitretenden) bedienbar
-klick LanGameOptionsMenu.wnd:ButtonStart 9000
-partie 2000000
-logik 900
-spielmenue
-klick QuitNoSave.wnd:ButtonExit
-klick QuitMessageBox.wnd:ButtonYes
-keinePartie 2000000
-klick ScoreScreen.wnd:ButtonOk
-fenster LanLobbyMenu.wnd:ButtonBack 3000
-warte 60
-klick LanLobbyMenu.wnd:ButtonBack
-hauptmenue
-klickFalls MainMenu.wnd:ButtonMultiBack
-hauptmenue
-warte 60
-beenden
+click LanGameOptionsMenu.wnd:ButtonStart 9000
+game 2000000
+logic 900
+gameMenu
+click QuitNoSave.wnd:ButtonExit
+click QuitMessageBox.wnd:ButtonYes
+noGame 2000000
+click ScoreScreen.wnd:ButtonOk
+window LanLobbyMenu.wnd:ButtonBack 3000
+wait 60
+click LanLobbyMenu.wnd:ButtonBack
+mainMenu
+clickIf MainMenu.wnd:ButtonMultiBack
+mainMenu
+wait 60
+quit

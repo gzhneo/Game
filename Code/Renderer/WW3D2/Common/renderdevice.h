@@ -502,6 +502,9 @@ public:
 	static void Do_Onetime_Device_Dependent_Shutdowns(void);
 
 	static bool Is_Device_Lost() { return IsDeviceLost; }
+	/// Counts completed device resets. Owners of textures without a file (font glyphs, radar, ...) compare it with
+	/// the value they saw last and fill their textures again when it changed.
+	static unsigned Get_Device_Reset_Count() { return _DeviceResetCount; }
 	static bool Is_Initted(void) { return IsInitted; }
 
 	// Device queries for game code, which has no access to the raw device.
@@ -585,6 +588,11 @@ public:
 	/// the default order). If the requested one is not built in or cannot be used, Init starts the next
 	/// usable layer and Get_Backend_Fallback_Reason says why.
 	static void					Set_Backend_Request(const char* name);
+	/// The graphics card the player chose ("VVVV:DDDD name", see gpuadapter.h; empty: automatic), before Init.
+	static void					Set_Preferred_Adapter(const char* choice);
+	/// The graphics cards of the active layer: the stored choice for each and its name (options menu).
+	static unsigned				Get_Graphics_Card_Count();
+	static bool					Get_Graphics_Card(unsigned index, char* choice, unsigned choice_size, char* name, unsigned name_size);
 	static const char*			Get_Backend_Name();		///< device layer of the last Init ("d3d11", "vulkan"), empty before
 	static const char*			Get_Backend_Title();	///< its name for the user ("Direct3D 11", "Vulkan")
 	static bool					Is_Backend(const char* name);	///< the last Init runs on this device layer
@@ -753,7 +761,7 @@ public:
 	/// view that can still shadow the visible ground); only while Shadow_Maps_Active().
 	static void Set_Shadow_Caster_Only(bool enable);
 	static void Scene_Terrain_Done();						///< terrain drawn, objects follow
-	/// GPU time of a part of the frame (GPUEFFEKTE line); only measured with timing on. A part that runs more
+	/// GPU time of a part of the frame (GPUEFFECTS line); only measured with timing on. A part that runs more
 	/// than once per frame (the water mirror draws a scene too) is counted for its last run.
 	static void Gpu_Pass_Begin(RenderGpuPass pass);
 	static void Gpu_Pass_End(RenderGpuPass pass);
@@ -767,10 +775,11 @@ public:
 	static HRESULT End_Surface_Pass(RenderGpuPass pass, WW3DSurfaceHandle target, WW3DSurfaceHandle depth);
 	// Terrain detail layer.
 	static void Set_Terrain_Detail_Table(const RenderTerrainDetailTable& table);	///< placement of terrain textures in the atlas
+	static void Warm_Shaders();							///< compiles the common vertex shader variants (map load)
 	static void Set_Terrain_Detail(bool enable);			///< following draws: terrain with atlas coordinates
 	// Inputs of the terrain rock layer.
 	static void Set_Terrain_Height_Field(const unsigned char* heights, int width, int height, int border,
-		float cell_size, float height_scale);				///< map height field (grid points, bytes)
+		float cell_size, float height_scale, unsigned version = 0);	///< map height field (grid points, bytes); version: counter that moves with every change of the data, 0 compares the data each call
 	static void Set_Terrain_Lighting(const RenderTerrainLighting& lighting);	///< prelighting light = scene light of the frame constants
 	// Terrain relief: atlas of normals and gloss in the layout of the terrain atlas.
 	static void Set_Terrain_Relief_Atlas(WW3DTextureHandle atlas, bool active);	///< false: drop it if it is this one
@@ -862,6 +871,12 @@ public:
 	/// Constant buffer ring with Direct3D 11.1 offsets (default on; off for comparisons). Read at device creation.
 	static void Enable_Constant_Buffer_Ring(bool enable) { _ConstantBufferRing = enable; }
 	static bool Constant_Buffer_Ring_Enabled() { return _ConstantBufferRing; }
+	/// Test switch: the n-th Present counts as a lost device (0 = off). The device is then really recreated.
+	static void Set_Simulated_Device_Loss(unsigned present) { _SimulatedDeviceLoss = present; }
+	static unsigned Simulated_Device_Loss() { return _SimulatedDeviceLoss; }
+	/// Test switch: every n-th texture creation fails (0 = off).
+	static void Set_Fail_Texture_Creation_Every(unsigned n) { _FailTextureEvery = n; }
+	static unsigned Fail_Texture_Creation_Every() { return _FailTextureEvery; }
 	static bool _Is_Triangle_Draw_Enabled() { return _EnableTriangleDraw; }
 
 	/*
@@ -896,15 +911,6 @@ public:
 	static bool					Is_Render_To_Texture(void) { return IsRenderToTexture; }
 
 	// for depth map support KJM V
-	static void Create_Render_Target
-	(
-		int width, 
-		int height, 
-		WW3DFormat format,
-		WW3DZFormat zformat,
-		TextureClass** target,
-		ZTextureClass** depth_buffer
-	);
 	static void					Set_Render_Target_With_Z (TextureClass * texture, ZTextureClass* ztexture=nullptr);
 
 	static void Set_Shadow_Map(int idx, ZTextureClass* ztex) { Shadow_Map[idx]=ztex; }
@@ -1043,6 +1049,9 @@ protected:
 
 	static bool								_EnableTriangleDraw;
 	static bool								_ConstantBufferRing;
+	static unsigned							_SimulatedDeviceLoss;
+	static unsigned							_DeviceResetCount;
+	static unsigned							_FailTextureEvery;
 	static bool								_MeshInstancing;
 
 	static int								CurRenderDevice;

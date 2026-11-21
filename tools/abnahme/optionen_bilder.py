@@ -40,22 +40,22 @@ def ablauf_menue():
     z, namen = [], []
 
     def foto(name):
-        z.extend(['warte 40', 'foto', 'warte 10'])
+        z.extend(['wait 40', 'screenshot', 'wait 10'])
         namen.append(name)
-    z += ['hauptmenue']
-    foto('hauptmenue')
-    z += ['klick MainMenu.wnd:ButtonOptions', 'fenster OptionsMenu.wnd:ButtonAccept']
+    z += ['mainMenu']
+    foto('mainMenu')
+    z += ['click MainMenu.wnd:ButtonOptions', 'window OptionsMenu.wnd:ButtonAccept']
     foto('optionen_start')
     for s in SEITEN:
-        z += [f'klick OptionsMenu.wnd:ButtonTab{s}']
+        z += [f'click OptionsMenu.wnd:ButtonTab{s}']
         foto(f'optionen_{s.lower()}')
     # Detailstufe Niedrig (Eintrag 3) und Annehmen: Dialog "Detailstufe geaendert" bzw. Neustart
-    z += ['klick OptionsMenu.wnd:ButtonTabDisplay', 'auswahl OptionsMenu.wnd:ComboBoxDetail 3', 'warte 10',
-          'klick OptionsMenu.wnd:ButtonAccept', 'warte 60']
+    z += ['click OptionsMenu.wnd:ButtonTabDisplay', 'select OptionsMenu.wnd:ComboBoxDetail 3', 'wait 10',
+          'click OptionsMenu.wnd:ButtonAccept', 'wait 60']
     foto('dialog')
-    z += ['klickFalls MessageBox.wnd:ButtonOk 200', 'klickFalls MessageBox.wnd:ButtonYes 60', 'hauptmenue']
+    z += ['clickIf MessageBox.wnd:ButtonOk 200', 'clickIf MessageBox.wnd:ButtonYes 60', 'mainMenu']
     foto('hauptmenue_danach')
-    z += ['beenden']
+    z += ['quit']
     return z, namen
 
 
@@ -63,17 +63,17 @@ def ablauf_partie():
     z, namen = [], []
 
     def foto(name):
-        z.extend(['warte 40', 'foto', 'warte 10'])
+        z.extend(['wait 40', 'screenshot', 'wait 10'])
         namen.append(name)
-    z += ['partie', 'warte 150']
-    foto('partie')
-    z += ['spielmenue', 'fenster QuitMenu.wnd:ButtonOptions']
-    foto('spielmenue')
-    z += ['klick QuitMenu.wnd:ButtonOptions', 'fenster OptionsMenu.wnd:ButtonAccept']
+    z += ['game', 'wait 150']
+    foto('game')
+    z += ['gameMenu', 'window QuitMenu.wnd:ButtonOptions']
+    foto('gameMenu')
+    z += ['click QuitMenu.wnd:ButtonOptions', 'window OptionsMenu.wnd:ButtonAccept']
     foto('optionen_aus_spielmenue')
-    z += ['klick OptionsMenu.wnd:ButtonBack', 'fenster QuitMenu.wnd:ButtonReturn']
+    z += ['click OptionsMenu.wnd:ButtonBack', 'window QuitMenu.wnd:ButtonReturn']
     foto('spielmenue_danach')
-    z += ['beenden']
+    z += ['quit']
     return z, namen
 
 
@@ -81,21 +81,21 @@ def ablauf_skirmish():
     z, namen = [], []
 
     def foto(name):
-        z.extend(['warte 40', 'foto', 'warte 10'])
+        z.extend(['wait 40', 'screenshot', 'wait 10'])
         namen.append(name)
     w = 'SkirmishGameOptionsMenu.wnd:'
-    z += ['hauptmenue', 'klickFalls MainMenu.wnd:ButtonSinglePlayer 60', 'klick MainMenu.wnd:ButtonSkirmish 900',
-          f'fenster {w}ButtonStart 900', f'auswahl {w}ComboBoxPlayer1 2']
+    z += ['mainMenu', 'clickIf MainMenu.wnd:ButtonSinglePlayer 60', 'click MainMenu.wnd:ButtonSkirmish 900',
+          f'window {w}ButtonStart 900', f'select {w}ComboBoxPlayer1 2']
     foto('skirmish')
     # jede Spalte einmal aufgeklappt: die Listen zeigen alle Eintraege, auch die langen
     for combo in ['ComboBoxPlayer1', 'ComboBoxColor0', 'ComboBoxPlayerTemplate0', 'ComboBoxTeam0', 'ComboBoxGracePeriod']:
-        z += [f'klickFalls {w}{combo} 60']
+        z += [f'clickIf {w}{combo} 60']
         foto(f'skirmish_{combo[8:].lower()}')
-        z += [f'klickFalls {w}{combo} 60']
-    z += [f'klick {w}ButtonSelectMap', 'fenster SkirmishMapSelectMenu.wnd:ButtonOK 900']
+        z += [f'clickIf {w}{combo} 60']
+    z += [f'click {w}ButtonSelectMap', 'window SkirmishMapSelectMenu.wnd:ButtonOK 900']
     foto('kartenauswahl')
-    z += ['klick SkirmishMapSelectMenu.wnd:ButtonBack', f'fenster {w}ButtonStart 900', f'klick {w}ButtonBack', 'hauptmenue',
-          'beenden']
+    z += ['click SkirmishMapSelectMenu.wnd:ButtonBack', f'window {w}ButtonStart 900', f'click {w}ButtonBack', 'mainMenu',
+          'quit']
     return z, namen
 
 
@@ -103,29 +103,29 @@ def ablauf_lan():
     z, namen = [], []
 
     def foto(name):
-        z.extend(['warte 40', 'foto', 'warte 10'])
+        z.extend(['wait 40', 'screenshot', 'wait 10'])
         namen.append(name)
     w = 'LanGameOptionsMenu.wnd:'
-    z += ['hauptmenue', 'klickFalls MainMenu.wnd:ButtonMultiplayer 60', 'klick MainMenu.wnd:ButtonNetwork 900',
-          'fenster LanLobbyMenu.wnd:ButtonHost 900']
+    z += ['mainMenu', 'clickIf MainMenu.wnd:ButtonMultiplayer 60', 'click MainMenu.wnd:ButtonNetwork 900',
+          'window LanLobbyMenu.wnd:ButtonHost 900']
     foto('lan_lobby')
-    z += ['klick LanLobbyMenu.wnd:ButtonHost', f'fenster {w}ButtonStart 900']
+    z += ['click LanLobbyMenu.wnd:ButtonHost', f'window {w}ButtonStart 900']
     foto('lan_spiel')
     # jede Spalte und beide eigenen Auswahlfelder (Schonzeit, Zoom) einmal aufgeklappt
     for combo in ['ComboBoxPlayer1', 'ComboBoxColor0', 'ComboBoxPlayerTemplate0', 'ComboBoxTeam0', 'ComboBoxGracePeriod',
                   'ComboBoxMaxZoom']:
-        z += [f'klickFalls {w}{combo} 60']
+        z += [f'clickIf {w}{combo} 60']
         foto(f'lan_{combo[8:].lower()}')
-        z += [f'klickFalls {w}{combo} 60']
-    z += [f'klick {w}ButtonSelectMap', 'fenster LanMapSelectMenu.wnd:ButtonOK 900']
+        z += [f'clickIf {w}{combo} 60']
+    z += [f'click {w}ButtonSelectMap', 'window LanMapSelectMenu.wnd:ButtonOK 900']
     foto('lan_kartenauswahl')
-    z += ['klick LanMapSelectMenu.wnd:ButtonBack', f'fenster {w}ButtonStart 900', f'klick {w}ButtonBack',
-          'klickFalls MessageBox.wnd:ButtonYes 60', 'fenster LanLobbyMenu.wnd:ButtonBack 900', 'klick LanLobbyMenu.wnd:ButtonBack',
-          'hauptmenue', 'beenden']
+    z += ['click LanMapSelectMenu.wnd:ButtonBack', f'window {w}ButtonStart 900', f'click {w}ButtonBack',
+          'clickIf MessageBox.wnd:ButtonYes 60', 'window LanLobbyMenu.wnd:ButtonBack 900', 'click LanLobbyMenu.wnd:ButtonBack',
+          'mainMenu', 'quit']
     return z, namen
 
 
-ABLAEUFE = {'menue': ablauf_menue, 'partie': ablauf_partie, 'skirmish': ablauf_skirmish, 'lan': ablauf_lan}
+ABLAEUFE = {'menue': ablauf_menue, 'game': ablauf_partie, 'skirmish': ablauf_skirmish, 'lan': ablauf_lan}
 
 
 def sprache_der_daten(exe, sprache):
@@ -154,9 +154,9 @@ def lauf(exe, sprache, breite, hoehe, art, karte, ziel, warte_slot, vollbild=Fal
     log = os.path.join(ziel, f'runner_{art}.txt')
     # -fixedTimeStep: das Hauptmenue blendet sich sonst erst nach einer Mausbewegung ein, die Bilder zeigten nur die
     # Menuekarte ohne Oberflaeche
-    args = [exe, '-fullscreen' if vollbild else '-win', '-xres', str(breite), '-yres', str(hoehe), '-nologo', '-noaudio', '-fixedTimeStep', '-mehrfach', '-ignoreAsserts',
-            '-benutzerdaten', benutzer, '-testablauf', skript, '-crcLog', log]
-    if art == 'partie':
+    args = [exe, '-fullscreen' if vollbild else '-win', '-xres', str(breite), '-yres', str(hoehe), '-nologo', '-noaudio', '-fixedTimeStep', '-multiInstance', '-ignoreAsserts',
+            '-userData', benutzer, '-testScript', skript, '-crcLog', log]
+    if art == 'game':
         args += ['-skirmish', karte]
     warte_slot()
     t0 = time.time()
@@ -167,9 +167,9 @@ def lauf(exe, sprache, breite, hoehe, art, karte, ziel, warte_slot, vollbild=Fal
     if os.path.isfile(log):
         with open(log, encoding='latin-1') as f:
             for z in f:
-                if 'TESTABLAUF OK' in z:
+                if 'TESTSCRIPT OK' in z:
                     ok_zeilen += 1
-                if 'TESTABLAUF ERROR' in z:
+                if 'TESTSCRIPT ERROR' in z:
                     fehler.append(z.strip())
     pngs = []
     try:

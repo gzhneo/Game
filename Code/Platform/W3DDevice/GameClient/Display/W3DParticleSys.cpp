@@ -602,6 +602,6 @@ void W3DParticleSystemManager::formatCpuTimes(char *text, size_t size) const
 		return;
 	const double updates = m_updates ? static_cast<double>(m_updates) : 1.0;
 	const double draws = m_draws ? static_cast<double>(m_draws) : 1.0;
-	WWFormat::Into(text, size, "PARTIKELZEIT simulation {:.4f} ms je Tick ({:d} Ticks, {:.1f} Partikel) aufbereiten {:.4f} ms je Bild ({:d} Bilder, {:.1f} Partikel sichtbar)",
+	WWFormat::Into(text, size, "PARTICLETIME simulation {:.4f} ms per tick ({:d} ticks, {:.1f} particles) prepare {:.4f} ms per frame ({:d} frames, {:.1f} particles visible)",
 		m_updateMs / updates, m_updates, m_updateParticles / updates, m_drawMs / draws, m_draws, m_drawParticles / draws);
 }

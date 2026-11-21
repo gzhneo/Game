@@ -106,6 +106,7 @@ protected:
 	WW3DFormat m_shroudTextureFormat;							///< format to use for shroud texture
 	Image *m_shroudImage;													///< shroud image abstraction for drawing
 	TextureClass *m_shroudTexture;								///< shroud texture
+	UnsignedInt m_deviceResets = 0;								///< RenderDevice reset count the textures were filled under
 	SurfaceClass *m_shroudBatch = nullptr;				///< shroud surface locked between beginShroudChanges and endShroudChanges
 	SurfaceClass *getShroudSurface();							///< the open batch (with a reference added) or a fresh surface
 

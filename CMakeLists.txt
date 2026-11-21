@@ -96,6 +96,7 @@ add_compile_definitions(
 	# C++ exception unwind (INI::prepFile) with 32-bit SEH.
 	string(APPEND CMAKE_CXX_FLAGS_RELEASE " /Zi")
 	string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " /DEBUG /OPT:REF")
+	string(APPEND CMAKE_SHARED_LINKER_FLAGS_RELEASE " /DEBUG /OPT:REF")
 	# Debug links without the incremental linker: its .ilk file got corrupted repeatedly (LNK1136 or an
 	# executable that jumps to address 0 at startup) and only deleting it helped.
 	string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " /INCREMENTAL:NO")
@@ -304,7 +305,7 @@ add_subdirectory("${SHARED_CODE_DIR}/Tests/BabylonTests" Code/Tests/BabylonTests
 # Rendezvous server for network games: engine building blocks only, built once.
 add_subdirectory("${SHARED_TOOLS_DIR}/Server/Rendezvous" Code/Tools/Rendezvous)
 
-# File system comparison tool (-dateiIndexAusgeben): engine building blocks only, built once.
+# File system comparison tool (-dumpFileIndex): engine building blocks only, built once.
 add_subdirectory("${SHARED_TOOLS_DIR}/Diagnostics/VfsDump" Code/Tools/VfsDump)
 
 # Setup program of the player package: finds the installed games and copies their data. Windows only.

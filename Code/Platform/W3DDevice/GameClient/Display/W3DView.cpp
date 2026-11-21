@@ -1693,7 +1693,8 @@ void W3DView::draw( void )
 	{
 		Int originX, originY;
 		getOrigin( &originX, &originY );
-		RenderDevice::Scene_3D_Begin( originX, originY, getWidth(), getHeight() );
+		// The rectangle includes the overscan below the logical view, so the scaled scene reaches the screen edge there too.
+		RenderDevice::Scene_3D_Begin( originX, originY, getWidth(), getViewportHeight() );
 	}
 
 	if (m_viewFilterMode && 
@@ -1777,7 +1778,7 @@ void W3DView::draw( void )
 	{
 		Int originX, originY;
 		getOrigin( &originX, &originY );
-		RenderDevice::Scene_3D_Done( originX, originY, getWidth(), getHeight() );
+		RenderDevice::Scene_3D_Done( originX, originY, getWidth(), getViewportHeight() );
 	}
 
 	if( TheGlobalData->m_debugAI )

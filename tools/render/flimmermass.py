@@ -2,7 +2,7 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Flimmermass einer Bildfolge (TODO 91 Punkt 6).
+"""Flimmermass einer Bildfolge.
 
 Eingabe: ein Ordner mit aufeinanderfolgenden Bildern einer langsamen Kamerafahrt (shot_NNNNNN.bmp, etwa mit
 -shotEvery 1). Gemessen wird die zweite zeitliche Differenz je Pixel, |I(t+1) - 2 I(t) + I(t-1)|, gemittelt ueber

@@ -44,7 +44,7 @@ const Definition TABLE[] = {
 		"Map list shows the official maps (no: your own maps)" },
 	{ "General.HardwareHint", SET, Type::Bool, "yes", 0, 0, nullptr, NOW, nullptr, OPT, "HardwareHint", PLAIN,
 		"Hint at start when the computer is below the minimum" },
-	{ "General.TestAids", SET, Type::Bool, "no", 0, 0, nullptr, RESTART, "-testhilfen", OPT, "Testhilfen", PLAIN,
+	{ "General.TestAids", SET, Type::Bool, "no", 0, 0, nullptr, RESTART, "-testAids", OPT, "Testhilfen", PLAIN,
 		"Developer keys (test aids such as money, power, winning a mission)" },
 
 	{ "Display.Resolution", SET, Type::Resolution, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "Resolution", PLAIN,
@@ -55,14 +55,17 @@ const Definition TABLE[] = {
 		"Multisampling: 0 off, 2, 4 or 8 samples" },
 	{ "Display.VSync", SET, Type::Bool, "yes", 0, 0, nullptr, RESTART, "-noVSync", OPT, "VSync", PLAIN,
 		"Wait for the display refresh" },
-	{ "Display.RenderFPSLimit", SET, Type::Int, "0", 0, 1000000, nullptr, RESTART, nullptr, OPT, "RenderFPSLimit", PLAIN,
+	{ "Display.RenderFPSLimit", SET, Type::Int, "0", 0, 1000, nullptr, RESTART, nullptr, OPT, "RenderFPSLimit", PLAIN,
 		"Frame rate limit of the picture, 0: none" },
-	{ "Display.RenderScale", SET, Type::Float, nullptr, 0, 0, nullptr, RESTART, "-renderScale", OPT, "RenderScale", PLAIN,
+	{ "Display.RenderScale", SET, Type::Float, nullptr, 0, 200, nullptr, RESTART, "-renderScale", OPT, "RenderScale", PLAIN,
 		"Share of the window resolution the 3D scene is drawn in, 0.5..2 (or 50..200; above 1 supersampling); not set: from the detail level" },
 	{ "Display.RenderScaleFilter", SET, Type::Enum, nullptr, 0, 0, "bilinear|bicubic|cas", RESTART, "-renderScaleFilter", OPT,
 		"RenderScaleFilter", PLAIN, "Filter that scales the 3D scene up: bilinear, bicubic or cas (sharpened)" },
 	{ "Display.RenderBackend", SET, Type::Enum, "d3d11", 0, 0, "d3d11|vulkan", RESTART, "-vulkan", Legacy::None, nullptr, PLAIN,
 		"Renderer: d3d11 or vulkan (Direct3D 11 starts and this goes back to d3d11 if Vulkan cannot be used)" },
+
+	{ "Display.Adapter", SET, Type::Text, "", 0, 0, nullptr, RESTART, "-adapter", Legacy::None, nullptr, PLAIN,
+		"Graphics card as 'VVVV:DDDD name' (hexadecimal vendor and device identifier); empty: automatic (the more powerful card)" },
 
 	{ "Detail.StaticGameLOD", SET, Type::Enum, nullptr, 0, 0, LOD_LEVELS, NOW, nullptr, OPT, "StaticGameLOD", PLAIN,
 		"Detail level; Custom uses the switches below" },
@@ -132,9 +135,8 @@ const Definition TABLE[] = {
 		"Water: 0 as in the game data, 1 turbidity and Fresnel, 2 also refraction; not set: from the detail level" },
 	{ "Detail.TerrainAnisotropy", SET, Type::Int, nullptr, 0, 16, nullptr, RESTART, "-terrainAnisotropy", Legacy::None, nullptr, PLAIN,
 		"Anisotropic filtering of the terrain 0..16; not set: from the detail level" },
-	{ "Detail.TextureReduction", SET, Type::Int, nullptr, -1000000, 2, nullptr, NOW, nullptr, OPT, "TextureReduction", PLAIN,
+	{ "Detail.TextureReduction", SET, Type::Int, nullptr, -1, 2, nullptr, NOW, nullptr, OPT, "TextureReduction", PLAIN,
 		"Custom: texture reduction 0..2" },
-	{ "Detail.UseShadowVolumes", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "UseShadowVolumes", PLAIN, "Custom: shadow volumes" },
 	{ "Detail.UseShadowDecals", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "UseShadowDecals", PLAIN, "Custom: shadow decals" },
 	{ "Detail.UseCloudMap", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "UseCloudMap", PLAIN, "Custom: cloud shadows" },
 	{ "Detail.UseLightMap", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "UseLightMap", PLAIN, "Custom: light map" },
@@ -145,13 +147,13 @@ const Definition TABLE[] = {
 	{ "Detail.ExtraAnimations", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "ExtraAnimations", PLAIN, "Custom: extra animations" },
 	{ "Detail.DynamicLOD", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "DynamicLOD", PLAIN, "Custom: lower details when the frame rate drops" },
 	{ "Detail.FPSLimit", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "FPSLimit", PLAIN, "Custom: limit the frame rate" },
-	{ "Detail.MaxParticleCount", SET, Type::Int, nullptr, 100, 1000000000, nullptr, NOW, nullptr, OPT, "MaxParticleCount", PLAIN,
+	{ "Detail.MaxParticleCount", SET, Type::Int, nullptr, 100, 1000000, nullptr, NOW, nullptr, OPT, "MaxParticleCount", PLAIN,
 		"Custom: particle limit" },
 
-	{ "Audio.SFXVolume", SET, Type::Float, nullptr, 0, 1000000, nullptr, NOW, nullptr, OPT, "SFXVolume", PLAIN, "Sound effects 0..100" },
-	{ "Audio.SFX3DVolume", SET, Type::Float, nullptr, 0, 1000000, nullptr, NOW, nullptr, OPT, "SFX3DVolume", PLAIN, "Sound effects in the world 0..100" },
-	{ "Audio.VoiceVolume", SET, Type::Float, nullptr, 0, 1000000, nullptr, NOW, nullptr, OPT, "VoiceVolume", PLAIN, "Voices 0..100" },
-	{ "Audio.MusicVolume", SET, Type::Float, nullptr, 0, 1000000, nullptr, NOW, nullptr, OPT, "MusicVolume", PLAIN, "Music 0..100" },
+	{ "Audio.SFXVolume", SET, Type::Float, nullptr, 0, 100, nullptr, NOW, nullptr, OPT, "SFXVolume", PLAIN, "Sound effects 0..100" },
+	{ "Audio.SFX3DVolume", SET, Type::Float, nullptr, 0, 100, nullptr, NOW, nullptr, OPT, "SFX3DVolume", PLAIN, "Sound effects in the world 0..100" },
+	{ "Audio.VoiceVolume", SET, Type::Float, nullptr, 0, 100, nullptr, NOW, nullptr, OPT, "VoiceVolume", PLAIN, "Voices 0..100" },
+	{ "Audio.MusicVolume", SET, Type::Float, nullptr, 0, 100, nullptr, NOW, nullptr, OPT, "MusicVolume", PLAIN, "Music 0..100" },
 
 	{ "Controls.ScrollFactor", SET, Type::Int, nullptr, 0, 100, nullptr, NOW, nullptr, OPT, "ScrollFactor", PLAIN, "Scroll speed 0..100" },
 	{ "Controls.UseAlternateMouse", SET, Type::Bool, nullptr, 0, 0, nullptr, NOW, nullptr, OPT, "UseAlternateMouse", PLAIN,
@@ -196,7 +198,7 @@ const Definition TABLE[] = {
 	{ "Network.ReturnWindow", SET, Type::Int, "300", 0, 3600, nullptr, NOW, nullptr, Legacy::None, nullptr, PLAIN,
 		"Seconds a player dropped for not answering may come back while its units wait (0: destroyed at once)" },
 
-	{ "System.WorkerThreads", SET, Type::Int, "-1", -1000000, 1000000, nullptr, RESTART, "-workers", OPT, "WorkerThreads", PLAIN,
+	{ "System.WorkerThreads", SET, Type::Int, "-1", -1, 64, nullptr, RESTART, "-workers", OPT, "WorkerThreads", PLAIN,
 		"Worker threads, -1: automatic" },
 	{ "System.PrefetchArchives", SET, Type::Bool, "yes", 0, 0, nullptr, RESTART, nullptr, OPT, "PrefetchArchives", PLAIN,
 		"Read the game archives ahead at start" },
@@ -236,7 +238,7 @@ const Definition TABLE[] = {
 	{ "Skirmish.UseSystemMapDir", STA, Type::Bool, "yes", 0, 0, nullptr, NOW, nullptr, SKI, "UseSystemMapDir", PLAIN,
 		"Map list shows the official maps" },
 	{ "Skirmish.SlotList", STA, Type::Text, "", 0, 0, nullptr, NOW, nullptr, SKI, "SlotList", PLAIN, "Last slot setup" },
-	{ "Skirmish.FPS", STA, Type::Int, nullptr, 0, 1000000, nullptr, NOW, nullptr, SKI, "FPS", PLAIN, "Game speed" },
+	{ "Skirmish.FPS", STA, Type::Int, nullptr, 0, 1000, nullptr, NOW, nullptr, SKI, "FPS", PLAIN, "Game speed" },
 };
 
 // No reader since the online code and the old network were removed, or never read at all. The old
@@ -244,7 +246,7 @@ const Definition TABLE[] = {
 const char *const DROPPED[] = {
 	"TextureFilter", "AnisotropyLevel", "FirewallNeedToRefresh", "FirewallBehavior",
 	"FirewallPortOverride", "FirewallPortAllocationDelta", "SendDelay", "GameSpyIPAddress",
-	"3DAudioProvider", "SpeakerType", "RenderBackend", "LanguageFilter" };
+	"3DAudioProvider", "SpeakerType", "RenderBackend", "LanguageFilter", "UseShadowVolumes" };
 
 }	// namespace
 

@@ -11,6 +11,8 @@
 #include "vulkandevice.h"
 #include "vulkanbackend.h"
 #include "vulkandxc.h"
+#include "WW3D2/Common/gpulayers.h"
+#include "WW3D2/Common/gpuadapter.h"
 #include "wwdebug.h"
 
 #include <algorithm>
@@ -90,10 +92,10 @@ VKAPI_ATTR VkBool32 VKAPI_CALL Debug_Callback(VkDebugUtilsMessageSeverityFlagBit
 	std::vector<int32_t>* ids = Messages ? &Messages->reported_ids : nullptr;
 	if (ids && (std::find(ids->begin(), ids->end(), data->messageIdNumber) == ids->end() || data->messageIdNumber == 0)) {
 		ids->push_back(data->messageIdNumber);
-		const char* level = (severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) ? "FEHLER" :
-							(severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) ? "WARNUNG" : "Info";
+		const char* level = (severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) ? "ERROR" :
+							(severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) ? "WARNING" : "Info";
 		char line[2048];
-		std::snprintf(line, sizeof(line), "Vulkan-Validierung [%s, %s]: %s", level,
+		std::snprintf(line, sizeof(line), "Vulkan-Validation [%s, %s]: %s", level,
 			data->pMessageIdName ? data->pMessageIdName : "?", data->pMessage ? data->pMessage : "");
 		if (Messages->lines.size() < 1000) Messages->lines.push_back(line);
 	}
@@ -214,6 +216,7 @@ Gpu::Gpu()
 	m_pipeline_statistics = false;
 	m_open_statistics = nullptr;
 	m_lost = false;
+	m_orphaned = false;
 	m_hwnd = nullptr;
 	m_surface = VK_NULL_HANDLE;
 	m_swapchain = VK_NULL_HANDLE;
@@ -293,6 +296,7 @@ bool Gpu::Create(VkInstance instance, VkPhysicalDevice physical, HWND hwnd, unsi
 {
 	m_instance = instance;
 	m_physical = physical;
+	m_lost = false;
 	m_hwnd = hwnd;
 	m_debug = debug;
 	m_serialized = Has_Command_Line_Switch("-vulkanSeriell");
@@ -486,6 +490,8 @@ void Gpu::Destroy()
 		f.pool = VK_NULL_HANDLE;
 		f.fence = VK_NULL_HANDLE;
 		f.acquired = VK_NULL_HANDLE;
+		f.descriptor_pool = 0;
+		f.upload_open = false;
 	}
 	Destroy_Swap_Chain();
 	if (m_surface) vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
@@ -496,7 +502,8 @@ void Gpu::Destroy()
 	else {
 		WWDEBUG_SAY(("Vulkan: 0 live objects at device shutdown\n"));
 	}
-	if (m_allocator && m_live_objects == 0) vmaDestroyAllocator(m_allocator);
+	// Orphaned objects have given back their allocations; otherwise the allocator outlives the objects still alive.
+	if (m_allocator && (m_live_objects == 0 || m_orphaned)) vmaDestroyAllocator(m_allocator);
 	m_allocator = nullptr;
 	vkDestroyDevice(m_device, nullptr);
 	m_device = VK_NULL_HANDLE;
@@ -505,6 +512,62 @@ void Gpu::Destroy()
 void Gpu::Object_Destroyed()
 {
 	--m_live_objects;
+	if (m_live_objects == 0 && m_device == VK_NULL_HANDLE && m_instance == VK_NULL_HANDLE && !m_orphaned) delete this;
+}
+
+void Gpu::Free_Slice(Slice& slice)
+{
+	if (slice.buffer) {
+		if (slice.allocation) vmaDestroyBuffer(m_allocator, slice.buffer, slice.allocation);
+		else vkDestroyBuffer(m_device, slice.buffer, nullptr);
+	}
+	memset(&slice, 0, sizeof(slice));
+}
+
+void Gpu::Orphan()
+{
+	if (m_device) {
+		vkDeviceWaitIdle(m_device);		// fails on a lost device; destroying is allowed all the same
+		ClearState();
+		m_open_statistics = nullptr;
+		// The device's default texture and buffer are destroyed by Destroy (the default view must go before its
+		// image); the back buffer is dropped like the rest, in case someone besides the device still holds it.
+		// Views go before the images they look at.
+		const Revivable* defaults[2] = { m_null_texture, m_null_buffer };
+		unsigned dropped = 0;
+		for (int pass = 1; pass >= 0; --pass) {
+			for (Revivable* object : m_revivable) {
+				if (object == defaults[0] || object == defaults[1] || object->Revive_Pass() != pass) continue;
+				object->Drop_Handles();
+				object->m_dropped = true;
+				++dropped;
+			}
+		}
+		WWDEBUG_SAY(("Vulkan: %u objects gave back their handles\n", dropped));
+	}
+	m_orphaned = true;
+	Destroy();
+}
+
+void Gpu::Revive()
+{
+	m_orphaned = false;
+	const std::vector<Revivable*> objects(m_revivable.begin(), m_revivable.end());
+	unsigned revived = 0, failed = 0;
+	for (int pass = 0; pass < 2; ++pass) {
+		for (Revivable* object : objects) {
+			if (!object->m_dropped || object->Revive_Pass() != pass) continue;
+			if (object->Recreate_Handles()) ++revived;
+			else ++failed;
+			object->m_dropped = false;
+		}
+	}
+	WWDEBUG_SAY(("Vulkan: device recreated, %u objects have new handles, %u could not be recreated\n", revived, failed));
+}
+
+void Gpu::Abandon()
+{
+	m_orphaned = false;
 	if (m_live_objects == 0 && m_device == VK_NULL_HANDLE && m_instance == VK_NULL_HANDLE) delete this;
 }
 
@@ -1009,6 +1072,8 @@ namespace {
 class VulkanOutput final : public GpuOutput
 {
 public:
+	~VulkanOutput() { if (m_orphan) m_orphan->Abandon(); }
+
 	bool Create_Interface() override
 	{
 		if (m_instance) return true;
@@ -1075,7 +1140,15 @@ public:
 		if (devices) vkEnumeratePhysicalDevices(m_instance, &devices, physical.data());
 		std::vector<VulkanDeviceInfo> infos(devices);
 		for (uint32_t i = 0; i < devices; ++i) Vulkan_Describe_Device(physical[i], infos[i]);
-		const int chosen = Vulkan_Choose_Device(infos.data(), devices);
+		const char* choice = Gpu_Preferred_Adapter();
+		const int chosen = Vulkan_Choose_Device_Preferred(infos.data(), devices, choice);
+		if (*choice && devices) {
+			std::vector<GpuAdapter::Candidate> candidates;
+			for (uint32_t i = 0; i < devices; ++i)
+				candidates.push_back({ infos[i].vendor_id, infos[i].device_id, infos[i].name });
+			if (GpuAdapter::Choose(choice, candidates.data(), devices) < 0)
+				WWRELEASE_SAY(("Vulkan: graphics card '%s' not found, using the automatic choice\n", choice));
+		}
 		if (chosen >= 0) {
 			m_physical = physical[chosen];
 			m_info = infos[chosen];
@@ -1130,12 +1203,18 @@ public:
 			Fail(reason);
 			return false;
 		}
-		Gpu* gpu = new Gpu();
+		// After a lost or replaced device the objects the game holds come back on the new one.
+		Gpu* gpu = m_orphan ? m_orphan : new Gpu();
+		const bool reviving = (gpu == m_orphan);
 		if (!gpu->Create(m_instance, m_physical, static_cast<HWND>(hwnd), buffer_width, buffer_height, m_debug)) {
 			gpu->Destroy();
 			gpu->m_instance = VK_NULL_HANDLE;
-			if (gpu->Live_Objects() == 0) delete gpu;
+			if (!reviving && gpu->Live_Objects() == 0) delete gpu;
 			return false;
+		}
+		if (reviving) {
+			m_orphan = nullptr;
+			gpu->Revive();
 		}
 		m_gpu = gpu;
 		*device = gpu;
@@ -1147,13 +1226,20 @@ public:
 	{
 		if (m_gpu) {
 			Drain_Debug_Messages();
-			m_gpu->Destroy();
-			// Objects the game still holds keep the C++ object; the last one deletes it.
-			m_gpu->m_instance = VK_NULL_HANDLE;
-			Drain_Debug_Messages();
 			Gpu* gpu = m_gpu;
 			m_gpu = nullptr;
-			if (gpu->Live_Objects() == 0) delete gpu;
+			// Objects the game still holds give back their Vulkan handles and wait for the next device
+			// (Create_Device); without a next device the last object that goes deletes the device object.
+			gpu->Orphan();
+			gpu->m_instance = VK_NULL_HANDLE;
+			Drain_Debug_Messages();
+			if (gpu->Live_Objects() == 0) {
+				delete gpu;
+			}
+			else {
+				if (m_orphan) m_orphan->Abandon();
+				m_orphan = gpu;
+			}
 		}
 		device = nullptr;
 		context = nullptr;
@@ -1185,6 +1271,7 @@ private:
 	VulkanDeviceInfo			m_info = {};
 	bool						m_debug = false;
 	Gpu*						m_gpu = nullptr;
+	Gpu*						m_orphan = nullptr;		///< the device object of a released device whose objects are still alive
 };
 
 }  // namespace

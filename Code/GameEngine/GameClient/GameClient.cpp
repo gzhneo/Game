@@ -694,7 +694,7 @@ void GameClient::update( void )
 	// need to draw the first frame, then don't draw again until TheGlobalData->m_noDraw
 	// Also active in release and profile builds for -runner, which would otherwise draw every tick and
 	// wait on Present/VSync. Only presentation is skipped (particles, terrain graphics, display); logic
-	// and CRC are unaffected. With -testablauf the menu needs the shell update below, so drawing is
+	// and CRC are unaffected. With -testScript the menu needs the shell update below, so drawing is
 	// only skipped inside a game (not on the shell map).
 	const Bool testScriptInMenu = TheGlobalData->m_testScriptFile.isNotEmpty()
 		&& !(TheGameLogic->isInGame() && !TheGameLogic->isInShellGame());

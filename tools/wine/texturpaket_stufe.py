@@ -14,7 +14,7 @@ voller Mip-Kette in die Stufe: das Paket nimmt dann diese Fassung, und der Test 
     python3 tools/wine/texturpaket_stufe.py <Datenordner> [--dds testwater] [--mod <Ordner>]
 
 Mit --mod kommt dieselbe Textur zusaetzlich in Originalgroesse als lose DXT1-DDS nach <Ordner>\\Art\\Textures: ein Mod,
-der eine Textur des Pakets ersetzt (die Engine nimmt dann die Datei des Mods unverkleinert, Zeile TEXTURPAKET ersetzt).
+der eine Textur des Pakets ersetzt (die Engine nimmt dann die Datei des Mods unverkleinert, Zeile TEXTUREPACK replaced).
 """
 import argparse
 import os

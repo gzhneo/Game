@@ -100,9 +100,11 @@ struct RenderStateCache
 		return nullptr;
 	}
 
-	void Insert(const RenderStateKey& k, T* object)
+	/// `keep` lists the objects the core still points to (current state, bound objects): they stay when the
+	/// cache is full. Freeing them would leave dangling pointers, or let a new object take a bound one's address.
+	void Insert(const RenderStateKey& k, T* object, T* const* keep = nullptr, unsigned keep_count = 0)
 	{
-		if (count >= STATE_CACHE_CAPACITY) Release_All();
+		if (count >= STATE_CACHE_CAPACITY) Evict_Unused(keep, keep_count);
 		keys[count]    = k;
 		objects[count] = object;
 		++count;
@@ -119,6 +121,27 @@ struct RenderStateCache
 	{
 		for (unsigned i = 0; i < count; ++i) Gpu_Release(objects[i]);
 		count = 0;
+	}
+
+	/// Releases every entry that is not in `keep`; the kept ones close up at the front.
+	void Evict_Unused(T* const* keep, unsigned keep_count)
+	{
+		unsigned kept = 0;
+		for (unsigned i = 0; i < count; ++i) {
+			bool in_use = false;
+			for (unsigned j = 0; j < keep_count && !in_use; ++j) in_use = (keep[j] == objects[i]);
+			if (in_use) {
+				keys[kept]    = keys[i];
+				objects[kept] = objects[i];
+				++kept;
+			}
+			else Gpu_Release(objects[i]);
+		}
+		count = kept;
+		if (count >= STATE_CACHE_CAPACITY) {		// everything in use: cannot happen with the sizes in use
+			Gpu_Release(objects[count - 1]);
+			--count;
+		}
 	}
 
 	/// One summary line. Written when the device is released, not per frame.
@@ -162,7 +185,7 @@ enum { FX_POST_FXAA = 1, FX_POST_CAS = 2, FX_POST_GRADE = 4, FX_POST_HAZE = 8, F
 enum { FX_GLOW_BLOOM_PREFILTER = 0, FX_GLOW_BLOOM_DOWN = 1, FX_GLOW_BLOOM_UP = 2, FX_GLOW_BLOOM_COMPOSITE = 3,
 	   FX_GLOW_HEAT_MASK = 4, FX_GLOW_SHADERS = 5, FX_GLOW_LEVELS = 6, FX_GLOW_MASK_LEVEL = 4 };
 // GPU time ranges, each with a begin and an end timestamp (2r, 2r + 1). The order is the order of the names in
-// the GPUEFFEKTE line (Get_Effect_Statistics). FX_RANGE_FRAME runs from the previous Present to this one (idle time
+// the GPUEFFECTS line (Get_Effect_Statistics). FX_RANGE_FRAME runs from the previous Present to this one (idle time
 // of the GPU included); the ranges from FX_RANGE_PASS_FIRST on are the parts of RenderGpuPass.
 enum FxRange : unsigned
 {
@@ -245,6 +268,13 @@ struct RenderCore::Impl
 	GpuRenderTargetView*	scene_out_rtv;
 	GpuShaderResourceView* scene_out_srv;		///< swapped with scene_srv together with the targets
 	bool				hdr_target;			///< the scene target was created for RENDER_EFFECT_HDR
+	// A target with the requested size, format or sample count could not be created: a plain one (window size,
+	// 8 bit, no multisampling) stands in until the settings change (Present compares against safe_*).
+	bool				scene_safe;
+	unsigned			safe_width;
+	unsigned			safe_height;
+	bool				safe_hdr;
+	unsigned			safe_samples;		///< sample count to return to
 	bool				fx_glow_from_hdr;	///< this frame's bloom levels come from the float scene (Fx_Hdr_Bloom_Down)
 	bool				scene_swapped;		///< after the 3D scene: scene_out is the scene target until Present
 	GPU_FORMAT			scene_float_format;	///< format of the float scene target while swapped
@@ -418,6 +448,7 @@ struct RenderCore::Impl
 	WW3DMatrixRaw               taa_prev_view_proj;	///< view times projection (without jitter) of the history
 	WW3DMatrixRaw               taa_projection;		///< jittered projection of this frame
 	bool                        taa_valid;			///< the history belongs to the previous frame
+	bool                        taa_phase_keep;		///< the history went with its targets (lost device, resize): the jitter sequence runs on
 	bool                        taa_in_scene;		///< inside the 3D scene: draws get the jittered projection
 	bool                        taa_jittered;		///< this frame's scene was drawn with jitter (FXAA stays off)
 	bool                        taa_failed;
@@ -565,6 +596,7 @@ struct RenderCore::Impl
 	bool                        tr_height_dirty;	///< height field changed, recreate the texture
 	bool                        tr_logged;
 	unsigned char*              tr_heights;			///< copy of the height field (compared per frame)
+	unsigned                    tr_version;			///< change counter of the caller for tr_heights; 0: unknown, compare the data
 	int                         tr_width, tr_height, tr_border;
 	float                       tr_cell, tr_height_scale;
 	float                       tr_min_height;		///< lowest grid point (world), base of the height fog

@@ -147,7 +147,7 @@ inline Bool GameEngine::getQuitting(void) { return m_quitting; }
 #include "Engine/EngineContext.h"
 
 // Process exit code (WinMain) and log for runner runs (-crcLog). 0 = ok, 2 = replay desync,
-// 3 = replay/map not found, 4 = test sequence failed (-testablauf).
+// 3 = replay/map not found, 4 = test sequence failed (-testScript).
 enum { GAME_EXIT_OK = 0, GAME_EXIT_DESYNC = 2, GAME_EXIT_NOT_FOUND = 3, GAME_EXIT_TEST_SCRIPT = 4, GAME_EXIT_BAD_SETUP = 5 };
 extern Int TheGameExitCode;
 void GameEngine_RunnerLog( const char *line );

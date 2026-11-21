@@ -112,7 +112,7 @@ static const TestAidButton s_buttons[] =
 };
 enum { BUTTON_COUNT = sizeof(s_buttons) / sizeof(s_buttons[0]) };
 
-// Names for the script file (-testhilfenAblauf)
+// Names for the script file (-testAidsScript)
 struct TestAidName
 {
 	const char *name;
@@ -121,16 +121,16 @@ struct TestAidName
 
 static const TestAidName s_names[] =
 {
-	{ "geld_plus", TA_MONEY_PLUS },									{ "geld_einfrieren", TA_FREEZE_MONEY },
-	{ "energie_unendlich", TA_UNLIMITED_POWER },	{ "energie_plus", TA_POWER_PLUS },
-	{ "energie_minus", TA_POWER_MINUS },					{ "generalspunkt", TA_GENERAL_POINT },
-	{ "alle_faehigkeiten", TA_ALL_ABILITIES },	{ "rang_plus", TA_RANK_PLUS },
-	{ "sofortbau", TA_INSTANT_BUILD },									{ "keine_wartezeit", TA_NO_COOLDOWN },
-	{ "unverwundbar", TA_INVULNERABLE },						{ "karte_aufdecken", TA_REVEAL_MAP },
-	{ "auswahl_vernichten", TA_DESTROY_SELECTION },	{ "alle_feinde_vernichten", TA_DESTROY_ALL_ENEMIES },
-	{ "sieg", TA_WIN },														{ "zeitraffer", TA_FAST_FORWARD },
-	{ "schnellspeichern", TA_QUICK_SAVE },		{ "schnellladen", TA_QUICK_LOAD },
-	{ "menue", TA_MENU },													{ "anzeige", TA_OVERLAY },
+	{ "money_plus", TA_MONEY_PLUS },									{ "freeze_money", TA_FREEZE_MONEY },
+	{ "unlimited_power", TA_UNLIMITED_POWER },	{ "power_plus", TA_POWER_PLUS },
+	{ "power_minus", TA_POWER_MINUS },					{ "general_point", TA_GENERAL_POINT },
+	{ "all_abilities", TA_ALL_ABILITIES },	{ "rank_plus", TA_RANK_PLUS },
+	{ "instant_build", TA_INSTANT_BUILD },									{ "no_cooldown", TA_NO_COOLDOWN },
+	{ "invulnerable", TA_INVULNERABLE },						{ "reveal_map", TA_REVEAL_MAP },
+	{ "destroy_selection", TA_DESTROY_SELECTION },	{ "destroy_all_enemies", TA_DESTROY_ALL_ENEMIES },
+	{ "win", TA_WIN },														{ "fast_forward", TA_FAST_FORWARD },
+	{ "quick_save", TA_QUICK_SAVE },		{ "quick_load", TA_QUICK_LOAD },
+	{ "menu", TA_MENU },													{ "overlay", TA_OVERLAY },
 };
 
 // ------------------------------------------------------------------------------------------------
@@ -489,7 +489,7 @@ static void updateBar( GameWindow *bar )
 }
 
 // ------------------------------------------------------------------------------------------------
-// Script file (-testhilfenAblauf): lines "logic-frame command [player index]", '#' comment. Triggers
+// Script file (-testAidsScript): lines "logic-frame command [player index]", '#' comment. Triggers
 // the commands like keys, for the test helper replay test (runner.py record/check).
 // ------------------------------------------------------------------------------------------------
 struct ScriptEntry
@@ -499,7 +499,7 @@ struct ScriptEntry
 	Int aidPlayer;
 };
 
-enum { SCRIPT_AI_BASE = -100 };	///< target "kiN" is stored as SCRIPT_AI_BASE - N
+enum { SCRIPT_AI_BASE = -100 };	///< target "aiN" is stored as SCRIPT_AI_BASE - N
 
 /// N-th AI player (from 1): computer, not neutral, observer or civilian; -1 = none
 static Int aiPlayer( Int n )
@@ -531,7 +531,7 @@ static void loadAidScript( void )
 	FILE *f = fopen( TheGlobalData->m_testAidsScript.str(), "r" );
 	if( f == nullptr )
 	{
-		GameEngine_RunnerLog( "TESTHILFE ERROR script file not found" );
+		GameEngine_RunnerLog( "TESTAID ERROR script file not found" );
 		return;
 	}
 	char line[256];
@@ -550,17 +550,17 @@ static void loadAidScript( void )
 		if( command == TA_NONE )
 		{
 			char notice[128];
-			WWFormat::Into(notice, "TESTHILFE ERROR unknown command {}", name);
+			WWFormat::Into(notice, "TESTAID ERROR unknown command {}", name);
 			GameEngine_RunnerLog( notice );
 			continue;
 		}
 		ScriptEntry e;
 		e.frame = frame;
 		e.command = command;
-		// target: player index, "kiN" (N-th AI player, from 1) or nothing (local player)
+		// target: player index, "aiN" (N-th AI player, from 1) or nothing (local player)
 		e.aidPlayer = -1;
 		if( n >= 3 )
-			e.aidPlayer = (_strnicmp( target, "ki", 2 ) == 0) ? SCRIPT_AI_BASE - atoi( target + 2 ) : atoi( target );
+			e.aidPlayer = (_strnicmp( target, "ai", 2 ) == 0) ? SCRIPT_AI_BASE - atoi( target + 2 ) : atoi( target );
 		if( s_scriptCount < SCRIPT_MAX_ENTRIES )
 			s_script[s_scriptCount++] = e;
 	}
@@ -581,7 +581,7 @@ static void runAidScript( void )
 		{
 			const Player *p = ThePlayerList->getNthPlayer( i );
 			char notice[160];
-			WWFormat::Into(notice, "TESTHILFE SPIELER {:d} {} {}{}", i, p->getSide().str(), p->getPlayerType() == PLAYER_HUMAN ? "human" : "computer", p == ThePlayerList->getLocalPlayer() ? " local" : "");
+			WWFormat::Into(notice, "TESTAID SPIELER {:d} {} {}{}", i, p->getSide().str(), p->getPlayerType() == PLAYER_HUMAN ? "human" : "computer", p == ThePlayerList->getLocalPlayer() ? " local" : "");
 			GameEngine_RunnerLog( notice );
 		}
 	}
@@ -591,7 +591,7 @@ static void runAidScript( void )
 		if( e.aidPlayer <= SCRIPT_AI_BASE )
 			e.aidPlayer = aiPlayer( SCRIPT_AI_BASE - e.aidPlayer );
 		char notice[96];
-		WWFormat::Into(notice, "TESTHILFE {:d} command {:d} player {:d}", frame, e.command, e.aidPlayer);
+		WWFormat::Into(notice, "TESTAID {:d} command {:d} player {:d}", frame, e.command, e.aidPlayer);
 		GameEngine_RunnerLog( notice );
 		TestAids_Command( e.command, e.aidPlayer );
 	}
@@ -730,14 +730,14 @@ Bool TestAids_PrepareMission( void )
 	if( TheCampaignManager == nullptr || campaign.isEmpty() || number < 1 )
 	{
 		DEBUG_LOG(( "Test aids: -mission %s %d invalid\n", campaign.str(), number ));
-		GameEngine_RunnerLog( "TESTHILFE ERROR -mission invalid" );
+		GameEngine_RunnerLog( "TESTAID ERROR -mission invalid" );
 		return FALSE;
 	}
 	TheCampaignManager->setCampaign( campaign );
 	if( TheCampaignManager->getCurrentCampaign() == nullptr || TheCampaignManager->getCurrentMission() == nullptr )
 	{
 		DEBUG_LOG(( "Test aids: campaign %s not found\n", campaign.str() ));
-		GameEngine_RunnerLog( "TESTHILFE ERROR campaign not found" );
+		GameEngine_RunnerLog( "TESTAID ERROR campaign not found" );
 		return FALSE;
 	}
 	for( Int i = 1; i < number; ++i )
@@ -745,7 +745,7 @@ Bool TestAids_PrepareMission( void )
 		if( TheCampaignManager->gotoNextMission() == nullptr )
 		{
 			DEBUG_LOG(( "Test aids: campaign %s has no mission %d\n", campaign.str(), number ));
-			GameEngine_RunnerLog( "TESTHILFE ERROR mission not found" );
+			GameEngine_RunnerLog( "TESTAID ERROR mission not found" );
 			TheCampaignManager->setCampaign( AsciiString::TheEmptyString );
 			return FALSE;
 		}

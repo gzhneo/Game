@@ -100,8 +100,8 @@ Bool SupplyWarehouseDockUpdate::action( Object* docker, Object *drone )
 		// Make it twitch a little.
 		Coord3D newPos = *docker->getPosition();
 		Real range = 0.4*PATHFIND_CELL_SIZE_F;
-		newPos.x += GameLogicRandomValue(static_cast<Int>(-range), static_cast<Int>(range));
-		newPos.y += GameLogicRandomValue(static_cast<Int>(-range), static_cast<Int>(range));
+		newPos.x += GameLogicRandomValueReal(-range, range);
+		newPos.y += GameLogicRandomValueReal(-range, range);
 		docker->setPosition(&newPos);
 		return FALSE;  //not close enough.
 	}

@@ -1,12 +1,16 @@
-TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
+TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15419 MB uma nein vorhanden SD,HD,UHD paket 5 abgewiesen 0
+MOD ordner ProjectData\Inhalt\BaeumeFrei\ dateien 217
+FREIER INHALT ProjectData\Inhalt\BaeumeFrei\ dateien 217 stufe SD manifest 101
 MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
 FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
 MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
 FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
-TEXTURPAKET ersetzt 0 texturen 63
-VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+TEXTURPAKET ersetzt 0 texturen 164
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15419 MB (used 0 MB), dedicated 16191 MB, shared 48862 MB
 WORKERS 30
-D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+VORABLESEN plan dateien 1013 mb 1087
+D3D11EFFECTS flags 0xC7DDFFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+GRAFIKKARTE 1002:7550 AMD Radeon RX 9070 von 2
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
 STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
 SLOTS mode 2 seed 1 localSlot 0
@@ -32,6 +36,7 @@ TERRAINRELIEF kacheln 204 von 204 stufe 2 atlas 4096 x 2048
 TERRAINTESS kacheln 204 von 204 stufe 1 klassen 14 von 14 gitter 380 x 400 abweichend 0
 0 3BA4898E
 STATE frame 0 mode 2 players 6 objects 660 recorder 0 particles 2/0
+VORABLESEN dateien 1013 mb 1087 ms 1485
 STATE frame 1 mode 2 players 6 objects 674 recorder 0 particles 2/0
 30 67B01BDA
 60 53AC7514
@@ -218,7 +223,7 @@ STATE frame 4500 mode 2 players 6 objects 721 recorder 0 particles 18/0
 5340 636F8E6E
 5370 7C5C59B1
 5400 CE0101B4
-STATE frame 5400 mode 2 players 6 objects 732 recorder 0 particles 43/92
+STATE frame 5400 mode 2 players 6 objects 732 recorder 0 particles 43/83
 5430 808A38EF
 5460 754BAF88
 5490 41360758
@@ -249,7 +254,7 @@ STATE frame 5400 mode 2 players 6 objects 732 recorder 0 particles 43/92
 6240 4C5B46EF
 6270 050B56FC
 6300 861885EA
-STATE frame 6300 mode 2 players 6 objects 745 recorder 0 particles 23/17
+STATE frame 6300 mode 2 players 6 objects 745 recorder 0 particles 22/19
 6330 6660A5DB
 6360 2A87AB49
 6390 389C135E
@@ -280,7 +285,7 @@ STATE frame 6300 mode 2 players 6 objects 745 recorder 0 particles 23/17
 7140 E94F1A48
 7170 56E907F3
 7200 6C5DAF02
-STATE frame 7200 mode 2 players 6 objects 733 recorder 0 particles 44/109
+STATE frame 7200 mode 2 players 6 objects 733 recorder 0 particles 44/118
 7230 072D5A76
 7260 7DDED28E
 7290 20B8157C
@@ -311,7 +316,7 @@ STATE frame 7200 mode 2 players 6 objects 733 recorder 0 particles 44/109
 8040 3B4903E3
 8070 3A5E18AC
 8100 69614222
-STATE frame 8100 mode 2 players 6 objects 731 recorder 0 particles 41/227
+STATE frame 8100 mode 2 players 6 objects 731 recorder 0 particles 40/224
 8130 9B652E28
 8160 AFACB029
 8190 7F2B3173
@@ -344,13 +349,13 @@ STATE frame 8100 mode 2 players 6 objects 731 recorder 0 particles 41/227
 END maxFrames 9000
 9000 81004433
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
-BENCH ticks 8998 mean 0.551 p50 0.418 p95 1.229 p99 2.311 max 22.008 total 4956 ms
-FRAMES frames 8940 mean 0.556 p50 0.422 p95 1.232 p99 2.312 max 22.791 total 4972 ms
-PFADSUCHE 0.2308 ms je Tick mit Anfragen (1431 Ticks, hoechstens 4.013 ms) anfragen 1860 zellen 789764 warteschlange 1.3 hoechstens 12 rest 0.01 anfragen_je_tick 1195 190 42 4 einzeln_hoechstens 4.013 ms
-PFADSUCHE_ARTEN pfad 1421 zellen 187847 ms 123.3 hoechstens 3.41 naechster 107 zellen 136282 ms 57.2 hoechstens 3.01 angriff 393 zellen 464562 ms 143.7 hoechstens 1.19 boden 2 zellen 319 ms 0.7 hoechstens 0.59 ausweichen 79 zellen 2357 ms 0.8 hoechstens 0.05 sichtlinie 339908 schritte 3515972 abbrueche 339393 vorrat_leer 0 pfad_fehlschlaege 0 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 26951 kleinste 26679 frei_bei_vorrat_leer 0
-LOGIKPHASEN 9001 Ticks, 0.4035 ms je Tick (Mittel/hoechstens ms): skript 0.0330/17.539 gelaende 0.0001/0.213 befehle 0.0025/19.255 updates 0.2518/225.288 ki 0.0666/20.873 bau 0.0001/0.123 partition 0.0439/1.798 tickende 0.0054/0.362
-LOGIKMODULE 44 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): RailroadBehavior 0.0975 13.0 225.206 AIUpdateInterface 0.0703 17.0 0.973 PhysicsBehavior 0.0122 20.3 0.577 ProductionUpdate 0.0121 19.5 12.474 SupplyTruckAIUpdate 0.0050 2.4 0.382 DozerAIUpdate 0.0047 3.5 0.370 GarrisonContain 0.0043 26.1 0.374 CommandButtonHuntUpdate 0.0037 0.1 0.631 ChinookAIUpdate 0.0028 1.6 0.286 ObjectWeaponStatusHelper 0.0028 33.7 0.499 TransportAIUpdate 0.0020 0.4 0.423 SlowDeathBehavior 0.0019 3.2 2.386
-LOGIKSPITZE ab Tick 31: laengster Tick 8720 21.745 ms: skript 0.018 gelaende 0.000 befehle 0.000 updates 0.693 ki 20.873 bau 0.001 partition 0.117 tickende 0.043; laengstes Update 12.474 ms Tick 1376 ProductionUpdate an ChinaBarracks
-GPUEFFEKTE flags 0x1FFFF samples 8 bilder 49 bild 13.0739 ms (49) bodendetail zeichnungen 0.0 von 0.0 felder 204 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 279.2 umlaeufe 0.09
-PARTIKELZEIT simulation 0.0003 ms je Tick (53 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+BENCH ticks 8998 mean 0.489 p50 0.382 p95 1.032 p99 2.164 max 21.436 total 4400 ms
+FRAMES frames 8940 mean 0.494 p50 0.385 p95 1.035 p99 2.165 max 22.658 total 4414 ms
+PFADSUCHE 0.2117 ms je Tick mit Anfragen (1431 Ticks, hoechstens 4.268 ms) anfragen 1860 zellen 789764 warteschlange 1.3 hoechstens 12 rest 0.01 anfragen_je_tick 1195 190 42 4 einzeln_hoechstens 4.268 ms
+PFADSUCHE_ARTEN pfad 1421 zellen 187847 ms 113.5 hoechstens 3.45 naechster 107 zellen 136282 ms 52.1 hoechstens 2.46 angriff 393 zellen 464562 ms 131.7 hoechstens 1.26 boden 2 zellen 319 ms 0.4 hoechstens 0.27 ausweichen 79 zellen 2357 ms 0.9 hoechstens 0.08 sichtlinie 339908 schritte 3515972 abbrueche 339393 vorrat_leer 0 pfad_fehlschlaege 0 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 26951 kleinste 26679 frei_bei_vorrat_leer 0
+LOGIKPHASEN 9001 Ticks, 0.3395 ms je Tick (Mittel/hoechstens ms): skript 0.0285/15.083 gelaende 0.0001/0.002 befehle 0.0026/20.172 updates 0.2019/6.122 ki 0.0623/20.678 bau 0.0001/0.048 partition 0.0394/2.587 tickende 0.0045/0.205
+LOGIKMODULE 44 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): RailroadBehavior 0.0662 13.0 4.656 AIUpdateInterface 0.0617 17.0 1.147 PhysicsBehavior 0.0114 20.3 0.407 ProductionUpdate 0.0093 19.5 6.049 DozerAIUpdate 0.0045 3.5 0.308 SupplyTruckAIUpdate 0.0044 2.4 0.222 GarrisonContain 0.0035 26.1 0.525 CommandButtonHuntUpdate 0.0031 0.1 0.389 ChinookAIUpdate 0.0027 1.6 0.138 ObjectWeaponStatusHelper 0.0025 33.7 0.089 TransportAIUpdate 0.0017 0.4 0.188 SlowDeathBehavior 0.0017 3.2 2.222
+LOGIKSPITZE ab Tick 31: laengster Tick 8720 21.183 ms: skript 0.016 gelaende 0.000 befehle 0.000 updates 0.315 ki 20.678 bau 0.001 partition 0.125 tickende 0.049; laengstes Update 6.049 ms Tick 2072 ProductionUpdate an AmericaBarracks
+GPUEFFEKTE flags 0xC7DDFFFF samples 8 bilder 49 bild 6.1806 ms (49) bodendetail zeichnungen 0.0 von 0.0 felder 204 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 279.2 umlaeufe 0.09
+PARTIKELZEIT simulation 0.0004 ms je Tick (53 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
 EXIT code 0

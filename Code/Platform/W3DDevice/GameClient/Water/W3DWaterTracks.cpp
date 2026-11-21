@@ -698,6 +698,15 @@ void WaterTracksRenderSystem::ReAcquireResources(void)
 
 	m_vertexBuffer=NEW_REF(DeviceVertexBufferClass,(RENDER_FVF_XYZDUV1,static_cast<unsigned short>(m_stripSizeX*m_stripSizeY*WATER_VB_PAGES),DeviceVertexBufferClass::USAGE_DYNAMIC));
 	m_batchStart=0;
+
+	// A texture without a file name is the free surf texture, filled from code: after a lost device it is empty.
+	for (WaterTracksObj *mod = m_usedModules; mod; mod = mod->m_nextSystem)
+	{
+		if (mod->m_stageZeroTexture && mod->m_stageZeroTexture->Get_Texture_Name().Is_Empty())
+		{	REF_PTR_RELEASE(mod->m_stageZeroTexture);
+			mod->m_stageZeroTexture = getWaterTrackTexture("wave256.tga");
+		}
+	}
 }
 
 //=============================================================================

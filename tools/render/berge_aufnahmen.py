@@ -10,7 +10,7 @@ flacher Kamera (Neigung +25). Alle 120 Logik-Frames ein Bild.
 
 Aufruf:
   python tools/render/berge_aufnahmen.py pfade                      Pfaddateien tests/render/paths/berge_*.txt schreiben
-  python tools/render/berge_aufnahmen.py lauf --fassung alt --zh <GZHNeoZH.exe> --g <GZHNeo.exe> [--effekte LISTE]
+  python tools/render/berge_aufnahmen.py lauf --fassung alt --zh <GZHNeoZH.exe> --g <GZHNeo.exe> [--effekte LIST]
         [--nur alpine,fortress] [--extra ...]
 Bilder: render-out/berge/raw/<szene>/<fassung>/shot_*.bmp
 """
@@ -75,7 +75,7 @@ def cmd_lauf(a):
         wait_free(parallel=3)
         cmd = [sys.executable, os.path.join(HIER, "run_render_test.py"), "run", "--exe", exe, "--scene", "skirmish",
                "--map", karte, "--ai", "2", "--seed", "1", "--path", pfad_datei(name), "--every", str(TAKT),
-               "--xres", "1920", "--yres", "1080", "--mehrfach", "--out", out,
+               "--xres", "1920", "--yres", "1080", "--multiInstance", "--out", out,
                "--extra", "-ignoreAsserts", "-d3d11Effects", a.effekte] + (a.extra or [])
         r = subprocess.call(cmd)
         print("==", name, a.fassung, "Exit", r)

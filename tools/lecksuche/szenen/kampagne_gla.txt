@@ -2,25 +2,25 @@
 # per Strg+W (wiederholt, bis die Mission endet -- die Zwischensequenz am Anfang schluckt die Taste),
 # Punkteanzeige, "Weiter". Wachstum je Mission misst kampagne_wachstum (dieselbe Mission mehrmals; hier laedt
 # jede Mission andere Modelle und Karten, das Wachstum waere vor allem Zwischenspeicher).
-hauptmenue
-klickFalls MainMenu.wnd:ButtonSinglePlayer
-klick MainMenu.wnd:ButtonGLA
-klick MainMenu.wnd:ButtonEasy
+mainMenu
+clickIf MainMenu.wnd:ButtonSinglePlayer
+click MainMenu.wnd:ButtonGLA
+click MainMenu.wnd:ButtonEasy
 # Mission 1
-partie 20000
-warte 900
-siegBisEnde 20000
-fenster ScoreScreen.wnd:ButtonContinue 900
-warte 60
-klick ScoreScreen.wnd:ButtonContinue
+game 20000
+wait 900
+winUntilEnd 20000
+window ScoreScreen.wnd:ButtonContinue 900
+wait 60
+click ScoreScreen.wnd:ButtonContinue
 # Mission 2
-partie 20000
-warte 900
-siegBisEnde 20000
-fenster ScoreScreen.wnd:ButtonContinue 900
-warte 60
-klick ScoreScreen.wnd:ButtonContinue
+game 20000
+wait 900
+winUntilEnd 20000
+window ScoreScreen.wnd:ButtonContinue 900
+wait 60
+click ScoreScreen.wnd:ButtonContinue
 # Mission 3
-partie 20000
-warte 900
-beenden
+game 20000
+wait 900
+quit

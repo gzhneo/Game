@@ -45,24 +45,24 @@ rm -rf "$DATA" && python3 "$HERE/testdaten/generate.py" "$DATA" > /dev/null || {
 # The host sets the limit before the guest joins (a change resets the guest's acceptance), waits for the guest and
 # starts (the guest's choice is disabled, so the test sequence cannot list it there). Both zoom out by 40 wheel notches in the game (more than enough for the highest limit) and quit.
 host_ablauf() {
-	printf 'hauptmenue\r\nklick MainMenu.wnd:ButtonMultiplayer 3000\r\nklick MainMenu.wnd:ButtonNetwork 3000\r\n'
-	printf 'fenster LanLobbyMenu.wnd:ButtonHost 3000\r\nwarte 60\r\nklick LanLobbyMenu.wnd:ButtonHost\r\n'
-	printf 'fenster LanGameOptionsMenu.wnd:ButtonStart 6000\r\nliste LanGameOptionsMenu.wnd:ComboBoxMaxZoom\r\n'
-	printf 'auswahl LanGameOptionsMenu.wnd:ComboBoxMaxZoom %d\r\nwarte 3200\r\n' "$INDEX"
-	printf 'klick LanGameOptionsMenu.wnd:ButtonStart 9000\r\npartie 2000000\r\nlog SPIEL BEGINNT\r\nlogik 60\r\n'
-	printf 'rad -40\r\nlogik 30\r\nspielmenue\r\nklick QuitNoSave.wnd:ButtonExit 3000\r\nklick QuitMessageBox.wnd:ButtonYes 3000\r\n'
-	printf 'keinePartie 2000000\r\nbeenden\r\n'
+	printf 'mainMenu\r\nclick MainMenu.wnd:ButtonMultiplayer 3000\r\nclick MainMenu.wnd:ButtonNetwork 3000\r\n'
+	printf 'window LanLobbyMenu.wnd:ButtonHost 3000\r\nwait 60\r\nclick LanLobbyMenu.wnd:ButtonHost\r\n'
+	printf 'window LanGameOptionsMenu.wnd:ButtonStart 6000\r\nlist LanGameOptionsMenu.wnd:ComboBoxMaxZoom\r\n'
+	printf 'select LanGameOptionsMenu.wnd:ComboBoxMaxZoom %d\r\nwait 3200\r\n' "$INDEX"
+	printf 'click LanGameOptionsMenu.wnd:ButtonStart 9000\r\ngame 2000000\r\nlog SPIEL BEGINNT\r\nlogic 60\r\n'
+	printf 'wheel -40\r\nlogic 30\r\ngameMenu\r\nclick QuitNoSave.wnd:ButtonExit 3000\r\nclick QuitMessageBox.wnd:ButtonYes 3000\r\n'
+	printf 'noGame 2000000\r\nquit\r\n'
 }
 gast_ablauf() {
-	printf 'hauptmenue\r\nklick MainMenu.wnd:ButtonMultiplayer 3000\r\nklick MainMenu.wnd:ButtonNetwork 3000\r\n'
-	printf 'fenster LanLobbyMenu.wnd:ListboxGames 3000\r\nwarte 600\r\nauswahl LanLobbyMenu.wnd:ListboxGames 0 6000\r\n'
-	printf 'klick LanLobbyMenu.wnd:ButtonJoin 3000\r\nfenster LanGameOptionsMenu.wnd:TextEntryChat 6000\r\nwarte 100\r\n'
-	printf 'klick LanGameOptionsMenu.wnd:ButtonStart 9000\r\npartie 2000000\r\nlog SPIEL BEGINNT\r\nlogik 60\r\n'
-	printf 'rad -40\r\nlogik 30\r\nspielmenue\r\nklick QuitNoSave.wnd:ButtonExit 3000\r\nklick QuitMessageBox.wnd:ButtonYes 3000\r\n'
-	printf 'keinePartie 2000000\r\nbeenden\r\n'
+	printf 'mainMenu\r\nclick MainMenu.wnd:ButtonMultiplayer 3000\r\nclick MainMenu.wnd:ButtonNetwork 3000\r\n'
+	printf 'window LanLobbyMenu.wnd:ListboxGames 3000\r\nwait 600\r\nselect LanLobbyMenu.wnd:ListboxGames 0 6000\r\n'
+	printf 'click LanLobbyMenu.wnd:ButtonJoin 3000\r\nwindow LanGameOptionsMenu.wnd:TextEntryChat 6000\r\nwait 100\r\n'
+	printf 'click LanGameOptionsMenu.wnd:ButtonStart 9000\r\ngame 2000000\r\nlog SPIEL BEGINNT\r\nlogic 60\r\n'
+	printf 'wheel -40\r\nlogic 30\r\ngameMenu\r\nclick QuitNoSave.wnd:ButtonExit 3000\r\nclick QuitMessageBox.wnd:ButtonYes 3000\r\n'
+	printf 'noGame 2000000\r\nquit\r\n'
 }
 replay_ablauf() {
-	printf 'partie 2000000\r\nlog REPLAY BEGINNT\r\nlogik 60\r\nrad -40\r\nlogik 10\r\nbeenden\r\n'
+	printf 'game 2000000\r\nlog REPLAY BEGINNT\r\nlogic 60\r\nwheel -40\r\nlogic 10\r\nquit\r\n'
 }
 
 for i in 1 2; do
@@ -78,8 +78,8 @@ host_ablauf > "$OUT/daten1/ablauf.txt"
 gast_ablauf > "$OUT/daten2/ablauf.txt"
 for i in 1 2; do
 	ip netns exec gzh-zoom$i env WINEPREFIX_CNC="$BAU/wineprefix-zoom$i" "$HERE/run_game.sh" --menue --zeit 3000 \
-		"$OUT/daten$i" -einstellungenNurLesen -d3d11Effects none -maxZoom 1.25 -crcLog crc.log -crcLogInterval 1 \
-		-testablauf ablauf.txt > "$OUT/lauf$i.out" 2>&1 &
+		"$OUT/daten$i" -settingsReadOnly -d3d11Effects none -maxZoom 1.25 -crcLog crc.log -crcLogInterval 1 \
+		-testScript ablauf.txt > "$OUT/lauf$i.out" 2>&1 &
 	eval "P$i=\$!"
 	[ $i = 1 ] && sleep 20
 done
@@ -90,8 +90,8 @@ cp "$REP" "$OUT/partie.rep" 2>/dev/null
 if [ -s "$OUT/partie.rep" ]; then
 	replay_ablauf > "$OUT/daten1/replay_ablauf.txt"
 	ip netns exec gzh-zoom1 env WINEPREFIX_CNC="$BAU/wineprefix-zoom1" "$HERE/run_game.sh" --zeit 1500 \
-		"$OUT/daten1" -einstellungenNurLesen -d3d11Effects none -maxZoom 1.25 -replay 00000000.rep \
-		-crcLog replay.log -testablauf replay_ablauf.txt > "$OUT/replay.out" 2>&1
+		"$OUT/daten1" -settingsReadOnly -d3d11Effects none -maxZoom 1.25 -replay 00000000.rep \
+		-crcLog replay.log -testScript replay_ablauf.txt > "$OUT/replay.out" 2>&1
 fi
 
 python3 - "$OUT" "$INDEX" <<'PYEOF'
@@ -111,14 +111,14 @@ def crc(z):
     return werte
 
 def hoehen(z):
-    return [float(m.group(1)) for l in z for m in [re.search(r'rad -40 zoom \S+ height \S+ current (\S+)', l)] if m]
+    return [float(m.group(1)) for l in z for m in [re.search(r'wheel -40 zoom \S+ height \S+ current (\S+)', l)] if m]
 
 host, gast, rep = lesen(os.path.join(out, 'daten1', 'crc.log')), lesen(os.path.join(out, 'daten2', 'crc.log')), \
     lesen(os.path.join(out, 'daten1', 'replay.log'))
 h, g = crc(host), crc(gast)
 gemeinsam = sorted(set(h) & set(g))
 falsch = [f for f in gemeinsam if h[f] != g[f]]
-fehler = [l for l in host + gast + rep if 'TESTABLAUF ERROR' in l]
+fehler = [l for l in host + gast + rep if 'TESTSCRIPT ERROR' in l]
 kopf = open(os.path.join(out, 'partie.rep'), 'rb').read(4096).decode('latin-1') if os.path.exists(os.path.join(out, 'partie.rep')) else ''
 zm = re.search(r'ZM=(\d+);', kopf)
 text = ['Gastgeber-Wert: Eintrag %d = %d %%' % (index, percent),

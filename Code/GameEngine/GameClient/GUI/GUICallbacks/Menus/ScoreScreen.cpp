@@ -695,7 +695,7 @@ void PlayMovieAndBlock(AsciiString movieTitle)
 
 	GameWindow *movieWindow = s_blankLayout->getFirstWindow();
 	TheWritableGlobalData->m_loadScreenRender = TRUE;
-	while (videoStream->frameIndex() < videoStream->frameCount() - 1)
+	while (videoStream->frameIndex() < videoStream->frameCount() - 1 && !videoStream->hasPlayedToEnd())
 	{
 		TheGameEngine->serviceWindowsOS();
 

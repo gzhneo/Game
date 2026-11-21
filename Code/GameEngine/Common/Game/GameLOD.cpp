@@ -76,7 +76,7 @@ static const FieldParse TheStaticGameLODFieldParseTable[] =
 	{ "SampleCount3D",					INI::parseInt,					nullptr,	offsetof( StaticGameLODInfo, m_sampleCount3D ) },
 	{ "StreamCount",					INI::parseInt,					nullptr,	offsetof( StaticGameLODInfo, m_streamCount ) },
 	{ "MaxParticleCount",				INI::parseInt,					nullptr,	offsetof( StaticGameLODInfo, m_maxParticleCount ) },
-	{ "UseShadowVolumes",				INI::parseBool,					nullptr,	offsetof( StaticGameLODInfo, m_useShadowVolumes ) },
+	{ "UseShadowVolumes",				INI::parseBool,					nullptr,	offsetof( StaticGameLODInfo, m_unusedShadowVolumes ) },	// accepted, no longer used
 	{ "UseShadowDecals",				INI::parseBool,					nullptr,	offsetof( StaticGameLODInfo, m_useShadowDecals ) },
 	{ "UseCloudMap",					INI::parseBool,					nullptr,	offsetof( StaticGameLODInfo, m_useCloudMap ) },
 	{ "UseLightMap",					INI::parseBool,					nullptr,	offsetof( StaticGameLODInfo, m_useLightMap ) },
@@ -114,7 +114,7 @@ StaticGameLODInfo::StaticGameLODInfo(void)
 	m_streamCount=2;
 	m_maxParticleCount=2500;
 
-	m_useShadowVolumes=TRUE;
+	m_unusedShadowVolumes=TRUE;
 	m_useShadowDecals=TRUE;
 	m_useCloudMap=TRUE;
 	m_useLightMap=TRUE;
@@ -238,7 +238,6 @@ void GameLODManager::init(void)
 		veryHigh.m_maxTankTrackEdges *= 2;
 		veryHigh.m_maxTankTrackOpaqueEdges *= 2;
 		veryHigh.m_maxTankTrackFadeDelay *= 2;
-		veryHigh.m_useShadowVolumes = TRUE;
 		veryHigh.m_useShadowDecals = TRUE;
 		veryHigh.m_useCloudMap = TRUE;
 		veryHigh.m_useLightMap = TRUE;
@@ -259,9 +258,8 @@ void GameLODManager::init(void)
 	for( Int lodIdx = STATIC_GAME_LOD_LOW; lodIdx <= STATIC_GAME_LOD_VERY_HIGH; ++lodIdx )
 	{
 		const StaticGameLODInfo &lodDbg = m_staticGameLODInfo[ lodIdx ];
-		DEBUG_LOG(( "detail level %s: particles %d, shadow volumes %s, tank track edges %d, texture reduction %d\n",
-			lodNames[ lodIdx ], lodDbg.m_maxParticleCount,
-			lodDbg.m_useShadowVolumes ? "yes" : "no", lodDbg.m_maxTankTrackEdges,
+		DEBUG_LOG(( "detail level %s: particles %d, tank track edges %d, texture reduction %d\n",
+			lodNames[ lodIdx ], lodDbg.m_maxParticleCount, lodDbg.m_maxTankTrackEdges,
 			lodDbg.m_textureReduction ));
 	}
 #endif
@@ -287,7 +285,6 @@ void GameLODManager::init(void)
 	if (userSetDetail == STATIC_GAME_LOD_CUSTOM)
 	{
 		TheWritableGlobalData->m_textureReductionFactor = UserSettings::getTextureReduction();
-		TheWritableGlobalData->m_useShadowVolumes = UserSettings::get3DShadowsEnabled();
 		TheWritableGlobalData->m_useShadowDecals = UserSettings::get2DShadowsEnabled();
 		TheWritableGlobalData->m_enableBehindBuildingMarkers = UserSettings::getBuildingOcclusionEnabled();
 		TheWritableGlobalData->m_maxParticleCount = UserSettings::getParticleCap();
@@ -315,7 +312,6 @@ void GameLODManager::refreshCustomStaticLODLevel(void)
 	StaticGameLODInfo *lodInfo=&m_staticGameLODInfo[STATIC_GAME_LOD_CUSTOM];
 
 	lodInfo->m_maxParticleCount=TheGlobalData->m_maxParticleCount;
-	lodInfo->m_useShadowVolumes=TheGlobalData->m_useShadowVolumes;
 	lodInfo->m_useShadowDecals=TheGlobalData->m_useShadowDecals;
 	lodInfo->m_useCloudMap=TheGlobalData->m_useCloudMap;
 	lodInfo->m_useLightMap=TheGlobalData->m_useLightMap;
@@ -474,7 +470,6 @@ void GameLODManager::applyStaticLODLevel(StaticGameLODLevel level)
 	if (TheGlobalData)
 	{
 		TheWritableGlobalData->m_maxParticleCount=lodInfo->m_maxParticleCount;
-		TheWritableGlobalData->m_useShadowVolumes=lodInfo->m_useShadowVolumes;
 		TheWritableGlobalData->m_useShadowDecals=lodInfo->m_useShadowDecals;
 
 		//Check if texture resolution changed.  No need to apply when current is unknown because display will do it
@@ -487,7 +482,6 @@ void GameLODManager::applyStaticLODLevel(StaticGameLODLevel level)
 
 		//Check if shadow state changed
 		if (m_currentStaticLOD == STATIC_GAME_LOD_UNKNOWN	||
-			lodInfo->m_useShadowVolumes != prevLodInfo->m_useShadowVolumes ||
 			lodInfo->m_useShadowDecals != prevLodInfo->m_useShadowDecals)
 		{
 			if (TheGameClient)

@@ -8,7 +8,7 @@
 // Test helpers for single player tests: money, power, general's points, instant build, invulnerability,
 // reveal map, time lapse, quick save and so on.
 //
-// Enabled with the command line switch -testhilfen or Options.ini "Testhilfen = yes", effective only in
+// Enabled with the command line switch -testAids or Options.ini "Testhilfen = yes", effective only in
 // single player matches (skirmish, campaign), never in multiplayer (lockstep). Everything that touches
 // the game logic runs as game message MSG_TEST_AID through the logic (TestAidsLogic.cpp) and is thus
 // recorded in the replay; the client (TestAidsClient.cpp) only sends commands, shows the sidebar and
@@ -99,14 +99,14 @@ Bool TestAids_NoCooldown( const Player *player );
 
 // Client (Source/GameClient/TestAidsClient.cpp) -----------------------------------------------
 
-/// Test helpers enabled (-testhilfen or Options.ini) and a single player match is running, not a replay
+/// Test helpers enabled (-testAids or Options.ini) and a single player match is running, not a replay
 Bool TestAids_ClientAllowed( void );
 
 /// Triggers a command (key, sidebar button, script file); targetPlayer -1 = local player
 void TestAids_Command( Int command, Int targetPlayer = -1 );
 
-/// Command for a name from the script file or the test sequence command "testhilfe" (geld_plus,
-/// sofortbau, ...); TA_NONE if unknown
+/// Command for a name from the script file or the test sequence command "testAid" (money_plus,
+/// instant_build, ...); TA_NONE if unknown
 Int TestAids_CommandByName( const char *name );
 
 /// Meta message MSG_META_TESTHILFE_* from CommandXlat; TRUE = handled (discard the message)

@@ -155,6 +155,7 @@ set(WW3D2_SCENE_DIRS
 set(WW3D2_SCENE_DIRS ${WW3D2_SCENE_DIRS} PARENT_SCOPE)
 target_include_directories(WW3D2 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${WW3D2_SCENE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/..)
 target_link_libraries(WW3D2 PUBLIC WWLib WWMath WWDebug WWSaveLoad)
+target_link_libraries(WW3D2 PRIVATE EngineCore)
 # DirectXTex (from the vcpkg manifest) handles texture conversion on the CPU, in every build.
 find_package(directxtex CONFIG REQUIRED)
 target_link_libraries(WW3D2 PRIVATE Microsoft::DirectXTex)

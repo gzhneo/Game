@@ -416,6 +416,9 @@ bool RenderCore::Tr_Ensure_Height_Field()
 		if (SUCCEEDED(M->device->CreateTexture2D(&td, &init, &M->tr_tex[2])) &&
 			FAILED(M->device->CreateShaderResourceView(M->tr_tex[2], nullptr, &M->tr_srv[2])))
 			Gpu_Release(M->tr_tex[2]);
+		if (!M->tr_srv[2]) {
+			WWDEBUG_SAY(("Terrain height field texture (%d x %d) cannot be created, the rock layer and terrain effects stay off\n", M->tr_width, M->tr_height));
+		}
 		delete[] data;
 		M->tr_height_dirty = false;
 		M->tr_cb_dirty = true;
@@ -527,13 +530,19 @@ void RenderCore::Tr_Bind(bool with_detail)
 }
 
 void RenderCore::Set_Terrain_Height_Field(const unsigned char* heights, int width, int height, int border,
-	float cell_size, float height_scale)
+	float cell_size, float height_scale, unsigned version)
 {
 	if (!heights || width < 2 || height < 2) return;
 	const size_t n = static_cast<size_t>(width) * static_cast<size_t>(height);
-	if (M->tr_heights && M->tr_width == width && M->tr_height == height && M->tr_border == border &&
-		M->tr_cell == cell_size && M->tr_height_scale == height_scale && ::memcmp(M->tr_heights, heights, n) == 0)
+	const bool same_params = M->tr_heights && M->tr_width == width && M->tr_height == height && M->tr_border == border &&
+		M->tr_cell == cell_size && M->tr_height_scale == height_scale;
+	// An unchanged version means the data is unchanged; otherwise compare against the copy.
+	if (same_params && version != 0 && M->tr_version == version)
 		return;
+	if (same_params && ::memcmp(M->tr_heights, heights, n) == 0) {
+		M->tr_version = version;
+		return;
+	}
 	if (!M->tr_heights || static_cast<size_t>(M->tr_width) * static_cast<size_t>(M->tr_height) != n) {
 		delete[] M->tr_heights;
 		M->tr_heights = W3DNEWARRAY unsigned char[n];
@@ -542,6 +551,7 @@ void RenderCore::Set_Terrain_Height_Field(const unsigned char* heights, int widt
 	unsigned char lowest = 255;
 	for (size_t i = 0; i < n; ++i) if (heights[i] < lowest) lowest = heights[i];
 	M->tr_min_height = static_cast<float>(lowest) * height_scale;
+	M->tr_version = version;
 	M->tr_width = width;
 	M->tr_height = height;
 	M->tr_border = border;
@@ -847,7 +857,12 @@ bool RenderCore::Tt_Ensure_Resources()
 		M->tt_cb_dirty = true;
 	}
 	// weights (immutable) and mask (updated when buildings come and go) from the copies
-	if (!M->tt_weights && M->tt_weights_cpu && M->tt_grid_w > 0 && M->tt_grid_h > 0) {
+	if ((!M->tt_weights || !M->tt_mask) && M->tt_weights_cpu && M->tt_grid_w > 0 && M->tt_grid_h > 0) {
+		// start from nothing so a half-built pair from an earlier call is not overwritten without release
+		Gpu_Release(M->tt_weights);
+		Gpu_Release(M->tt_weights_tex);
+		Gpu_Release(M->tt_mask);
+		Gpu_Release(M->tt_mask_tex);
 		GPU_TEXTURE2D_DESC td;
 		::ZeroMemory(&td, sizeof(td));
 		td.Width = static_cast<UINT>(M->tt_grid_w);  td.Height = static_cast<UINT>(M->tt_grid_h);
@@ -870,6 +885,15 @@ bool RenderCore::Tt_Ensure_Resources()
 		if (M->tt_mask_cpu && SUCCEEDED(M->device->CreateTexture2D(&td, &init, &M->tt_mask_tex)) &&
 			FAILED(M->device->CreateShaderResourceView(M->tt_mask_tex, nullptr, &M->tt_mask)))
 			Gpu_Release(M->tt_mask_tex);
+		if (!M->tt_weights || !M->tt_mask) {
+			WWDEBUG_SAY(("Terrain tessellation: weight or mask texture cannot be created, tessellation stays off\n"));
+			Gpu_Release(M->tt_weights);
+			Gpu_Release(M->tt_weights_tex);
+			Gpu_Release(M->tt_mask);
+			Gpu_Release(M->tt_mask_tex);
+			M->tt_failed = true;
+			return false;
+		}
 	}
 	return M->tt_weights && M->tt_mask && Tr_Ensure_Height_Field();
 }

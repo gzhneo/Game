@@ -219,6 +219,7 @@ GameLogic::GameLogic( void )
 	m_loadingMap = FALSE;
 	m_loadingSave = FALSE;
 	m_clearingGameData = FALSE;
+	m_destroyingAllObjects = FALSE;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -262,6 +263,7 @@ Bool GameLogic::isInSinglePlayerGame( void )
 void GameLogic::destroyAllObjectsImmediate()
 {
 	// destroy all remaining objects
+	m_destroyingAllObjects = TRUE;
 	Object *obj;
 	Object *nextObj;
 	for( obj = m_objList; obj; obj = nextObj )
@@ -272,6 +274,7 @@ void GameLogic::destroyAllObjectsImmediate()
 
 	// process the destroy list immediately
 	processDestroyList();
+	m_destroyingAllObjects = FALSE;
 	DEBUG_ASSERTCRASH( m_objList == nullptr, ("destroyAllObjectsImmediate: Object list not cleared\n") );
 
 }  // end destroyAllObjectsImmediate
@@ -405,6 +408,7 @@ void GameLogic::reset( void )
 	// has grown m_objVector, and shrinking it first would make removeObjectFromLookupTable() write
 	// past size(), while findObjectByID() would no longer find objects that are still alive.
 	m_objVector.clear();
+	m_livePointers.clear();
 	m_objVector.resize(OBJ_HASH_SIZE, nullptr);
 	m_objGeneration.reset(OBJ_HASH_SIZE);
 
@@ -1113,7 +1117,7 @@ namespace
 		PHASE_COUNT
 	};
 	const char *const s_phaseNames[PHASE_COUNT] =
-		{ "skript", "gelaende", "befehle", "updates", "ki", "bau", "partition", "tickende" };
+		{ "script", "terrain", "commands", "updates", "ai", "build", "partition", "tick_end" };
 
 	struct PhaseStatistics
 	{
@@ -1179,7 +1183,7 @@ Bool GameLogic::formatPhaseStatistics( AsciiString &phases, AsciiString &modules
 	double total = 0.0;
 	for( Int i = 0; i < PHASE_COUNT; ++i )
 		total += s_phaseStats->sumMs[ i ];
-	phases.format( "LOGIKPHASEN %u Ticks, %.4f ms je Tick (Mittel/hoechstens ms):", s_phaseStats->ticks, total / ticks );
+	phases.format( "LOGICPHASES %u ticks, %.4f ms per tick (mean/max ms):", s_phaseStats->ticks, total / ticks );
 	for( Int i = 0; i < PHASE_COUNT; ++i )
 	{
 		AsciiString part;
@@ -1191,7 +1195,7 @@ Bool GameLogic::formatPhaseStatistics( AsciiString &phases, AsciiString &modules
 	std::vector<std::pair<NameKeyType, PhaseStatistics::ModuleTime>> list( s_phaseStats->modules.begin(), s_phaseStats->modules.end() );
 	std::sort( list.begin(), list.end(),
 		[]( const auto &a, const auto &b ) { return a.second.ms > b.second.ms || ( a.second.ms == b.second.ms && a.first < b.first ); } );
-	modules.format( "LOGIKMODULE %u Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms):", static_cast<UnsignedInt>( list.size() ) );
+	modules.format( "LOGICMODULES %u types (ms per tick, calls per tick, longest call ms):", static_cast<UnsignedInt>( list.size() ) );
 	for( size_t i = 0; i < list.size() && i < 12; ++i )
 	{
 		AsciiString part;
@@ -1201,7 +1205,7 @@ Bool GameLogic::formatPhaseStatistics( AsciiString &phases, AsciiString &modules
 	}
 
 	// where the longest tick and the longest single update went
-	spikes.format( "LOGIKSPITZE ab Tick %u: laengster Tick %u %.3f ms:", PHASE_WARMUP_TICKS + 1, s_phaseStats->slowestTickFrame, s_phaseStats->slowestTickMs );
+	spikes.format( "LOGICPEAK from tick %u: longest tick %u %.3f ms:", PHASE_WARMUP_TICKS + 1, s_phaseStats->slowestTickFrame, s_phaseStats->slowestTickMs );
 	AsciiString part;
 	for( Int i = 0; i < PHASE_COUNT; ++i )
 	{
@@ -1210,7 +1214,7 @@ Bool GameLogic::formatPhaseStatistics( AsciiString &phases, AsciiString &modules
 	}
 	if( s_phaseStats->slowestModule != NAMEKEY_INVALID )
 	{
-		part.format( "; laengstes Update %.3f ms Tick %u %s an %s", s_phaseStats->slowestMs, s_phaseStats->slowestFrame,
+		part.format( "; longest update %.3f ms tick %u %s on %s", s_phaseStats->slowestMs, s_phaseStats->slowestFrame,
 			TheNameKeyGenerator->keyToName( s_phaseStats->slowestModule ).str(), s_phaseStats->slowestObject.str() );
 		spikes.concat( part );
 	}
@@ -1623,6 +1627,7 @@ void GameLogic::addObjectToLookupTable( Object *obj )
 		m_objVector.resize((m_objVector.size() > 0) ? (m_objVector.size() * 2) : OBJ_HASH_SIZE, nullptr);
 
 	m_objVector[ newID ] = obj;
+	m_livePointers.insert( obj );
 
 	// Bump the slot generation, so a handle to an earlier object in this slot no longer matches.
 	m_objGeneration.onSlotOccupied( static_cast<size_t>(newID) );
@@ -1641,6 +1646,7 @@ void GameLogic::removeObjectFromLookupTable( Object *obj )
 
 	// remove from lookup table
 //	m_objHash.erase( obj->getID() );
+	m_livePointers.erase( obj );
 	// bounds check as in findObjectByID(): reset() shrinks the table
 	if( static_cast<UnsignedInt>(obj->getID()) < m_objVector.size() )
 		m_objVector[ obj->getID() ] = nullptr;

@@ -151,7 +151,7 @@ private:
 	UdpSocket m_socket;
 	Int m_maxPacketSize;
 
-	// Bad-link emulation of received packets (-netzLatenz and related switches)
+	// Bad-link emulation of received packets (-netLatency and related switches)
 	::Engine::NetEmulator m_emulator;
 	UnsignedInt m_emulatorLogTime;
 	UnsignedInt m_lastRecovery = 0;

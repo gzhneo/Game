@@ -912,7 +912,7 @@ void MainMenuUpdate( WindowLayout *layout, void *userData )
 	// On first start the menu only fades in on a mouse move (> 20 pixels) or a key press (notShown path
 	// in MainMenuInput). Take the key press path at once where that cannot happen or must not wait for it:
 	// -fixedTimeStep (the menu appears at a fixed frame for image comparisons), test sequences and
-	// -echteEingabeAus (both ignore the real mouse, so no mouse move arrives).
+	// -noRealInput (both ignore the real mouse, so no mouse move arrives).
 	const Bool showAtOnce = TheGlobalData->m_fixedTimeStep || TheGlobalData->m_testScriptFile.isNotEmpty()
 		|| TheGlobalData->m_noRealInput;
 	if(notShown && showAtOnce && dropDownWindows[DROPDOWN_MAIN])

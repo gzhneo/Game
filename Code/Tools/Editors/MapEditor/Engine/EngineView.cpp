@@ -260,7 +260,6 @@ void applyGraphics()
 
 void applyDisplayFlags()
 {
-	TheWritableGlobalData->m_useShadowVolumes = s_display.shadows != 0;
 	TheWritableGlobalData->m_useShadowDecals = s_display.shadows != 0;
 	TheWritableGlobalData->m_useCloudMap = s_display.clouds != 0;
 	TheWritableGlobalData->m_useLightMap = s_display.macroTexture != 0;
@@ -323,7 +322,7 @@ void createWater()
 	v.water->toggleCloudLayer(gd.m_useCloudPlane);
 	v.water->setGridHeightClamps(gd.m_vertexWaterHeightClampLow[0], gd.m_vertexWaterHeightClampHi[0]);
 	v.water->setGridTransform(gd.m_vertexWaterAngle[0], gd.m_vertexWaterXPosition[0], gd.m_vertexWaterYPosition[0], gd.m_vertexWaterZPosition[0]);
-	v.water->setGridResolution(gd.m_vertexWaterXGridCells[0], gd.m_vertexWaterYGridCells[0], gd.m_vertexWaterGridSize[0]);
+	v.water->setGridResolution(static_cast<Real>(gd.m_vertexWaterXGridCells[0]), static_cast<Real>(gd.m_vertexWaterYGridCells[0]), gd.m_vertexWaterGridSize[0]);
 	v.water->setGridChangeAttenuationFactors(gd.m_vertexWaterAttenuationA[0], gd.m_vertexWaterAttenuationB[0],
 		gd.m_vertexWaterAttenuationC[0], gd.m_vertexWaterAttenuationRange[0]);
 	::Engine::context().waterRenderObj = v.water;

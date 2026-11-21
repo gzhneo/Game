@@ -403,6 +403,10 @@ void BaseHeightMapRenderObjClass::ReleaseResources(void)
 	REF_PTR_SET(pMap, m_map);
 	freeMapResources();
 	m_map = pMap; // ref_ptr_set has already incremented the ref count.
+	// After a lost device the atlas textures of the map belong to the old device: the next
+	// getTerrainTexture() builds them again from the tile data.
+	if (m_map && RenderDevice::Is_Device_Lost())
+		m_map->freeDeviceTextures();
 	if (TheWaterRenderObj)
 		TheWaterRenderObj->ReleaseResources();
 	if (TheTerrainTracksRenderObjClassSystem)
@@ -1326,6 +1330,7 @@ Bool BaseHeightMapRenderObjClass::evaluateAsVisibleCliff(Int xIndex, Int yIndex,
 //=============================================================================
 void BaseHeightMapRenderObjClass::oversizeTerrain(Int tilesToOversize) 
 {
+	++m_heightFieldVersion;
 	// Not needed with flat version. [3/20/2003]
 }
 
@@ -1784,6 +1789,7 @@ shaders, and materials.*/
 //=============================================================================
 Int BaseHeightMapRenderObjClass::initHeightData(Int x, Int y, WorldHeightMap *pMap, RefRenderObjListIterator *pLightsIteratork, Bool updateExtraPassTiles)
 {	
+	++m_heightFieldVersion;
 
 	REF_PTR_SET(m_map, pMap);	//update our heightmap pointer in case it changed since last call.
 
@@ -2356,6 +2362,7 @@ void BaseHeightMapRenderObjClass::removeTerrainBibDrawable(DrawableID id)
 //=============================================================================
 void BaseHeightMapRenderObjClass::staticLightingChanged( void )
 {
+	++m_heightFieldVersion;
 	// Cause the terrain to get updated with new lighting.
 	m_needFullUpdate = true;
 

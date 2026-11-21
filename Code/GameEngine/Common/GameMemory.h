@@ -849,7 +849,7 @@ extern void shutdownMemoryManager();
 	Finds growth between two points in time. debugMemorySetMark() groups all live blocks (pool, tag,
 	with ENABLE_MEMORYPOOL_STACKTRACE also the call stack) and stores their counts;
 	debugMemoryReportGrowth() writes the groups that have grown since then to the log (lines
-	"WACHSTUM,..."). The test script calls both (commands merke and wachstum).
+	"GROWTH,..."). The test script calls both (commands merke and wachstum).
 */
 extern void debugMemorySetMark();
 extern void debugMemoryFreeMark();

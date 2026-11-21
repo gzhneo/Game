@@ -233,6 +233,9 @@ protected:
 	virtual Object *findDozer(const Coord3D *pos);
 	virtual void queueDozer(void);
 	virtual Bool selectTeamToBuild( void );			///< determine the next team to build
+	/// A team just got all its units. A derived AI may take the units over (they go to the default team) before the team is
+	/// activated; the classic AI never does.
+	virtual void takeOverTeam( Team * ) {}
 	virtual Bool selectTeamToReinforce( Int minPriority );			///< determine the next team to reinforce
 	virtual Bool startTraining( WorkOrder *order, Bool busyOK, AsciiString teamName);	///< find a production building that can handle the order, and start building
 	virtual Bool isAGoodIdeaToBuildTeam( TeamPrototype *proto );		///< return true if team should be built

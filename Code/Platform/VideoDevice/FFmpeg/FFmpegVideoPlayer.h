@@ -66,6 +66,9 @@ class FFmpegVideoStream : public VideoStream
 		UnsignedInt						m_startTimeMS;		///< Wall clock time (GetTickCount) the stream started, for the isFrameReady() gate
 		Bool									m_endOfStream;
 		Bool									m_haveVideoFrame;	///< Is m_videoFrame currently holding a valid decoded frame
+		Bool									m_wrapped;				///< frameNext() has passed the last frame (index went back to 0) at least once
+		Bool									m_cannotRewind;		///< Rewinding to the start failed once; the stream then stays on its last frame
+		Bool									m_audioFailed;		///< The audio track cannot be resampled; its packets are dropped
 
 		FFmpegVideoStream();										///< only FFmpegVideoPlayer can create these
 		virtual ~FFmpegVideoStream() override;
@@ -74,6 +77,7 @@ class FFmpegVideoStream : public VideoStream
 		void	feedAudioFrame( AVFrame *frame );	///< Resamples one decoded audio frame to S16 and submits it to m_audioVoice
 		void	ensureAudioVoice( void );					///< Lazily creates m_audioVoice once the audio stream's format is known
 		void	freePlayedAudioBuffers( void );		///< Frees the PCM buffers that finished playing (all of them if there is no voice)
+		void	rewindToStart( void );						///< Wraps the stream back to frame 0 after the last frame
 
 	public:
 
@@ -85,6 +89,7 @@ class FFmpegVideoStream : public VideoStream
 		virtual Int		frameIndex( void ) override;
 		virtual Int		frameCount( void ) override;
 		virtual void	frameGoto( Int index ) override;
+		virtual Bool	hasPlayedToEnd( void ) override;
 		virtual Int		height( void ) override;
 		virtual Int		width( void ) override;
 };

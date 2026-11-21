@@ -60,6 +60,9 @@
 #define _AI_COMMANDER_PLAYER_H_
 
 #include "GameLogic/AIPlanner.h"
+#include "GameLogic/AIRoles.h"
+#include "GameLogic/AIPosts.h"
+#include "GameLogic/AISquad.h"
 #include "GameLogic/AISkirmishPlayer.h"
 
 #include <vector>
@@ -82,6 +85,7 @@ enum class CommanderRaidPhase : Int
 };
 
 class CommandButton;
+class LocomotorSet;
 class SpecialPowerTemplate;
 
 class AICommanderPlayer : public AISkirmishPlayer
@@ -108,6 +112,8 @@ public:
 	Int getAttackEnemyIndex( void ) const { return m_attackEnemy; }
 	UnsignedInt getAttackPhaseFrame( void ) const { return m_attackPhaseFrame; }
 	Bool isGatherReady( void ) const { return m_gatherReady; }
+	/// The unit is on a mission of the command layer (attack, help, raid, scout) right now; for the loss log.
+	Bool isInMission( ObjectID id ) const { return isOnMission( id ); }
 
 protected:
 	// snapshot methods
@@ -129,8 +135,11 @@ private:
 		UnsignedInt frame;		///< last seen
 		Real value;						///< build cost (combat value for units)
 		Bool structure;
+		AsciiString tmpl;			///< template name, for the planner (units)
+		Int health;						///< health in per mille at the last sighting
 	};
 	void updateMemory( void );
+	void collectRememberedUnits( std::vector<AIPlanObject> *out ) const;
 	void updateScouting( void );
 	Bool isSeenNow( const Coord3D *pos ) const;
 	Bool nextScoutTarget( const Coord3D &from, Coord3D *target ) const;
@@ -160,6 +169,25 @@ private:
 	Bool findAllyEmergency( Int *allyIndex, Coord3D *hotspot, Coord3D *anchor, Real *threat ) const;
 	Real enemyStrengthNear( const Player *victim, const Coord3D *pos, Real radius, Coord3D *centroid ) const;
 	Real ownBaseThreat( void ) const;
+	/// Enemies that threaten the base: armed units within reach of its edge, armed buildings in it.
+	struct BaseThreat
+	{
+		Object *obj;
+		Coord3D pos;
+		Real value;
+	};
+	struct ThreatCluster
+	{
+		Coord3D centre;
+		Real value;
+		std::vector<size_t> members;	///< indices into the threat list
+	};
+	void collectBaseThreats( std::vector<BaseThreat> *out ) const;
+	void clusterThreats( const std::vector<BaseThreat> &threats, std::vector<ThreatCluster> *out ) const;
+	void evadeWorkers( const std::vector<ThreatCluster> &clusters );
+	/// The enemies in the base are an emergency: worth the minimum threat and not beaten by the defenders at home.
+	Bool baseUnderThreat( void );
+	Bool homeDefendersWin( void ) const;
 	Bool isHelperCandidate( Object *obj ) const;
 	Bool isHelper( ObjectID id ) const;
 	Bool isOnMission( ObjectID id ) const;		///< helper or attacker
@@ -181,6 +209,8 @@ private:
 	// Attack mission with pincer
 	void updateAttack( void );
 	Int  collectIdleForce( std::vector<Object *> *chosen, Real budget, Real *chosenValue, Real *sendable ) const;
+	/// Replaces the chosen units by the squad composed for the target (false: not sendable, the missing roles become a want).
+	Bool composeAttackSquad( std::vector<Object *> *chosen, const Coord3D &objective, Bool invited, Real *value );
 	void takeIntoMission( const std::vector<Object *> &units, std::vector<ObjectID> *list, const Coord3D &pos );
 	Bool startGather( void );
 	void continueGather( void );
@@ -200,6 +230,9 @@ private:
 	void updateRaid( void );
 	Bool startRaidProduction( void );
 	void continueRaidAssemble( void );
+	Bool restartRaid( void );
+	Bool startRaidNow( UnsignedInt now );
+	Bool orderMissingRiders( Int missing );
 	void continueRaid( void );
 	void continueRaidReturn( void );
 	void returnRaid( const char *reason );
@@ -232,6 +265,36 @@ private:
 	Int  baseReserve( void ) const;
 	Int  freeMoney( void ) const;
 	Bool growthBuildPending( void ) const;
+
+	// Energy: a power plant before the consumer that would tip the balance
+	Int  energyBalance( void ) const;
+	const ThingTemplate *findPowerPlant( void );
+	Bool energyAllows( const ThingTemplate *t );
+	void updateEnergy( void );
+
+	// Unit mix: roles of the units and the gap to the wanted shares
+	unsigned unitRoles( const ThingTemplate *t ) const;
+	void currentShares( float shares[AIRoles::SHARE_ROLES] ) const;
+	void collectRoleValues( float have[AIRoles::SHARE_ROLES] ) const;
+	void logRoles( const ThingTemplate *t );
+	void logMix( void );
+	void logThreat( void );
+	/// Counts why no attack started (measurement); one line every minute.
+	Bool attackGate( Int reason );
+	void logGate( void );
+
+	// Posts: idle units guard a post (front posts towards the enemies, object posts at outlying economy buildings)
+	void updatePosts( void );
+	Bool isPosted( ObjectID id ) const;
+	void makeWalkable( const LocomotorSet &locomotors, AIPosts::Point *post ) const;
+	Bool isOwnTaskTeam( Team *team ) const;
+	Bool producesArmy( Object *factory ) const;
+	void unpost( ObjectID id );
+	/// Idle or standing guard at its post: free for missions.
+	Bool isAvailable( Object *obj ) const;
+	void logPower( void );
+	virtual Bool allowBaseBuilding( const ThingTemplate *t ) override;
+	virtual void takeOverTeam( Team *team ) override;
 	void updateTechCapture( void );
 	const CommandButton *findCaptureButton( Object *unit, Bool *allowed ) const;
 
@@ -320,6 +383,24 @@ private:
 	UnsignedInt			m_nextEconomyReportFrame;	///< next status report (log)
 	Int							m_economyOrders;					///< economy orders (log)
 	Int							m_economyNeed;						///< build cost of planned, not yet started economy buildings
+	// Energy (measurement and caches only, not part of the game state)
+	const ThingTemplate	*m_powerPlant;					///< power plant the dozers can build, looked up at most every few seconds
+	UnsignedInt			m_powerPlantFrame;				///< frame of that lookup
+	UnsignedInt			m_underpoweredFrames;			///< frames without sufficient power (log)
+	UnsignedInt			m_lastPowerSampleFrame;
+	UnsignedInt			m_nextPowerLogFrame;
+	UnsignedInt			m_nextPowerBlockLogFrame;
+	UnsignedInt			m_nextMixLogFrame;
+	UnsignedInt			m_nextPostFrame;
+	std::vector<std::pair<ObjectID, UnsignedInt>> m_idleSince;	///< units of script teams standing idle at home, since when (not saved)
+	Int							m_scriptLogPass;
+	std::vector<ObjectID> m_posted;						///< units that stand guard at their post
+	UnsignedInt			m_nextThreatLogFrame;
+	UnsignedInt			m_threatCacheFrame;
+	Bool				m_threatCache;
+	UnsignedInt			m_heldFrames;				///< frames a threat below HELD_LOG_THREAT halted the leadership (log)
+	UnsignedInt			m_lastThreatSampleFrame;
+	std::vector<Int>		m_rolesLogged;				///< combat table rows whose roles are in the log
 	ObjectID				m_captureUnit;						///< unit currently capturing a tech building
 	ObjectID				m_captureTarget;					///< the tech building
 	UnsignedInt			m_captureFrame;						///< start of the capture
@@ -334,6 +415,18 @@ private:
 	Int							m_forecastBad;						///< plans in a row that forecast a lost fight on site
 	Real						m_regrowValue;						///< the next attack needs this combat value ...
 	UnsignedInt			m_regrowUntil;						///< ... until this frame
+	UnsignedInt			m_squadWant;							///< AIRoles bits the last squad lacked; the production favours them
+	UnsignedInt			m_squadWantFrame;
+	Int							m_squadFail;							///< gate reason of the last squad that was not sendable
+	Int							m_gateCount[16];						///< checks per reason that no attack started (measurement, not saved)
+	Real						m_gateValue, m_gateNeeded;	///< force value available and wanted at the last check of the force size
+	Int							m_gateUnits, m_gateNeededUnits;
+	UnsignedInt			m_nextGateLogFrame;
+	UnsignedInt			m_phaseFrames[3];						///< frames spent without a mission, gathering, attacking since the last gate line
+	UnsignedInt			m_lastPhaseSample;
+	std::vector<AICombat::FocusAssignment> m_focusPrevious;	///< last focus fire assignment (not saved)
+	UnsignedInt			m_nextSquadLogFrame;
+	std::vector<ObjectID> m_squadHome;				///< damaged and slow units that stay home during this gather (not saved)
 
 	// Fight control
 	UnsignedInt			m_nextMicroFrame;
@@ -350,6 +443,8 @@ private:
 	UnsignedInt			m_raidCooldownFrame;
 	UnsignedInt			m_raidTargetFrame;					///< when the current raid target was chosen
 	Int							m_raidRidersWanted;
+	Int							m_raidRepairHealth;				///< transport health in per mille when the wait began
+	UnsignedInt			m_raidRepairSince;				///< frame the squad started waiting for its repair, 0 = not waiting
 	AsciiString			m_raidTransportName;				///< templates ordered for the squad
 	AsciiString			m_raidRiderName;
 	Int							m_raids;										///< raids started (log)

@@ -598,8 +598,8 @@ UpdateSleepTime SpectreGunshipUpdate::update()
               {
                 Coord3D attackPositionWithRandomOffset;
                 Real offs = data->m_randomOffsetForHowitzer;
-                attackPositionWithRandomOffset.x = m_gattlingTargetPosition.x + GameLogicRandomValue( static_cast<Int>(-offs), static_cast<Int>(offs) );
-                attackPositionWithRandomOffset.y = m_gattlingTargetPosition.y + GameLogicRandomValue( static_cast<Int>(-offs), static_cast<Int>(offs) );
+                attackPositionWithRandomOffset.x = m_gattlingTargetPosition.x + GameLogicRandomValueReal( -offs, offs );
+                attackPositionWithRandomOffset.y = m_gattlingTargetPosition.y + GameLogicRandomValueReal( -offs, offs );
                 attackPositionWithRandomOffset.z = m_gattlingTargetPosition.z;
 	              TheWeaponStore->createAndFireTempWeapon( wt, gunship, &attackPositionWithRandomOffset );
 

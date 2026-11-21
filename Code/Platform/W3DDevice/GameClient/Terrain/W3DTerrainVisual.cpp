@@ -369,6 +369,8 @@ Bool W3DTerrainVisual::load( AsciiString filename )
 	if( m_terrainRenderObject == nullptr )
 		return FALSE;
 
+	// Compile the common vertex shader variants now, while the loading screen is up.
+	RenderDevice::Warm_Shaders();
 
   ChunkInputStream *pStrm = &fileStrm;
 

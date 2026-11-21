@@ -99,7 +99,7 @@ def main():
             "Hoch (2)" if stufe == "q2" else "Niedrig (0)", html.escape(TITEL[szene]), s[0], s[1] / s[0], s[2] / s[0],
             100 * (s[2] / s[1] - 1), we))
         print("%s %-12s ganzes Bild %+.2f %%, Wasser %s" % (stufe, szene, 100 * (s[2] / s[1] - 1), we.replace("→", "->")))
-    seite = SEITE.replace("@BILDER@", json.dumps(bilder)).replace("@LISTE@", json.dumps(eintraege)) \
+    seite = SEITE.replace("@BILDER@", json.dumps(bilder)).replace("@LIST@", json.dumps(eintraege)) \
         .replace("@TITEL@", json.dumps(TITEL, ensure_ascii=False)).replace("@TABELLE@", "\n".join(tab))
     with open(os.path.join(a.out, "wassertextur_vergleich.html"), "w", encoding="utf-8") as f:
         f.write(seite)
@@ -133,7 +133,7 @@ table{border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid var(
 <table>@TABELLE@</table>
 <p>Wasser = Fläche, auf der sich die Bilder unterscheiden (um 6 Pixel erweitert), gewichtet nach Fläche. Ganzes Bild ohne Befehlsleiste.</p>
 </div><script>
-const D=@BILDER@, L=@LISTE@, T=@TITEL@; const $=i=>document.getElementById(i);
+const D=@BILDER@, L=@LIST@, T=@TITEL@; const $=i=>document.getElementById(i);
 let st=L[0][1], sz=L[0][2], bi=L[0][3];
 function knoepfe(id,werte,akt,setz,name){const e=$(id);e.innerHTML="";for(const v of werte){const b=document.createElement("button");b.textContent=name(v);b.setAttribute("aria-pressed",String(v==akt));b.onclick=()=>{setz(v);z();};e.append(b);}}
 function uniq(a){return [...new Set(a)];}

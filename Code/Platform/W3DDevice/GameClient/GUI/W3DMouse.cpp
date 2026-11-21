@@ -396,7 +396,7 @@ static void cursorLogEvent( const char *kind, Int from, Int to, Int mode )
 	if (!cursorLogOpen() || s_cursorLogEvents >= 20000)
 		return;
 	++s_cursorLogEvents;
-	fprintf(s_cursorLog, "%s ms=%u von=%d nach=%d modus=%d thread=%lu\n", kind, static_cast<unsigned>(timeGetTime()), from, to, mode,
+	fprintf(s_cursorLog, "%s ms=%u from=%d to=%d mode=%d thread=%lu\n", kind, static_cast<unsigned>(timeGetTime()), from, to, mode,
 		static_cast<unsigned long>(GetCurrentThreadId()));
 	fflush(s_cursorLog);
 }
@@ -411,7 +411,7 @@ static void cursorLogFrame( Int mode )
 		s_cursorSecondMs = now;
 	if (now - s_cursorSecondMs >= 1000)
 	{
-		fprintf(s_cursorLog, "SEKUNDE ms=%u bilder=%u setCursor=%u wechsel=%u neu_gesetzt=%u animbilder=%u modus=%d\n", static_cast<unsigned>(now),
+		fprintf(s_cursorLog, "SECOND ms=%u frames=%u setCursor=%u changes=%u reset=%u anim_frames=%u mode=%d\n", static_cast<unsigned>(now),
 			s_cursorFrames, s_cursorCalls, s_cursorChanges, s_cursorResets, s_cursorAnimImages, mode);
 		fflush(s_cursorLog);
 		s_cursorSecondMs = now;

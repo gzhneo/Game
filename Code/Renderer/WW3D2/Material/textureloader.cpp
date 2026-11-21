@@ -279,10 +279,10 @@ WW3DTextureHandle Load_Compressed_Texture(
 		dest_format,
 		static_cast<MipCountType>(mips)
 	);
+	if (!d3d_texture) return nullptr;		// the device could not create it (video memory full, device lost)
 
 	for (unsigned level=0;level<mips;++level) {
 		WW3DSurfaceHandle d3d_surface=nullptr;
-		WWASSERT(d3d_texture);
 		Device_ErrorCode(RenderDevice::Get_Texture_Surface_Level(d3d_texture, level/*-reduction_factor*/, &d3d_surface));
 		dds_file.Copy_Level_To_Surface(level,d3d_surface);
 		RenderDevice::Release_Resource(d3d_surface);
@@ -342,8 +342,10 @@ void TextureLoader::Init()
 
 void TextureLoader::Deinit()
 {
-	FastCriticalSectionClass::LockClass lock(_BackgroundCriticalSection);
+	// Stop the load thread before taking the lock: the thread holds the lock while loading, so
+	// waiting for it under the lock would run into the forced termination timeout.
 	_TextureLoadThread.Stop();
+	FastCriticalSectionClass::LockClass lock(_BackgroundCriticalSection);
 
 	// Tasks still queued at shutdown each hold a texture reference (and maybe a half loaded D3D
 	// texture); drain them before the leak report. The load thread is stopped; this runs on the
@@ -522,10 +524,19 @@ WW3DSurfaceHandle TextureLoader::Load_Surface_Immediate(
 	unsigned src_pitch=src_width*src_bpp;
 
 	WW3DSurfaceHandle d3d_surface = RenderDevice::_Create_Device_Surface(width,height,dest_format);
-	WWASSERT(d3d_surface);
+	if (!d3d_surface) {
+		if (converted_surface) delete[] converted_surface;
+		return MissingTexture::_Create_Missing_Surface();
+	}
 	WW3DLockedRect locked_rect;
+	locked_rect.pBits=nullptr;
 	Device_ErrorCode(
 		RenderDevice::Lock_Surface(d3d_surface, &locked_rect, nullptr, 0));
+	if (!locked_rect.pBits) {
+		RenderDevice::Release_Resource(d3d_surface);
+		if (converted_surface) delete[] converted_surface;
+		return MissingTexture::_Create_Missing_Surface();
+	}
 
 	BitmapHandlerClass::Copy_Image(
 		static_cast<unsigned char*>(locked_rect.pBits),
@@ -1078,6 +1089,10 @@ void TextureLoadTaskClass::Apply_Missing_Texture(void)
 	WWASSERT(TextureLoader::Is_Render_Thread());
 	WWASSERT(!D3DTexture);
 
+	// A texture the game builds itself (terrain atlas, text) gets written into, and the missing texture is shared:
+	// it stays without a device texture, and Get_Surface_Level hands writers a surface in main memory.
+	if (Texture && Texture->Is_Procedural()) return;
+
 	D3DTexture = MissingTexture::_Get_Missing_Texture();
 	Apply(true);
 }
@@ -1232,7 +1247,6 @@ bool TextureLoadTaskClass::Begin_Compressed_Load(void)
 
 			if (w == tmp_w && h == tmp_h) 
 			{
-				Reduction	+= i;
 				width			=	w;
 				height		=	h;
 				break;
@@ -1321,6 +1335,7 @@ bool TextureLoadTaskClass::Begin_Compressed_Load(void)
 		static_cast<MipCountType>(mip_level_count),
 		WW3D_POOL_MANAGED
 	);
+	if (!D3DTexture) return false;		// the caller applies the missing texture
 
 	MipLevelCount = mip_level_count;
 
@@ -1422,6 +1437,7 @@ bool TextureLoadTaskClass::Begin_Uncompressed_Load(void)
 		static_cast<MipCountType>(reducedMipCount),
 		WW3D_POOL_MANAGED
 	);
+	if (!D3DTexture) return false;		// the caller applies the missing texture
 
 	return true;
 }

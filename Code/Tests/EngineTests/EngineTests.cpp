@@ -20,6 +20,10 @@
 #include "Engine/GenerationTable.h"
 #include "Engine/JobSystem.h"
 #include "GameLogic/AICombatModel.h"
+#include "GameLogic/AIEconomy.h"
+#include "GameLogic/AIRoles.h"
+#include "GameLogic/AIPosts.h"
+#include "GameLogic/AISquad.h"
 #include "Engine/LogicAccessGuard.h"
 #include "Engine/NetAddress.h"
 #include "Engine/NetAddressBook.h"
@@ -1477,6 +1481,234 @@ static void testCombatModel()
 // Influence map basics, then a staged picture: five own tanks; the enemy has an undefended
 // building far away and a closer one guarded by turrets and tanks. The plan must pick the
 // undefended one, and forecast a lost fight when ten enemy tanks stand next to the force.
+// ------------------------------------------------------------------ AIEconomy
+static void testRoles()
+{
+	// Profiles: 0 infantry target, 1 vehicle target, 2 building target, 3 air target, then attackers 4..8.
+	AICombat::Table table;
+	table.resize( 9, 0 );
+	auto set = [&]( int p, float hp, float cost, bool air, bool structure, int kind, float range )
+	{
+		AICombat::Profile &pr = table.profiles[static_cast<size_t>( p )];
+		pr.maxHealth = hp; pr.cost = cost; pr.air = air; pr.structure = structure; pr.kind = kind; pr.range = range;
+	};
+	set( 0, 100, 100, false, false, AICombat::KIND_INFANTRY, 100 );
+	set( 1, 400, 300, false, false, AICombat::KIND_VEHICLE, 150 );
+	set( 2, 1000, 500, false, true, 0, 200 );
+	set( 3, 200, 400, true, false, 0, 100 );
+	set( 4, 100, 150, false, false, AICombat::KIND_INFANTRY, 100 );	// rifleman
+	set( 5, 150, 250, false, false, AICombat::KIND_INFANTRY, 120 );	// rocket soldier
+	set( 6, 200, 300, false, false, AICombat::KIND_VEHICLE, 150 );	// anti-air vehicle
+	set( 7, 150, 500, false, false, AICombat::KIND_VEHICLE, 400 );	// artillery
+	set( 8, 900, 300, false, false, AICombat::KIND_VEHICLE, 150 );	// tank
+	// one armor slot only: the same damage against every ground target
+	table.dpsRef( 4, -1, false ) = 10; table.dpsRef( 4, -1, true ) = 0;
+	table.dpsRef( 5, -1, false ) = 30; table.dpsRef( 5, -1, true ) = 20;
+	table.dpsRef( 6, -1, false ) = 0; table.dpsRef( 6, -1, true ) = 60;
+	table.dpsRef( 7, -1, false ) = 40;
+	table.dpsRef( 8, -1, false ) = 35;
+	const AIRoles::Context ctx = AIRoles::makeContext( table );
+	CHECK( ctx.defenceRange == 200.0f );
+	CHECK( AIRoles::classifyRole( table, ctx, 6, false ) == AIRoles::ROLE_ANTI_AIR );
+	CHECK( ( AIRoles::classifyRole( table, ctx, 7, false ) & AIRoles::ROLE_SIEGE ) != 0 );
+	CHECK( ( AIRoles::classifyRole( table, ctx, 8, false ) & AIRoles::ROLE_FRONT ) != 0 );
+	CHECK( ( AIRoles::classifyRole( table, ctx, 4, false ) & AIRoles::ROLE_SIEGE ) == 0 );
+	CHECK( AIRoles::classifyRole( table, ctx, 0, true ) == AIRoles::ROLE_SUPPORT );
+	CHECK( AIRoles::classifyRole( table, ctx, -1, false ) == 0 );
+
+	// Shares: sum one; air and infantry shift with the enemy.
+	float base[AIRoles::SHARE_ROLES], air[AIRoles::SHARE_ROLES], inf[AIRoles::SHARE_ROLES];
+	AIRoles::EnemyMix none;
+	AIRoles::targetShares( none, base );
+	AIRoles::EnemyMix airy;
+	airy.known = true; airy.airShare = 0.35f; airy.infantryShare = 0.2f; airy.vehicleShare = 0.45f; airy.fieldValue = 1000;
+	AIRoles::targetShares( airy, air );
+	AIRoles::EnemyMix foot;
+	foot.known = true; foot.infantryShare = 0.9f; foot.vehicleShare = 0.1f; foot.fieldValue = 1000;
+	AIRoles::targetShares( foot, inf );
+	float sumBase = 0, sumAir = 0, sumInf = 0;
+	for (int r = 0; r < AIRoles::SHARE_ROLES; ++r) { sumBase += base[r]; sumAir += air[r]; sumInf += inf[r]; }
+	CHECK( std::fabs( sumBase - 1.0f ) < 1.0e-5f && std::fabs( sumAir - 1.0f ) < 1.0e-5f && std::fabs( sumInf - 1.0f ) < 1.0e-5f );
+	CHECK( air[3] > base[3] );
+	CHECK( inf[2] > base[2] && inf[1] < base[1] );
+
+	// chooseNextUnit: the gap decides, the cap damping and the counter score weigh in, same input same answer.
+	std::vector<AIRoles::Candidate> c( 3 );
+	c[0].roles = AIRoles::ROLE_FRONT; c[0].cost = 300;
+	c[1].roles = AIRoles::ROLE_ANTI_INFANTRY; c[1].cost = 150;
+	c[2].roles = AIRoles::ROLE_ANTI_AIR; c[2].cost = 250;
+	float have[AIRoles::SHARE_ROLES] = { 1000, 0, 0, 0, 0 };	// only front so far
+	CHECK( AIRoles::chooseNextUnit( have, c, base ) != 0 );
+	CHECK( AIRoles::chooseNextUnit( have, c, base ) == AIRoles::chooseNextUnit( have, c, base ) );
+	c[1].damping = 0.1f;
+	CHECK( AIRoles::chooseNextUnit( have, c, base ) == 2 );
+	c[1].counter = 5.0f; c[2].counter = 1.0f; c[0].counter = 1.0f; c[1].damping = 1.0f;
+	CHECK( AIRoles::chooseNextUnit( have, c, base ) == 1 );
+	std::vector<AIRoles::Candidate> support( 1 );
+	support[0].roles = AIRoles::ROLE_SUPPORT;
+	CHECK( AIRoles::chooseNextUnit( have, support, base ) == -1 );
+	CHECK( AIRoles::chooseNextUnit( have, std::vector<AIRoles::Candidate>(), base ) == -1 );
+}
+
+static void testPosts()
+{
+	AIPosts::Point base; base.x = 1000; base.y = 1000;
+	std::vector<AIPosts::Point> dirs( 3 ), objects( 1 );
+	dirs[0].x = 10; dirs[0].y = 0;
+	dirs[1].x = 20; dirs[1].y = 1;		// almost the same direction: dropped
+	dirs[2].x = 0; dirs[2].y = -5;
+	objects[0].x = 1800; objects[0].y = 1000;
+	std::vector<AIPosts::Post> posts;
+	AIPosts::choosePosts( base, 400.0f, dirs, objects, 3, &posts );
+	CHECK( posts.size() == 3 );
+	CHECK( std::fabs( posts[0].pos.x - 1360.0f ) < 0.01f && std::fabs( posts[0].pos.y - 1000.0f ) < 0.01f );
+	CHECK( std::fabs( posts[1].pos.x - 1000.0f ) < 0.01f && std::fabs( posts[1].pos.y - 640.0f ) < 0.01f );
+	CHECK( posts[2].kind == AIPosts::POST_OBJECT );
+	AIPosts::choosePosts( base, 400.0f, dirs, objects, 1, &posts );
+	CHECK( posts.size() == 2 );
+	std::vector<AIPosts::Point> none( 1 );	// zero-length direction gives no post
+	AIPosts::choosePosts( base, 400.0f, none, std::vector<AIPosts::Point>(), 3, &posts );
+	CHECK( posts.empty() );
+
+	// Assignment: anti-air to the object post, the rest spread over the two front posts.
+	AIPosts::choosePosts( base, 400.0f, dirs, objects, 3, &posts );
+	std::vector<AIPosts::Unit> units( 5 );
+	for (size_t i = 0; i < units.size(); ++i)
+	{
+		units[i].pos = base;
+		units[i].value = 100.0f;
+		units[i].roles = AIRoles::ROLE_FRONT;
+	}
+	units[4].roles = AIRoles::ROLE_ANTI_AIR;
+	std::vector<int> assigned;
+	AIPosts::assignPosts( units, posts, 400.0f, &assigned );
+	CHECK( assigned[4] == 2 );
+	int onFirst = 0, onSecond = 0;
+	for (int i = 0; i < 4; ++i)
+	{
+		CHECK( assigned[static_cast<size_t>( i )] == 0 || assigned[static_cast<size_t>( i )] == 1 );
+		onFirst += assigned[static_cast<size_t>( i )] == 0;
+		onSecond += assigned[static_cast<size_t>( i )] == 1;
+	}
+	CHECK( onFirst == 2 && onSecond == 2 );
+	std::vector<int> again;
+	AIPosts::assignPosts( units, posts, 400.0f, &again );
+	CHECK( again == assigned );
+	// A unit standing at a post prefers it.
+	units[0].pos = posts[1].pos;
+	AIPosts::assignPosts( units, posts, 400.0f, &assigned );
+	CHECK( assigned[0] == 1 );
+	// Without front posts everybody takes the object post, without posts nobody gets one.
+	std::vector<AIPosts::Post> onlyObject( posts.begin() + 2, posts.end() );
+	AIPosts::assignPosts( units, onlyObject, 400.0f, &assigned );
+	CHECK( assigned[0] == 0 && assigned[4] == 0 );
+	AIPosts::assignPosts( units, std::vector<AIPosts::Post>(), 400.0f, &assigned );
+	CHECK( assigned[0] == -1 );
+}
+
+static void testSquad()
+{
+	using AIRoles::ROLE_FRONT; using AIRoles::ROLE_ANTI_AIR; using AIRoles::ROLE_SIEGE; using AIRoles::ROLE_ANTI_VEHICLE;
+	// ratio: sum of the effect of the picked units against 10 (strength ratio 1.3 = 13)
+	std::vector<AISquad::Unit> units( 7 );
+	for (size_t i = 0; i < units.size(); ++i) { units[i].value = 100.0f; units[i].speed = 10.0f; units[i].effect = static_cast<float>( 10 - static_cast<int>( i ) ); units[i].roles = ROLE_FRONT | ROLE_ANTI_VEHICLE; }
+	units[4].roles = ROLE_ANTI_AIR; units[4].effect = 20.0f;
+	units[5].roles = ROLE_SIEGE; units[5].effect = 15.0f;
+	units[6].health = 0.3f;		// stays home
+	units[3].speed = 3.0f;		// second wave
+	std::function<float( const std::vector<int> & )> ratio = [&]( const std::vector<int> &picked )
+	{
+		float sum = 0.0f;
+		for (int i : picked)
+			sum += units[static_cast<size_t>( i )].effect;
+		return sum / 10.0f;
+	};
+	AISquad::Request req;
+	AISquad::Result r = AISquad::composeSquad( units, req, ratio );
+	CHECK( r.ok );
+	CHECK( r.ratio >= 1.3f );
+	CHECK( std::find( r.picked.begin(), r.picked.end(), 6 ) == r.picked.end() );		// damaged: not in the squad
+	CHECK( std::find( r.picked.begin(), r.picked.end(), 4 ) == r.picked.end() );		// anti-air only wanted with air cover
+	CHECK( r.secondWave.size() == 1 && r.secondWave[0] == 3 );
+	// With air cover and covered target both roles join.
+	req.wantAirCover = true; req.targetCovered = true;
+	r = AISquad::composeSquad( units, req, ratio );
+	CHECK( r.ok );
+	CHECK( std::find( r.picked.begin(), r.picked.end(), 4 ) != r.picked.end() );
+	CHECK( std::find( r.picked.begin(), r.picked.end(), 5 ) != r.picked.end() );
+	// Without anti-air and siege units in the pool the squad still goes; the missing roles are reported.
+	std::vector<AISquad::Unit> plain;
+	for (size_t i = 0; i < 4; ++i)
+	{
+		AISquad::Unit u;
+		u.roles = ROLE_FRONT | ROLE_ANTI_VEHICLE; u.value = 100.0f; u.speed = 10.0f; u.effect = 10.0f;
+		plain.push_back( u );
+	}
+	AISquad::Request both; both.wantAirCover = true; both.targetCovered = true;
+	std::function<float( const std::vector<int> & )> enough = []( const std::vector<int> & ) { return 5.0f; };
+	const AISquad::Result soft = AISquad::composeSquad( plain, both, enough );
+	CHECK( soft.ok );
+	CHECK( ( soft.missing & ROLE_ANTI_AIR ) != 0 && ( soft.missing & ROLE_SIEGE ) != 0 && ( soft.missing & ROLE_FRONT ) == 0 );
+	CHECK( soft.picked.size() == 1 );		// the forecast is reached, nothing more to gain
+	// Same input, same answer.
+	AISquad::Result again = AISquad::composeSquad( units, req, ratio );
+	CHECK( again.picked == r.picked && again.ratio == r.ratio );
+	// Too weak: nothing reaches the minimum, the missing role is wanted.
+	std::function<float( const std::vector<int> & )> weak = []( const std::vector<int> & ) { return 0.5f; };
+	r = AISquad::composeSquad( units, AISquad::Request(), weak );
+	CHECK( !r.ok && ( r.missing & ROLE_FRONT ) != 0 );
+	// Only anti-air and siege units: invalid.
+	std::vector<AISquad::Unit> odd( 2 );
+	odd[0].roles = ROLE_ANTI_AIR; odd[0].value = 100.0f; odd[1].roles = ROLE_SIEGE; odd[1].value = 100.0f;
+	r = AISquad::composeSquad( odd, AISquad::Request(), []( const std::vector<int> & ) { return 5.0f; } );
+	CHECK( !r.ok );
+	// No units: nothing.
+	r = AISquad::composeSquad( std::vector<AISquad::Unit>(), AISquad::Request(), ratio );
+	CHECK( !r.ok && r.picked.empty() );
+	// The cap on the number of units is kept.
+	req = AISquad::Request(); req.maxUnits = 2; req.goalRatio = 100.0f; req.minRatio = 0.0f;
+	r = AISquad::composeSquad( units, req, ratio );
+	CHECK( r.picked.size() == 2 );
+}
+
+static void testMemoryWeight()
+{
+	const unsigned hl = 90, mx = 180;
+	CHECK( AIEconomy::memoryWeight( 0, hl, mx ) == 1000 );
+	CHECK( AIEconomy::memoryWeight( 90, hl, mx ) == 500 );
+	CHECK( AIEconomy::memoryWeight( 45, hl, mx ) == 750 );
+	CHECK( AIEconomy::memoryWeight( 179, hl, mx ) > 0 );
+	CHECK( AIEconomy::memoryWeight( 180, hl, mx ) == 0 );
+	CHECK( AIEconomy::memoryWeight( 10, 0, mx ) == 0 );
+	int last = 1001;
+	for (unsigned a = 0; a < mx; ++a)
+	{
+		const int w = AIEconomy::memoryWeight( a, hl, mx );
+		CHECK_SILENT( w <= last );
+		last = w;
+	}
+}
+
+static void testEnergyRules()
+{
+	std::printf("EngineTests: AIEconomy\n");
+	const int none[1] = { 0 };
+	CHECK(AIEconomy::energyAfter(10, 4, none, 0) == 6);
+	const int mixed[3] = { -3, -2, 5 };
+	CHECK(AIEconomy::energyAfter(10, 4, mixed, 3) == 6);			// -3 - 2 + 5 cancel
+	const int consumers[2] = { -4, -4 };
+	CHECK(AIEconomy::energyAfter(5, 2, consumers, 2) == -5);
+	CHECK(AIEconomy::powerPlantsNeeded(0, 3, 5) == 1);
+	CHECK(AIEconomy::powerPlantsNeeded(-9, 3, 5) == 3);			// 12 missing, 5 each
+	CHECK(AIEconomy::powerPlantsNeeded(3, 3, 5) == 0);
+	CHECK(AIEconomy::powerPlantsNeeded(8, 3, 5) == 0);
+	CHECK(AIEconomy::powerPlantsNeeded(-9, 3, 0) == 0);			// a plant without output cannot help
+	CHECK(AIEconomy::energyAllows(6, -6));							// exactly even
+	CHECK(!AIEconomy::energyAllows(5, -6));
+	CHECK(AIEconomy::energyAllows(-20, 0));							// no consumer: always
+	CHECK(AIEconomy::energyAllows(-20, 5));							// a producer: always
+}
+
 static void testAttackPlan()
 {
 	std::printf("Attack planning of the new AI\n");
@@ -1650,7 +1882,7 @@ static void testFightControl()
 	std::vector<AICombat::FocusAssignment> a = AICombat::assignFocusFire(t, own, enemies, 100.0f, 4.0f);
 	CHECK(a.size() == 6);
 	// Tank 52 needs 100/4 = 25 damage per second: one shooter (40) is enough.
-	CHECK(a[0].shooter == 1 && a[0].target == 52);
+	CHECK(a[0].shooter == 6 && a[0].target == 52);		// the nearest shooter takes it
 	// Tank 51 needs 100: three shooters (120); the remaining two take the truck.
 	int on51 = 0, on50 = 0, on53 = 0;
 	for (const AICombat::FocusAssignment &x : a)
@@ -1661,6 +1893,26 @@ static void testFightControl()
 	}
 	CHECK(on51 == 3 && on50 == 2 && on53 == 0);
 	CHECK(AICombat::assignFocusFire(t, own, std::vector<AICombat::Fighter>()).empty());
+	// A shooter keeps its earlier target (51) although 52 ranks higher, unless that one ranks more than 1.3 times as high.
+	std::vector<AICombat::FocusAssignment> prev( 1 );
+	prev[0].shooter = 6; prev[0].target = 51;
+	std::vector<AICombat::FocusAssignment> sticky = AICombat::assignFocusFire(t, own, enemies, 100.0f, 4.0f, &prev, 100.0f);
+	bool keeps = false;
+	for (const AICombat::FocusAssignment &x : sticky)
+		keeps = keeps || (x.shooter == 6 && x.target == 51);
+	CHECK(keeps);
+	std::vector<AICombat::FocusAssignment> moved = AICombat::assignFocusFire(t, own, enemies, 100.0f, 4.0f, &prev, 1.3f);
+	keeps = false;
+	for (const AICombat::FocusAssignment &x : moved)
+		keeps = keeps || (x.shooter == 6 && x.target == 51);
+	CHECK(!keeps);		// 52 ranks far more than 1.3 times as high: the shooter switches
+	CHECK(sticky.size() == 6 && moved.size() == 6);
+	// A target that is gone or out of reach is dropped from the earlier assignment.
+	prev[0].target = 53;
+	std::vector<AICombat::FocusAssignment> dropped = AICombat::assignFocusFire(t, own, enemies, 100.0f, 4.0f, &prev, 100.0f);
+	CHECK(dropped.size() == 6);
+	for (const AICombat::FocusAssignment &x : dropped)
+		CHECK(x.target != 53);
 
 	// Artillery (range 400) steps back from a tank (range 150) standing 140 away; not from one 300 away.
 	float x = 0.0f, y = 0.0f;
@@ -1672,6 +1924,10 @@ static void testFightControl()
 	CHECK(!AICombat::kiteStep(t, arty, distant, &x, &y));
 	// A tank does not run from a tank (same range).
 	CHECK(!AICombat::kiteStep(t, own[0], close, &x, &y));
+	// A unit that must stop to fire does not step back.
+	AICombat::Fighter fixedArty = arty;
+	fixedArty.fireOnMove = false;
+	CHECK(!AICombat::kiteStep(t, fixedArty, close, &x, &y));
 	// Speeds known: slow artillery keeps firing at a clearly faster tank; at a slower one it steps back.
 	AICombat::Fighter slowArty = arty;
 	slowArty.speed = 20.0f;
@@ -1928,10 +2184,10 @@ static void testTexturePackage()
 	TexturePackage pkg;
 	CHECK(!pkg.active());
 	CHECK(pkg.addManifest("no manifest", 11) == -1);
-	CHECK(pkg.addManifest("TEXTURPAKET 2 UHD\n", 18) == -1);
+	CHECK(pkg.addManifest("TEXTUREPACK 2 UHD\n", 18) == -1);
 	CHECK(!pkg.active());
 	const char manifest[] =
-		"\r\nTEXTURPAKET 1 UHD\r\n"
+		"\r\nTEXTUREPACK 1 UHD\r\n"
 		"; comment\r\n"
 		"art\\textures\\abc.dds 256 128\r\n"
 		"art\\terrain\\grass.dds 64 64\n"
@@ -1951,7 +2207,7 @@ static void testTexturePackage()
 	CHECK(pkg.logicalSize("Gas Can.tga", w, h) && w == 64 && h == 32);
 
 	// a second archive: known entries keep their first size, the highest tier is the lowest named
-	const char second[] = "TEXTURPAKET 1 HD\nart\\textures\\abc.dds 512 512\nart\\textures\\neu.dds 32 32\n";
+	const char second[] = "TEXTUREPACK 1 HD\nart\\textures\\abc.dds 512 512\nart\\textures\\neu.dds 32 32\n";
 	CHECK(pkg.addManifest(second, sizeof(second) - 1, "ProjectData\\Inhalt\\Frei\\") == 1);
 	CHECK(pkg.logicalSize("abc", w, h) && w == 256 && h == 128);
 	CHECK(pkg.highestTier() == TEXTURE_TIER_HD);
@@ -1963,6 +2219,13 @@ static void testTexturePackage()
 	CHECK(!pkg.provides("Mod\\", "abc.dds"));
 	CHECK(pkg.namedBy("Texturstufen\\Paket\\TexturesPaket.big") == 3 && pkg.namedBy("ProjectData\\Inhalt\\Frei\\") == 2);
 	CHECK(pkg.namedBy("Mod\\") == -1);
+
+	// packages built by older tool versions carry the keyword TEXTURPAKET
+	{
+		TexturePackage older;
+		const char text[] = "TEXTURPAKET 1 SD\nart\\textures\\alt.dds 8 8\n";
+		CHECK(older.addManifest(text, sizeof(text) - 1) == 1 && older.active());
+	}
 
 	pkg.setTier(TEXTURE_TIER_SD);
 	CHECK(pkg.mipOffset("abc.tga", 1024, 512, 11) == 2);
@@ -2455,6 +2718,14 @@ static void testSettingsValues()
 	// no ranges where the old reader has none
 	CHECK(normalizeValue(*findDefinition("Display.Gamma"), "140", out, &clamped) && out == "140" && !clamped);
 	CHECK(normalizeValue(*findDefinition("Detail.MaxParticleCount"), "200000", out, &clamped) && out == "200000" && !clamped);
+	// values that size memory, buffers or loops are limited to tested ranges
+	CHECK(normalizeValue(*findDefinition("Detail.MaxParticleCount"), "1000000000", out, &clamped) && out == "1000000" && clamped);
+	CHECK(normalizeValue(*findDefinition("Display.RenderFPSLimit"), "99999999", out, &clamped) && out == "1000" && clamped);
+	CHECK(normalizeValue(*findDefinition("System.WorkerThreads"), "100000", out, &clamped) && out == "64" && clamped);
+	CHECK(normalizeValue(*findDefinition("System.WorkerThreads"), "-7", out, &clamped) && out == "-1" && clamped);
+	CHECK(normalizeValue(*findDefinition("Detail.TextureReduction"), "-50", out, &clamped) && out == "-1" && clamped);
+	CHECK(normalizeValue(*findDefinition("Audio.SFXVolume"), "5000", out, &clamped) && out == "100" && clamped);
+	CHECK(normalizeValue(*findDefinition("Display.RenderScale"), "9999", out, &clamped) && out == "200" && clamped);
 	CHECK(normalizeValue(*findDefinition("Audio.MusicVolume"), "70.5", out) && out == "70.5");
 	const Definition &vsync = *findDefinition("Display.VSync");
 	CHECK(normalizeValue(vsync, "TRUE", out) && out == "yes");
@@ -2664,7 +2935,7 @@ static void testSettingsImport()
 	CHECK(store.getInt("Display.Gamma") == 70);
 	CHECK(store.text("Display.Resolution") == "1920 1080");
 	CHECK(store.text("Detail.StaticGameLOD") == "VeryHigh");
-	CHECK(store.getBool("Detail.UseShadowVolumes"));
+	CHECK(store.fileValue("Detail.UseShadowVolumes") == nullptr);	// shadow volumes are gone
 	CHECK(store.getInt("Controls.ScrollFactor") == 100);
 	CHECK(store.text("General.Language") == "german");
 	CHECK(!store.getBool("Replays.SaveCamera"));
@@ -2684,6 +2955,7 @@ static void testSettingsImport()
 			[part](const std::string &line) { return line.find(part) != std::string::npos; });
 	};
 	CHECK(has("Options.ini TextureFilter: no reader any more"));
+	CHECK(has("Options.ini UseShadowVolumes: no reader any more"));
 	CHECK(has("Options.ini SomethingElse: unknown"));
 	CHECK(has("ScrollFactor -> Settings.ini Controls.ScrollFactor = 100 (out of range, limited)"));
 	CHECK(!has("Section"));
@@ -3795,7 +4067,7 @@ static void testModCatalog()
 	CHECK(restartCommandLine({L"C:\\Games\\GZHNeoZH.exe", L"-win", L"-mod", L"Mods\\a.big", L"-xres", L"800", L"-MOD", L"b"})
 		== L"C:\\Games\\GZHNeoZH.exe -win -xres 800");
 	CHECK(restartCommandLine({L"C:\\Program Files\\Game\\GZHNeoZH.exe", L"-win"}) == L"\"C:\\Program Files\\Game\\GZHNeoZH.exe\" -win");
-	CHECK(restartCommandLine({L"x.exe", L"-benutzerdaten", L"C:\\My Data\\"}) == L"x.exe -benutzerdaten \"C:\\My Data\\\\\"");
+	CHECK(restartCommandLine({L"x.exe", L"-userData", L"C:\\My Data\\"}) == L"x.exe -userData \"C:\\My Data\\\\\"");
 	CHECK(restartCommandLine({L"x.exe", L"a\"b", L""}) == L"x.exe \"a\\\"b\" \"\"");
 	CHECK(restartCommandLine({L"x.exe", L"-mod"}) == L"x.exe");
 
@@ -3906,9 +4178,9 @@ static void testVfsModRanks()
 	// Texture package of a mod: above the mod's own loose files and archives from HD on (the tier only sets the
 	// mip offset), each mod as a block; a package archive with anything but textures and its manifest is not used.
 	auto packageA = std::make_shared<const std::vector<unsigned char>>(makeBigWithData({
-		{"texturpaket.txt", "TEXTURPAKET 1 UHD"}, {"Art\\Textures\\t.dds", "mod1 paket"}}));
+		{"texturpaket.txt", "TEXTUREPACK 1 UHD"}, {"Art\\Textures\\t.dds", "mod1 paket"}}));
 	auto packageB = std::make_shared<const std::vector<unsigned char>>(makeBigWithData({
-		{"texturpaket.txt", "TEXTURPAKET 1 UHD"}, {"Art\\Textures\\u.dds", "mod1 paket b"}, {"Art\\Textures\\t.dds", "mod1 paket b"}}));
+		{"texturpaket.txt", "TEXTUREPACK 1 UHD"}, {"Art\\Textures\\u.dds", "mod1 paket b"}, {"Art\\Textures\\t.dds", "mod1 paket b"}}));
 	auto packageBad = std::make_shared<const std::vector<unsigned char>>(makeBigWithData({
 		{"Art\\Textures\\v.dds", "bad"}, {"Data\\INI\\x.ini", "bad"}}));
 	auto mod2 = std::make_shared<const std::vector<unsigned char>>(makeBigWithData({
@@ -3949,7 +4221,7 @@ static void testVfsModRanks()
 		CHECK(from("art/textures/w.dds") == "mod2");
 		CHECK(from("art/textures/u.dds") == (tier >= 1 ? "mod1 paket b" : "base"));
 		CHECK(from("art/textures/v.dds") == "base");
-		CHECK(from("texturpaket.txt") == (tier >= 1 ? "TEXTURPAKET 1 UHD" : "-"));
+		CHECK(from("texturpaket.txt") == (tier >= 1 ? "TEXTUREPACK 1 UHD" : "-"));
 		CHECK(rejected.size() == (tier >= 1 ? 1u : 0u));
 	}
 }
@@ -6123,6 +6395,11 @@ int main(int argc, char **argv)
 	testAsyncTask();
 	testCombatModel();
 	testAttackPlan();
+	testEnergyRules();
+	testMemoryWeight();
+	testRoles();
+	testPosts();
+	testSquad();
 	testFightControl();
 	testLogicAccessGuard();
 	testSimThread();

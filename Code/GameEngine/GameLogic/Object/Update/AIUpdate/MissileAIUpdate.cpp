@@ -812,8 +812,8 @@ void MissileAIUpdate::projectileNowJammed()
 		targetPosition = *getGoalPosition();
 
 	Real scatter = data->m_distanceScatterWhenJammed;
-	targetPosition.x += GameLogicRandomValue(static_cast<Int>(-scatter), static_cast<Int>(scatter));
-	targetPosition.y += GameLogicRandomValue(static_cast<Int>(-scatter), static_cast<Int>(scatter));
+	targetPosition.x += GameLogicRandomValueReal(-scatter, scatter);
+	targetPosition.y += GameLogicRandomValueReal(-scatter, scatter);
 	targetPosition.z = TheTerrainLogic->getLayerHeight(	targetPosition.x, 
 																											targetPosition.y, 
 																											TheTerrainLogic->getHighestLayerForDestination(&targetPosition) );

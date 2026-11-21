@@ -131,16 +131,16 @@ LAN-Lobby, die jeder Rechner im Netz schicken kann, und die Pakete der Mitspiele
 
 ## Funde
 
-INI: R-319 (`LocomotorStore::reset`), R-330 (Tabellen ohne Endeintrag), R-331 (unbekannter Modulname,
-Felder in Modulen ohne Daten), R-332 (Parserfehler beendete das Spiel, jetzt Abbruch des Kartenstarts);
-offen R-333 (Waffen aus `map.ini` bleiben). Karten: R-334 (Chunk-Leser lasen über das Chunk-Ende,
-Chunk-Größen und Skript-Parameter ungeprüft), R-335 (`normalizeAngle` hing bei unendlichem Winkel),
-R-336 (vergiftete `MapCache.ini` beendete das Spiel bei jedem Start, Überläufe in `QuotedPrintable`);
-R-337 (Kartenliste fand die `map.str` von Nutzerkarten nicht). Replays: R-338 (`format` warf bei
-langem Text). Spielstände: R-350 (eingebettete Karte unter fremdem Pfad geschrieben, negative
-Blockgröße ließ Lade-Menü und Laden endlos kreisen, Slotwerte ungeprüft). LAN-Lobby: R-354 (fremde
-Spielankündigung löschte das laufende Spiel, Absturz). Netzspiel: R-355 (jeder konnte jeden aus dem Spiel
-werfen und fremde Einheiten zerstören lassen). Nicht erreicht: `Network` selbst (Vorlauf, Zerstören eines Spielers). W3D-Modelle und DDS (2026-10-06): R-590
-(Animationskanäle), R-591 (komprimierte Animation, doppeltes `delete`), R-592 (HLOD), R-593 (DDS-Leser), R-594
-(Netz-Lader), R-595 (Hierarchie, Knochenindex), R-596 (AABB-Baum), R-597 (Namensfelder der übrigen Prototypen),
-R-598 (Chunk-Länge gegen die Dateigröße), R-599 (leeres Netz), aus den Nachläufen R-570 bis R-581.
+INI: `LocomotorStore::reset`, Tabellen ohne Endeintrag, unbekannter Modulname,
+Felder in Modulen ohne Daten, Parserfehler beendete das Spiel, jetzt Abbruch des Kartenstarts;
+offen: Waffen aus `map.ini` bleiben. Karten: Chunk-Leser lasen über das Chunk-Ende,
+Chunk-Größen und Skript-Parameter ungeprüft, `normalizeAngle` hing bei unendlichem Winkel,
+vergiftete `MapCache.ini` beendete das Spiel bei jedem Start, Überläufe in `QuotedPrintable`;
+Kartenliste fand die `map.str` von Nutzerkarten nicht. Replays: `format` warf bei
+langem Text. Spielstände: eingebettete Karte unter fremdem Pfad geschrieben, negative
+Blockgröße ließ Lade-Menü und Laden endlos kreisen, Slotwerte ungeprüft. LAN-Lobby: fremde
+Spielankündigung löschte das laufende Spiel, Absturz. Netzspiel: jeder konnte jeden aus dem Spiel
+werfen und fremde Einheiten zerstören lassen. Nicht erreicht: `Network` selbst (Vorlauf, Zerstören eines Spielers). W3D-Modelle und DDS (2026-10-06):
+Animationskanäle, komprimierte Animation, doppeltes `delete`, HLOD, DDS-Leser,
+Netz-Lader, Hierarchie, Knochenindex, AABB-Baum, Namensfelder der übrigen Prototypen,
+Chunk-Länge gegen die Dateigröße, leeres Netz, dazu Funde aus den Nachläufen.

@@ -2,58 +2,55 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Render-Tests fuer die DX11-Portierung.
+"""Render tests for the Direct3D 11 backend.
 
-Startet das Spiel mit festem Zeitschritt, laesst es an bestimmten Client-Frames Backbuffer-
-Screenshots schreiben und beendet es danach selbst. Die Bilder lassen sich mit einer Referenz
-vergleichen (compare_shots.py). Ausserdem misst ein Baseline-Lauf die Frame-Zeiten ohne festen
-Zeitschritt.
+Starts the game with a fixed time step, has it write back-buffer screenshots at given client frames and lets it
+quit by itself. The pictures can be compared with a reference (compare_shots.py). A baseline run also measures
+the frame times without the fixed time step.
 
-Befehle:
+Commands:
 
-  run       Szene einmal aufnehmen: Screenshots, Runner-Protokoll (run.log) und Debug-Log landen in
-            --out. Mit --reference wird danach gegen einen Referenzordner verglichen.
-  twice     Szene zweimal aufnehmen (--out/a, --out/b) und beide Laeufe vergleichen. Zeigt, wie
-            reproduzierbar eine Szene ist; daraus werden die Toleranzen festgelegt.
-  baseline  Szene ohne festen Zeitschritt und ohne Screenshots laufen lassen und die Frame-Zeiten
-            (FRAMES-Zeile, frames.csv) festhalten -- Vergleichswert D3D9 gegen D3D11 (P-4.3).
+  run       Record a scene once: screenshots, runner log (run.log) and debug log end up in --out. With
+            --reference the result is compared with a reference folder afterwards.
+  twice     Record a scene twice (--out/a, --out/b) and compare the two runs. Shows how reproducible a scene
+            is; the tolerances are derived from it.
+  baseline  Run a scene without the fixed time step and without screenshots and record the frame times
+            (FRAMES line, frames.csv).
 
-Szenen (--scene):
-  shellmap  Startmenue mit Shell-Map (echte Spielengine; wichtigster Ersttest)
-  menu      Hauptmenue ohne Shell-Map (nur 2D)
-  skirmish  Skirmish ohne Menue: --map, --ai, --seed (E-0.2)
-  replay    Replay abspielen: --replay <Datei> (passend zur Architektur der Exe)
-  mission   Karte direkt starten (-file, nur Debug-Builds): --map "Maps\\md_usa01.map" -- Kampagnen-
-            missionen samt Zwischensequenz
+Scenes (--scene):
+  shellmap  Start menu with shell map (the real game engine; the most important first test)
+  menu      Main menu without shell map (2D only)
+  skirmish  Skirmish without menu: --map, --ai, --seed
+  replay    Play a replay: --replay <file> (matching the architecture of the exe)
+  mission   Start a map directly (-file, debug builds only): --map "Maps\\md_usa01.map" -- campaign
+            missions including the cutscene
 
-Kamerafahrt: --path <Datei> faehrt die Kamera nach der Datei
-(-cameraPath) und nimmt alle --every Logik-Frames ein Bild auf, solange die Fahrt laeuft
-(-shotEvery). --frames entfaellt dann; die erwarteten Bilder ergeben sich aus der Datei.
+Camera path: --path <file> moves the camera along the file (-cameraPath) and takes a picture every --every
+logic frames while the path runs (-shotEvery). --frames does not apply then; the expected pictures follow from
+the file.
 
-Beispiele:
+Examples:
   python tools/render/run_render_test.py run --exe build-x64/Generals/Code/Main/Debug/GZHNeo.exe ^
       --scene shellmap --frames 300,900 --out render-out/shellmap --extra -ignoreAsserts
   python tools/render/run_render_test.py twice --exe ... --scene shellmap --out render-out/repro
-  python tools/render/run_render_test.py run --exe ... --out render-out/neu --reference tests/render/shellmap
+  python tools/render/run_render_test.py run --exe ... --out render-out/new --reference tests/render/shellmap
   python tools/render/run_render_test.py baseline --exe build-x64/.../Release/GZHNeo.exe --frames 1800
   python tools/render/run_render_test.py run --exe ... --scene replay ^
       --replay tests/replays/x64/e0-alpine-assault-2ai-seed1.rep --path tests/render/paths/quer.txt ^
       --out render-out/quer --extra -ignoreAsserts
 
-Hinweise:
-  - Nur eine Spielinstanz zur Zeit (Mutex). Laeuft schon GZHNeo.exe oder GZHNeoZH.exe, bricht das
-    Skript ab (--force ueberspringt die Pruefung). Ausnahme --mehrfach (2026-09-24): startet das Spiel mit
-    -mehrfach (keine Einzelinstanz-Sperre, Protokolle mit Vorsatz m<PID>_), mehrere Laeufe duerfen dann
-    nebeneinander laufen; der Mauszeiger wird nicht geparkt (das Spiel ignoriert die echte Maus in
-    Bildvergleichslaeufen, TODO 33). Nur fuer Exes ab dem Stand mit -mehrfach.
-  - Das Fenster nicht minimieren (ohne -fixedTimeStep pausiert die Engine dann). Der Mauszeiger wird vor
-    jedem Start an den linken Bildschirmrand geparkt (nicht in eine Ecke, siehe park_cursor): ueber dem
-    Fenster wuerde er Hover-Effekte im Menue und das
-    Randscrollen der Shell-Map-Kamera ausloesen (beides im Bild). Waehrend des Laufs die Maus nicht
-    ueber das Fenster bewegen.
-  - Frames zaehlen Client-Frames (auch im Menue); mit -fixedTimeStep ist das ein Logik-Tick pro Bild.
-  - Jeder Lauf hat einen eigenen Benutzerordner (<out>/_benutzer) und eine feste Detailstufe (--stufe, Standard
-    VeryHigh); Einstellungen des Nutzers fliessen nicht ein. --stufe nutzer startet wie frueher mit seinen Einstellungen.
+Notes:
+  - Only one game instance at a time (mutex). If GZHNeo.exe or GZHNeoZH.exe is already running the script
+    stops (--force skips the check). Exception --multiInstance: starts the game with -multiInstance (no
+    single-instance lock, logs prefixed m<PID>_); several runs may then run side by side; the mouse pointer
+    is not parked (the game ignores the real mouse in picture comparison runs).
+  - Do not minimise the window (without -fixedTimeStep the engine pauses then). Before every start the mouse
+    pointer is parked at the left screen edge (not in a corner, see park_cursor): over the window it would
+    trigger hover effects in the menu and edge scrolling of the shell-map camera (both end up in the
+    picture). Do not move the mouse over the window during a run.
+  - Frames count client frames (also in the menu); with -fixedTimeStep that is one logic tick per picture.
+  - Every run has its own user folder (<out>/_user) and a fixed detail level (--level, default VeryHigh); the
+    user's settings do not flow in. --level user starts with the user's settings.
 """
 import argparse
 import os
@@ -106,8 +103,8 @@ def parse_frames(text):
 
 
 def path_frames(path, every):
-    """Bilder einer Kamerafahrt: -shotEvery nimmt im Bereich erster bis letzter Stuetzpunkt auf,
-    jeweils beim ersten Frame eines neuen Vielfachen von every, benannt nach dem Vielfachen."""
+    """Pictures of a camera path: -shotEvery records between the first and the last key point, at the first
+    frame of each new multiple of every, named after the multiple."""
     if every <= 0:
         raise SystemExit("--every: positive Anzahl Logik-Frames")
     keys = []
@@ -123,7 +120,7 @@ def path_frames(path, every):
 
 
 def shot_plan(a):
-    """Erwartete Screenshot-Frames und -quitAfter fuer diesen Lauf."""
+    """Expected screenshot frames and -quitAfter for this run."""
     if a.path:
         frames, last = path_frames(a.path, a.every)
         return frames, a.quit or last + 30
@@ -139,12 +136,12 @@ def read_log(path):
 
 
 def park_cursor():
-    """Mauszeiger ausserhalb des Spielfensters parken (TODO 12/16): ueber dem Fenster loest er Hover-Effekte
-    im Hauptmenue und das Randscrollen der Shell-Map-Kamera aus, beides landet im Bild und macht zwei
-    Laeufe verschieden. TODO 34 (2026-09-18): NICHT in die untere rechte Ecke -- dort liegt die
-    Schaltflaeche "Desktop anzeigen"; beim Spielstart wurden dadurch alle Fenster minimiert, das Spiel
-    wartete minimiert bis zum Zeitlimit und behielt danach die Anfangsgroesse 800x600. Auch nicht in die
-    oberen Ecken (Schliessen bzw. Systemmenue maximierter Fenster). Mitte des linken Bildschirmrands."""
+    """Park the mouse pointer outside the game window: over the window it triggers hover effects in the main
+    menu and edge scrolling of the shell-map camera, both end up in the picture and make two runs differ.
+    NOT in the lower right corner -- the "show desktop" button is there; it minimised all windows at game
+    start, the game waited minimised until the time limit and kept the initial size 800x600 afterwards.
+    Not in the upper corners either (close button or system menu of maximised windows). Middle of the left
+    screen edge."""
     try:
         import ctypes
         u = ctypes.windll.user32
@@ -157,11 +154,10 @@ CDB = os.path.join(os.environ.get("LOCALAPPDATA", ""), "Microsoft", "WindowsApps
 
 
 def dump_hung_process(pid, out):
-    """TODO 34: haengt das Spiel bis zum Zeitlimit, vor dem Abbruch einen Speicherauszug und die
-    Aufrufstapel aller Threads sichern (cdb nicht-invasiv angehaengt, -pv). Ergebnis in out:
-    hang.dmp und hang_stacks.txt."""
+    """If the game hangs until the time limit, save a memory dump and the call stacks of all threads before
+    aborting (cdb attached non-invasively, -pv). Result in out: hang.dmp and hang_stacks.txt."""
     if not os.path.isfile(CDB):
-        print(f"Kein cdb unter {CDB} -- kein Speicherauszug")
+        print(f"No cdb at {CDB} -- no memory dump")
         return
     dmp = os.path.join(out, "hang.dmp")
     stacks = os.path.join(out, "hang_stacks.txt")
@@ -179,15 +175,15 @@ def dump_hung_process(pid, out):
 def run_game(a, out, fixed, frames, quit_after):
     exe = os.path.abspath(a.exe)
     if not os.path.isfile(exe):
-        raise SystemExit(f"Exe nicht gefunden: {exe}")
+        raise SystemExit(f"exe not found: {exe}")
     os.makedirs(out, exist_ok=True)
     log = os.path.join(out, "run.log")
     for stale in [log, log + ".frames.csv", log + ".ticks.csv"] + \
             [os.path.join(out, n) for n in os.listdir(out) if n.startswith("shot_") and n.endswith(".bmp")]:
         if os.path.isfile(stale):
             os.remove(stale)
-    # Referenzbilder immer mit den Original-Texturen (SD); "Auto" haengt von
-    # Aufloesung, Grafikspeicher und den vorhandenen Stufen ab. --texture-quality ueberschreibt das.
+    # Reference pictures always use the original textures (SD); "Auto" depends on the resolution, the video
+    # memory and the tiers present. --texture-quality overrides this.
     cmd = [exe, "-win", "-xres", str(a.xres), "-yres", str(a.yres), "-nologo", "-noaudio",
            "-textureQuality", a.texture_quality,
            "-gamma", str(a.gamma),
@@ -200,30 +196,30 @@ def run_game(a, out, fixed, frames, quit_after):
         else:
             for f in frames:
                 cmd += ["-shotAfter", str(f)]
-    if getattr(a, "mehrfach", False):
-        cmd += ["-mehrfach"]
+    if getattr(a, "multiInstance", False):
+        cmd += ["-multiInstance"]
     extra = list(a.extra or [])
     extra_lower = [e.lower() for e in extra]
-    # Eigener Benutzerordner und feste Detailstufe: sonst kaemen Stufe, Effektliste und weitere Optionen aus der
-    # Settings.ini des Nutzers, und die Bilder hingen vom Rechner ab. Die fast leere Settings.ini verhindert, dass der
-    # erste Start die Options.ini des Originalspiels uebernimmt.
-    if a.stufe != "nutzer":
-        if "-benutzerdaten" not in extra_lower:
-            benutzer = os.path.join(out, "_benutzer")
-            if os.path.isdir(benutzer):
-                shutil.rmtree(benutzer)
-            os.makedirs(benutzer)
-            with open(os.path.join(benutzer, "Settings.ini"), "w", encoding="utf-8", newline="\r\n") as f:
+    # Own user folder and fixed detail level: otherwise level, effect list and further options would come from the
+    # user's Settings.ini and the pictures would depend on the machine. The almost empty Settings.ini keeps the first
+    # start from taking over the original game's Options.ini.
+    if a.level != "user":
+        if "-userdata" not in extra_lower:
+            user_dir = os.path.join(out, "_user")
+            if os.path.isdir(user_dir):
+                shutil.rmtree(user_dir)
+            os.makedirs(user_dir)
+            with open(os.path.join(user_dir, "Settings.ini"), "w", encoding="utf-8", newline="\r\n") as f:
                 f.write("[General]\n")
-            cmd += ["-benutzerdaten", benutzer + os.sep, "-einstellungenNurLesen"]
+            cmd += ["-userData", user_dir + os.sep, "-settingsReadOnly"]
         if "-staticlod" not in extra_lower:
-            cmd += ["-staticLOD", a.stufe]
-    # -d3d11 ausdruecklich, damit ein alter Eintrag "RenderBackend = D3D9" in der Options.ini keine Meldung ausloest.
+            cmd += ["-staticLOD", a.level]
+    # -d3d11 explicitly, so an old entry "RenderBackend = D3D9" in Options.ini raises no message.
     if not any(e.lower() in ("-d3d9", "-d3d11", "-vulkan") for e in extra):
         cmd += ["-d3d11"]
     cmd += extra
     print("Start:", " ".join(f'"{c}"' if " " in c else c for c in cmd))
-    if not getattr(a, "mehrfach", False):
+    if not getattr(a, "multiInstance", False):
         park_cursor()
     start = time.time()
     proc = subprocess.Popen(cmd, cwd=os.path.dirname(exe))
@@ -235,14 +231,14 @@ def run_game(a, out, fixed, frames, quit_after):
         proc.kill()
         proc.wait()
     secs = time.time() - start
-    debug_log = os.path.join(os.path.dirname(exe), (f"m{proc.pid}_" if getattr(a, "mehrfach", False) else "")
+    debug_log = os.path.join(os.path.dirname(exe), (f"m{proc.pid}_" if getattr(a, "multiInstance", False) else "")
                              + "DebugLogFileD.txt")
     if os.path.isfile(debug_log) and os.path.getmtime(debug_log) >= start - 1:
         shutil.copy2(debug_log, os.path.join(out, "DebugLogFileD.txt"))
     lines = read_log(log)
-    print(f"Ende nach {secs:.1f} s, Exit-Code {code}")
+    print(f"End after {secs:.1f} s, exit code {code}")
     for line in lines:
-        if line.startswith(("SHOT", "FRAMES", "BENCH", "END", "EXIT", "ERROR", "CAMERAPATH", "SHADERFEHLER")):
+        if line.startswith(("SHOT", "FRAMES", "BENCH", "END", "EXIT", "ERROR", "CAMERAPATH", "SHADERFAILURE")):
             print("  " + line)
     return code, lines
 
@@ -250,25 +246,25 @@ def run_game(a, out, fixed, frames, quit_after):
 def check_run(a, out, frames, code, lines):
     ok = True
     if code is None:
-        print(f"FEHLER: Zeitlimit {a.timeout} s ueberschritten")
+        print(f"ERROR: time limit of {a.timeout} s exceeded")
         ok = False
     elif code != 0:
-        # Ein Exit-Code ungleich 0 nach regulaerem Ende (END quitAfter, alle Screenshots da) kommt vom
-        # Leckbericht bzw. der Assert-Box beim Beenden -- Warnung, kein Abbruch, sonst
-        # faellt der Bildvergleich aus, obwohl die Bilder vollstaendig sind.
-        print(f"WARNUNG: Exit-Code {code} (Beenden-Pfad); Bilder werden trotzdem verglichen")
+        # A non-zero exit code after a regular end (END quitAfter, all screenshots present) comes from the
+        # leak report or the assert box at shutdown -- a warning, not an abort, otherwise the picture
+        # comparison would be skipped although the pictures are complete.
+        print(f"WARNING: exit code {code} (shutdown path); the pictures are compared anyway")
     for line in lines:
         # A shader that did not compile drops its effect silently; the game names it in the release build too.
-        if line.startswith(("CAMERAPATH ERROR", "CAMERAPATH Fehler", "SHADERFEHLER")):
-            print("FEHLER: " + line)
+        if line.startswith(("CAMERAPATH ERROR", "SHADERFAILURE")):
+            print("ERROR: " + line)
             ok = False
     if not any(line.startswith("END quitAfter") for line in lines):
-        print("FEHLER: Lauf endete nicht ueber -quitAfter (Absturz oder vorzeitiges Ende? DebugLogFileD.txt pruefen)")
+        print("ERROR: the run did not end through -quitAfter (crash or early end? check DebugLogFileD.txt)")
         ok = False
     for f in frames:
         path = os.path.join(out, f"shot_{f:06d}.bmp")
         if not os.path.isfile(path):
-            print(f"FEHLER: Screenshot fehlt: {path}")
+            print(f"ERROR: screenshot missing: {path}")
             ok = False
     return ok
 
@@ -282,12 +278,12 @@ def compare_dirs(ref, new, diff, a):
 
 
 def guard_mutex(a):
-    if a.force or getattr(a, "mehrfach", False):
+    if a.force or getattr(a, "multiInstance", False):
         return
     others = running_game_processes()
     if others:
-        raise SystemExit("Abbruch: es laeuft bereits " + ", ".join(others) +
-                         " (Mutex; ein weiterer Start beendet sich sofort). --force ueberspringt die Pruefung.")
+        raise SystemExit("Abort: already running: " + ", ".join(others) +
+                         " (mutex; another start ends at once). --force skips the check.")
 
 
 def cmd_run(a):
@@ -313,7 +309,7 @@ def cmd_twice(a):
         if not check_run(a, out, frames, code, lines):
             return 2
         runs.append(out)
-    print("Vergleich Lauf a gegen Lauf b:")
+    print("Comparison run a against run b:")
     return compare_dirs(runs[0], runs[1], os.path.join(base, "diff"), a)
 
 
@@ -323,10 +319,10 @@ def cmd_baseline(a):
     code, lines = run_game(a, out, False, [], a.frames_total)
     frames_line = next((line for line in lines if line.startswith("FRAMES")), None)
     if code != 0 or frames_line is None:
-        print("FEHLER: keine FRAMES-Zeile (Exit-Code %s)" % code)
+        print("ERROR: no FRAMES line (exit code %s)" % code)
         return 2
     print(f"Baseline: {frames_line}")
-    print(f"Einzelwerte: {os.path.join(out, 'run.log.frames.csv')}")
+    print(f"Single values: {os.path.join(out, 'run.log.frames.csv')}")
     return 0
 
 
@@ -335,56 +331,55 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--exe", required=True, help="GZHNeo.exe (mit verlinkten Assets im selben Ordner)")
+    common.add_argument("--exe", required=True, help="GZHNeo.exe (with linked assets in the same folder)")
     common.add_argument("--scene", choices=("shellmap", "menu", "skirmish", "replay", "mission"), default="shellmap")
-    common.add_argument("--replay", help="Replay-Datei fuer --scene replay")
-    common.add_argument("--map", help='Skirmish-Karte, z. B. "Alpine Assault"; mission: Kartenpfad, z. B. "Maps\\md_usa01.map"')
-    common.add_argument("--ai", type=int, default=3, help="Skirmish: Anzahl KI-Gegner")
-    common.add_argument("--seed", type=int, default=1, help="Skirmish: Spiel-Seed")
-    # 2026-09-25: Helligkeitsregler neutral; er wirkt unter D3D11 auch im Fenster und kaeme sonst aus der
-    # Options.ini des Nutzers (Referenzbilder waeren dann vom Regler abhaengig).
-    common.add_argument("--gamma", type=int, default=50, help="Stellung des Helligkeitsreglers 0..100 (-gamma), Standard 50 = neutral")
+    common.add_argument("--replay", help="replay file for --scene replay")
+    common.add_argument("--map", help='skirmish map, e.g. "Alpine Assault"; mission: map path, e.g. "Maps\\md_usa01.map"')
+    common.add_argument("--ai", type=int, default=3, help="skirmish: number of AI opponents")
+    common.add_argument("--seed", type=int, default=1, help="skirmish: game seed")
+    # Brightness slider neutral; under D3D11 it also acts in a window and would otherwise come from the user's
+    # Options.ini (reference pictures would then depend on the slider).
+    common.add_argument("--gamma", type=int, default=50, help="brightness slider position 0..100 (-gamma), default 50 = neutral")
     common.add_argument("--texture-quality", default="sd", choices=("sd", "hd", "uhd", "auto"),
-                        help="Texturstufe, Standard sd fuer reproduzierbare Referenzen")
-    # R-683: the anti-aliasing would otherwise come from the user's Settings.ini (8 samples on one machine, 1 on another),
+                        help="texture tier, default sd for reproducible references")
+    # The anti-aliasing would otherwise come from the user's Settings.ini (8 samples on one machine, 1 on another),
     # and with multisampling the depth effects took another path.
-    common.add_argument("--msaa", type=int, default=1, help="Kantenglaettung, Samples (-msaa), Standard 1 = aus; "
-                        "unabhaengig von der Settings.ini des Nutzers")
-    common.add_argument("--stufe", default="VeryHigh", choices=("Low", "Medium", "High", "VeryHigh", "nutzer"),
-                        help="Detailstufe (-staticLOD) mit eigenem Benutzerordner unter --out, Standard VeryHigh; "
-                             "nutzer = Stufe und Einstellungen aus dem Benutzerordner des Nutzers wie frueher")
+    common.add_argument("--msaa", type=int, default=1, help="multisampling, samples (-msaa), default 1 = off; "
+                        "independent of the user's Settings.ini")
+    common.add_argument("--level", default="VeryHigh", choices=("Low", "Medium", "High", "VeryHigh", "user"),
+                        help="detail level (-staticLOD) with its own user folder under --out, default VeryHigh; "
+                             "user = level and settings from the user's own user folder")
     common.add_argument("--xres", type=int, default=1280)
     common.add_argument("--yres", type=int, default=720)
-    common.add_argument("--timeout", type=int, default=600, help="Sekunden pro Lauf")
-    common.add_argument("--force", action="store_true", help="Pruefung auf laufende Spielinstanzen ueberspringen")
-    common.add_argument("--mehrfach", action="store_true",
-                        help="Spiel mit -mehrfach starten: mehrere Instanzen nebeneinander, Protokolle je Instanz")
-    common.add_argument("--extra", nargs=argparse.REMAINDER, help="weitere Spielparameter (am Ende angeben)")
+    common.add_argument("--timeout", type=int, default=600, help="seconds per run")
+    common.add_argument("--force", action="store_true", help="skip the check for running game instances")
+    common.add_argument("--multiInstance", action="store_true",
+                        help="start the game with -multiInstance: several instances side by side, one log per instance")
+    common.add_argument("--extra", nargs=argparse.REMAINDER, help="further game parameters (give them last)")
 
     shots = argparse.ArgumentParser(add_help=False)
-    shots.add_argument("--frames", default="300,900", help="Client-Frames fuer Screenshots, kommagetrennt")
-    shots.add_argument("--path", help="Kamerafahrt (-cameraPath), ersetzt --frames")
-    shots.add_argument("--every", type=int, default=60, help="mit --path: alle N Logik-Frames ein Bild")
-    shots.add_argument("--quit", type=int, help="nach N Client-Frames beenden (Standard: letzter Screenshot + 30)")
+    shots.add_argument("--frames", default="300,900", help="client frames for screenshots, comma-separated")
+    shots.add_argument("--path", help="camera path (-cameraPath), replaces --frames")
+    shots.add_argument("--every", type=int, default=60, help="with --path: one picture every N logic frames")
+    shots.add_argument("--quit", type=int, help="quit after N client frames (default: last screenshot + 30)")
     shots.add_argument("--threshold", type=int, default=compare_shots.DEFAULT_THRESHOLD)
     shots.add_argument("--min-psnr", type=float, default=compare_shots.DEFAULT_MIN_PSNR)
     shots.add_argument("--max-diff-ratio", type=float, default=compare_shots.DEFAULT_MAX_DIFF_RATIO)
     shots.add_argument("--ignore", action="append", type=compare_shots.Rect, metavar="X,Y,B,H", default=[],
-                       help="Bildbereich vom Vergleich ausnehmen (Pixel oder Prozent), mehrfach angebbar. "
-                            "Fuer die Shell-Map sinnvoll, weil die Menue-Einblendung nicht deterministisch "
-                            "erscheint (TODO Nr. 16)")
+                       help="exclude an image region from the comparison (pixels or percent), may be given several times. "
+                            "Useful for the shell map because the menu fade-in is not deterministic")
 
-    r = sub.add_parser("run", parents=[common, shots], help="Szene aufnehmen, optional mit Referenz vergleichen")
-    r.add_argument("--out", required=True, help="Zielordner")
-    r.add_argument("--reference", help="Referenzordner mit shot_*.bmp")
+    r = sub.add_parser("run", parents=[common, shots], help="record a scene, optionally compare it with a reference")
+    r.add_argument("--out", required=True, help="target folder")
+    r.add_argument("--reference", help="reference folder with shot_*.bmp")
 
-    t = sub.add_parser("twice", parents=[common, shots], help="Szene zweimal aufnehmen und vergleichen")
-    t.add_argument("--out", required=True, help="Zielordner (Unterordner a, b, diff)")
+    t = sub.add_parser("twice", parents=[common, shots], help="record a scene twice and compare")
+    t.add_argument("--out", required=True, help="target folder (subfolders a, b, diff)")
 
-    b = sub.add_parser("baseline", parents=[common], help="Frame-Zeiten ohne festen Zeitschritt messen")
-    b.add_argument("--out", default="render-out/baseline", help="Zielordner")
+    b = sub.add_parser("baseline", parents=[common], help="measure frame times without the fixed time step")
+    b.add_argument("--out", default="render-out/baseline", help="target folder")
     b.add_argument("--frames", dest="frames_total", type=int, default=1800,
-                   help="Laufzeit in Client-Frames (Standard 1800, etwa 60 s)")
+                   help="run time in client frames (default 1800, about 60 s)")
 
     a = ap.parse_args([arg for arg in sys.argv[1:] if arg != ""])
     return {"run": cmd_run, "twice": cmd_twice, "baseline": cmd_baseline}[a.cmd](a)

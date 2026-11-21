@@ -51,7 +51,7 @@ Verfahren (Abschnitt 5.2 des Plans):
   * Formate: DXT1-Quellen und TGA ohne Alpha nach DXT1, alles mit Alpha nach DXT5. Ausnahme Oberflaeche aus
     TGA: bleibt unkomprimiertes TGA wie das Original -- DXT verfaelscht die ein bis zwei Pixel breiten
     Leuchtlinien der Rahmen;
-  * BC7 (TODO 58, 2026-09-26): --bc7 alle|alpha schreibt DDS mit DX10-Kopf (DXGI_FORMAT_BC7_UNORM, wie DXT
+  * BC7: --bc7 alle|alpha schreibt DDS mit DX10-Kopf (DXGI_FORMAT_BC7_UNORM, wie DXT
     ohne sRGB) statt DXT1/DXT5 -- "alpha" nur statt DXT5 (gleicher Speicher), "alle" auch statt DXT1 (doppelter
     Speicher). Kodiert wird mit texconv aus DirectXTex (MIT, github.com/microsoft/DirectXTex, --texconv), auf
     der Grafikkarte (DirectCompute), --bc7-cpu erzwingt die CPU (etwa 40-mal langsamer). Stapelbetrieb wie bei
@@ -267,7 +267,7 @@ def exclusion_reason(record, excl, terrain=False):
 
 
 def target_fourcc(src_format, has_alpha, bc7=None):
-    """bc7: None/"aus" wie bisher; "alpha" BC7 statt DXT5; "alle" BC7 statt DXT1 und DXT5 (TODO 58)."""
+    """bc7: None/"aus" wie bisher; "alpha" BC7 statt DXT5; "alle" BC7 statt DXT1 und DXT5."""
     dxt = "DXT1" if (src_format == "DXT1" or not has_alpha) else "DXT5"
     if bc7 == "alle" or (bc7 == "alpha" and dxt == "DXT5"):
         return "BC7"
@@ -802,7 +802,7 @@ def compare_to_sd(result_dds, sd_rgba):
 def params_hash(params):
     keys = ("sharpen", "deblock", "min_psnr", "ai_cmd", "ai_kinds", "ai_model", "ai_scale", "ai_min_psnr",
             "ai_refine", "terrain")
-    extra = {"bc7": params["bc7"]} if params.get("bc7") else {}	# TODO 58: nur mit BC7, alte Staende bleiben gueltig
+    extra = {"bc7": params["bc7"]} if params.get("bc7") else {}	# nur mit BC7, alte Staende bleiben gueltig
     if params.get("ai_match_color"):
         extra["ai_match_color"] = True	# only when set: work folders of earlier runs stay valid
     blob = json.dumps({k: params.get(k) for k in keys} | {"tool": TOOL_VERSION} | extra, sort_keys=True)
@@ -914,7 +914,7 @@ def process_job(job, root, work, params):
             elif data is None:
                 return {"name": job["name"], "status": "bc7-vorbereitet"}
             if data[:4] == b"DDS ":
-                # TODO 58: Stufe 0 gegen die unkomprimierte Vorlage; bei BC7 auch die DXT-Fassung zum Vergleich
+                # Stufe 0 gegen die unkomprimierte Vorlage; bei BC7 auch die DXT-Fassung zum Vergleich
                 meta["psnr_vorlage"] = psnr_to_template(data, big)
                 if fourcc == "BC7" and params.get("bc7_compare", True):
                     dxt = target_fourcc(job["format"], alpha_mode != "none")
@@ -1414,7 +1414,7 @@ def selftest():
     check(len(head) == 128, "DDS: Kopflaenge")
     check(parse_dds(head) == ("DXT5", 256, 64, 9, 128), "DDS: Kopf lesen")
     check(inv.texture_header(head, "x.dds") == ("DXT5", 256, 64, 9), "DDS: Kopf mit texture_inventory")
-    # BC7 (TODO 58): DX10-Kopf lesen, Zielformat je Richtlinie
+    # BC7: DX10-Kopf lesen, Zielformat je Richtlinie
     dx10 = head[:84] + b"DX10" + head[88:] + struct.pack("<IIIII", DXGI_BC7_UNORM, 3, 0, 1, 0)
     check(parse_dds(dx10) == ("BC7", 256, 64, 9, 148), "DDS: DX10-Kopf BC7")
     check(target_fourcc("DXT1", False, "alpha") == "DXT1" and target_fourcc("DXT5", True, "alpha") == "BC7"
@@ -1645,7 +1645,7 @@ def main():
                     help="Staerke der Diffusions-Verfeinerung je Art (0 = keine)")
     ap.add_argument("--stage", help="eigener Stufenordner unter Texturstufen (z. B. HD-KI), Vorgabe HD bzw. UHD")
     ap.add_argument("--bc7", choices=("aus", "alpha", "alle"), default="aus",
-                    help="BC7 (TODO 58): alpha = statt DXT5, alle = auch statt DXT1 (doppelter Speicher)")
+                    help="BC7: alpha = statt DXT5, alle = auch statt DXT1 (doppelter Speicher)")
     ap.add_argument("--texconv", help="texconv.exe aus DirectXTex (MIT) fuer --bc7")
     ap.add_argument("--bc7-cpu", action="store_true", help="BC7 auf der CPU statt der Grafikkarte (etwa 40-mal langsamer)")
     ap.add_argument("--ai-reuse", help="fertige KI-Ausgaben (Ordner mit aus\\) eines anderen Satzes nur lesen, ohne KI-Lauf")

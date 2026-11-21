@@ -508,6 +508,23 @@ Bool W3DDisplay::offersRendererChoice( void )
 	return RenderDevice::Get_Backend_Choices() > 1 ? TRUE : FALSE;
 }
 
+Int W3DDisplay::getGraphicsCardCount( void )
+{
+	return static_cast<Int>( RenderDevice::Get_Graphics_Card_Count() );
+}
+
+Bool W3DDisplay::getGraphicsCard( Int index, AsciiString *choice, AsciiString *name )
+{
+	char choiceText[320], nameText[128];
+	if( index < 0 || !RenderDevice::Get_Graphics_Card( static_cast<unsigned>( index ), choiceText, sizeof( choiceText ), nameText, sizeof( nameText ) ) )
+		return FALSE;
+	if( choice )
+		choice->set( choiceText );
+	if( name )
+		name->set( nameText );
+	return TRUE;
+}
+
 Int W3DDisplay::getDisplayModeCount(void)
 {
 	const RenderDeviceDescClass &devDesc=WW3D::Get_Render_Device_Desc(0);
@@ -520,7 +537,7 @@ Int W3DDisplay::getDisplayModeCount(void)
 	
 	//Walk through all resolutions and determine which ones are compatible with other settings
 	//chosen by user.  For example, 32-bit may be required for shadows, occlusion, soft water edge, etc.
-	if (TheGlobalData->m_useShadowVolumes || (TheGlobalData->m_enableBehindBuildingMarkers && TheGameLogic->getShowBehindBuildingMarkers()))
+	if (TheGlobalData->m_enableBehindBuildingMarkers && TheGameLogic->getShowBehindBuildingMarkers())
 		needStencil=true;
 
 	if (TheGlobalData->m_showSoftWaterEdge)
@@ -813,15 +830,15 @@ void W3DDisplay::init( void )
 		effects.gpu_timing = TheGlobalData->m_gpuTiming ? 1u : 0u;
 		RenderDevice::Set_Effect_Settings( effects );
 		if( effects.scene_format == SCENE_FORMAT_RGBA16F )
-			GameEngine_RunnerLog( "SZENENFORMAT rgba16f" );
+			GameEngine_RunnerLog( "SCENEFORMAT rgba16f" );
 		else if( effects.scene_format == SCENE_FORMAT_RGBA16 )
-			GameEngine_RunnerLog( "SZENENFORMAT rgba16" );
+			GameEngine_RunnerLog( "SCENEFORMAT rgba16" );
 		else if( effects.scene_format == SCENE_FORMAT_R11G11B10 )
-			GameEngine_RunnerLog( "SZENENFORMAT r11g11b10" );
+			GameEngine_RunnerLog( "SCENEFORMAT r11g11b10" );
 		if( effects.render_scale < 0.999f || effects.render_scale > 1.001f || effects.gpu_timing )
 		{
 			char line[160];
-			WWFormat::Into(line, "RENDERSKALIERUNG anteil {:.3f} filter {:d} schaerfe {:.2f} zeitmessung {:d}", effects.render_scale,
+			WWFormat::Into(line, "RENDERSCALING share {:.3f} filter {:d} sharpness {:.2f} timing {:d}", effects.render_scale,
 				effects.render_scale_filter, effects.render_scale_sharpen, effects.gpu_timing);
 			line[sizeof(line) - 1] = 0;
 			GameEngine_RunnerLog( line );
@@ -829,13 +846,15 @@ void W3DDisplay::init( void )
 		}
 		SkinFVFCategoryContainer::Enable_GPU_Skinning( !TheGlobalData->m_cpuSkinning );
 		RenderDevice::Enable_Constant_Buffer_Ring( !TheGlobalData->m_noConstantBufferRing );
+		RenderDevice::Set_Simulated_Device_Loss( TheGlobalData->m_simulateDeviceLoss );
+		RenderDevice::Set_Fail_Texture_Creation_Every( TheGlobalData->m_failTextureEvery );
 		PointGroupClass::Enable_GPU_Particles( !TheGlobalData->m_cpuParticles );
 		RenderDevice::Enable_Mesh_Instancing( !TheGlobalData->m_noMeshInstancing );
 		if( effects.flags != 0 || TheGlobalData->m_renderEffectMsaa >= 0 || TheGlobalData->m_msaaSamples >= 0 )
 		{
 			char line[320];
 			// "backend" is always 1 (Direct3D 11); the field stays for the log evaluation tools.
-			WWFormat::Into(line, "D3D11EFFECTS flags 0x{:X} sharpen {:.2f} msaa {:d} backend {:d} shadowmap {:d} gelaende {:.2f} detailboden {:.2f} berge {:.2f} relief {:.2f} tessellation {:.2f} faktor {:.0f} pixel {:.0f} probe {:d} felstess {:.2f}", effects.flags, effects.sharpen, (TheGlobalData->m_msaaSamples >= 0) ? TheGlobalData->m_msaaSamples : TheGlobalData->m_renderEffectMsaa, 1, effects.shadow_map_size, effects.shadow_terrain_strength, effects.terrain_detail, effects.terrain_rock, effects.terrain_normal, effects.terrain_tess, effects.terrain_tess_max, effects.terrain_tess_pixels, effects.terrain_tess_probe, effects.rock_tess);
+			WWFormat::Into(line, "D3D11EFFECTS flags 0x{:X} sharpen {:.2f} msaa {:d} backend {:d} shadowmap {:d} terrain {:.2f} ground_detail {:.2f} mountains {:.2f} relief {:.2f} tessellation {:.2f} factor {:.0f} pixel {:.0f} probe {:d} rock_tess {:.2f}", effects.flags, effects.sharpen, (TheGlobalData->m_msaaSamples >= 0) ? TheGlobalData->m_msaaSamples : TheGlobalData->m_renderEffectMsaa, 1, effects.shadow_map_size, effects.shadow_terrain_strength, effects.terrain_detail, effects.terrain_rock, effects.terrain_normal, effects.terrain_tess, effects.terrain_tess_max, effects.terrain_tess_pixels, effects.terrain_tess_probe, effects.rock_tess);
 			line[sizeof(line) - 1] = 0;
 			GameEngine_RunnerLog( line );
 			DEBUG_LOG(( "D3D11 effects: %s\n", line ));
@@ -847,6 +866,7 @@ void W3DDisplay::init( void )
 	// the reason is reported once the device exists.
 	const Bool vulkanRequested = UserSettings::useVulkanRenderer();
 	RenderDevice::Set_Backend_Request( vulkanRequested ? "vulkan" : nullptr );
+	RenderDevice::Set_Preferred_Adapter( UserSettings::getAdapter().str() );
 	RenderDevice::Set_Float_Depth( TheGlobalData->m_depthFloat != FALSE );
 	RenderDevice::Set_Upload_Diagnosis( TheGlobalData->m_logUploads, TheGlobalData->m_fillUnwritten );
 	if (WW3D::Init( ApplicationHWnd ) != WW3D_ERROR_OK)
@@ -870,7 +890,7 @@ void W3DDisplay::init( void )
 			RenderDevice::Set_Multisample_Samples( TheGlobalData->m_msaaSamples );
 	}
 
-	// The monitor to open on: -bildschirm n, else the one of the last run. The window was created on the
+	// The monitor to open on: -monitor n, else the one of the last run. The window was created on the
 	// primary monitor, before the settings were read.
 	PlaceWindowOnMonitor( ApplicationHWnd, TheGlobalData->m_monitorIndex, UserSettings::get( "Window.Monitor" ),
 		!TheGlobalData->m_windowed || TheGlobalData->m_borderless );
@@ -934,6 +954,19 @@ void W3DDisplay::init( void )
 		}
 
 	}  // end if
+
+	// the card the device runs on is the first of the list (Info.txt of a crash report names it)
+	{
+		char cardChoice[320], cardName[128];
+		if( RenderDevice::Get_Graphics_Card( 0, cardChoice, sizeof( cardChoice ), cardName, sizeof( cardName ) ) )
+		{
+			TheWritableGlobalData->m_graphicsCard.set( cardChoice );
+			char line[400];
+			WWFormat::Into( line, "GRAPHICSCARD {} by {}", cardChoice, RenderDevice::Get_Graphics_Card_Count() );
+			line[sizeof(line) - 1] = 0;
+			GameEngine_RunnerLog( line );
+		}
+	}
 
 	// Which renderer runs: logged for runners, shown once per process when Vulkan was asked for and not
 	// started (not in automated runs, like the D3D9 notice). A choice from Settings.ini goes back to
@@ -1036,7 +1069,7 @@ void W3DDisplay::init( void )
 		m_debugDisplayCallback = StatDebugDisplay;
 	}
 
-	// -modellPruefung: load every model and DDS once, write the result and quit
+	// -modelCheck: load every model and DDS once, write the result and quit
 	if (!TheGlobalData->m_modelCheckFile.isEmpty() && m_assetManager != nullptr)
 	{
 		[[maybe_unused]] const int rejected = m_assetManager->Check_Model_Files(TheGlobalData->m_modelCheckFile.str());
@@ -1412,7 +1445,7 @@ static void logDrawStatistics( void )
 	s_next = frame + TheGlobalData->m_logDrawStats;
 	const double n = static_cast<double>(s_images);
 	char line[256];
-	WWFormat::Into(line, "DRAWSTATS frame {:d} logic {:d} bilder {:d} zeichnungen {:.0f} dreiecke {:.0f} ecken {:.0f} zoom {:.3f} hoehe {:.0f}",
+	WWFormat::Into(line, "DRAWSTATS frame {:d} logic {:d} images {:d} draws {:.0f} triangles {:.0f} vertices {:.0f} zoom {:.3f} height {:.0f}",
 		frame, TheGameLogic ? TheGameLogic->getFrame() : 0, s_images, s_draws / n, s_polys / n, s_verts / n,
 		TheTacticalView ? TheTacticalView->getZoom() : 0.0f, TheTacticalView ? TheTacticalView->getCurrentHeightAboveGround() : 0.0f);
 	line[sizeof(line) - 1] = 0;

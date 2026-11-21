@@ -1,12 +1,17 @@
-TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15416 MB uma nein vorhanden SD paket 0 abgewiesen 0
+TEXTURESTUFE SD wunsch Auto (Settings.ini) grund output height below 900 hoehe 600 budget 15419 MB uma nein vorhanden SD,HD,UHD paket 5 abgewiesen 0
+MOD ordner ProjectData\Inhalt\BaeumeFrei\ dateien 217
+FREIER INHALT ProjectData\Inhalt\BaeumeFrei\ dateien 217 stufe SD manifest 101
 MOD ordner ProjectData\Inhalt\FreierBoden\ dateien 723
 FREIER INHALT ProjectData\Inhalt\FreierBoden\ dateien 723 stufe SD manifest -1
 MOD ordner ProjectData\Inhalt\FreieStrassen\ dateien 63
 FREIER INHALT ProjectData\Inhalt\FreieStrassen\ dateien 63 stufe SD manifest 63
-TEXTURPAKET ersetzt 0 texturen 63
-VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15416 MB (used 0 MB), dedicated 16188 MB, shared 48862 MB
+TEXTURPAKET ersetzt 0 texturen 164
+VIDEOMEM AMD Radeon RX 9070 (1002:7550), UMA no, budget 15419 MB (used 0 MB), dedicated 16191 MB, shared 48862 MB
 WORKERS 30
-D3D11EFFECTS flags 0x1FFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+VORABLESEN plan dateien 1013 mb 1087
+D3D11EFFECTS flags 0xC7DDFFFF sharpen 0.50 msaa -1 backend 1 shadowmap 4096 gelaende 0.50 detailboden 1.00 berge 1.00 relief 2.00 tessellation 2.00 faktor 16 pixel 8 probe 0 felstess 1.00
+GRAFIKKARTE 1002:7550 AMD Radeon RX 9070 von 2
+VORABLESEN dateien 1013 mb 1087 ms 297
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
 STATE frame 1 mode 2 players 1 objects 0 recorder 0 particles 0/0
 SLOTS mode 2 seed 2 localSlot 0
@@ -195,7 +200,7 @@ STATE frame 3600 mode 2 players 7 objects 612 recorder 0 particles 8/0
 4440 6DE32220
 4470 AB92BD86
 4500 3CCC9C4B
-STATE frame 4500 mode 2 players 7 objects 632 recorder 0 particles 20/22
+STATE frame 4500 mode 2 players 7 objects 632 recorder 0 particles 20/18
 4530 2F839A44
 4560 210B4542
 4590 1D3C19A9
@@ -226,7 +231,7 @@ STATE frame 4500 mode 2 players 7 objects 632 recorder 0 particles 20/22
 5340 BFEBA7B9
 5370 7359526F
 5400 E2357B35
-STATE frame 5400 mode 2 players 7 objects 642 recorder 0 particles 104/337
+STATE frame 5400 mode 2 players 7 objects 642 recorder 0 particles 104/341
 5430 91059637
 5460 1E499297
 5490 51786A99
@@ -249,13 +254,13 @@ STATE frame 5400 mode 2 players 7 objects 642 recorder 0 particles 104/337
 END maxFrames 6000
 6000 D0E11531
 STATE frame 0 mode 6 players 1 objects 0 recorder 2 particles 0/0
-BENCH ticks 5998 mean 0.379 p50 0.255 p95 0.908 p99 1.696 max 22.444 total 2275 ms
-FRAMES frames 5940 mean 0.385 p50 0.258 p95 0.911 p99 1.684 max 22.445 total 2289 ms
-PFADSUCHE 0.0767 ms je Tick mit Anfragen (1016 Ticks, hoechstens 2.907 ms) anfragen 1345 zellen 213310 warteschlange 1.3 hoechstens 12 rest 0.00 anfragen_je_tick 828 158 24 6 einzeln_hoechstens 2.907 ms
-PFADSUCHE_ARTEN pfad 1177 zellen 41561 ms 25.4 hoechstens 0.72 naechster 63 zellen 81629 ms 25.6 hoechstens 2.89 angriff 70 zellen 89707 ms 24.1 hoechstens 1.06 kosten 3 zellen 43 ms 0.0 hoechstens 0.00 boden 3 zellen 931 ms 1.0 hoechstens 0.66 ausweichen 21 zellen 652 ms 0.4 hoechstens 0.25 sichtlinie 97709 schritte 413667 abbrueche 97195 vorrat_leer 0 pfad_fehlschlaege 0 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 26337 kleinste 26080 frei_bei_vorrat_leer 0
-LOGIKPHASEN 6001 Ticks, 0.2881 ms je Tick (Mittel/hoechstens ms): skript 0.0358/1.373 gelaende 0.0001/0.001 befehle 0.0035/19.218 updates 0.1336/9.405 ki 0.0930/248.920 bau 0.0001/0.005 partition 0.0196/1.132 tickende 0.0024/0.591
-LOGIKMODULE 33 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): AIUpdateInterface 0.0442 11.3 1.002 ProductionUpdate 0.0156 21.3 9.316 WorkerAIUpdate 0.0123 6.8 0.445 PhysicsBehavior 0.0110 17.7 0.460 TransportAIUpdate 0.0049 0.8 0.429 ChinookAIUpdate 0.0047 3.5 0.411 StealthDetectorUpdate 0.0041 1.4 0.404 DozerAIUpdate 0.0040 3.6 0.475 GarrisonContain 0.0031 20.0 0.283 SpawnBehavior 0.0027 4.5 5.471 ObjectWeaponStatusHelper 0.0020 27.5 0.229 SlowDeathBehavior 0.0014 1.6 2.366
-LOGIKSPITZE ab Tick 31: laengster Tick 1423 22.139 ms: skript 0.066 gelaende 0.000 befehle 0.000 updates 0.018 ki 22.035 bau 0.001 partition 0.013 tickende 0.005; laengstes Update 9.316 ms Tick 2061 ProductionUpdate an AmericaBarracks
-GPUEFFEKTE flags 0x1FFFF samples 8 bilder 51 bild 13.7101 ms (51) bodendetail zeichnungen 0.0 von 0.0 felder 348 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 294.1 umlaeufe 0.09
-PARTIKELZEIT simulation 0.0004 ms je Tick (55 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
+BENCH ticks 5998 mean 0.326 p50 0.243 p95 0.679 p99 1.455 max 23.830 total 1956 ms
+FRAMES frames 5940 mean 0.332 p50 0.246 p95 0.681 p99 1.457 max 23.832 total 1972 ms
+PFADSUCHE 0.0720 ms je Tick mit Anfragen (1016 Ticks, hoechstens 2.521 ms) anfragen 1345 zellen 213310 warteschlange 1.3 hoechstens 12 rest 0.00 anfragen_je_tick 828 158 24 6 einzeln_hoechstens 2.517 ms
+PFADSUCHE_ARTEN pfad 1177 zellen 41561 ms 23.1 hoechstens 0.61 naechster 63 zellen 81629 ms 24.0 hoechstens 2.51 angriff 70 zellen 89707 ms 23.8 hoechstens 1.00 kosten 3 zellen 43 ms 0.0 hoechstens 0.00 boden 3 zellen 931 ms 0.9 hoechstens 0.47 ausweichen 21 zellen 652 ms 0.2 hoechstens 0.02 sichtlinie 97709 schritte 413667 abbrueche 97195 vorrat_leer 0 pfad_fehlschlaege 0 davon_vorrat_leer 0 wiederholt 0 frei_beim_start mittel 26337 kleinste 26080 frei_bei_vorrat_leer 0
+LOGIKPHASEN 6001 Ticks, 0.2188 ms je Tick (Mittel/hoechstens ms): skript 0.0306/1.237 gelaende 0.0001/0.001 befehle 0.0035/19.050 updates 0.1108/5.380 ki 0.0547/32.325 bau 0.0001/0.022 partition 0.0172/2.462 tickende 0.0019/0.409
+LOGIKMODULE 33 Typen (ms je Tick, Aufrufe je Tick, laengster Aufruf ms): AIUpdateInterface 0.0354 11.3 1.019 ProductionUpdate 0.0124 21.3 5.307 WorkerAIUpdate 0.0109 6.8 0.283 PhysicsBehavior 0.0096 17.7 0.308 ChinookAIUpdate 0.0042 3.5 0.227 TransportAIUpdate 0.0038 0.8 0.352 DozerAIUpdate 0.0036 3.6 0.362 StealthDetectorUpdate 0.0032 1.4 0.321 GarrisonContain 0.0023 20.0 0.108 ObjectWeaponStatusHelper 0.0018 27.5 0.055 SpawnBehavior 0.0018 4.5 3.616 SlowDeathBehavior 0.0014 1.6 2.157
+LOGIKSPITZE ab Tick 31: laengster Tick 1423 23.641 ms: skript 0.070 gelaende 0.000 befehle 0.000 updates 0.021 ki 23.535 bau 0.001 partition 0.010 tickende 0.004; laengstes Update 5.307 ms Tick 2061 ProductionUpdate an AmericaBarracks
+GPUEFFEKTE flags 0xC7DDFFFF samples 8 bilder 51 bild 6.4720 ms (51) bodendetail zeichnungen 0.0 von 0.0 felder 348 tabelle 1 texturen -1 berge zeichnungen 0.0 hoehenfeld 0 x 0 texturen -1 relief zeichnungen 0.0 atlas 1 tessellation zeichnungen 0.0 abschnitte 0.00 flecken 0 punkte 0 dreiecke 0 gemessen 0 hoehen 1 fels 0.00 cbring schreiben 294.1 umlaeufe 0.09
+PARTIKELZEIT simulation 0.0005 ms je Tick (55 Ticks, 0.0 Partikel) aufbereiten 0.0000 ms je Bild (0 Bilder, 0.0 Partikel sichtbar)
 EXIT code 0

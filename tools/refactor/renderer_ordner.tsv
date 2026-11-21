@@ -1,4 +1,4 @@
-# Zuordnung der Dateien unter WW3D2 (heute Code/Renderer/WW3D2) (TODO Nr. 103 Schritt 1).
+# Zuordnung der Dateien unter WW3D2 (heute Code/Renderer/WW3D2).
 # Spalten (Tab): Datei, Ziel (Common, D3D11, Vulkan oder bleibt), Grund. Eingabe von tools/refactor/renderer_ordner.py
 # und tools/refactor/renderer_schichten.py; Erzeugung und Begruendung: docs/RENDERKERN.md Abschnitt "Schritt 1".
 # Was nicht in Common, D3D11 oder Vulkan steht, bleibt im Ordner WW3D2 (EAs Szenen-Klassen, Hilfsdateien).

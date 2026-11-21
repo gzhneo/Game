@@ -3,7 +3,7 @@
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
 #
 # VfsDump: resolves the archives of a game folder with the new file system core and prints the list
-# the game writes with -dateiIndexAusgeben. Engine building blocks only, so it
+# the game writes with -dumpFileIndex. Engine building blocks only, so it
 # also builds on Linux (tools/dateisystem/pruefen.sh).
 
 set(VFSDUMP_ENGINE ${SHARED_ENGINE_DIR}/Engine)

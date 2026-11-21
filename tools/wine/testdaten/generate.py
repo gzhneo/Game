@@ -20,7 +20,7 @@ needs Pillow, downloads and builds once into a cache (see gen_polyhaven.py). Gam
 the same.
 
 --superwaffe gives each side a superweapon building (no power, limited by the superweapon option) with two
-places in its build list, for tests of the AI with limited superweapons (-superwaffenlimit).
+places in its build list, for tests of the AI with limited superweapons (-superweaponLimit).
 
 --gegnerarten gives each side an armed tower (the script builds up to five), an aircraft, an anti-air
 vehicle, a stealthed infantry unit and a stealth-detecting radar; the script teams field aircraft and
@@ -31,7 +31,7 @@ leaves the towers out of build list and scripts (they stay buildable), for the b
 the team colour blend in the shader.
 
 --rund makes the units coarse ellipsoids with smooth normals and a white highlight, textured with testround.tga and
-its normal map testround_n.dds (round bumps), for the lighting per pixel of the models and their normal maps
+its normal map testround_nrm.dds (round bumps), for the lighting per pixel of the models and their normal maps
 (-effects modellight).
 
 --winter writes ProjectData/INI/BodenDetail.ini (loose, also with --big) with detail materials for the test terrain:

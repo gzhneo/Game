@@ -15,7 +15,7 @@
 # und beschaedigtem ZIP, Mod als einzelnes ZIP), das Texturpaket aus einer Stufe UHD der Testdaten
 # (texturpaket_stufe.py, build_texture_package.py) und ein Paket freien Inhalts unter ProjectData\Inhalt.
 #
-# Je Fall ein Start mit -dateiIndexAusgeben; die Liste muss der von VfsDump gleichen (ohne freien Inhalt, den VfsDump
+# Je Fall ein Start mit -dumpFileIndex; die Liste muss der von VfsDump gleichen (ohne freien Inhalt, den VfsDump
 # nicht kennt):
 #   sd              ohne Mod: kein Paket
 #   hd_mod          -textureQuality hd, -mod <Mod-Ordner> (mit eigenem Paket)
@@ -61,7 +61,7 @@ mkdir -p "$FREI/Art/Textures" "$FREI/Texturstufen/UHD/Art/Textures"
 printf 'frei' > "$FREI/Art/Textures/gzhtest_frei.dds"
 printf 'frei' > "$FREI/Art/Textures/gzhtest_h.dds"
 printf 'frei' > "$FREI/Art/Textures/gzhtest_u.dds"
-printf 'TEXTURPAKET 1 UHD\r\nArt\\Textures\\gzhtest_u.dds 4 4\r\n' > "$FREI/texturpaket.txt"
+printf 'TEXTUREPACK 1 UHD\r\nArt\\Textures\\gzhtest_u.dds 4 4\r\n' > "$FREI/texturpaket.txt"
 printf 'alt' > "$FREI/Texturstufen/UHD/Art/Textures/gzhtest_alt.dds"
 printf 'Testpaket' > "$FREI/LIESMICH.md"
 # zweiter Mod-Ordner: eine lose Datei, die auch die anderen Mods haben, und ein eigenes Paket mit einem Texturarchiv und
@@ -71,7 +71,7 @@ mkdir -p "$MOD2/GzhTest" "$MOD2/Texturstufen/Paket"
 printf 'mod2' > "$MOD2/GzhTest/b.txt"
 python3 - "$MOD2/Texturstufen/Paket" <<'PY'
 import sys, zipfile
-manifest = 'TEXTURPAKET 1 UHD\r\nArt\\Textures\\gzhtest_t.dds 4 4\r\n'
+manifest = 'TEXTUREPACK 1 UHD\r\nArt\\Textures\\gzhtest_t.dds 4 4\r\n'
 with zipfile.ZipFile(sys.argv[1] + '/m2.zip', 'w') as z:
     z.writestr('texturpaket.txt', manifest)
     z.writestr('Art/Textures/gzhtest_t.dds', 'mod2 paket')
@@ -94,7 +94,7 @@ fehler=0
 start() {	# start <Name> <Spielschalter ...>
 	local name=$1; shift
 	rm -f "$DATA/$name.idx" "$DATA/run_$name.log"
-	"$HERE/run_game.sh" --zeit 600 "$DATA" -quitAfter 5 -dateiIndexAusgeben "$name.idx" -crcLog "run_$name.log" "$@" \
+	"$HERE/run_game.sh" --zeit 600 "$DATA" -quitAfter 5 -dumpFileIndex "$name.idx" -crcLog "run_$name.log" "$@" \
 		> "$DATA/wine_$name.txt" 2>&1
 	local rc=$?
 	[ $rc -eq 0 ] || { echo "FEHLER $name: Rueckgabewert $rc ($DATA/wine_$name.txt)"; fehler=$((fehler + 1)); }
@@ -134,19 +134,19 @@ gegen_vfsdump drei uhd --mod "$BSP/mod=$WINMOD" --mod "$BSP/einzel.zip=$WINZIP" 
 if [ -s "$DATA/drei.idx" ]; then
 	grep -q "^gzhtest/b.txt	Z:.*mod2.GzhTest.b.txt" "$DATA/drei.idx" || { echo "FEHLER drei: b.txt nicht aus mod2"; fehler=$((fehler + 1)); }
 	grep -q "^art/textures/gzhtest_t.dds	Z:.*mod2.Texturstufen.Paket.m2.zip" "$DATA/drei.idx" || { echo "FEHLER drei: gzhtest_t.dds nicht aus dem Paket des Mods"; fehler=$((fehler + 1)); }
-	grep -aq "^MOD paket UHD .*mod2.* archive 1 abgewiesen 1" "$DATA/run_drei.log" || { echo "FEHLER drei: Zeile MOD paket fehlt"; fehler=$((fehler + 1)); }
+	grep -aq "^MOD package UHD .*mod2.* archives 1 rejected 1" "$DATA/run_drei.log" || { echo "FEHLER drei: Zeile MOD package fehlt"; fehler=$((fehler + 1)); }
 fi
 # ohne Paket des Spiels gibt es nur SD
 mv "$DATA/Texturstufen/Paket" "$DATA/Paket.weg"
 gegen_vfsdump ohne_paket hd --mod "$BSP/mod=$WINMOD" -- -mod "$WINMOD"
 if [ -s "$DATA/ohne_paket.idx" ]; then
-	grep -aq "^TEXTURESTUFE SD wunsch HD .*paket 0 " "$DATA/run_ohne_paket.log" || { echo "FEHLER ohne_paket: Zeile TEXTURESTUFE SD fehlt"; fehler=$((fehler + 1)); }
-	! grep -aq "^MOD paket" "$DATA/run_ohne_paket.log" || { echo "FEHLER ohne_paket: Paket des Mods geladen"; fehler=$((fehler + 1)); }
+	grep -aq "^TEXTURETIER SD wanted HD .*package 0 " "$DATA/run_ohne_paket.log" || { echo "FEHLER ohne_paket: Zeile TEXTURETIER SD fehlt"; fehler=$((fehler + 1)); }
+	! grep -aq "^MOD package" "$DATA/run_ohne_paket.log" || { echo "FEHLER ohne_paket: Paket des Mods geladen"; fehler=$((fehler + 1)); }
 fi
 mv "$DATA/Paket.weg" "$DATA/Texturstufen/Paket"
 if start uhd_paket -textureQuality uhd -mod "$WINMOD"; then
-	grep -aq "^TEXTURPAKET UHD " "$DATA/run_uhd_paket.log" || { echo "FEHLER uhd_paket: Paket nicht geladen"; fehler=$((fehler + 1)); }
-	grep -aq "^FREIER INHALT .*TestFrei.* dateien 3 stufe UHD manifest 1" "$DATA/run_uhd_paket.log" \
+	grep -aq "^TEXTUREPACK UHD " "$DATA/run_uhd_paket.log" || { echo "FEHLER uhd_paket: Paket nicht geladen"; fehler=$((fehler + 1)); }
+	grep -aq "^FREE CONTENT .*TestFrei.* files 3 tier UHD manifest 1" "$DATA/run_uhd_paket.log" \
 		|| { echo "FEHLER uhd_paket: freier Inhalt nicht geladen"; fehler=$((fehler + 1)); }
 	for p in gzhtest_frei.dds gzhtest_h.dds gzhtest_u.dds; do
 		grep -q "^art/textures/$p	ProjectData" "$DATA/uhd_paket.idx" || { echo "FEHLER uhd_paket: $p nicht aus dem freien Inhalt"; fehler=$((fehler + 1)); }

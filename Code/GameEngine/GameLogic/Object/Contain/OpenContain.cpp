@@ -355,6 +355,11 @@ void OpenContain::addToContain( Object *rider )
 	// trigger an onContainedBy event for the object that just got "eaten" by us
 	rider->onContainedBy( getObject() );
 
+	// A rider destroyed while it was being added (it had no container yet, so its destruction could not
+	// remove it) would stay in the list until it is freed.
+	if( rider->isDestroyed() && getObject()->getContain() )
+		getObject()->getContain()->removeFromContain( rider );
+
 	doLoadSound();
 
 }
@@ -1211,6 +1216,18 @@ void OpenContain::redeployOccupants( void )
 	// backwards to the start ... that reflects the order in which they actually went
 	// into the building since all list building constructs at the head
 	//
+	for (ContainedItemsList::iterator it = m_containList.begin(); it != m_containList.end(); )
+	{
+		// An entry that is no longer a live object must not be touched; drop it from the list.
+		if( !TheGameLogic->isObjectPointerLive( *it ) )
+		{
+			DEBUG_CRASH(("OpenContain::redeployOccupants - '%s' holds a destroyed occupant\n", getObject()->getTemplate()->getName().str()));
+			it = m_containList.erase( it );
+			m_containListSize--;
+			continue;
+		}
+		++it;
+	}
 	for (ContainedItemsList::const_reverse_iterator it = getContainList().rbegin(); it != getContainList().rend(); ++it)
 	{
 		putObjAtNextFirePoint( *it );

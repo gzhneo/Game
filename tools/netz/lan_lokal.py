@@ -4,7 +4,7 @@
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
 """LAN-Partie mehrerer Instanzen auf einem Rechner (nur Windows).
 
-Startet N Instanzen (2 bis 8) im Fenster mit -mehrfach und -netzLokal <i>: Instanz i bindet die
+Startet N Instanzen (2 bis 8) im Fenster mit -multiInstance und -netLocal <i>: Instanz i bindet die
 Loopback-Adresse 127.0.0.i (Lobby 8086, Spiel 8088), Rundrufe der Lobby gehen als Einzelsendungen an
 127.0.0.1 bis 127.0.0.8, der Spielername bekommt die Instanznummer angehaengt, und die Einstellungen
 (Options.ini, Network.ini) werden nicht geschrieben. Wahlweise mit Netzwerkemulator (Latenz, Schwankung,
@@ -16,7 +16,7 @@ die Debug-Protokolle aus (m<PID>_DebugLogFileD.txt im Exe-Ordner, nur Debug-Buil
 verworfene Befehle fremder Absender, Assertions.
 
 Mit --relais startet das Werkzeug einen lokalen Treffpunkt-Server (gzh-rendezvous auf 127.0.0.1:18090) und die Instanzen mit
--treffpunkt und -netzNurRelais: der Gastgeber meldet seinen Raum an, und jeder Weg zwischen den Spiel-Sockets geht ueber das Relais
+-rendezvous und -netRelayOnly: der Gastgeber meldet seinen Raum an, und jeder Weg zwischen den Spiel-Sockets geht ueber das Relais
 des Servers, kein direkter Weg. Die Auswertung nennt die Wege je Instanz (GameLinks-Zeilen) und die Statistik des Servers.
 
 Beispiele:
@@ -31,7 +31,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "abnahme"))
 
 SERVER_PORT = 18090
-MERKMALE = ("GameLinks - the way", "relay", "network emulator", "dropped a command", "ASSERTION", "CRC mismatch", "disconnect", "TESTABLAUF ERROR", "sealed traffic", "no keys for", "no usable key")
+MERKMALE = ("GameLinks - the way", "relay", "network emulator", "dropped a command", "ASSERTION", "CRC mismatch", "disconnect", "TESTSCRIPT ERROR", "sealed traffic", "no keys for", "no usable key")
 
 
 def skript(a, i):
@@ -44,11 +44,11 @@ def skript(a, i):
     with open(pfad, "w", encoding="utf-8") as f:
         karte = ""
         if i == 1 and a.karte:
-            karte = ("klick LanGameOptionsMenu.wnd:ButtonSelectMap\n"
-                     "fenster LanMapSelectMenu.wnd:ListboxMap\n"
-                     f"auswahlText LanMapSelectMenu.wnd:ListboxMap {a.karte}\n"
-                     "klick LanMapSelectMenu.wnd:ButtonOK\n"
-                     "fenster LanGameOptionsMenu.wnd:ButtonStart\n")
+            karte = ("click LanGameOptionsMenu.wnd:ButtonSelectMap\n"
+                     "window LanMapSelectMenu.wnd:ListboxMap\n"
+                     f"selectText LanMapSelectMenu.wnd:ListboxMap {a.karte}\n"
+                     "click LanMapSelectMenu.wnd:ButtonOK\n"
+                     "window LanGameOptionsMenu.wnd:ButtonStart\n")
         f.write(text.replace("{WARTE}", str(warte)).replace("{KARTE}", karte))
     return pfad
 
@@ -84,25 +84,25 @@ def finde_server(a):
 def befehl(a, i):
     # -ignoreAsserts: an assertion dialog would hold an instance forever, this tool waits for all of them;
     # the log check below still counts every ASSERTION line
-    cmd = [a.exe, "-win", "-mehrfach", "-netzLokal", str(i), "-xres", str(a.xres), "-yres", str(a.yres), "-nologo",
+    cmd = [a.exe, "-win", "-multiInstance", "-netLocal", str(i), "-xres", str(a.xres), "-yres", str(a.yres), "-nologo",
            "-ignoreAsserts"]
     if a.nur is None or i in a.nur:
-        for schalter, wert in (("-netzLatenz", a.latenz), ("-netzSchwankung", a.schwankung),
-                               ("-netzVerlust", a.verlust), ("-netzDoppelt", a.doppelt),
-                               ("-netzUmordnung", a.umordnung)):
+        for schalter, wert in (("-netLatency", a.latenz), ("-netJitter", a.schwankung),
+                               ("-netLoss", a.verlust), ("-netDuplicate", a.doppelt),
+                               ("-netReorder", a.umordnung)):
             if wert:
                 cmd += [schalter, str(wert)]
         if a.saat:
-            cmd += ["-netzSaat", str(a.saat + i)]
+            cmd += ["-netSeed", str(a.saat + i)]
     for mod in a.mod_alle or []:
         cmd += ["-mod", mod]
     if i == 1:
         for mod in a.mod_host or []:
             cmd += ["-mod", mod]
     if a.relais:
-        cmd += ["-treffpunkt", a.treffpunkt or f"127.0.0.1:{SERVER_PORT}", "-netzNurRelais"]
+        cmd += ["-rendezvous", a.rendezvous or f"127.0.0.1:{SERVER_PORT}", "-netRelayOnly"]
     if a.auto:
-        cmd += ["-testablauf", skript(a, i)]
+        cmd += ["-testScript", skript(a, i)]
     return cmd + [x.replace("{i}", str(i)) for x in (a.extra or [])]  # {i} = instance number, e.g. for a log file per instance
 
 
@@ -117,7 +117,7 @@ def auswerten(exe_dir, pids, start):
                 for zeile in f:
                     if any(m in zeile for m in MERKMALE):
                         print("  " + zeile.rstrip())
-                        if "ASSERTION" in zeile or "dropped a command" in zeile or "CRC mismatch" in zeile or "TESTABLAUF ERROR" in zeile:
+                        if "ASSERTION" in zeile or "dropped a command" in zeile or "CRC mismatch" in zeile or "TESTSCRIPT ERROR" in zeile:
                             fehler += 1
     return fehler
 
@@ -137,11 +137,11 @@ def main():
     p.add_argument("--nur", type=int, nargs="+", help="Emulator nur auf diesen Instanzen")
     p.add_argument("--karte", help="--auto: Text im Kartennamen, etwa \"(4)\" fuer die erste Karte mit vier Plaetzen (Standard: die voreingestellte Karte, zwei Plaetze)")
     p.add_argument("--auto", action="store_true", help="Menues per Testablauf bedienen: Instanz 1 hostet, die anderen treten bei, alle spielen 900 Logik-Frames und beenden")
-    p.add_argument("--relais", action="store_true", help="lokalen Treffpunkt-Server starten, jeder Weg zwischen den Spielern geht ueber sein Relais (-netzNurRelais)")
+    p.add_argument("--relais", action="store_true", help="lokalen Treffpunkt-Server starten, jeder Weg zwischen den Spielern geht ueber sein Relais (-netRelayOnly)")
     p.add_argument("--server", help="--relais: gzh-rendezvous.exe (Standard: aus build-x64 oder build-x64-tools)")
     p.add_argument("--mod-alle", nargs="+", help="-mod <Ordner oder Archiv> fuer alle Instanzen")
     p.add_argument("--mod-host", nargs="+", help="-mod <Ordner oder Archiv> nur fuer Instanz 1 (den Gastgeber)")
-    p.add_argument("--treffpunkt", help="--relais: ein laufender Treffpunkt-Server host[:port] statt des lokalen (es wird keiner gestartet)")
+    p.add_argument("--rendezvous", help="--relais: ein laufender Treffpunkt-Server host[:port] statt des lokalen (es wird keiner gestartet)")
     p.add_argument("extra", nargs="*", help="weitere Startschalter (nach --)")
     a = p.parse_args()
     if not 2 <= a.anzahl <= 8:
@@ -157,8 +157,8 @@ def main():
 
     server = None
     server_log = os.path.join(a.skriptdir, "server.txt")
-    if a.relais and a.treffpunkt:
-        print(f"Treffpunkt-Server {a.treffpunkt} (extern, wird nicht gestartet)")
+    if a.relais and a.rendezvous:
+        print(f"Treffpunkt-Server {a.rendezvous} (extern, wird nicht gestartet)")
     elif a.relais:
         exe_server = finde_server(a)
         if exe_server is None:

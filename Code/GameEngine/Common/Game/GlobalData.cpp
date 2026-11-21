@@ -111,7 +111,7 @@ GlobalData* GlobalData::m_theOriginal = nullptr;
 	{ "UseWaterPlane",							INI::parseBool,				nullptr,			offsetof( GlobalData, m_useWaterPlane ) },
 	{ "UseCloudPlane",							INI::parseBool,				nullptr,			offsetof( GlobalData, m_useCloudPlane ) },
 	{ "DownwindAngle",							INI::parseReal,				nullptr,			offsetof( GlobalData, m_downwindAngle ) },
-	{ "UseShadowVolumes",						INI::parseBool,				nullptr,			offsetof( GlobalData, m_useShadowVolumes ) },
+	{ "UseShadowVolumes",						INI::parseBool,				nullptr,			offsetof( GlobalData, m_unusedShadowVolumes ) },
 	{ "UseShadowDecals",						INI::parseBool,				nullptr,			offsetof( GlobalData, m_useShadowDecals ) },
 	{ "TextureReductionFactor",			INI::parseInt,				nullptr,			offsetof( GlobalData, m_textureReductionFactor ) },
 	{ "UseBehindBuildingMarker",		INI::parseBool,				nullptr,			offsetof( GlobalData, m_enableBehindBuildingMarkers ) },
@@ -529,7 +529,7 @@ GlobalData* GlobalData::m_theOriginal = nullptr;
 };
 
 
-// True when the command line names -benutzerdaten <folder>.
+// True when the command line names -userData <folder>.
 static bool userDataFolderGiven()
 {
 	int count = 0;
@@ -538,7 +538,7 @@ static bool userDataFolderGiven()
 	if (args)
 	{
 		for (int i = 1; i + 1 < count && !given; ++i)
-			given = ::_wcsicmp(args[i], L"-benutzerdaten") == 0;
+			given = ::_wcsicmp(args[i], L"-userData") == 0;
 		::LocalFree(args);
 	}
 	return given;
@@ -546,7 +546,7 @@ static bool userDataFolderGiven()
 
 //-------------------------------------------------------------------------------------------------
 // EA's user data folder of the original game (<Documents>\<leafName>), only read: the first start without
-// Settings.ini takes over its Options.ini. Empty with -benutzerdaten (test runs keep to their own folder) or
+// Settings.ini takes over its Options.ini. Empty with -userData (test runs keep to their own folder) or
 // when the folder does not exist.
 //-------------------------------------------------------------------------------------------------
 static AsciiString eaUserDataDirectory(const char *leafName)
@@ -567,7 +567,7 @@ static AsciiString eaUserDataDirectory(const char *leafName)
 }
 
 //-------------------------------------------------------------------------------------------------
-// The user data folder: -benutzerdaten <folder>, or <Documents>\<leafName>. The switch is read from the
+// The user data folder: -userData <folder>, or <Documents>\<leafName>. The switch is read from the
 // wide command line here, before parseCommandLine, because Options.ini is read while GameData.ini is
 // parsed. The real path goes to Engine::UserDataFiles; the narrow form for the rest of the engine is in
 // the ANSI code page, or the short name, or UTF-8 when neither holds the path.
@@ -581,7 +581,7 @@ static AsciiString userDataDirectory(const char *leafName)
 	{
 		for (int i = 1; i + 1 < count; ++i)
 		{
-			if (::_wcsicmp(args[i], L"-benutzerdaten") == 0)
+			if (::_wcsicmp(args[i], L"-userData") == 0)
 			{
 				std::error_code ec;
 				dir = std::filesystem::absolute(std::filesystem::path(args[i + 1]), ec);
@@ -706,7 +706,7 @@ GlobalData::GlobalData()
 	m_useWaterPlane = FALSE;
 	m_useCloudPlane = FALSE;
 	m_downwindAngle = ( -0.785f );//Northeast!
-	m_useShadowVolumes = FALSE;
+	m_unusedShadowVolumes = FALSE;
 	m_useShadowDecals = FALSE;
 	m_textureReductionFactor = -1;
 	m_enableBehindBuildingMarkers = TRUE;
@@ -930,6 +930,8 @@ GlobalData::GlobalData()
 	m_cpuParticles = FALSE;
 	m_noMeshInstancing = FALSE;
 	m_simThread = FALSE;
+	m_failTextureEvery = 0;
+	m_simulateDeviceLoss = 0;
 	m_noConstantBufferRing = FALSE;
 	m_renderEffectsFromCommandLine = FALSE;
 	m_renderScale = 1.0f;				// full resolution until the detail level applies

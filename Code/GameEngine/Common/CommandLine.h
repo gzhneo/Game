@@ -33,7 +33,7 @@
 #define _COMMAND_LINE_H_
 
 void parseCommandLine(int argc, char *argv[]); ///< Parse command-line parameters
-/// -vorlagenAusgeben <file>: path for the dump of things, upgrades, sciences and special powers (nullptr = off)
+/// -dumpGameData <file>: path for the dump of things, upgrades, sciences and special powers (nullptr = off)
 const char *getGameDataDumpPath();
 /// -staticLOD <Low|Medium|High|VeryHigh>: detail level for this run instead of the one in the options (nullptr = off)
 const char *getForcedStaticLOD();

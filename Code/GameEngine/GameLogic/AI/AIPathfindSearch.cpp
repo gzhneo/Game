@@ -287,8 +287,8 @@ void Pathfinder::formatStatistics( char *text, size_t size ) const
 	if (m_statTicks == 0)
 		return;
 	const double ticks = static_cast<double>(m_statTicks);
-	snprintf(text, size, "PFADSUCHE %.4f ms je Tick mit Anfragen (%u Ticks, hoechstens %.3f ms) anfragen %u zellen %.0f "
-		"warteschlange %.1f hoechstens %u rest %.2f anfragen_je_tick %u %u %u %u einzeln_hoechstens %.3f ms",
+	snprintf(text, size, "PATHFINDING %.4f ms per tick with requests (%u ticks, max %.3f ms) requests %u cells %.0f "
+		"queue %.1f max %u rest %.2f requests_per_tick %u %u %u %u single_max %.3f ms",
 		m_statQueueMs / ticks, m_statTicks, m_statMaxMs, m_statRequests, m_statCells,
 		m_statQueueLength / ticks, m_statQueueMax, m_statLeftOver / ticks,
 		m_statPerTick[0], m_statPerTick[1], m_statPerTick[2], m_statPerTick[3], m_statRequestMaxMs);
@@ -325,21 +325,21 @@ void Pathfinder::nextLineMemoGeneration( void )
 
 void Pathfinder::formatSearchStatistics( char *text, size_t size ) const
 {
-	static const char *const names[SEARCH_KINDS] = { "pfad", "naechster", "angriff", "sicher", "flicken", "kosten",
-		"boden", "hierarchisch", "ausweichen" };
-	size_t used = static_cast<size_t>(snprintf(text, size, "PFADSUCHE_ARTEN"));
+	static const char *const names[SEARCH_KINDS] = { "path", "nearest", "attack", "safe", "patch", "cost",
+		"ground", "hierarchical", "evade" };
+	size_t used = static_cast<size_t>(snprintf(text, size, "PATHFINDING_KINDS"));
 	for (Int i = 0; i < SEARCH_KINDS && used < size; ++i)
 	{
 		const SearchStats &s = m_statSearch[i];
 		if (s.searches == 0)
 			continue;
-		used += static_cast<size_t>(snprintf(text + used, size - used, " %s %u zellen %.0f ms %.1f hoechstens %.2f",
+		used += static_cast<size_t>(snprintf(text + used, size - used, " %s %u cells %.0f ms %.1f max %.2f",
 			names[i], s.searches, s.cells, s.ms, s.maxMs));
 	}
 	if (used < size)
-		snprintf(text + used, size - used, " sichtlinie %.0f schritte %.0f abbrueche %.0f vorrat_leer %u"
-			" pfad_fehlschlaege %u davon_vorrat_leer %u wiederholt %u frei_beim_start mittel %.0f kleinste %u"
-			" frei_bei_vorrat_leer %.0f",
+		snprintf(text + used, size - used, " line_of_sight %.0f steps %.0f aborts %.0f pool_empty %u"
+			" path_failures %u of_pool_empty %u repeated %u free_at_start mean %.0f smallest %u"
+			" free_when_pool_empty %.0f",
 			m_statLineCalls, m_statLineSteps, m_statLineAborts, s_statInfoExhausted,
 			m_statPathFailed, m_statPathFailedExhausted, m_statPathFailedRepeat,
 			m_statFreeSamples ? m_statFreeSum / m_statFreeSamples : 0.0, m_statFreeSamples ? m_statFreeMin : 0u,

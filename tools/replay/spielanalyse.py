@@ -6,7 +6,7 @@
 
 Ein Replay enthaelt die Befehle der MENSCHLICHEN Spieler (KI-Plaetze rechnen lokal und senden nichts) mit
 Frame, Spielernummer, Typ und Argumenten. Die Nummern der Vorlagen, Upgrades, Wissenschaften und
-Spezialkraefte loest eine Liste auf, die das Spiel mit `-vorlagenAusgeben <Datei>` schreibt.
+Spezialkraefte loest eine Liste auf, die das Spiel mit `-dumpGameData <Datei>` schreibt.
 
   spielanalyse.py --vorlagen-zh vorlagen-zh.txt --vorlagen-generals vorlagen-g.txt <Ordner oder .rep>... [--md Datei]
 
@@ -319,25 +319,25 @@ def bericht(ergebnisse, md):
 
 
 def analysiere_ki_logs(ordner, liste):
-    """Kennzahlen der Computerspieler aus Protokollen der KI-Serien (KIAUFTRAG, KISTAT, KIANGRIFF; -aiStats -crcLog).
+    """Kennzahlen der Computerspieler aus Protokollen der KI-Serien (AIORDER, AISTAT, AIATTACK; -aiStats -crcLog).
     Ergebnis: {art: [Spieler]} mit art 'neue KI' und 'klassische KI'."""
     nach_name = {v[0]: v for v in liste["THING"].values()}
     out = {"neue KI": [], "klassische KI": []}
     for pfad in sorted(glob.glob(os.path.join(ordner, "**", "*.log"), recursive=True)):
         arten, ereignisse, angriffe, letzter = {}, collections.defaultdict(list), collections.defaultdict(list), 0
         for z in open(pfad, encoding="latin-1", errors="replace"):
-            if z.startswith("KISTAT "):
+            if z.startswith("AISTAT "):
                 t = z.split()
                 spieler = int(t[3])
-                arten.setdefault(spieler, int(t[t.index("art") + 1]))
+                arten.setdefault(spieler, int(t[t.index("kind") + 1]))
                 letzter = max(letzter, int(t[1]))
-            elif z.startswith("KIAUFTRAG "):
+            elif z.startswith("AIORDER "):
                 t = z.split()
                 frame, spieler = int(t[1]), int(t[3])
                 art, name, kosten = t[5], t[7], int(t[9])
                 kinds = nach_name.get(name, ("?", "?", 0, []))[3]
-                ereignisse[spieler].append((frame / TICKS / 60.0, "einheit" if art == "einheit" else "gebaeude", name, kosten, kinds))
-            elif z.startswith("KIANGRIFF ") and " los " in z:
+                ereignisse[spieler].append((frame / TICKS / 60.0, "einheit" if art == "unit" else "gebaeude", name, kosten, kinds))
+            elif z.startswith("AIATTACK ") and " launch " in z:
                 t = z.split()
                 angriffe[int(t[3])].append(int(t[1]) / TICKS / 60.0) if int(t[3]) in angriffe else angriffe.__setitem__(int(t[3]), [int(t[1]) / TICKS / 60.0])
         minuten = letzter / TICKS / 60.0
@@ -358,7 +358,7 @@ def bericht_ki(ki, md):
     w = z.append
     w("# Kennzahlen der Computerspieler (aus Protokollen der KI-Serien)")
     w("")
-    w("Kennzahlen aus den Zeilen `KIAUFTRAG` (Einheiten- und Gebäudeaufträge), `KISTAT` und `KIANGRIFF` "
+    w("Kennzahlen aus den Zeilen `AIORDER` (Einheiten- und Gebäudeaufträge), `AISTAT` und `AIATTACK` "
       "(erster Angriff nur für die neue KI). Minuten sind Spielminuten. Median je Spieler und Partie, in Klammern die Zahl der Spieler mit dem Ereignis.")
     w("")
     w("| Kennzahl | " + " | ".join(ki) + " |")
@@ -414,7 +414,7 @@ def bericht_ki(ki, md):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("pfade", nargs="*")
-    ap.add_argument("--ki-logs", help="Ordner mit Protokollen der KI-Serien (KIAUFTRAG-Zeilen); schreibt die Kennzahlen der Computerspieler")
+    ap.add_argument("--ki-logs", help="Ordner mit Protokollen der KI-Serien (AIORDER-Zeilen); schreibt die Kennzahlen der Computerspieler")
     ap.add_argument("--md-ki")
     ap.add_argument("--vorlagen-zh", required=True)
     ap.add_argument("--vorlagen-generals", required=True)

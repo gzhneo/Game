@@ -46,7 +46,7 @@ import map_props  # noqa: E402  (RefPack, BIG-Archiv)
 
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import pfade  # noqa: E402
-# Muster: ScriptEngine.cpp und ScriptActions.cpp sind zerlegt (TODO 72 a), ihre Teile heissen ScriptEngine*.cpp usw.
+# Muster: ScriptEngine.cpp und ScriptActions.cpp sind zerlegt, ihre Teile heissen ScriptEngine*.cpp usw.
 SRC = {
     "scripts_h": "GameEngine/GameLogic/Scripts.h",
     "engine": "GameEngine/GameLogic/ScriptEngine/ScriptEngine*.cpp",

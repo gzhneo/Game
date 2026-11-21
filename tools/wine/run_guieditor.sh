@@ -36,6 +36,8 @@ Z="$OUT/mapeditor"
 [ -n "$BILDER" ] || BILDER="$OUT/guieditor-lauf"
 WINE=$(command -v wine64 || echo /usr/lib/wine/wine64)
 WINESERVER=$(command -v wineserver || echo /usr/lib/wine/wineserver64)
+# Wine 9.0 aborts ("free(): invalid pointer") whenever TMPDIR is set, whatever its value; work dirs are derived above.
+unset TMPDIR
 command -v Xvfb >/dev/null || { echo "Xvfb fehlt (Paket xvfb)"; exit 2; }
 
 # Frische Testdaten und ein leerer Bilderordner: kein Rest eines frueheren Laufs zaehlt mit.

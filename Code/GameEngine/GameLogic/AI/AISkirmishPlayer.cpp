@@ -257,6 +257,10 @@ void AISkirmishPlayer::processBaseBuilding( void )
 				DEBUG_LOG(("Forcing build of power plant.\n"));
 			}
 		}
+		if (bldgPlan && bldgInfo && !allowBaseBuilding(bldgPlan)) {
+			bldgPlan = nullptr;
+			bldgInfo = nullptr;
+		}
 		if (bldgPlan && bldgInfo) {
 #ifdef USE_DOZER
 			// dozer-construct the building
@@ -1052,9 +1056,8 @@ void AISkirmishPlayer::adjustBuildList(BuildListInfo *list)
 
 	cur = list;
 	while (cur) {
-		const ThingTemplate *tTemplate = TheThingFactory->findTemplate(list->getTemplateName());
-		if (tTemplate && tTemplate->isKindOf(KINDOF_COMMANDCENTER)) {
-			foundInBuildList = true;
+		// Every entry is moved around the command center of the build list.
+		if (foundInBuildList) {
 			Coord3D curPos = *cur->getLocation();
 			// Transform to new coords.
 			curPos.x -= buildPos.x;

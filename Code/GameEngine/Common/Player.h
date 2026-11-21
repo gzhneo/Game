@@ -449,7 +449,7 @@ public:
 
 	/// Get the enemy an ai player is currently focused on.  NOTE - Can be NULL.
 	Player  *getCurrentEnemy( void );
-	/// Like getCurrentEnemy, but never picks a new enemy; read-only (KISTAT log).
+	/// Like getCurrentEnemy, but never picks a new enemy; read-only (AISTAT log).
 	Player  *peekCurrentEnemy( void ) const;
 	/// The player's AI (nullptr for humans); the commander AI uses it to coordinate with allied AIs.
 	/// Read-only.

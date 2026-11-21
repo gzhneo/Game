@@ -392,15 +392,17 @@ public:
 	virtual void				Set_Terrain_Detail_Table(const RenderTerrainDetailTable&) {}
 	/// The following draws are terrain with atlas coordinates (HeightMapRenderObjClass::Render).
 	virtual void				Set_Terrain_Detail(bool) {}
+	/// Compiles the common vertex shader variants ahead of the first draw (map load); cheap once cached.
+	virtual void				Warm_Shaders() {}
 	// Terrain rock layer.
 	/// Map height field (one byte per grid point, row by row), border in cells, cell size and height scale (world).
-	virtual void				Set_Terrain_Height_Field(const unsigned char*, int, int, int, float, float) {}
+	virtual void				Set_Terrain_Height_Field(const unsigned char*, int, int, int, float, float, unsigned) {}
 	/// Prelighting lights (map time of day).
 	virtual void				Set_Terrain_Lighting(const RenderTerrainLighting&) {}
 	/// Terrain relief: atlas of normals and gloss, laid out like the terrain atlas (WorldHeightMap). active =
 	/// false drops it if it is the current one.
 	virtual void				Set_Terrain_Relief_Atlas(WW3DTextureHandle, bool) {}
-	/// Models lit per pixel: the normal map (<texture>_n.dds) of the stage 0 texture owner, nullptr for none. Used
+	/// Models lit per pixel: the normal map (<texture>_nrm.dds) of the stage 0 texture owner, nullptr for none. Used
 	/// only while stage 0 holds owner.
 	virtual void				Set_Model_Normal_Texture(WW3DTextureHandle, WW3DTextureHandle) {}
 	// Terrain tessellation.

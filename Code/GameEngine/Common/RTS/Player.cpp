@@ -1216,7 +1216,7 @@ Bool Player::computeSuperweaponTarget(const SpecialPowerTemplate *power, Coord3D
 //-------------------------------------------------------------------------------------------------
 /** Get this player's current enemy. NOTE - Can be NULL. */
 //-------------------------------------------------------------------------------------------------
-// getAiEnemy re-picks every 5 s and changes state; the KISTAT log must only read.
+// getAiEnemy re-picks every 5 s and changes state; the AISTAT log must only read.
 Player  *Player::peekCurrentEnemy( void ) const
 {
 	return m_ai ? m_ai->peekAiEnemy() : nullptr;

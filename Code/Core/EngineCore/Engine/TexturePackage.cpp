@@ -166,7 +166,8 @@ int TexturePackage::addManifest(const char *text, std::size_t length, const char
 				const std::string version = token(p, lineEnd);
 				const std::string tierName = token(p, lineEnd);
 				const int tier = parseTextureTier(tierName.c_str());
-				if (first != "TEXTURPAKET" || version != "1" || tier < TEXTURE_TIER_SD)
+				// TEXTURPAKET is the keyword of packages built by older tool versions; they are still in use.
+				if ((first != "TEXTUREPACK" && first != "TEXTURPAKET") || version != "1" || tier < TEXTURE_TIER_SD)
 					return -1;
 				header = true;
 				if (m_highestTier < 0 || tier < m_highestTier)

@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Auftrag für objekt_ersetzen.py, baum_ersetzen.py und natur_anordnen.py (TODO 56/78). Pfade außerhalb des Repos, relativ zu GZH_WERKZEUGE; Scans in <modelle> (tools/assets/cc0_laden.py). Liest keine EA-Datei: modell = Name, unter dem die INI das Modell lädt (Schnittstelle); anordnung = eigene Regel für Größe und Anordnung der Scan-Teile (Spielmaßstab 6,5 Einheiten je Meter mal Gestaltungsfaktor); lage = daraus mit natur_anordnen.py gerechnet (Mitte, Winkel, Maßstab); farbziel = eigene Palette, Mittel und Streuung je Kanal (sRGB 0..1); hoehe/kronen_halbmesser der Kiefer in Spieleinheiten.",
+  "_hinweis": "Auftrag für objekt_ersetzen.py, baum_ersetzen.py und natur_anordnen.py. Pfade außerhalb des Repos, relativ zu GZH_WERKZEUGE; Scans in <modelle> (tools/assets/cc0_laden.py). Liest keine EA-Datei: modell = Name, unter dem die INI das Modell lädt (Schnittstelle); anordnung = eigene Regel für Größe und Anordnung der Scan-Teile (Spielmaßstab 6,5 Einheiten je Meter mal Gestaltungsfaktor); lage = daraus mit natur_anordnen.py gerechnet (Mitte, Winkel, Maßstab); farbziel = eigene Palette, Mittel und Streuung je Kanal (sRGB 0..1); hoehe/kronen_halbmesser der Kiefer in Spieleinheiten.",
   "vorgaben": {
     "arbeit": "cc0/arbeit",
     "modelle": "cc0/modelle",

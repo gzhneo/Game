@@ -318,7 +318,7 @@ void SlavedUpdate::doAttackLogic( const Object *target )
 	if( data->m_attackWanderRange )
 	{
 		//Allow me to wander away from the pinnedPosition.
-		Real randomDirection = static_cast<Real>(GameLogicRandomValue( 0, static_cast<Int>(2*PI) ));
+		Real randomDirection = GameLogicRandomValueReal( 0, 2*PI );
 		m_guardPointOffset.zero();
 		m_guardPointOffset.x += data->m_attackWanderRange * Cos( randomDirection );
 		m_guardPointOffset.y += data->m_attackWanderRange * Sin( randomDirection );
@@ -381,7 +381,7 @@ void SlavedUpdate::doScoutLogic( const Coord3D *mastersDestination )
 	if( data->m_scoutWanderRange )
 	{
 		//Allow me to wander away from the pinnedPosition.
-		Real randomDirection = static_cast<Real>(GameLogicRandomValue( 0, static_cast<Int>(2*PI) ));
+		Real randomDirection = GameLogicRandomValueReal( 0, 2*PI );
 		m_guardPointOffset.zero();
 		m_guardPointOffset.x += data->m_scoutWanderRange * Cos( randomDirection );
 		m_guardPointOffset.y += data->m_scoutWanderRange * Sin( randomDirection );
@@ -411,7 +411,7 @@ void SlavedUpdate::doGuardLogic( Coord3D *pinnedPosition )
 	if( data->m_guardWanderRange )
 	{
 		// recalc where we want to be if we wander around
-		Real randomDirection = static_cast<Real>(GameLogicRandomValue( 0, static_cast<Int>(2*PI) ));
+		Real randomDirection = GameLogicRandomValueReal( 0, 2*PI );
 		m_guardPointOffset.zero();
 		m_guardPointOffset.x += data->m_guardMaxRange * Cos( randomDirection );
 		m_guardPointOffset.y += data->m_guardMaxRange * Sin( randomDirection );
@@ -678,7 +678,7 @@ void SlavedUpdate::moveToNewRepairSpot()
 	if( data->m_repairRange )
 	{
 		//Allow me to wander away from the pinnedPosition.
-		Real randomDirection = static_cast<Real>(GameLogicRandomValue( 0, static_cast<Int>(2*PI) ));
+		Real randomDirection = GameLogicRandomValueReal( 0, 2*PI );
 		m_guardPointOffset.set( master->getPosition() );
 		m_guardPointOffset.x += data->m_repairRange * Cos( randomDirection );
 		m_guardPointOffset.y += data->m_repairRange * Sin( randomDirection );
@@ -712,7 +712,7 @@ void SlavedUpdate::startSlavedEffects( const Object *slaver )
 	const SlavedUpdateModuleData* data = getSlavedUpdateModuleData();
 
 	// Decide where our pinned stray point is
-	Real randomDirection = static_cast<Real>(GameLogicRandomValue( 0, static_cast<Int>(2*PI) ));
+	Real randomDirection = GameLogicRandomValueReal( 0, 2*PI );
 	m_guardPointOffset.zero();
 	m_guardPointOffset.x += data->m_guardMaxRange * Cos( randomDirection );
 	m_guardPointOffset.y += data->m_guardMaxRange * Sin( randomDirection );

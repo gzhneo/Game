@@ -67,6 +67,8 @@ void MissingTexture::_Init()
 		WW3D_FORMAT_A8R8G8B8,
 		MIP_LEVELS_ALL
 	);
+	// No texture (video memory full, device lost): textures that fail to load then have nothing to fall back to.
+	if (!tex) return;
 
 	WW3DLockedRect locked_rect;
 	RECT rect;

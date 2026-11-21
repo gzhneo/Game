@@ -4,22 +4,22 @@
 # Gedacht fuer runner.py record mit 2 KI: der lokale Spieler ist Beobachter, die Befehle gehen an
 # die KI-Spieler (aufgeloeste Indizes in den Zeilen "TESTHILFE" im CRC-Protokoll). Jede Testhilfe, die die
 # Logik beruehrt, kommt mindestens einmal vor; das Replay muss beim Abspielen CRC-gleich laufen.
-300   geld_plus  ki1
-330   geld_einfrieren  ki1
-360   energie_unendlich  ki1
-390   energie_minus  ki2
-391   energie_minus  ki2
-392   energie_minus  ki2
-420   sofortbau  ki1
-450   unverwundbar  ki2
-480   keine_wartezeit  ki1
-510   generalspunkt  ki1
-540   alle_faehigkeiten  ki2
-570   rang_plus  ki1
-600   karte_aufdecken  ki1
-1500  energie_plus  ki2
-1800  geld_einfrieren  ki1
-2100  unverwundbar  ki2
-2400  karte_aufdecken  ki1
-2700  sofortbau  ki1
-3300  alle_feinde_vernichten  ki1
+300   money_plus  ai1
+330   freeze_money  ai1
+360   unlimited_power  ai1
+390   power_minus  ai2
+391   power_minus  ai2
+392   power_minus  ai2
+420   instant_build  ai1
+450   invulnerable  ai2
+480   no_cooldown  ai1
+510   general_point  ai1
+540   all_abilities  ai2
+570   rank_plus  ai1
+600   reveal_map  ai1
+1500  power_plus  ai2
+1800  freeze_money  ai1
+2100  invulnerable  ai2
+2400  reveal_map  ai1
+2700  instant_build  ai1
+3300  destroy_all_enemies  ai1

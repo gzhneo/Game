@@ -1,0 +1,11 @@
+# Many equal buildings per base (power plants, barracks, supply centers) in the Tournament Lake replay, camera close
+# enough to see building shadows; compared with and without mesh instancing.
+# frame   x      y      zoom   drehung   neigung
+3000      0.134  0.874  0.40   0         standard
+3600      0.134  0.874  0.40   0         standard
+3700      0.860  0.868  0.40   0         standard
+4300      0.860  0.868  0.40   0         standard
+4400      0.869  0.129  0.40   0         standard
+5000      0.869  0.129  0.40   0         standard
+5100      0.138  0.140  0.40   0         standard
+5700      0.138  0.140  0.40   0         standard

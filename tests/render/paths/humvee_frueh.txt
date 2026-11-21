@@ -1,4 +1,4 @@
-# TODO 62 (Humvee-Pilot): Replay e0zh-tournament-lake-3ai-seed2 (Zero Hour x64).
+# Humvee-Pilot: Replay e0zh-tournament-lake-3ai-seed2 (Zero Hour x64).
 # Die beiden ersten Humvees (ID 263, 272) stehen ab Frame 4500 an der Basis von Player_2 -- vor der
 # TOW-Aufrüstung, also mit dem MG-Turm (TURRET). Bilder alle 100 Frames: Spielsicht, dann nah mit
 # Kameradrehung um die beiden Fahrzeuge.

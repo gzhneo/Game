@@ -2,17 +2,17 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-"""Vergleichsseite fuer das Licht je Pixel auf dem Boden (TODO 47 R-6): Kamerafahrten heute
+"""Vergleichsseite fuer das Licht je Pixel auf dem Boden Kamerafahrten heute
 (Licht je Ecke) gegen neu (Schalter terrainlight), Tag und Nacht, Generals und Zero Hour (nur Windows mit Spieldaten).
 
 Aufruf:
   python tools/render/bodenlicht_seite.py lauf --fassung heute               Fahrten ohne terrainlight
   python tools/render/bodenlicht_seite.py lauf --fassung neu                 Fahrten mit terrainlight
-        [--effekte LISTE] [--nur quer,rand] [--schalter-text "..."]         (weitere Schalter fuer beide Fassungen gleich)
+        [--effekte LIST] [--nur quer,rand] [--schalter-text "..."]         (weitere Schalter fuer beide Fassungen gleich)
   python tools/render/bodenlicht_seite.py vergleich heute main               pixelgleich? (Schalter aus gegen main)
   python tools/render/bodenlicht_seite.py seite [--alt heute] [--neu neu]    render-out/bodenlicht/index.html
 
-Die Fahrten laufen ueber tools/render/alle_fahrten.py (je Fahrt zweimal, Warteschlange tools/abnahme/slot.py), Bilder unter
+Die Fahrten laufen ueber tools/render/all_camera_paths.py (je Fahrt zweimal, Warteschlange tools/abnahme/slot.py), Bilder unter
 render-out/bodenlicht/<fassung>/<fahrt>/a/shot_*.bmp. Die Seite zeigt je Bild heute und neu (Leertaste wechselt, Lupe,
 nebeneinander) und je Bild und Fahrt die mittlere Helligkeit (Luminanz Rec. 709) und den mittleren Farbton (a*, b* in
 CIELAB) ohne die Befehlsleiste; dazu helligkeit.csv.
@@ -27,7 +27,7 @@ HIER = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HIER))
 ZIEL = os.path.join(REPO, "render-out", "bodenlicht")
 
-# Fahrten aus alle_fahrten.py: Tag (Generals Alpine Assault, Zero Hour Green Pastures), Nacht (Tundra in beiden Spielen,
+# Fahrten aus all_camera_paths.py: Tag (Generals Alpine Assault, Zero Hour Green Pastures), Nacht (Tundra in beiden Spielen,
 # Lights Out), Berge, Gefecht mit Explosionen (dynamische Lichter).
 FAHRTEN = [
     ("quer", "quer: Alpine Assault (Generals, Tag)"),
@@ -50,8 +50,8 @@ def cmd_lauf(a):
     effekte = a.effekte + (",terrainlight" if a.fassung == "neu" else "")
     schalter = ("%s -effects %s" % (a.schalter_text, effekte)).strip()
     nur = a.nur or ",".join(n for n, _ in FAHRTEN)
-    cmd = [sys.executable, os.path.join(HIER, "alle_fahrten.py"), "--nur", nur, "--ohne-bildpruefung",
-           "--out", os.path.join(ZIEL, a.fassung), "--schalter-text", schalter]
+    cmd = [sys.executable, os.path.join(HIER, "all_camera_paths.py"), "--only", nur, "--no-image-check",
+           "--out", os.path.join(ZIEL, a.fassung), "--switches-text", schalter]
     print(">>", " ".join(cmd), flush=True)
     return subprocess.call(cmd, cwd=REPO)
 

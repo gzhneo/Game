@@ -4,7 +4,7 @@
 **	(Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
 */
 
-// Win32Monitors.h -- which monitor the game window is on: the choice at start (-bildschirm, the monitor
+// Win32Monitors.h -- which monitor the game window is on: the choice at start (-monitor, the monitor
 // of the last run), the size of the window's monitor, the DPI for the cursor size.
 
 #pragma once

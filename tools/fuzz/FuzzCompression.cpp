@@ -4,7 +4,7 @@
 **	(Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
 */
 
-// FuzzCompression.cpp -- E-8.4: Fuzzing-Ziel fuer die
+// FuzzCompression.cpp -- Fuzzing-Ziel fuer die
 // Dekompression (EA RefPack/BTree/Huffman und ZLib ueber CompressionManager).
 //
 // Warum gerade hier: Jede `.big`-Datei, jedes Replay und jeder Spielstand kann komprimierte
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	if (argc < 2)
 	{
 		std::printf("Aufruf: %s <datei> [...]\n", argv[0]);
-		std::printf("Prueft jede Datei als komprimierten Block (E-8.4).\n");
+		std::printf("Prueft jede Datei als komprimierten Block.\n");
 		return 2;
 	}
 

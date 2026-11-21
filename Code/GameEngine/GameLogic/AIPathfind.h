@@ -702,10 +702,10 @@ public:
 
 	Bool queueForPath(ObjectID id);	 ///< The object wants to request a pathfind, so put it on the list to process.
 	void processPathfindQueue(void); ///< Process some or all of the queued pathfinds.
-	/// PFADSUCHE line of the runner log: time of the queue per tick with requests, requests, cells, queue length,
+	/// PATHFINDING line of the runner log: time of the queue per tick with requests, requests, cells, queue length,
 	/// requests per tick and the longest single request (empty if there were none).
 	void formatStatistics( char *text, size_t size ) const;
-	/// PFADSUCHE_ARTEN line: per kind of search (outermost call only) count, cells and time; the line of sight at
+	/// PATHFINDING_KINDS line: per kind of search (outermost call only) count, cells and time; the line of sight at
 	/// the start of each expansion (calls, steps, aborts) and searches that ran out of cell infos.
 	void formatSearchStatistics( char *text, size_t size ) const;
 	enum SearchKind { SEARCH_PATH, SEARCH_CLOSEST, SEARCH_ATTACK, SEARCH_SAFE, SEARCH_PATCH, SEARCH_COST,

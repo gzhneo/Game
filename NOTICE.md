@@ -24,7 +24,7 @@ to show which game it is based on.
 
 ## Changes since EA's release
 
-This notice belongs to GZH Neo 2.0-alpha-2 (the first public version was 2.0-alpha-1). Modifications since 2026, in broad
+This notice belongs to GZH Neo 2.0-alpha-3 (the first public version was 2.0-alpha-1). Modifications since 2026, in broad
 terms:
 
 - Builds with a current MSVC toolchain as conforming C++20 (`/std:c++20 /permissive-`); 64-bit (x64)
@@ -50,7 +50,7 @@ terms:
   game data ([ASSET_CREDITS.md](ASSET_CREDITS.md)).
 - New map editor and GUI editor (Qt 6) instead of WorldBuilder, ParticleEditor and GUIEdit; the
   translation tool Babylon without Excel.
-- Program names `GZHNeo.exe` and `GZHNeoZH.exe`, window titles and version 2.0-alpha-2 mark the
+- Program names `GZHNeo.exe` and `GZHNeoZH.exe`, window titles and version 2.0-alpha-3 mark the
   program as GZH Neo, not as EA's original game.
 - A Windows setup (Inno Setup) with a setup program that finds the player's installation of Generals and
   Zero Hour (Steam, EA app, Origin, disc) and copies the game data, reading the installation only.

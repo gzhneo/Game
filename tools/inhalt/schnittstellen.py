@@ -235,7 +235,7 @@ def schreiben(funde, fenster):
     z.append('Erzeugt von `tools/inhalt/schnittstellen.py` aus dem Code unter `Code/` (ohne `Tools/` und `Tests/`); nicht von Hand ändern.')
     z.append('Der Prüfgang (`tools/gate.sh`) prüft, dass die Datei dem Code entspricht; nach einer Codeänderung, die einen Namen hinzufügt')
     z.append('oder entfernt, `python3 tools/inhalt/schnittstellen.py` laufen lassen. Zweck und Einordnung: `docs/FREIER_INHALT.md`')
-    z.append('(Nr. 79, Stufe 1).')
+    z.append('(stage 1).')
     z.append('')
     z.append('Aufgeführt sind Namen, die als Zeichenkette im Code stehen und an eine Nachschlage-Funktion gehen. Ein Inhaltspaket, das')
     z.append('EAs Inhalt ersetzen will, muss sie liefern oder in Kauf nehmen, dass die Stelle ohne sie auskommt (je nach Stelle eine')

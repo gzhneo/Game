@@ -78,6 +78,8 @@ void		Vulkan_Describe_Missing(unsigned missing, char* text, unsigned size);
 /// other before CPU (software renderers only when nothing else is there), then the larger local
 /// memory, then the lower index. -1 if no device is usable.
 int			Vulkan_Choose_Device(const VulkanDeviceInfo* devices, unsigned count);
+/// The device the player chose (choice as in gpuadapter.h) if it can be used, else Vulkan_Choose_Device.
+int			Vulkan_Choose_Device_Preferred(const VulkanDeviceInfo* devices, unsigned count, const char* choice);
 /// "discrete", "integrated", ...
 const char*	Vulkan_Device_Type_Name(int type);
 /// "1.3.275" from an API or driver version in VK_MAKE_API_VERSION layout.

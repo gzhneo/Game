@@ -326,7 +326,7 @@ void EMPUpdate::doDisableAttack( void )
 						{
 							Coord3D offs = {0,0,0};
 							curVictim->getGeometryInfo().makeRandomOffsetWithinFootprint( offs );
-							offs.z = static_cast<Real>(GameLogicRandomValue(3, static_cast<Int>(victimHeight)));
+							offs.z = GameLogicRandomValueReal(3, victimHeight);
 
 							//This puts all the sparks within a quadrahemicycloid (rectangular dome) volume
 							//The same shape as a four cornered camping dome tent, for those with less Greek

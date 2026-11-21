@@ -208,7 +208,7 @@ void LanLobbyMenuInit( WindowLayout *layout, void *userData )
 		TheLobby->reset();
 	}
 
-	// Every adapter, unless -netzLokal or the setting Network.IPAddress names one address.
+	// Every adapter, unless -netLocal or the setting Network.IPAddress names one address.
 	const UnsignedInt IP = GetLocalNetInstanceIP() ? GetLocalNetInstanceIP() : TheGlobalData->m_defaultIP;
 
 	// TheLobby->init() sets us to be in a LAN menu screen automatically.

@@ -1,4 +1,4 @@
-# Referenzreplays (E-0.3)
+# Referenzreplays
 
 Replays (`*.rep`) mit ihrem CRC-Verlauf (`*.crc`) als Regressionsreferenz für die Spiellogik.
 `ctest -L assets` spielt sie mit `-runner` ab (`ReplayDeterminism`, `ReplayDeterminismZH`) und
@@ -9,14 +9,14 @@ vergleicht den CRC-Verlauf; Werkzeug: `tools/determinism/runner.py`.
 ```
 tests/replays/x64/   Generals, x64
 tests/replays/zh/x64 Zero Hour, x64
-tests/replays/neueki/x64     Generals, x64, neue KI (TODO 50, Abschnitt „Neue KI“)
+tests/replays/neueki/x64     Generals, x64, neue KI (Abschnitt „Neue KI“)
 tests/replays/neueki/zh/x64  Zero Hour, x64, neue KI
 ```
 
 **Nur x64:** Der 32-Bit-Build ist seit 2026-09-26 entfernt, die x86-Referenzen mit ihm (Tag
 `x86_Letzter_Stand`). Die Ordnernamen tragen die Architektur weiter, weil Replays an sie gebunden sind:
 x86 und x64 rechneten die Spiellogik verschieden (`float`-Mathe der Windows-Laufzeit). Innerhalb von x64 ist der Verlauf reproduzierbar, und Debug und Release müssen
-übereinstimmen (eine Abweichung war ein Fehler: TODO 36).
+übereinstimmen (eine Abweichung war ein Fehler).
 
 ## Abweichungen eingrenzen
 
@@ -74,7 +74,7 @@ nicht mehr synchron) ist am 2026-09-26 mit dem 32-Bit-Build entfallen.
 Testhilfen synchron ablaufen. Nicht Teil von `ctest -L assets`; prüfen mit
 `runner.py check --all tests/replays/testhilfen/x64` bzw. `.../zh/x64`.
 
-## Neue KI (TODO 50)
+## Neue KI
 
 `neueki/x64` (Generals) und `neueki/zh/x64` (Zero Hour) enthalten Partien, in denen die **neue KI**
 (`AICommanderPlayer`) ein Bündnis führt: Tournament Lake, `N1,N1,K2,K2`, Seed 7,
@@ -83,7 +83,7 @@ Käufe des späten Spiels). Sie liegen getrennt von den Referenzen der klassisch
 
 - Die Referenzen der **klassischen** KI dürfen sich durch Arbeit an der neuen KI nie ändern.
 - Die Referenzen der **neuen** KI zeigen jede Änderung an ihr, auch ungewollte. Eine *gewollte*
-  Änderung der neuen KI nimmt sie im selben Commit bewusst neu auf (wie Nr. 49 für die klassische).
+  Änderung der neuen KI nimmt sie im selben Commit bewusst neu auf (wie für die klassische).
 
 `ctest -L assets` prüft sie als `ReplayNeueKI` bzw. `ReplayNeueKIZH`. Von Hand:
 
@@ -100,9 +100,16 @@ python tools/determinism/runner.py record --exe build-x64/GeneralsMD/Code/Main/R
     --out tests/replays/neueki/zh/x64/nk-zh-tournament-lake-n1n1k2k2-seed7
 ```
 
-Seit R-161 darf dabei ein anderes Spiel laufen (eigene Aufnahmedatei je Prozess).
+Dabei darf ein anderes Spiel laufen (eigene Aufnahmedatei je Prozess).
 
-**Neu aufgenommen 2026-10-10 (alle zwölf Sätze beider Spiele, Release, dieselben Parameter; Testhilfen mit `--extra -ignoreAsserts -testhilfenAblauf tests/replays/testhilfen/ablauf-2ki.txt`):** Spielstände sichern alle Zustände der Zustandsautomaten und der Wegfinder-CRC liest die Mauerstücke richtig (R-513, R-514), die klassische KI baut automatische Einträge und nur baubare Vorrang-Einträge (Nr. 98), die neue KI bekommt Persönlichkeiten, Fristen und Leuchtfeuer (KA-9 bis KA-16). Logik-Kennung `0x62BCB645`.
+**Re-recorded 2026-11-17 (the four new AI sets, Release, same parameters):** the command layer takes over fresh script teams by default (`-aiOff takeover` switches it off). The classic sets are unchanged. Logic ID `0xA582C4BF`.
+
+**Re-recorded 2026-11-13 (all fourteen sets of both games, Release, same parameters; the eight-AI sets with
+`--ai N1,K1,N2,K2,N3m,K3,N4,K4e --seed 3 --frames 36000`):** script conditions count nested object type lists, the script
+condition team survives a subroutine, skirmish build lists are moved by the command center wherever it is listed, and random
+calls with real bounds use the real variant. Logic ID `0x81BC50DA`.
+
+**Neu aufgenommen 2026-10-10 (alle zwölf Sätze beider Spiele, Release, dieselben Parameter; Testhilfen mit `--extra -ignoreAsserts -testhilfenAblauf tests/replays/testhilfen/ablauf-2ki.txt`):** Spielstände sichern alle Zustände der Zustandsautomaten und der Wegfinder-CRC liest die Mauerstücke richtig, die klassische KI baut automatische Einträge und nur baubare Vorrang-Einträge, die neue KI bekommt Persönlichkeiten, Fristen und Leuchtfeuer (KA-9 bis KA-16). Logik-Kennung `0x62BCB645`.
 
 **Neu aufgenommen 2026-10-08 (Generals):** `e0-alpine-assault-2ai-seed1`, `e0-tournament-lake-3ai-seed2`, `e0-twilight-flame-7ai-seed3` und
 `neueki/x64/nk-tournament-lake-n1n1k2k2-seed7` nach der bewussten Logikänderung S5b und S6 (Nachladen startet bei neuem Waffenbonus neu, Abwurfzone ruht bei

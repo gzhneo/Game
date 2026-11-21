@@ -89,7 +89,7 @@ public:
 	{
 		m_render->Reset();
 		m_render->Enable_Texturing(FALSE);
-		m_render->Add_Line(Vector2(startX, startY), Vector2(endX, endY), lineWidth, lineColor);
+		m_render->Add_Line(Vector2(static_cast<Real>(startX), static_cast<Real>(startY)), Vector2(static_cast<Real>(endX), static_cast<Real>(endY)), lineWidth, lineColor);
 		m_render->Render();
 	}
 
@@ -97,7 +97,7 @@ public:
 	{
 		m_render->Reset();
 		m_render->Enable_Texturing(FALSE);
-		m_render->Add_Line(Vector2(startX, startY), Vector2(endX, endY), lineWidth, lineColor1, lineColor2);
+		m_render->Add_Line(Vector2(static_cast<Real>(startX), static_cast<Real>(startY)), Vector2(static_cast<Real>(endX), static_cast<Real>(endY)), lineWidth, lineColor1, lineColor2);
 		m_render->Render();
 	}
 
@@ -118,7 +118,7 @@ public:
 		}
 		m_render->Reset();
 		m_render->Enable_Texturing(FALSE);
-		m_render->Add_Outline(RectClass(startX, startY, startX + width, startY + height), lineWidth, lineColor);
+		m_render->Add_Outline(RectClass(static_cast<Real>(startX), static_cast<Real>(startY), static_cast<Real>(startX + width), static_cast<Real>(startY + height)), lineWidth, lineColor);
 		m_render->Render();
 	}
 
@@ -126,7 +126,7 @@ public:
 	{
 		m_render->Reset();
 		m_render->Enable_Texturing(FALSE);
-		m_render->Add_Rect(RectClass(startX, startY, startX + width, startY + height), 0, 0, color);
+		m_render->Add_Rect(RectClass(static_cast<Real>(startX), static_cast<Real>(startY), static_cast<Real>(startX + width), static_cast<Real>(startY + height)), 0, 0, color);
 		m_render->Render();
 	}
 
@@ -163,7 +163,7 @@ public:
 		else
 			m_render->Set_Texture(image->getFilename().str());
 
-		RectClass screen(startX, startY, endX, endY);
+		RectClass screen(static_cast<Real>(startX), static_cast<Real>(startY), static_cast<Real>(endX), static_cast<Real>(endY));
 		RectClass uvRect(uv->lo.x, uv->lo.y, uv->hi.x, uv->hi.y);
 		const bool rotated = BitTest(image->getStatus(), IMAGE_STATUS_ROTATED_90_CLOCKWISE);
 		if (m_clipped)
@@ -171,10 +171,10 @@ public:
 			if (endX <= m_clip.lo.x || endY <= m_clip.lo.y)
 				return;
 			RectClass clipped;
-			clipped.Left = std::max<float>(screen.Left, m_clip.lo.x);
-			clipped.Right = std::min<float>(screen.Right, m_clip.hi.x);
-			clipped.Top = std::max<float>(screen.Top, m_clip.lo.y);
-			clipped.Bottom = std::min<float>(screen.Bottom, m_clip.hi.y);
+			clipped.Left = std::max(screen.Left, static_cast<float>(m_clip.lo.x));
+			clipped.Right = std::min(screen.Right, static_cast<float>(m_clip.hi.x));
+			clipped.Top = std::max(screen.Top, static_cast<float>(m_clip.lo.y));
+			clipped.Bottom = std::min(screen.Bottom, static_cast<float>(m_clip.hi.y));
 			const float left = (clipped.Left - screen.Left) / screen.Width();
 			const float right = (clipped.Right - screen.Left) / screen.Width();
 			const float top = (clipped.Top - screen.Top) / screen.Height();

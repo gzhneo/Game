@@ -31,14 +31,14 @@ fehler=0
 for res in "${AUFLOESUNGEN[@]}"; do
 	D="$OUT/$res"
 	rm -rf "$D" && cp -r "$OUT/daten" "$D"
-	printf 'partie 2000000\r\nlogik 30\r\nrahmen 8\r\nzeichenbereich\r\nrad -10\r\nlogik 10\r\nrahmen 4\r\nzeichenbereich\r\nrahmen 12 oben\r\nrahmen 12 unten\r\nrahmen 12 links\r\nrahmen 12 rechts\r\nstreifen\r\nstreifen mitte\r\nbeenden\r\n' > "$D/ablauf.txt"
-	"$HERE/run_game.sh" --zeit 900 --auflosung "$res" "$D" -einstellungenNurLesen -d3d11Effects none \
+	printf 'game 2000000\r\nlogic 30\r\nbox 8\r\ndrawRegion\r\nwheel -10\r\nlogic 10\r\nbox 4\r\ndrawRegion\r\nbox 12 top\r\nbox 12 bottom\r\nbox 12 left\r\nbox 12 right\r\nstrip\r\nstrip middle\r\nquit\r\n' > "$D/ablauf.txt"
+	"$HERE/run_game.sh" --zeit 900 --auflosung "$res" "$D" -settingsReadOnly -d3d11Effects none \
 		-xres "${res%x*}" -yres "${res#*x}" -skirmish TestSkirmish -skirmishAI H1,K2 -skirmishSeed 1 \
-		-crcLog run.log -testablauf ablauf.txt > "$D/lauf.out" 2>&1
+		-crcLog run.log -testScript ablauf.txt > "$D/lauf.out" 2>&1
 	rc=$?
-	ok=$(grep -ac "TESTABLAUF OK line .* \(rahmen\|zeichenbereich\|streifen\)" "$D/run.log" 2>/dev/null)
+	ok=$(grep -ac "TESTSCRIPT OK line .* \(box\|drawRegion\|strip\)" "$D/run.log" 2>/dev/null)
 	echo "$res: Exit $rc, $ok von 10 Pruefungen bestanden"
-	grep -a "TESTABLAUF .*\(rahmen\|zeichenbereich\|streifen\)\|TESTABLAUF ERROR" "$D/run.log" 2>/dev/null | sed 's/^/  /'
+	grep -a "TESTSCRIPT .*\(box\|drawRegion\|strip\)\|TESTSCRIPT ERROR" "$D/run.log" 2>/dev/null | sed 's/^/  /'
 	[ "$rc" -eq 0 ] && [ "$ok" = 10 ] || fehler=$((fehler + 1))
 done
 [ $fehler -eq 0 ] && { echo "Auswahlrahmen bestanden"; exit 0; }

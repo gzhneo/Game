@@ -77,15 +77,15 @@ constexpr auto DEFAULT_RENDER_TARGET_WIDTH = 512;
 constexpr auto DEFAULT_RENDER_TARGET_HEIGHT = 512;
 
 extern const FrustumClass *shadowCameraFrustum;	//defined in W3DShadow.
-///@todo: Externs from volumetric shadow renderer - these need to be moved into W3DBufferManager
-extern WW3DVertexBufferHandle shadowVertexBufferD3D;		///<D3D vertex buffer
-extern WW3DIndexBufferHandle 	shadowIndexBufferD3D;	///<D3D index buffer
-extern int nShadowVertsInBuf;	//model vetices in vertex buffer
-extern int nShadowStartBatchVertex;
-extern int nShadowIndicesInBuf;	//model vetices in vertex buffer
-extern int nShadowStartBatchIndex;
-extern int SHADOW_VERTEX_SIZE;
-extern int SHADOW_INDEX_SIZE;
+// Buffers of the shadow rendered onto the terrain (renderProjectedTerrainShadow).
+static WW3DVertexBufferHandle shadowVertexBufferD3D=nullptr;		///<D3D vertex buffer
+static WW3DIndexBufferHandle 	shadowIndexBufferD3D=nullptr;	///<D3D index buffer
+static int nShadowVertsInBuf=0;	//model vetices in vertex buffer
+static int nShadowStartBatchVertex=0;
+static int nShadowIndicesInBuf=0;	//model indices in index buffer
+static int nShadowStartBatchIndex=0;
+static constexpr int SHADOW_VERTEX_SIZE=4096;
+static constexpr int SHADOW_INDEX_SIZE=8192;
 
 //Bounding rectangle around rendered portion of terrain.
 static Int drawEdgeX=0;
@@ -278,6 +278,26 @@ Bool W3DProjectedShadowManager::ReAcquireResources(void)
 
 	if (FAILED(RenderDevice::Create_Device_Index_Buffer
 	(
+		SHADOW_INDEX_SIZE*sizeof(WORD),
+		WW3D_USAGE_WRITEONLY|WW3D_USAGE_DYNAMIC,
+		WW3D_FMT_INDEX16,
+		WW3D_POOL_DEFAULT,
+		&shadowIndexBufferD3D
+	)))
+		return FALSE;
+
+	if (FAILED(RenderDevice::Create_Device_Vertex_Buffer
+	(
+		SHADOW_VERTEX_SIZE*3*sizeof(float),
+		WW3D_USAGE_WRITEONLY|WW3D_USAGE_DYNAMIC,
+		0,
+		WW3D_POOL_DEFAULT,
+		&shadowVertexBufferD3D
+	)))
+		return FALSE;
+
+	if (FAILED(RenderDevice::Create_Device_Index_Buffer
+	(
 		SHADOW_DECAL_INDEX_SIZE*sizeof(WORD),
 		WW3D_USAGE_WRITEONLY|WW3D_USAGE_DYNAMIC,
 		WW3D_FMT_INDEX16,
@@ -307,6 +327,13 @@ void W3DProjectedShadowManager::ReleaseResources(void)
 {
 	invalidateCachedLightPositions();	//textures need to be updated
 	REF_PTR_RELEASE(m_dynamicRenderTarget);	//need to create a new render target
+	if (shadowIndexBufferD3D)
+		RenderDevice::Release_Resource(shadowIndexBufferD3D);
+	if (shadowVertexBufferD3D)
+		RenderDevice::Release_Resource(shadowVertexBufferD3D);
+	shadowIndexBufferD3D=nullptr;
+	shadowVertexBufferD3D=nullptr;
+	nShadowVertsInBuf=nShadowStartBatchVertex=nShadowIndicesInBuf=nShadowStartBatchIndex=0;
 	if (shadowDecalIndexBufferD3D)
 		RenderDevice::Release_Resource(shadowDecalIndexBufferD3D);
 	if (shadowDecalVertexBufferD3D)
@@ -320,6 +347,13 @@ void W3DProjectedShadowManager::invalidateCachedLightPositions(void)
 	m_W3DShadowTextureManager->invalidateCachedLightPositions();
 }
 
+// Shadow maps replace the model shadows of this manager. Asked by the effect settings, which also hold
+// outside the scene pass.
+static Bool shadowMapsEnabled()
+{
+	return (RenderDevice::Get_Effect_Settings().flags & RENDER_EFFECT_SHADOW_MAP) != 0;
+}
+
 void W3DProjectedShadowManager::updateRenderTargetTextures(void)
 {
 	///@todo: Don't update texture for shadows that can't be seen!!
@@ -329,6 +363,12 @@ void W3DProjectedShadowManager::updateRenderTargetTextures(void)
 		return;	//there are no shadows to render.
 
 	if (!TheGlobalData->m_useShadowDecals)
+		return;
+
+	// With shadow maps the model shadows are not drawn (renderShadows), so their textures are not rendered
+	// either; the light position history makes them update once shadow maps are switched off. This runs
+	// before the scene, so it asks the effect settings instead of Shadow_Maps_Active().
+	if (shadowMapsEnabled())
 		return;
 
 	if (m_numProjectionShadows)
@@ -1148,6 +1188,10 @@ Int W3DProjectedShadowManager::renderShadows(RenderInfoClass & rinfo)
 	if (!m_shadowList && !m_decalList)
 		return	projectionCount;	//there are no shadows to render.
 
+	// A dynamic buffer starts over with DISCARD each frame.
+	nShadowIndicesInBuf = 0xffff;
+	nShadowVertsInBuf = 0xffff;
+
 	//Find extents of visible terrain
 	if (TheTerrainRenderObject)
 	{
@@ -1173,7 +1217,7 @@ Int W3DProjectedShadowManager::renderShadows(RenderInfoClass & rinfo)
 	// With shadow maps the models cast real shadows, so the model shadows of this list (shadow decals,
 	// projected shadows) are skipped. The decals of the second list (build sites, markers, scorch marks)
 	// stay.
-	if (TheGlobalData->m_useShadowDecals && !RenderDevice::Shadow_Maps_Active())
+	if (TheGlobalData->m_useShadowDecals && !shadowMapsEnabled())
 	{
 		// Render the object
 		TheMeshRenderer.Set_Camera(&rinfo.Camera);
@@ -1248,12 +1292,13 @@ Int W3DProjectedShadowManager::renderShadows(RenderInfoClass & rinfo)
 					SimpleObjectIterator *iter;
 					Object *obj;
 
-					iter = ThePartitionManager->iterateObjectsInRange(reinterpret_cast<const Coord3D*>(&sphere.Center),sphere.Radius, DistanceCalculationType::FROM_CENTER_3D);
+					// The map editor renders without game logic: there are no objects to receive the shadow.
+					iter = ThePartitionManager ? ThePartitionManager->iterateObjectsInRange(reinterpret_cast<const Coord3D*>(&sphere.Center),sphere.Radius, DistanceCalculationType::FROM_CENTER_3D) : nullptr;
 					MemoryPoolObjectHolder hold( iter );
 
 					AABoxIntersectionTestClass boxtest(aaBox,COLL_TYPE_ALL);
 
-					for( obj = iter->first(); obj; obj = iter->next() )
+					for( obj = iter ? iter->first() : nullptr; obj; obj = iter->next() )
 					{
 							Drawable *draw = obj->getDrawable();
 

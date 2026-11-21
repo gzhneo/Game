@@ -5,9 +5,8 @@
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
 """Pruefung der Spiel-Ordner (Phase 8 Schritt 7, Entscheidung P8-8).
 
-Seit Phase 8 Schritt 7 (2026-09-23) liegt der gesamte Code einmal unter Code/. Je Spiel bleibt nur ein
-kleiner Ordner (Code/Games/Generals, Code/Games/ZeroHour; bis 2026-10-13 Generals/Spiel und
-GeneralsMD/Spiel im Hauptverzeichnis, TODO Nr. 102) mit genau drei Dateien:
+Der gesamte Code liegt einmal unter Code/. Je Spiel bleibt nur ein
+kleiner Ordner (Code/Games/Generals, Code/Games/ZeroHour) mit genau drei Dateien:
 
     CMakeLists.txt    Parameter des Spiels (GAME_SUFFIX, GAME_EXE_NAME, ...)
     GameEdition.cpp   legt das Spiel fest (getGameEdition())

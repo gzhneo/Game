@@ -29,12 +29,14 @@
 #include "wwdebug.h"
 #include "wwstring.h"
 #include "ffactory.h"
+#include <unordered_set>
 #include "WWFILE.H"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <algorithm>
+#include <unordered_set>
 #include <vector>
 #include "rendercore_internal.h"
 
@@ -76,6 +78,13 @@ HRESULT RenderCore::Create_Texture(unsigned width, unsigned height, unsigned lev
 	if (!out) return static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
 	*out = nullptr;
 	if (!M->device) return static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
+	// Test switch: every n-th creation fails as if the video memory were full.
+	static unsigned created = 0;
+	const unsigned fail_every = RenderDevice::Fail_Texture_Creation_Every();
+	if (fail_every && ++created % fail_every == 0) {
+		WWDEBUG_SAY(("Render: texture creation %u failed on purpose\n", created));
+		return static_cast<HRESULT>(E_OUTOFMEMORY);
+	}
 
 	const GPU_FORMAT dxgi = Device_Format_To_Gpu_Format(format);
 	const bool render_target = (usage & WW3D_USAGE_RENDERTARGET) != 0;
@@ -131,6 +140,11 @@ HRESULT RenderCore::Create_Texture(unsigned width, unsigned height, unsigned lev
 	return static_cast<HRESULT>(WW3D_OK);
 }
 
+// Every live vertex and index buffer object: after a lost device their GPU buffers are new and empty, and
+// Restore_Buffer_Contents fills the static ones again from their staging copy. Allocated with the first buffer
+// and freed with the last, so no memory is held at shutdown.
+static std::unordered_set<WW3DBufferCommon*>* s_live_buffers = nullptr;
+
 template <class T>
 static HRESULT Create_D3D11_Buffer(GpuDevice* device, unsigned length, unsigned usage, bool index_buffer,
 								   T** out)
@@ -168,6 +182,8 @@ static HRESULT Create_D3D11_Buffer(GpuDevice* device, unsigned length, unsigned 
 	obj->size     = length;
 	obj->dynamic  = dynamic;
 	obj->refcount = 1;
+	if (!s_live_buffers) s_live_buffers = new std::unordered_set<WW3DBufferCommon*>;
+	s_live_buffers->insert(obj);
 	Ud_Created(obj);
 	*out = obj;
 	number_of_API_calls++;
@@ -237,6 +253,7 @@ WW3DSurfaceHandle RenderCore::Create_Offscreen_Surface(unsigned width, unsigned 
 
 HRESULT RenderCore::Get_Texture_Surface_Level(WW3DTextureHandle texture, unsigned level, WW3DSurfaceHandle* out)
 {
+	if (out) *out = nullptr;		// callers use and release the handle even if the call fails
 	if (!texture || !out) return static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
 	WW3DSurfaceObject* obj = W3DNEW WW3DSurfaceObject;
 	::ZeroMemory(obj, sizeof(*obj));
@@ -269,8 +286,9 @@ HRESULT RenderCore::Get_Texture_Level_Desc(WW3DTextureHandle texture, unsigned l
 
 HRESULT RenderCore::Get_Surface_Desc(WW3DSurfaceHandle surface, WW3DSurfaceDesc* desc)
 {
+	// Callers read the description even if the call fails (no surface after a failed texture creation).
+	if (desc) ::ZeroMemory(desc, sizeof(WW3DSurfaceDesc));
 	if (!surface || !desc) return static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
-	::ZeroMemory(desc, sizeof(WW3DSurfaceDesc));
 	desc->Width  = surface->width;
 	desc->Height = surface->height;
 	// Levels of a converting texture (A4R4G4B4, L8, ...) and system-memory surfaces report their
@@ -435,6 +453,7 @@ static void Drop_Texture_Shadow(WW3DTextureObject* texture, unsigned level)
 
 HRESULT RenderCore::Lock_Surface(WW3DSurfaceHandle surface, WW3DLockedRect* out, const RECT* rect, unsigned flags)
 {
+	if (out) { out->pBits = nullptr; out->Pitch = 0; }		// no pointer to write through if the lock fails
 	if (!surface || !out || !M->context) return static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
 	if (surface->owner) return Lock_Texture(surface->owner, surface->level, out, rect, flags);
 	if (rect) {
@@ -498,6 +517,7 @@ HRESULT RenderCore::Unlock_Surface(WW3DSurfaceHandle surface)
 
 HRESULT RenderCore::Lock_Texture(WW3DTextureHandle texture, unsigned level, WW3DLockedRect* out, const RECT* rect, unsigned flags)
 {
+	if (out) { out->pBits = nullptr; out->Pitch = 0; }
 	if (!texture || !out || !M->context) return static_cast<HRESULT>(WW3D_ERR_INVALIDCALL);
 	if (level < WW3DTextureObject::MAX_CPU_LEVELS && (texture->shadow_levels & (1u << level))) {
 		const unsigned bit = 1u << level;
@@ -795,6 +815,13 @@ void RenderCore::Add_Ref_Resource(WW3DSurfaceHandle surface)	{ if (surface) ++su
 void RenderCore::Release_Resource(WW3DTextureHandle texture)
 {
 	if (!texture || --texture->refcount > 0) return;
+	// The binding caches compare pointers: another object can get this one's address.
+	if (M) {
+		for (unsigned i = 0; i < 8; ++i) {
+			if (texture->srv && M->bound_srv[i] == texture->srv) M->bound_srv[i] = (GpuShaderResourceView*)1;
+			if (M->textures[i] == texture) M->textures[i] = nullptr;
+		}
+	}
 	for (unsigned l = 0; l < WW3DTextureObject::MAX_CPU_LEVELS; ++l) delete[] texture->cpu[l];
 	Gpu_Release(texture->staging);
 	Gpu_Release(texture->rtv);
@@ -819,6 +846,10 @@ void RenderCore::Release_Resource(WW3DSurfaceHandle surface)
 void RenderCore::Release_Resource(WW3DVertexShaderHandle shader)
 {
 	if (!shader || --shader->refcount > 0) return;
+	if (M) {
+		if (M->bound_vs == shader->shader) M->bound_vs = (GpuVertexShader*)1;
+		if (M->vertex_shader == shader) M->vertex_shader = nullptr;
+	}
 	Gpu_Release(shader->bytecode);
 	Gpu_Release(shader->shader);
 	delete shader;
@@ -827,6 +858,10 @@ void RenderCore::Release_Resource(WW3DVertexShaderHandle shader)
 void RenderCore::Release_Resource(WW3DPixelShaderHandle shader)
 {
 	if (!shader || --shader->refcount > 0) return;
+	if (M) {
+		if (M->bound_ps == shader->shader) M->bound_ps = (GpuPixelShader*)1;
+		if (M->pixel_shader == shader) M->pixel_shader = nullptr;
+	}
 	Gpu_Release(shader->shader);
 	// the source and its permutations belong to the shader
 	delete[] shader->detail_source;
@@ -840,17 +875,42 @@ void RenderCore::Release_Resource(WW3DPixelShaderHandle shader)
 void RenderCore::Release_Resource(WW3DVertexDeclHandle decl)
 {
 	if (!decl || --decl->refcount > 0) return;
-	for (unsigned i = 0; i < decl->layout_count; ++i)
+	if (M && M->vertex_decl == decl) M->vertex_decl = nullptr;
+	for (unsigned i = 0; i < decl->layout_count; ++i) {
+		if (M && M->bound_layout == decl->layouts[i].layout) M->bound_layout = (GpuInputLayout*)1;
 		Gpu_Release(decl->layouts[i].layout);
+	}
 	delete decl;
 }
 
 static void Release_Buffer_Object(WW3DBufferCommon* b)
 {
 	if (!b || --b->refcount > 0) return;
+	if (s_live_buffers) {
+		s_live_buffers->erase(b);
+		if (s_live_buffers->empty()) {
+			delete s_live_buffers;
+			s_live_buffers = nullptr;
+		}
+	}
 	Gpu_Release(b->gpu);
 	delete [] b->cpu;
 	delete b;
+}
+
+// The device layer gave the buffers new, empty GPU buffers (see Revivable in d3d11device.cpp): write the
+// contents of the static ones again. Dynamic buffers are written anew every time they are used.
+void RenderCore::Restore_Buffer_Contents()
+{
+	if (!s_live_buffers) return;
+	for (WW3DBufferCommon* b : *s_live_buffers) {
+		b->mapped = false;
+		b->mapped_discard = false;
+		b->mapped_data = nullptr;
+		b->shadow_frame = 0;
+		if (b->dynamic || !b->cpu || !b->gpu || !M->context) continue;
+		M->context->UpdateSubresource(b->gpu, 0, nullptr, b->cpu, 0, 0);
+	}
 }
 
 // A buffer that recorded shadow casters still need is preserved first.

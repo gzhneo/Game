@@ -1,7 +1,7 @@
 # Copyright (C) 2026 GZH Neo
 # Part of GZH Neo, a modified version of Command & Conquer Generals / Zero Hour
 # (Electronic Arts). Licensed under the GNU GPL v3 or later; see LICENSE.md and NOTICE.md.
-# Ablaufsteuerung für die CC0-Naturobjekte (TODO 56/78): Blender-Schritte je Objekt, Prüfung gegen
+# Ablaufsteuerung für die CC0-Naturobjekte: Blender-Schritte je Objekt, Prüfung gegen
 # die eigene Gerüst-Vorschrift (w3d_geruest.py), Ablage im Repo und Testarchiv. Liest keine EA-Datei; der Vergleich mit
 # den EA-Modellen steht getrennt in natur_messen.py.
 #

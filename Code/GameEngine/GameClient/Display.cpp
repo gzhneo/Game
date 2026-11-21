@@ -353,7 +353,7 @@ void Display::update( void )
 		{
 			m_videoStream->frameDecompress();
 			m_videoStream->frameRender( m_videoBuffer.get() );
-			if( m_videoStream->frameIndex() != m_videoStream->frameCount() - 1)
+			if( m_videoStream->frameIndex() != m_videoStream->frameCount() - 1 && !m_videoStream->hasPlayedToEnd())
 				m_videoStream->frameNext();
 			else if( m_copyrightHoldTime >= 0 ||m_movieHoldTime >= 0 )
 			{

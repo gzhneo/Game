@@ -269,6 +269,10 @@ GZH:OptionsVulkan
 "Vulkan renderer"
 END
 
+GZH:OptionsAdapter
+"Graphics card"
+END
+
 GZH:RemoveVote
 "%ls votes to remove %ls from the game (%d of %d votes). To agree, type: /remove %ls"
 END

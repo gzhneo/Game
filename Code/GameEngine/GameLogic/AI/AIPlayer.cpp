@@ -2812,6 +2812,7 @@ void AIPlayer::checkReadyTeams( void )
 						obj->getAIUpdateInterface()->joinTeam();
 					}
 				} else {
+					takeOverTeam( team->m_team );
 					// mark our completed team as "active" - this will invoke any OnCreate scripts, etc.
 					team->m_team->setActive();
 					if (isSkirmishAI()) {

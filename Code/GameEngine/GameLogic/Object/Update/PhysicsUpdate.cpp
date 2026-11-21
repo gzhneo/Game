@@ -358,13 +358,13 @@ void PhysicsBehavior::applyRandomRotation()
 
 	Real randomModifier;
 
-	randomModifier = static_cast<Real>(GameLogicRandomValue(-1, 1));
+	randomModifier = GameLogicRandomValueReal(-1.0f, 1.0f);
 	m_yawRate += getPhysicsBehaviorModuleData()->m_shockMaxYaw * randomModifier;
 
-	randomModifier = static_cast<Real>(GameLogicRandomValue(-1, 1));
+	randomModifier = GameLogicRandomValueReal(-1.0f, 1.0f);
 	m_pitchRate += getPhysicsBehaviorModuleData()->m_shockMaxPitch * randomModifier;
 
-	randomModifier = static_cast<Real>(GameLogicRandomValue(-1, 1));
+	randomModifier = GameLogicRandomValueReal(-1.0f, 1.0f);
 	m_rollRate += getPhysicsBehaviorModuleData()->m_shockMaxRoll * randomModifier;
 
 #ifdef SLEEPY_PHYSICS

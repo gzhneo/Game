@@ -38,7 +38,7 @@ EMPTY_FILES = [
 def game_lod():
     out = [header('GameLOD')]
     for name in ('Low', 'Medium', 'High', 'VeryHigh'):
-        out.append('StaticGameLOD %s\n  MinimumFPS = 0\n  MaxParticleCount = 1500\n  UseShadowVolumes = No\n  UseShadowDecals = No\n'
+        out.append('StaticGameLOD %s\n  MinimumFPS = 0\n  MaxParticleCount = 1500\n  UseShadowDecals = No\n'
                    '  UseCloudMap = No\n  UseLightMap = No\n  ShowSoftWaterEdge = No\n  TextureReductionFactor = 0\nEnd\n' % name)
     for name in ('Low', 'Medium', 'High', 'VeryHigh'):
         out.append('DynamicGameLOD %s\n  MinimumFPS = 0\n  ParticleSkipMask = 0\n  DebrisSkipMask = 0\n  SlowDeathScale = 1.0\nEnd\n' % name)

@@ -1541,6 +1541,8 @@ void ObjectCreationList::addObjectCreationNugget(ObjectCreationNugget* nugget)
 Object* ObjectCreationList::createInternal( const Object* primaryObj, const Coord3D *primary, const Coord3D* secondary, Bool createOwner, UnsignedInt lifetimeFrames ) const
 {
 	DEBUG_ASSERTCRASH(primaryObj != nullptr, ("You should always call OCLs with a non-null primary Obj, even for positional calls, to get team ownership right"));
+	if (TheGameLogic && TheGameLogic->isDestroyingAllObjects())
+		return nullptr;
 	Object *theFirstObject = nullptr;
 	for (ObjectCreationNuggetVector::const_iterator i = m_nuggets.begin(); i != m_nuggets.end(); ++i)
 	{
@@ -1556,6 +1558,8 @@ Object* ObjectCreationList::createInternal( const Object* primaryObj, const Coor
 Object* ObjectCreationList::createInternal( const Object* primaryObj, const Coord3D *primary, const Coord3D* secondary, Real angle, UnsignedInt lifetimeFrames ) const
 {
 	DEBUG_ASSERTCRASH(primaryObj != nullptr, ("You should always call OCLs with a non-null primary Obj, even for positional calls, to get team ownership right"));
+	if (TheGameLogic && TheGameLogic->isDestroyingAllObjects())
+		return nullptr;
 	Object *theFirstObject = nullptr;
 	for (ObjectCreationNuggetVector::const_iterator i = m_nuggets.begin(); i != m_nuggets.end(); ++i)
 	{
@@ -1571,6 +1575,8 @@ Object* ObjectCreationList::createInternal( const Object* primaryObj, const Coor
 Object* ObjectCreationList::createInternal( const Object* primary, const Object* secondary, UnsignedInt lifetimeFrames ) const
 {
 	DEBUG_ASSERTCRASH(primary != nullptr, ("You should always call OCLs with a non-null primary Obj, even for positional calls, to get team ownership right"));
+	if (TheGameLogic && TheGameLogic->isDestroyingAllObjects())
+		return nullptr;
 	Object *theFirstObject = nullptr;
 	for (ObjectCreationNuggetVector::const_iterator i = m_nuggets.begin(); i != m_nuggets.end(); ++i)
 	{

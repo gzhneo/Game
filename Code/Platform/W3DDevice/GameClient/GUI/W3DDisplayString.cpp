@@ -55,6 +55,7 @@
 #include "GameClient/HotKey.h"
 #include "GameClient/GameFont.h"
 #include "GameClient/GlobalLanguage.h"
+#include "WW3D2/Common/renderdevice.h"
 
 // DEFINES ////////////////////////////////////////////////////////////////////
 
@@ -79,6 +80,7 @@ W3DDisplayString::W3DDisplayString( void )
 {
 	
 	m_textChanged = FALSE;
+	m_deviceResets = RenderDevice::Get_Device_Reset_Count();
 	m_textPos.x = 0;
 	m_textPos.y = 0;
 	m_currTextColor = 0;
@@ -165,6 +167,13 @@ void W3DDisplayString::draw( Int x, Int y, Color color, Color dropColor, Int xDr
 	if( getTextLength() == 0 )	
 		return;  // nothing to draw
 	
+	// After a device reset the glyph textures are empty: build the sentence again.
+	if( m_deviceResets != RenderDevice::Get_Device_Reset_Count() )
+	{
+		m_deviceResets = RenderDevice::Get_Device_Reset_Count();
+		m_textChanged = TRUE;
+	}
+
 	// if our font or text has changed we need to build a new sentence
 	if( m_fontChanged || m_textChanged )
 	{
